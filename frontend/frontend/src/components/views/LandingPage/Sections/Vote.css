@@ -1,0 +1,103 @@
+.rank{
+    text-align: center;
+}
+
+.loadmore-list {
+    min-height: 200px;
+}
+
+.container-vote {
+    display: inline-block;
+    width : 100%;
+    border-radius: 5px;
+    background-color: brown;
+}
+
+.container-vote-header {
+    text-align: center;
+    line-height: 50px;
+    width: 70%;
+    height: 50px;
+    margin: 2rem auto;
+    border-radius: 3px;
+    background-color: white;
+}
+
+.container-vote-section {
+    width:85%;
+    margin: 2rem auto;
+
+    background-color: cadetblue;
+}
+
+.item-vote {
+    height:20vw;
+    margin: 2rem;
+    text-align: center;
+
+    background-color: cyan;
+}
+
+.item-vote-img{
+    width:100%;
+    height:100%;
+}
+
+#go-detail{
+    display:none;
+    font-size: 20px;
+    color: black;
+    position: absolute;
+    top:45%;
+}
+
+.item-vote:hover #go-detail{
+    display: inline-block;
+}
+
+.item-vote:hover .item-vote-img{
+    background-color:black;
+    opacity:0.5;
+}
+
+.layer {
+    display: block;
+    position: fixed;
+    _position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+.layer .dimBg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .5;
+    filter: alpha(opacity=50);
+}
+
+.layer .pop-layer {
+    display:block;
+}
+
+.pop-layer {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 410px;
+    height: auto;
+    background-color: #fff;
+    border: 5px solid #3571B5;
+    z-index: 10;
+  }
+
+  .pop-layer .pop-container {
+    padding: 20px 25px;
+  }

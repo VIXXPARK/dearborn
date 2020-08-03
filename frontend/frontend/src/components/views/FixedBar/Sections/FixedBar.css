@@ -1,0 +1,19 @@
+.fixed {
+    position:fixed;
+    top: 80%;
+    left:0;
+    z-index:35;
+}
+
+#fixed-vote {
+    width: 40px;
+    border-radius: 5px;
+    background-color: powderblue;
+}
+
+#fixed-repo {
+    width: 40px;
+    border-radius: 5px;
+    background-color:tomato;
+
+}

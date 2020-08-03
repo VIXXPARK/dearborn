@@ -1,0 +1,19 @@
+.container-detail {
+    width:90%;
+    margin: 3rem auto;
+    background-color: gray;
+    border-radius: 7px;
+}
+
+.detail-header {
+    text-align: center;
+    font-size: 2rem;
+    padding: 1rem;
+    margin: 5rem 2rem 0rem 2rem;
+    border-bottom: black dashed 1px;
+}
+
+.detail-span{
+    text-align: end;
+    margin-right:2rem;
+}
