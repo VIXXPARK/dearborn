@@ -7,7 +7,7 @@ import './Sections/Vote.css'
 function LandingPageVote(props) {
 
     useEffect(() => {
-        axios.get('/api/')
+        axios.get('/api/user/')
         .then(response => {
             console.log(response)
         })
