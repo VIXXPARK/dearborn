@@ -20,14 +20,23 @@
 #     'delete':'destroy',
 # })
 
-from rest_framework import generics
-from . import models
-from . import serializers
+# from rest_framework import generics
+# from . import models
+# form . import serializers
 
-class UserList(generics.ListAPIView):
-    queryset = models.User.objects.all()
-    serializer_class = serializers.ProfileSerializer
+# class UserList(generics.ListAPIView):
+#     queryset = models.User.objects.all()
+#     serializer_class = serializers.ProfileSerializer
 
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.User.objects.all()
-    serializer_class = serializers.ProfileSerializer
+# class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = models.User.objects.all()
+#     serializer_class = serializers.
+
+from rest_framework import viewsets
+from .models import User
+from .serializers import ProfileSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = ProfileSerializer
+
