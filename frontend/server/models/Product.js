@@ -12,6 +12,10 @@ const productSchema = mongoose.Schema({
         maxlength : 50,
         text : true,
     },
+    images : {
+        type : Array,
+        default : [],
+    },
     content : {
         type : String
     },

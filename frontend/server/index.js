@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(cookieParser())
 
+
 app.use('/api/user', require('./routes/user'))
 app.use('/api/product', require('./routes/product'))
 
