@@ -35,8 +35,10 @@
 from rest_framework import viewsets
 from .models import User
 from .serializers import ProfileSerializer
+#from rest_framework.permissions import IsAuthenticated #about auth
 
 class UserViewSet(viewsets.ModelViewSet):
+    #permission_classes = (IsAuthenticated,) #about auth
     queryset = User.objects.all()
     serializer_class = ProfileSerializer
 
