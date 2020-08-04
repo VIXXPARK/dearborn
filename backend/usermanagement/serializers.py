@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Profile
+from .models import User
 
 class ProfileSerializer(ModelSerializer):
     class Meta:
-        model = Profile
+        model = User
         fields='__all__'
