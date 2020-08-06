@@ -32,7 +32,6 @@ function App() {
           <Route exact path='/login' component={Auth(LoginPage, false)}/>
           <Route exact path='/register' component={Auth(RegisterPage, false)}/>
           <Route exact path='/upload' component={Auth(UploadVotePage, true)}/>
-          <Route exact path='/test' component={TestingPage}/>
         </Switch>
       </div>
       <Route path="^/(?!.*(/login|/register)).*$" component={Footer}/>

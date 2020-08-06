@@ -9,7 +9,6 @@ const {Product} =require('../models/Product')
 
 var storage = multer.diskStorage({
     destination: (req, file, cb)=> {
-        
         cb(null, `server/uploads/`)
       },
     filename : (req, file, cb) => {
@@ -24,11 +23,19 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({storage : storage})
+var upload = multer({storage : storage}).array('files')
 
-router.post('/uploadImages', upload.array('files'))
 router.post('/uploadImages', (req, res) => {
-    console.log(req.files)
+  console.log(req)
+  /*
+  mkdirp(`/server/uploads/${}`)
+  */
+  /*
+    upload(req, res, err => {
+      if(err) return res.status(400).json({success: false, err})
+      
+    })
+  */
 })
 
 module.exports = router

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import {Form, Input, Upload, Button} from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios'
-
+import { useSelector } from 'react-redux';
 import Modal from 'antd/lib/modal/Modal';
 
 import {PRODUCT_SERVER} from '../../Config'
@@ -12,6 +12,7 @@ const {TextArea} = Input
 
 
 function UploadVotePage(props) {
+
     //upload
     const [PreviewVisible, setPreviewVisible] = useState(false)
     const [PreviewImage, setPreviewImage] = useState('')
@@ -21,6 +22,7 @@ function UploadVotePage(props) {
     //other
     const [Title, setTitle] = useState("")
     const [Content, setContent] = useState("")
+    
 
     //upload
     const getBase64 = (file) => {
@@ -30,9 +32,9 @@ function UploadVotePage(props) {
           reader.onload = () => resolve(reader.result);
           reader.onerror = error => reject(error);
         });
-
     }
 
+    let user = useSelector(state => state.user)
     const onFinish = (values) => {
         let formData = new FormData()
         const config = {
@@ -41,6 +43,7 @@ function UploadVotePage(props) {
         console.log(FileList)
         FileList.forEach(file => formData.append('files', file))
 
+        formData.append('nickname', user.userData.nickname)
         axios.post('/api/product/uploadImages', formData, config)
         .then(response => {
             console.log(response.data)
