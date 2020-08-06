@@ -6,29 +6,29 @@ const mkdirp = require('mkdirp')
 const {auth} = require('../middleware/auth')
 
 const {Product} =require('../models/Product')
-/*
+
 var storage = multer.diskStorage({
     destination: (req, file, cb)=> {
         
-        cb(null, `uploads/`)
+        cb(null, `server/uploads/`)
       },
-      filename: (req, file, cb) => {
-        cb(null, `${Date.now()}_${file.name}`)
-      },
-      fileFilter: (req, file, cb) => {
-   
-          const ext = path.extname(file.name)
-          if(ext !== '.jpg' || ext !== '.png' || ext !== '.gif'){
-              return cb(res.status(400).end('only jpg, png, gif are allowed'), false);
-          }
-          cb(null, true)
-        }
+    filename : (req, file, cb) => {
+      cb(null, `${Date.now()}_${file.originalname}`)
+    },
+    fileFilter : (req, file, cb) => {
+      const ext = path.extname(file.originalname)
+      if(ext !== '.jpt' || ext !=='.png'){
+        return cb(res.status(400).end('only jpg, png are allowed'), false)
+      }
+      cb(null, true)
+    }
 })
 
-var upload = multer({storage : storage}).single("file")
-*/
-router.post('/uploadImage', (req, res) => {
-    console.log()
+var upload = multer({storage : storage})
+
+router.post('/uploadImages', upload.array('files'))
+router.post('/uploadImages', (req, res) => {
+    console.log(req.files)
 })
 
 module.exports = router

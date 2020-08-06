@@ -36,11 +36,12 @@ function UploadVotePage(props) {
     const onFinish = (values) => {
         let formData = new FormData()
         const config = {
-            header : {'content-type' : 'multipart/form-data'}
+            header : {'Content-Type' : 'multipart/form-data'}
         }
-        FileList.forEach(file => formData.append('files', file.originFileObj))
+        console.log(FileList)
+        FileList.forEach(file => formData.append('files', file))
 
-        axios.post('/api/product/uploadImage', formData, config)
+        axios.post('/api/product/uploadImages', formData, config)
         .then(response => {
             console.log(response.data)
         })
@@ -63,14 +64,13 @@ function UploadVotePage(props) {
         setPreviewVisible(true)
         setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/')+1))
     }
-
-    const handleChange = ({fileList}) => {
-        setFileList(fileList)
-        console.log('2')
-        console.log(FileList)
-    }
-
     const handleCancel = () => setPreviewVisible(false)
+
+    const onBeforeUpload = (file) => {
+        console.log(file)
+        setFileList(FileList.concat(file))
+        return false
+    }
 
     const uploadButton = (
         <div>
@@ -101,10 +101,11 @@ function UploadVotePage(props) {
                     />
                 </Form.Item>
                 <Upload
+                    action="/api/product/uploadImage"
                     listType="picture-card"
                     fileList={FileList}
+                    beforeUpload={onBeforeUpload}
                     onPreview={handlePreview}
-                    onChange={handleChange}
                 >
                     {FileList.length >= 8 ? null : uploadButton}
                 </Upload>
