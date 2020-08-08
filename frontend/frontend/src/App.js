@@ -17,7 +17,6 @@ import LoginPage from './components/views/LoginPage/LoginPage'
 import RegisterPage from './components/views/RegisterPage/RegisterPage'
 import VoteDetailPage from './components/views/DetailPage/VoteDetailPage'
 import UploadVotePage from './components/views/UploadPage/UploadVotePage'
-import TestingPage from './components/views/TestingPage'
 
 function App() {
   return (

@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 
-import {Form, Input, Upload, Button} from 'antd'
+import {Form, Input, Upload, Button, Descriptions} from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios'
-import { useSelector } from 'react-redux';
 import Modal from 'antd/lib/modal/Modal';
-
-import {PRODUCT_SERVER} from '../../Config'
 
 const {TextArea} = Input
 
@@ -20,11 +17,12 @@ function UploadVotePage(props) {
     const [PreviewTitle, setPreviewTitle] = useState('')
     
     //other
-    const [Title, setTitle] = useState("")
-    const [Content, setContent] = useState("")
+
     
 
     //upload
+
+
     const getBase64 = (file) => {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -33,48 +31,71 @@ function UploadVotePage(props) {
           reader.onerror = error => reject(error);
         });
     }
-
-    let user = useSelector(state => state.user)
     const onFinish = (values) => {
         let formData = new FormData()
         const config = {
             header : {'Content-Type' : 'multipart/form-data'}
         }
         console.log(FileList)
-        FileList.forEach(file => formData.append('files', file))
+        FileList.forEach(file => formData.append('files', file.originFileObj))
 
-        formData.append('nickname', user.userData.nickname)
+
         axios.post('/api/product/uploadImages', formData, config)
         .then(response => {
-            console.log(response.data)
-        })
+            if(!response.data.success)
+                return alert("이미지 업로드 실패")
+            else{
+                var temp = response.data.images
+                var tempArray = temp.slice(0, temp.length-2).split("&&")
+                
+                const variables = {
+                    writer : props.user.userData._id,
+                    title : values.title,
+                    content : values.content,
+                    images : tempArray
+                }
 
-        const variable = {
-            values:values,
-            fileList : FileList,
-        }
-        console.log(variable)
+
+                axios.post('/api/product/uploadProduct', variables)
+                .then(response => {
+                    if(response.data.success)
+                    {
+                        alert('성공')
+                        props.history.push('/')
+                    }
+                    else{
+                        return alert('페이지 업로드 실패')
+                    }
+                })
+
+            }
+        })
 
     }
 
     const handlePreview = async (file) => {
-        if(!file.url && !file.preview){
+        if(!file.preview){
             file.preview = await getBase64(file.originFileObj)
-        }else{
-            return alert('파일 오류')
         }
         setPreviewImage(file.url || file.preview)
         setPreviewVisible(true)
         setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/')+1))
     }
-    const handleCancel = () => setPreviewVisible(false)
 
-    const onBeforeUpload = (file) => {
-        console.log(file)
-        setFileList(FileList.concat(file))
-        return false
+    const handleRemove = (file) =>{
+        const index = FileList.indexOf(file)
+        const newFileList = FileList.slice()
+        newFileList.splice(index, 1)
+
+        setFileList(newFileList)
     }
 
+    const handleCancel = () => setPreviewVisible(false)
+
+    const handleChange = (info) => {
+        setFileList(info.fileList)
+    }
+    
     const uploadButton = (
         <div>
           <PlusOutlined />
@@ -84,13 +105,6 @@ function UploadVotePage(props) {
 
     //other
 
-    const onTitleChange = (e) =>{
-        setTitle(e.currentTarget.value)
-    }
-
-    const onContentChange = (e) => {
-        setContent(e.currentTarget.value)
-    }
 
     return (
         <div style={{}}>
@@ -104,11 +118,11 @@ function UploadVotePage(props) {
                     />
                 </Form.Item>
                 <Upload
-                    action="/api/product/uploadImage"
                     listType="picture-card"
                     fileList={FileList}
-                    beforeUpload={onBeforeUpload}
                     onPreview={handlePreview}
+                    onRemove={handleRemove}
+                    onChange={handleChange}
                 >
                     {FileList.length >= 8 ? null : uploadButton}
                 </Upload>
