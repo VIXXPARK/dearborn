@@ -1,44 +1,39 @@
-# from django.shortcuts import render
-# from rest_framework.viewsets import ReadOnlyModelViewSet,ModelViewSet
-# from .models import Profile
-# from .serializers import ProfileSerializer
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import  Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.status import(
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_200_OK,
+)
 
-# class ProfileViewSet(ModelViewSet):
-#     queryset = Profile.objects.all()
-#     serializer_class = ProfileSerializer
+from .serializers import UserSerializer, UserSigninSerializer
+from .authentication import token_expire_handler, expires_in
 
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def signin(request):
+    signin_serializer = UserSigninSerializer(data = request.data)
+    if not signin_serializer.is_valid():
+        return Response(signin_serializer.errors, status = HTTP_400_BAD_REQUEST)
+    
+    user = authenticate(
+        username = signin_serializer.data['username'],
+        password = signin_serializer.data['password'],
+    )
+    if not user:
+        return Response({'detail': 'Invalid Credentials or activate account'}status = HTTP_404_NOT_FOUND)
+    
+    token, _ = Token.objects.get_or_create(user = user)
+    
 
-# profile_list = ProfileViewSet.as_view({
-#     'get':'list',
-#     'post':'create',
-# })
+    is_expired, token = token_expire_handler(token)
+    user_serialized = UserSerializer(user)
 
-# profile_detail = ProfileViewSet.as_view({
-#     'get':'retrieve',
-#     'put':'update',
-#     'patch':'partial_update',
-#     'delete':'destroy',
-# })
-
-# from rest_framework import generics
-# from . import models
-# form . import serializers
-
-# class UserList(generics.ListAPIView):
-#     queryset = models.User.objects.all()
-#     serializer_class = serializers.ProfileSerializer
-
-# class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = models.User.objects.all()
-#     serializer_class = serializers.
-
-from rest_framework import viewsets
-from .models import User
-from .serializers import ProfileSerializer
-#from rest_framework.permissions import IsAuthenticated #about auth
-
-class UserViewSet(viewsets.ModelViewSet):
-    #permission_classes = (IsAuthenticated,) #about auth
-    queryset = User.objects.all()
-    serializer_class = ProfileSerializer
-
+    return Response({
+        'user' : user_serialized.data,
+        'expires_in': expires_in(token),
+        'token': token.key,
+    }, status=HTTP_200_OK)

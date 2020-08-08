@@ -133,8 +133,11 @@ AUTH_USER_MODEL = 'usermanagement.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'usermanagement.ExpiringTokenAuthentication',
+    ]
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+TOKEN_EXPIRED_AFTER_SECONDS = 86400
