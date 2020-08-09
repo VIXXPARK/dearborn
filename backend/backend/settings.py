@@ -79,6 +79,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -89,6 +90,15 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
 
 
 # Password validation
@@ -133,11 +143,11 @@ AUTH_USER_MODEL = 'usermanagement.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'usermanagement.ExpiringTokenAuthentication',
-    ]
+        'usermanagement.authentication.ExpiringTokenAuthentication',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
 }
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
