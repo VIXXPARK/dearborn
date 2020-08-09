@@ -21,6 +21,7 @@ import UploadVotePage from './components/views/UploadPage/UploadVotePage'
 function App() {
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
+    
     <Router>
       <Route path={ new RegExp("^(?!.*(/register|/login)).*$") } component={NavBar}/>
       <Route path={ new RegExp("^(?!.*(/register|/login)).*$") } component={FixedBar}/>
@@ -32,6 +33,7 @@ function App() {
           <Route exact path='/register' component={Auth(RegisterPage, false)}/>
           <Route exact path='/upload' component={Auth(UploadVotePage, true)}/>
         </Switch>
+        <Route path="/detail" component={Auth(VoteDetailPage, true)}/>
       </div>
       <Route path="^/(?!.*(/login|/register)).*$" component={Footer}/>
     </Router>

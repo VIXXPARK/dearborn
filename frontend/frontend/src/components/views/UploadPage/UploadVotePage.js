@@ -36,7 +36,6 @@ function UploadVotePage(props) {
         const config = {
             header : {'Content-Type' : 'multipart/form-data'}
         }
-        console.log(FileList)
         FileList.forEach(file => formData.append('files', file.originFileObj))
 
 
@@ -48,7 +47,7 @@ function UploadVotePage(props) {
                 var temp = response.data.images
                 var tempArray = temp.slice(0, temp.length-2).split("&&")
                 
-                const variables = {
+                const posts = {
                     writer : props.user.userData._id,
                     title : values.title,
                     content : values.content,
@@ -56,7 +55,7 @@ function UploadVotePage(props) {
                 }
 
 
-                axios.post('/api/product/uploadProduct', variables)
+                axios.post('/api/product/uploadProduct', posts)
                 .then(response => {
                     if(response.data.success)
                     {
