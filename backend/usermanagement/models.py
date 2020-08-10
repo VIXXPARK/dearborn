@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from backend import settings
+import uuid
 
 class MyUserManager(BaseUserManager):
     use_in_migrations = True
@@ -34,6 +35,9 @@ class MyUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    def make_uuid():
+        return str(uuid.uuid4())
+
     JOB_CHOICES = (
         ('1','무관'),
         ('2','학생'),
@@ -47,7 +51,8 @@ class User(AbstractUser):
         ('5','신발'),
         ('6','악세사리'),
     )
-    nickname = models.CharField(max_length=50)
+    id = models.CharField(editable=False, max_length=36, db_index=True, unique=True, default=make_uuid, primary_key=True)
+    nickname = models.CharField(max_length=50, unique=True)
     profileImage = models.ImageField(blank=True)
     job = models.CharField(max_length=100,choices=JOB_CHOICES)
     major = models.CharField(max_length=20,choices=MAJOR_CHOICES)
@@ -56,6 +61,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = MyUserManager
+
 
     def set_email(self, email):
         self.email = email
@@ -68,3 +74,6 @@ class User(AbstractUser):
 
     def set_nickname(self, nickname):
         self.nickname = nickname
+
+    def get_id(self):
+        return self.id

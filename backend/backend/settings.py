@@ -80,6 +80,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -90,15 +91,6 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-"""
 
 
 # Password validation
@@ -151,3 +143,8 @@ REST_FRAMEWORK = {
 }
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
+
+# AUTHENTICATION_BACKENDS = [
+#     'backend.usermanagement.authentication.SettingsBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# ]

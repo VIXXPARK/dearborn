@@ -27,6 +27,7 @@ function LoginPage(props) {
             console.log(data)
             dispatch(loginUser(data))
             .then(response =>{
+                console.log(response.payload)
                 if(response.payload.success){
                     window.localStorage.setItem('userId', response.payload.userId)
                     if(RememberEmail){

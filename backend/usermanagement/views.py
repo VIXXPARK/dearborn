@@ -1,4 +1,3 @@
-from .authentication import SettingsBackend
 from rest_framework.authtoken.models import  Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -8,10 +7,12 @@ from rest_framework.status import(
     HTTP_404_NOT_FOUND,
     HTTP_200_OK,
     HTTP_201_CREATED,
+    HTTP_502_BAD_GATEWAY
 )
 
 from .serializers import UserSerializer, UserSigninSerializer
 from .authentication import token_expire_handler, expires_in
+from django.contrib.auth import authenticate
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -20,14 +21,16 @@ def signin(request):
     if not signin_serializer.is_valid():
         return Response(signin_serializer.errors, status = HTTP_400_BAD_REQUEST)
     
-    temp = SettingsBackend()
-    user = temp.authenticate(
-        request = request,
-        email = signin_serializer.data['email'],
-        password = signin_serializer.data['password'],
-    )
+    try:
+        user = authenticate(
+            request = request,
+            email = signin_serializer.validated_data['email'],
+            password = signin_serializer.validated_data['password'],
+        )
+    except:
+        return Response({'message': 'Invalid Password'}, status=HTTP_502_BAD_GATEWAY)
     if not user:
-        return Response({'detail': 'Invalid Credentials or activate account'}, status = HTTP_404_NOT_FOUND)
+        return Response({'message': 'Invalid Credentials or activate account'}, status = HTTP_404_NOT_FOUND)
     
     token, _ = Token.objects.get_or_create(user = user)
     
@@ -36,9 +39,8 @@ def signin(request):
     user_serialized = UserSerializer(user)
 
     return Response({
-        'user' : user_serialized.data,
-        'expires_in': expires_in(token),
-        'token': token.key,
+        'success' : True,
+        'userId' : user.get_id(),
     }, status=HTTP_200_OK)
 
 @api_view(["POST"])
