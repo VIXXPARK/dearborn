@@ -4,16 +4,13 @@ from backend import settings
 import uuid
 
 class MyUserManager(BaseUserManager):
-    use_in_migrations = True
     def _create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
         email = self.normalize_email(email)
         user = User()
         user.set_email(email)
-        user.set_nickname(extra_fields['nickname'])
-        user.set_major(extra_fields['major'])
-        user.set_job(extra_fields['job'])
+        user.set_extra(job = extra_fields['job'], major = extra_fields['major'], nickname = extra_fields['nickname'], is_staff = extra_fields['is_staff'], is_superuser = extra_fields['is_superuser'])
         user.set_password(password)
         user.save(using = self._db)
         return user
@@ -26,12 +23,12 @@ class MyUserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff = True')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser = True')
         return self._create_user(email, password, **extra_fields)
+
 
 
 class User(AbstractUser):
@@ -59,21 +56,20 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     username = None
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['nickname', 'job', 'major']
     objects = MyUserManager
+    object = MyUserManager()
 
 
     def set_email(self, email):
         self.email = email
 
-    def set_major(self, major):
-        self.major = major
-
-    def set_job(self, job):
-        self.job = job
-
-    def set_nickname(self, nickname):
-        self.nickname = nickname
-
     def get_id(self):
         return self.id
+    def set_extra(self, **extra_fields):
+        self.is_staff = extra_fields['is_staff']
+        self.is_superuser = extra_fields['is_superuser']
+        self.major = extra_fields['major']
+        self.job = extra_fields['job']
+        self.nickname = extra_fields['nickname']
+

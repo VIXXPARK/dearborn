@@ -144,7 +144,3 @@ REST_FRAMEWORK = {
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
 
-# AUTHENTICATION_BACKENDS = [
-#     'backend.usermanagement.authentication.SettingsBackend',
-#     'django.contrib.auth.backends.ModelBackend',
-# ]
