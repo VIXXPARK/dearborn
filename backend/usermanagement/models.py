@@ -60,13 +60,12 @@ class User(AbstractUser):
     objects = MyUserManager
     object = MyUserManager()
 
-
     def set_email(self, email):
         self.email = email
 
     def get_id(self):
         return self.id
-        
+
     def set_extra(self, **extra_fields):
         self.is_staff = extra_fields['is_staff']
         self.is_superuser = extra_fields['is_superuser']
@@ -74,3 +73,5 @@ class User(AbstractUser):
         self.job = extra_fields['job']
         self.nickname = extra_fields['nickname']
 
+    class Meta:
+        ordering = ['nickname']
