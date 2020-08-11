@@ -66,6 +66,7 @@ class User(AbstractUser):
 
     def get_id(self):
         return self.id
+        
     def set_extra(self, **extra_fields):
         self.is_staff = extra_fields['is_staff']
         self.is_superuser = extra_fields['is_superuser']
