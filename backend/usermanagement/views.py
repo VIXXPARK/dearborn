@@ -13,6 +13,7 @@ from rest_framework.status import(
 from .serializers import UserSerializer, UserSigninSerializer
 from .authentication import token_expire_handler, expires_in
 from django.contrib.auth import authenticate
+from django.core.cache import cache
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -33,15 +34,17 @@ def signin(request):
         return Response({'message': 'Invalid Credentials or activate account'}, status = HTTP_404_NOT_FOUND)
     
     token, _ = Token.objects.get_or_create(user = user)
-    
 
     is_expired, token = token_expire_handler(token)
     user_serialized = UserSerializer(user)
 
-    return Response({
+    response = Response({
         'success' : True,
         'userId' : user.get_id(),
     }, status=HTTP_200_OK)
+
+    response.set_cookie('w_auth',token)
+    return response
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))

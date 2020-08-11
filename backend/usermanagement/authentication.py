@@ -8,8 +8,6 @@ from django.conf import settings
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth import get_user_model
 
-
-
 def expires_in(token):
     time_elapsed = timezone.now() - token.created
     left_time = timedelta(seconds = settings.TOKEN_EXPIRED_AFTER_SECONDS) - time_elapsed
