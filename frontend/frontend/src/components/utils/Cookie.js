@@ -1,4 +1,4 @@
-const getCookieValue = (key) => {
+export const getCookieValue = (key) => {
     let cookieKey = key + "="; 
     let result = "";
     const cookieArr = document.cookie.split(";");

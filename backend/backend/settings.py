@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'usermanagement.apps.UsermanagementConfig',
+    'post.apps.PostConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -143,3 +145,6 @@ REST_FRAMEWORK = {
 }
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

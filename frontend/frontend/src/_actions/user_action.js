@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {getCookieValue} from '../components/utils/Cookie'
 
 import {
     REGISTER_USER,
@@ -31,23 +32,6 @@ export function loginUser(data){
 }
 
 export function auth(){
-    const getCookieValue = (key) => {
-        let cookieKey = key + "="; 
-        let result = "";
-        const cookieArr = document.cookie.split(";");
-        
-        for(let i = 0; i < cookieArr.length; i++) {
-          if(cookieArr[i][0] === " ") {
-            cookieArr[i] = cookieArr[i].substring(1);
-          }
-          
-          if(cookieArr[i].indexOf(cookieKey) === 0) {
-            result = cookieArr[i].slice(cookieKey.length, cookieArr[i].length);
-            return result;
-          }
-        }
-        return result;
-    }
     const config = {
         headers : {
             Authorization: `Token ${getCookieValue('w_auth')}`
