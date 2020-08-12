@@ -18,9 +18,10 @@ import RegisterPage from './components/views/RegisterPage/RegisterPage'
 import VoteDetailPage from './components/views/DetailPage/VoteDetailPage'
 import UploadVotePage from './components/views/UploadPage/UploadVotePage'
 
-function App() {
+function App(props) {
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
+    
     <Router>
       <Route path={ new RegExp("^(?!.*(/register|/login)).*$") } component={NavBar}/>
       <Route path={ new RegExp("^(?!.*(/register|/login)).*$") } component={FixedBar}/>
@@ -33,6 +34,7 @@ function App() {
           <Route exact path='/upload' component={Auth(UploadVotePage, true)}/>
         </Switch>
       </div>
+      <Route path="/" component={Auth(VoteDetailPage, null)}/>
       <Route path="^/(?!.*(/login|/register)).*$" component={Footer}/>
     </Router>
     </Suspense>

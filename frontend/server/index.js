@@ -25,8 +25,11 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(cookieParser())
 
+app.use('/uploads', express.static('uploads'))
+
 app.use('/api/user', require('./routes/user'))
-app.use('/api/product', require('./routes/product'))
+app.use('/api/post', require('./routes/post'))
+app.use('/api/vote', require('./routes/vote'))
 
 
 app.listen(PORT, ()=>{

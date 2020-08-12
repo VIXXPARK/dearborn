@@ -5,15 +5,20 @@ import MenCategory from './Sections/MenCategory';
 import WomenCategory from './Sections/WomenCategory';
 import { useSelector } from 'react-redux';
 import Axios from 'axios';
+import {useDispatch} from 'react-redux'
 import {USER_SERVER} from '../../Config'
 
+import {logoutUser} from '../../../_actions/user_action'
+
 function NavBar(props) {
+
+    const dispatch = useDispatch()
 
     const user = useSelector(state => state.user)
 
     const logoutHandler = () =>{
-        Axios.get(`${USER_SERVER}/logout`).then(response => {
-            if(response.status === 200){
+        dispatch(logoutUser()).then(response =>{
+            if(response.payload.success){
                 props.history.push('/login')
             }else{
                 alert('logout Failed')
