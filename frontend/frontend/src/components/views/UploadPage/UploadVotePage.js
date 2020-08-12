@@ -34,18 +34,17 @@ function UploadVotePage(props) {
     const onFinish = (values) => {
         let formData = new FormData()
         const config = {
-            headers : 
-            {
-                'Content-Type' : 'multipart/form-data',
-                Authorization: `Token ${getCookieValue('w_auth')}`
-            }
+            // headers : 
+            // {
+            //     'Content-Type' : 'multipart/form-data',
+            //     Authorization: `Token ${getCookieValue('w_auth')}`
+            // }
         }
-        FileList.forEach(file => formData.append('files', file.originFileObj))
-        formData.append('writer', props.user.userData._id)
+        FileList.forEach(file => formData.append('image', file.originFileObj))
+        formData.append('user', props.user.userData._id)
         formData.append('title', values.title)
         formData.append('content', values.content)
-
-        axios.post('/api/post/uploadPost', formData, config)
+        axios.post('/api/post/uploadPost/', formData, config)
         .then(response => {
             if(response.data.success){
                 alert('성공')
