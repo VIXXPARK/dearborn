@@ -66,7 +66,6 @@ def signup(request):
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 class UserView(APIView):
-
     def get(self, request, format=None):
         user = request.user
         content = {
