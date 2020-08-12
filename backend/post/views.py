@@ -14,7 +14,7 @@ from rest_framework.status import(
     HTTP_502_BAD_GATEWAY
 )
 class PostViewSet(ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    # permission_classes = (permissions.AllowAny,)
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     parser_classes = (MultiPartParser,FormParser)
