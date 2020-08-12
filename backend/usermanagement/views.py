@@ -41,7 +41,8 @@ def signin(request):
         return Response({'message': 'Invalid Credentials or activate account'}, status = HTTP_404_NOT_FOUND)
     
     
-    token = Token.objects.get_or_create(user = user)
+    result = Token.objects.get_or_create(user = user)
+    token = result[0]
 
     is_expired, token = token_expire_handler(token)
     user_serialized = UserSerializer(user)
