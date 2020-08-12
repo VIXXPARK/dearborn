@@ -2,12 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import ModalApp from './ModalApp'
 import * as serviceWorker from './serviceWorker';
 
 import Reducer from './_reducers'
 import {Provider} from 'react-redux'
-import {BrowserRouter} from 'react-router-dom'
+import {BrowserRouter, Router} from 'react-router-dom'
 import { applyMiddleware, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise'
 import ReduxThunk from 'redux-thunk'
@@ -27,20 +26,6 @@ ReactDOM.render(
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')
-);
-
-ReactDOM.render(
-  <Provider
-    store={createStoreWithMiddleware(
-      Reducer,
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__()
-    )}>
-    <BrowserRouter>
-      <ModalApp/>
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById('modal_root')
 );
 
 // If you want your app to work offline and load faster, you can change

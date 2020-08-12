@@ -39,7 +39,7 @@ function UploadVotePage(props) {
         FileList.forEach(file => formData.append('files', file.originFileObj))
 
 
-        axios.post('/api/product/uploadImages', formData, config)
+        axios.post('/api/post/uploadImages', formData, config)
         .then(response => {
             if(!response.data.success)
                 return alert("이미지 업로드 실패")
@@ -55,7 +55,7 @@ function UploadVotePage(props) {
                 }
 
 
-                axios.post('/api/product/uploadProduct', posts)
+                axios.post('/api/post/uploadPost', posts)
                 .then(response => {
                     if(response.data.success)
                     {

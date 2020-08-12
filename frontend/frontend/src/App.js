@@ -18,7 +18,7 @@ import RegisterPage from './components/views/RegisterPage/RegisterPage'
 import VoteDetailPage from './components/views/DetailPage/VoteDetailPage'
 import UploadVotePage from './components/views/UploadPage/UploadVotePage'
 
-function App() {
+function App(props) {
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
     
@@ -33,8 +33,8 @@ function App() {
           <Route exact path='/register' component={Auth(RegisterPage, false)}/>
           <Route exact path='/upload' component={Auth(UploadVotePage, true)}/>
         </Switch>
-        <Route path="/detail" component={Auth(VoteDetailPage, true)}/>
       </div>
+      <Route path="/" component={Auth(VoteDetailPage, null)}/>
       <Route path="^/(?!.*(/login|/register)).*$" component={Footer}/>
     </Router>
     </Suspense>

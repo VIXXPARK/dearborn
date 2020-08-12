@@ -11,7 +11,6 @@ router.get('/auth', auth, (req, res)=>{
         isAuth:true,
         email:req.user.email,
         nickname:req.user.nickname,
-        
     })
 })
 

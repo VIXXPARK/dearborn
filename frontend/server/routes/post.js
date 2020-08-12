@@ -5,7 +5,7 @@ const mkdirp = require('mkdirp')
 
 const {auth} = require('../middleware/auth')
 
-const {Product} =require('../models/Product')
+const {Post} =require('../models/Post')
 
 var storage = multer.diskStorage({
     destination: (req, file, cb)=> {
@@ -38,29 +38,33 @@ router.post('/uploadImages', (req, res) => {
     })
 })
 
-router.post('/uploadProduct', (req, res)=> {
-  const product = new Product(req.body)
+router.post('/uploadPost', (req, res)=> {
+  const post = new Post(req.body)
   
-  product.save((err)=>{
+  post.save((err)=>{
     if(err) return res.status(400).json({success:false, err})
     return res.status(200).json({success : true})
   })
 })
 
-router.get('/getProducts', (req, res) => {
+router.get('/getPosts', (req, res) => {
 
   let order = req.body.order ? req.body.order : "desc"
   let sortBy = req.body.sortBy ? req.body.sortBy : "createdAt"
 
-  Product.find()
+  Post.find()
   .sort([[sortBy, order]])
-  .exec((err, products) => {
+  .exec((err, posts) => {
     if(err){
       console.log(err)
       return res.status(400).json({success:false, err})
     }
-    return res.status(200).json({success:true, products})
+    return res.status(200).json({success:true, posts})
   })
+})
+
+router.get('/voting', (req, res)=> {
+  Post.find
 })
 
 module.exports = router
