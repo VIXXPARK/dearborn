@@ -8,8 +8,3 @@ class Post(models.Model):
 class PostImage(models.Model):
    post = models.ForeignKey(Post, on_delete=models.CASCADE)
    image = models.ImageField(upload_to="images/")
-
-class Comment(models.Model):
-   post = models.ForeignKey(Post,on_delete=models.CASCADE)
-   chat = models.TextField()
-
