@@ -26,7 +26,8 @@ class PostViewSet(ModelViewSet):
         instance = response.data
         return Response({'success': True})
     
-class PostImageViewSet(ListAPIView):    
+class PostImageViewSet(ListAPIView):
+    queryset = PostImage.objects.all()
     serializer_class = PostImageSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -36,29 +37,10 @@ class PostImageViewSet(ListAPIView):
 
     def get(self,request):
         try:
-            queryset = PostImage.objects.all()
-            postIterator = queryset.iterator()
-
-            # try:
-            #     first_atom = next(postIterator)
-            # except StopIteration:
-            #     pass
-            # else:
-            #     from itertools import chain
-            #     images = list()
-            #     for post in chain([first_atom], postIterator):
-            #         images.append(post.image)
-
-            if queryset.exists():
-                images = []
-                for posts in queryset.iterator():
-                    images.append(posts)
-            if not images.count:
-                return Response({'message': "No Images"}, status=HTTP_404_NOT_FOUND)
-
+            data=PostImageSerializer(self.get_queryset(),many=True).data
             context={
-                'success': True,
-                'posts':images,
+                'success':True,
+                'data':data
             }
             return Response(context,status=HTTP_200_OK)
         except Exception as error:
@@ -79,9 +61,10 @@ class PostList(ListAPIView):
     def get(self,request):
         try:
             data=PostSerializer(self.get_queryset(),many=True).data
+            # data2 = PostImageSerializer(PostImage.get_queryset(),many=True).data
             context = {
                 'success':True,
-                'data':data
+                'data':data,
             }
             return Response(context,status=HTTP_200_OK)
         except Exception as error:

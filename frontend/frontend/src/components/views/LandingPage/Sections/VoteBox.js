@@ -12,11 +12,16 @@ function VoteBox(props) {
     const [Posts, setPosts] = useState([])
 
     useEffect(() => {
+<<<<<<< HEAD
         
         axios.get('/api/post/getPosts')
+=======
+        axios.get('/api/post/getPosts/image')
+>>>>>>> be7502fe5502e7d3d58b2a0cdf4bb77f3b1cb5d2
         .then(response => {
             if(response.data.success){
-                setPosts(response.data.posts)
+                setPosts(response.data.data)
+                console.log(response.data.data)
             }
         })
     }, [DetailVisible])
@@ -46,10 +51,10 @@ function VoteBox(props) {
         return (
             <>
             <Col className="item-vote" lg={8} md={12} xd={24}>
-                <img className="item-vote-img" src={`http://localhost:5000/${post.images[0]}`} alt/>
+                <img className="item-vote-img" src={`http://localhost:8000${post.image}`} alt/>
                 <div className="item-vote-show">
                     <div id="go-detail" >
-                        <Link to = {{pathname:'/', search:`?designer=${post.writer}`}}>자세히보기</Link>
+                        <Link to = {{pathname:'/', search:`?designer=${post.user}`}}>자세히보기</Link>
                     </div>
                     <Button id="button-vote" onClick={onVoteClick}>투표하기</Button>
                 </div>
@@ -57,7 +62,7 @@ function VoteBox(props) {
             </>
         )
     }
-    
+
     return (
         <>
         <div className="container-vote">
@@ -66,7 +71,7 @@ function VoteBox(props) {
             </div>
             <div className="container-vote-section">
                 <Row gutter={[16,16]}>
-                    {Posts.map(post => (
+                    {Posts&&Posts.map(post => (
                         renderCards(post)
                     ))}
                 </Row>
