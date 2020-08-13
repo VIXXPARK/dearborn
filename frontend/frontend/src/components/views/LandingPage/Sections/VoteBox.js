@@ -60,7 +60,6 @@ function VoteBox(props) {
     
     return (
         <>
-        
         <div className="container-vote">
             <div className="container-vote-header">
                 Let's Vote!!
