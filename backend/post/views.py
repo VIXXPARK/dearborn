@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
-from .serializers import PostSerializer
-from .models import Post
+from .serializers import PostSerializer,PostImageSerializer
+from .models import Post,PostImage
 from rest_framework import filters
 from rest_framework.generics import ListAPIView
 from rest_framework import permissions
@@ -26,7 +26,31 @@ class PostViewSet(ModelViewSet):
         instance = response.data
         return Response({'success': True})
     
-    
+class PostImageViewSet(ListAPIView):
+    queryset = PostImage.objects.all()
+    serializer_class = PostImageSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def get_queryset(self):
+        queryset = PostImage.objects.all()
+        return queryset
+
+    def get(self,request):
+        try:
+            data=PostImageSerializer(self.get_queryset(),many=True).data
+            context={
+                'success':True,
+                'data':data
+            }
+            return Response(context,status=HTTP_200_OK)
+        except Exception as error:
+            context = {
+                'error':str(error)
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
 class PostList(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = PostSerializer
@@ -37,9 +61,10 @@ class PostList(ListAPIView):
     def get(self,request):
         try:
             data=PostSerializer(self.get_queryset(),many=True).data
+            # data2 = PostImageSerializer(PostImage.get_queryset(),many=True).data
             context = {
                 'success':True,
-                'data':data
+                'data':data,
             }
             return Response(context,status=HTTP_200_OK)
         except Exception as error:
