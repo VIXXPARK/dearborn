@@ -47,7 +47,12 @@ export function auth(){
 }
 
 export function logoutUser(){
-    const request = axios.get(`${USER_SERVER}/logout`)
+    const config = {
+        headers : {
+            Authorization: `Token ${getCookieValue('w_auth')}`
+        }
+    }
+    const request = axios.get(`${USER_SERVER}/logout`, config)
     .then(response => response.data);
 
     return {
