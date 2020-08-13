@@ -11,16 +11,16 @@ from rest_framework.status import(
     HTTP_201_CREATED,
     HTTP_502_BAD_GATEWAY
 )
+
+from django.contrib.auth import authenticate, logout
+from django.core.cache import cache
+from django.db.models import F
 from .serializers import UserSerializer, UserSigninSerializer
 from .authentication import token_expire_handler, expires_in
-from django.contrib.auth import authenticate
-from django.core.cache import cache
 from .models import User
-from django.db.models import F
 from backend.settings import SECRET_KEY
-import jwt, json
 from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY
-
+import jwt, json
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -53,6 +53,13 @@ def signin(request):
     }, status=HTTP_200_OK)
 
     response.set_cookie('w_auth',token)
+    return response
+
+@api_view(["get"])
+def signout(request):
+    logout(request)
+    response = Response({'success' : True}, HTTP_200_OK)
+    response.delete_cookie('w_auth')
     return response
 
 @api_view(["POST"])

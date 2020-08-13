@@ -4,7 +4,7 @@ import {Form, Input, Upload, Button, Descriptions} from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import Modal from 'antd/lib/modal/Modal';
-
+import {getCookieValue} from '../../utils/Cookie'
 const {TextArea} = Input
 
 
@@ -34,39 +34,23 @@ function UploadVotePage(props) {
     const onFinish = (values) => {
         let formData = new FormData()
         const config = {
-            header : {'Content-Type' : 'multipart/form-data'}
+            // headers : 
+            // {
+            //     'Content-Type' : 'multipart/form-data',
+            //     Authorization: `Token ${getCookieValue('w_auth')}`
+            // }
         }
-        FileList.forEach(file => formData.append('files', file.originFileObj))
-
-
-        axios.post('/api/post/uploadImages', formData, config)
+        FileList.forEach(file => formData.append('image', file.originFileObj))
+        formData.append('user', props.user.userData._id)
+        formData.append('title', values.title)
+        formData.append('content', values.content)
+        axios.post('/api/post/uploadPost/', formData, config)
         .then(response => {
-            if(!response.data.success)
-                return alert("이미지 업로드 실패")
-            else{
-                var temp = response.data.images
-                var tempArray = temp.slice(0, temp.length-2).split("&&")
-                
-                const posts = {
-                    writer : props.user.userData._id,
-                    title : values.title,
-                    content : values.content,
-                    images : tempArray
-                }
-
-
-                axios.post('/api/post/uploadPost', posts)
-                .then(response => {
-                    if(response.data.success)
-                    {
-                        alert('성공')
-                        props.history.push('/')
-                    }
-                    else{
-                        return alert('페이지 업로드 실패')
-                    }
-                })
-
+            if(response.data.success){
+                alert('성공')
+                props.history.push('/')
+            }else{
+                return alert('페이지 업로드 실패')
             }
         })
 
