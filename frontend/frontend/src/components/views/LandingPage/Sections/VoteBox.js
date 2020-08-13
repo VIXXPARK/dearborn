@@ -12,6 +12,7 @@ function VoteBox(props) {
     const [Posts, setPosts] = useState([])
 
     useEffect(() => {
+        
         axios.get('/api/post/getPosts')
         .then(response => {
             if(response.data.success){
