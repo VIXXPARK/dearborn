@@ -9,15 +9,18 @@ const modalStyle = {
     backgroundColor: "white",
     color: "#FFF",
     fontSize: "40px",
+    opacity:'100%'
   };
 
 function Modal(props) {
     return createPortal(
+        <>
         <div style={{position:'fixed', top:0, bottom:0, left:0, right:0, backgroundColor:'gray', opacity:'70%'}} onClick={props.onClick}>
-            <div style={modalStyle}>
-                {props.children}
-            </div>
-        </div>,
+        </div>
+        <div style={modalStyle}>
+            {props.children}
+        </div>
+        </>,
     document.getElementById("modal_root")
     );
 }

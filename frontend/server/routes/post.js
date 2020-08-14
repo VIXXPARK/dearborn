@@ -6,6 +6,7 @@ const mkdirp = require('mkdirp')
 const {auth} = require('../middleware/auth')
 
 const {Post} =require('../models/Post')
+const {User} = require('../models/User')
 
 var storage = multer.diskStorage({
     destination: (req, file, cb)=> {
@@ -61,10 +62,6 @@ router.get('/getPosts', (req, res) => {
     }
     return res.status(200).json({success:true, posts})
   })
-})
-
-router.get('/voting', (req, res)=> {
-  Post.find
 })
 
 module.exports = router

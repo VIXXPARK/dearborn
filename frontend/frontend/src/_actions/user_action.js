@@ -8,6 +8,8 @@ import {
     
 } from './types'
 
+import {getCookieValue} from '../components/utils/Cookie'
+
 import {USER_SERVER} from '../components/Config'
 
 export function registerUser(data){
@@ -31,7 +33,12 @@ export function loginUser(data){
 }
 
 export function auth(){
-    const request = axios.get(`${USER_SERVER}/auth`)
+    const config = {
+        headers : {
+            Authorization: `Token ${getCookieValue('w_auth')}`
+        }
+    }
+    const request = axios.get(`${USER_SERVER}/auth`, config)
         .then(response => response.data)
 
     return{
