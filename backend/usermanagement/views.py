@@ -12,15 +12,27 @@ from rest_framework.status import(
     HTTP_502_BAD_GATEWAY
 )
 
+from django.shortcuts import redirect
+from django.views import View
 from django.contrib.auth import authenticate, logout
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
+from django.core.mail import EmailMessage
+from django.core.exceptions import ValidationError
 from django.db.models import F
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+
 from .serializers import UserSerializer, UserSigninSerializer
 from .authentication import token_expire_handler, expires_in
 from .models import User
+from .token import account_activation_token
+from .text import message
 from backend.settings import SECRET_KEY
 from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY
+from backend.my_settings import EMAIL
 import jwt, json
+
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -68,8 +80,22 @@ def signup(request):
     signup_serializer = UserSerializer(data = request.data)
     if not signup_serializer.is_valid():
         return Response(signup_serializer.errors, status = HTTP_400_BAD_REQUEST)
-    signup_serializer.create(signup_serializer.validated_data)
-    
+
+    try :
+        user = signup_serializer.create(signup_serializer.validated_data)
+    except:
+        return Response({'message' : "Already Exists user"}, HTTP_400_BAD_REQUEST)
+
+    current_site = get_current_site(request)
+    domain = current_site.domain
+    uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+    token = account_activation_token.make_token(user)
+    message_data = message(domain, uid64, token)
+
+    mail_title = "이메일 인증을 완료해주세요"
+    mail_to = signup_serializer.validated_data['email']
+    email = EmailMessage(mail_title, message_data, to=[mail_to])
+    email.send()
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 class UserView(APIView):
@@ -82,3 +108,20 @@ class UserView(APIView):
             'isAuth': True,
         }
         return Response(content)
+
+@permission_classes((AllowAny, ))
+class Activate(View):
+    def get(self, request, uid64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uid64))
+            user = User.object.get(pk=uid)
+
+            if account_activation_token.check_token(user, token):
+                user.is_active = True
+                user.save()
+                return redirect(EMAIL['REDIRECT_PAGE'])
+            return Response({'message':"Authorization fail"}, status=HTTP_400_BAD_REQUEST)
+        except ValidationError:
+            return Response({'mesasge':'Unvalid Type'}, status = HTTP_400_BAD_REQUEST)
+        except KeyError:
+            return Response({'message': 'Invalid Key'}, HTTP_400_BAD_REQUEST)

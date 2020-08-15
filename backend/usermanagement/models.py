@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models, IntegrityError
 from backend import settings
 import uuid
 
@@ -7,22 +8,29 @@ class MyUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
-        email = self.normalize_email(email)
-        user = User()
-        user.set_email(email)
-        user.set_extra(job = extra_fields['job'], major = extra_fields['major'], nickname = extra_fields['nickname'], is_staff = extra_fields['is_staff'], is_superuser = extra_fields['is_superuser'])
-        user.set_password(password)
-        user.save(using = self._db)
-        return user
+        try:
+            email = self.normalize_email(email)
+            user = User()
+            user.set_email(email)
+            user.set_extra(job = extra_fields['job'], major = extra_fields['major'], nickname = extra_fields['nickname'], is_staff = extra_fields['is_staff'], is_superuser = extra_fields['is_superuser'])
+            user.is_active = extra_fields['is_activate']
+            user.set_password(password)
+            user.save(using = self._db)
+            return user
+        except IntegrityError:
+            raise IntegrityError
+
 
     def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault('is_activate', False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_activate', True)
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff = True')
         if extra_fields.get('is_superuser') is not True:
@@ -72,11 +80,6 @@ class User(AbstractUser):
         self.major = extra_fields['major']
         self.job = extra_fields['job']
         self.nickname = extra_fields['nickname']
-    
-    # def get_info(self):
-    #     userDict = {"nickname":self.nickname, "_id":self.id}
-    #     return userDict
-
 
     class Meta:
         ordering = ['nickname']

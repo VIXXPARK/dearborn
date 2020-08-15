@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from django.db import IntegrityError
 from .models import User
 
 class UserSigninSerializer(serializers.Serializer):
@@ -23,7 +24,11 @@ class UserSerializer(serializers.ModelSerializer):
         job = validated_data['job']
         major = validated_data['major']
         
-        myManager.create_user(email, password, nickname = nickname, job = job, major = major)
+        try:
+            new_user = myManager.create_user(email, password, nickname = nickname, job = job, major = major)
+            return new_user
+        except:
+            raise IntegrityError
 
     class Meta:
         model = User

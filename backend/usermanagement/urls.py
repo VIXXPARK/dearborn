@@ -7,4 +7,5 @@ urlpatterns = [
     path('user/register', views.signup),
     path('user/auth/', views.UserView.as_view()),
     path('user/logout', views.signout),
+    path('user/activate/<str:uid64>/<str:token>', views.Activate.as_view())
 ]
