@@ -3,6 +3,7 @@ import {Card, Button, Col, Row} from 'antd'
 import axios from 'axios'
 import {Link} from 'react-router-dom'
 import VoteDetailPage from '../../DetailPage/VoteDetailPage'
+// import {getCookieValue} from '../../../utils/Cookie'
 
 const {Meta} = Card
 
@@ -12,16 +13,17 @@ function VoteBox(props) {
     const [Posts, setPosts] = useState([])
 
     useEffect(() => {
-<<<<<<< HEAD
-        
-        axios.get('/api/post/getPosts')
-=======
+        // const config = {
+        //     headers : {
+        //         Authorization: `Token ${getCookieValue('w_auth')}`
+        //     }
+        // }
         axios.get('/api/post/getPosts/image')
->>>>>>> be7502fe5502e7d3d58b2a0cdf4bb77f3b1cb5d2
         .then(response => {
             if(response.data.success){
                 setPosts(response.data.data)
                 console.log(response.data.data)
+                console.log(response.data.user)
             }
         })
     }, [DetailVisible])
