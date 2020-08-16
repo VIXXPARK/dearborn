@@ -23,7 +23,7 @@ from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 
-from .serializers import UserSerializer, UserSigninSerializer
+from .serializers import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
 from .authentication import token_expire_handler, expires_in
 from .models import User
 from .token import account_activation_token
@@ -48,9 +48,12 @@ def signin(request):
             password = signin_serializer.validated_data['password'],
         )
     except:
-        return Response({'message': 'Invalid Password'}, status=HTTP_502_BAD_GATEWAY)
+        return Response({'message': 'Invalid Password','success': False}, status=HTTP_502_BAD_GATEWAY)
     if not user:
-        return Response({'message': 'Invalid Credentials or activate account'}, status = HTTP_404_NOT_FOUND)
+        if not user.is_active:
+            return Response({'success': True, 'is_active': False}, status = HTTP_200_OK)
+        else:
+            return Response({'message': 'Invalid Credential','success': False}, status=HTTP_400_BAD_REQUEST)
     
     
     result = Token.objects.get_or_create(user = user)
@@ -84,19 +87,53 @@ def signup(request):
     try :
         user = signup_serializer.create(signup_serializer.validated_data)
     except:
-        return Response({'message' : "Already Exists user"}, HTTP_400_BAD_REQUEST)
+        return Response({'success' : False}, HTTP_400_BAD_REQUEST)
+
 
     current_site = get_current_site(request)
-    domain = current_site.domain
-    uid64 = urlsafe_base64_encode(force_bytes(user.pk))
-    token = account_activation_token.make_token(user)
-    message_data = message(domain, uid64, token)
+    email = signup_serializer.validated_data['email']
 
-    mail_title = "이메일 인증을 완료해주세요"
-    mail_to = signup_serializer.validated_data['email']
-    email = EmailMessage(mail_title, message_data, to=[mail_to])
-    email.send()
+    if not emailVerification(current_site, user, email):
+        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+    # domain = current_site.domain
+    # uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+    # token = account_activation_token.make_token(user)
+    # message_data = message(domain, uid64, token)
+    # mail_title = "이메일 인증을 완료해주세요"
+    # email = EmailMessage(mail_title, message_data, to=[mail_to])
+    # email.send()
     return Response({'success': True}, status = HTTP_201_CREATED)
+
+def emailVerification(current_site, user, email):
+    try:    
+        current_site = current_site
+        domain = current_site.domain
+        uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        message_data = message(domain, uid64, token)
+
+        mail_title = "이메일 인증을 완료해주세요"
+        mail_to = email
+        email = EmailMessage(mail_title, message_data, to=[mail_to])
+        email.send()
+        return True
+    except:
+        return False
+
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def emailReVerification(request):
+    serializer = EmailVerificationSerializer(data = request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status = HTTP_400_BAD_REQUEST)
+    email = serializer.validated_data['email']
+    user = User.object.get(email = email)
+    current_site = get_current_site(request)
+    result = emailVerification(current_site, user, email)
+    if not result:
+        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+    return Response({'success':True}, status=HTTP_200_OK)
+
 
 class UserView(APIView):
     def get(self, request, format=None):
@@ -115,13 +152,13 @@ class Activate(View):
         try:
             uid = force_text(urlsafe_base64_decode(uid64))
             user = User.object.get(pk=uid)
-
+            
             if account_activation_token.check_token(user, token):
                 user.is_active = True
                 user.save()
                 return redirect(EMAIL['REDIRECT_PAGE'])
             return Response({'message':"Authorization fail"}, status=HTTP_400_BAD_REQUEST)
         except ValidationError:
-            return Response({'mesasge':'Unvalid Type'}, status = HTTP_400_BAD_REQUEST)
+            return Response({'mesasge':'Unvalid Type'}, status=HTTP_400_BAD_REQUEST)
         except KeyError:
-            return Response({'message': 'Invalid Key'}, HTTP_400_BAD_REQUEST)
+            return Response({'message':'Invalid Key'}, status=HTTP_400_BAD_REQUEST)

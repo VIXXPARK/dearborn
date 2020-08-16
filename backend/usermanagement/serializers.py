@@ -3,6 +3,9 @@ from rest_framework.validators import UniqueValidator
 from django.db import IntegrityError
 from .models import User
 
+class EmailVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
 class UserSigninSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
