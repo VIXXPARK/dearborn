@@ -14,7 +14,7 @@ from rest_framework.status import(
 
 from django.shortcuts import redirect
 from django.views import View
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import logout, authenticate
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
 from django.core.mail import EmailMessage
@@ -28,7 +28,6 @@ from .authentication import token_expire_handler, expires_in
 from .models import User
 from .token import account_activation_token
 from .text import message
-from backend.settings import SECRET_KEY
 from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY
 from backend.my_settings import EMAIL
 import jwt, json
@@ -49,12 +48,12 @@ def signin(request):
         )
     except:
         return Response({'message': 'Invalid Password','success': False}, status=HTTP_502_BAD_GATEWAY)
-    if not user:
-        if not user.is_active:
-            return Response({'success': True, 'is_active': False}, status = HTTP_200_OK)
-        else:
-            return Response({'message': 'Invalid Credential','success': False}, status=HTTP_400_BAD_REQUEST)
-    
+    if user is None:
+        user = User.object.get(email = signin_serializer.validated_data['email'])
+        if not getattr(user,'is_active',None):
+            return Response({'message' : 'Non active','success':True},status=HTTP_200_OK)
+        return Response({'message': 'Invalid Credential','success': False}, status=HTTP_400_BAD_REQUEST)
+
     
     result = Token.objects.get_or_create(user = user)
     token = result[0]
@@ -64,6 +63,7 @@ def signin(request):
 
     response = Response({
         'success' : True,
+        'isActive' : True,
         'userId' : user.get_id(),
     }, status=HTTP_200_OK)
 
@@ -95,13 +95,6 @@ def signup(request):
 
     if not emailVerification(current_site, user, email):
         return Response({'success':False}, status=HTTP_404_NOT_FOUND)
-    # domain = current_site.domain
-    # uid64 = urlsafe_base64_encode(force_bytes(user.pk))
-    # token = account_activation_token.make_token(user)
-    # message_data = message(domain, uid64, token)
-    # mail_title = "이메일 인증을 완료해주세요"
-    # email = EmailMessage(mail_title, message_data, to=[mail_to])
-    # email.send()
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 def emailVerification(current_site, user, email):
@@ -157,8 +150,6 @@ class Activate(View):
                 user.is_active = True
                 user.save()
                 return redirect(EMAIL['REDIRECT_PAGE'])
-            return Response({'message':"Authorization fail"}, status=HTTP_400_BAD_REQUEST)
-        except ValidationError:
-            return Response({'mesasge':'Unvalid Type'}, status=HTTP_400_BAD_REQUEST)
-        except KeyError:
-            return Response({'message':'Invalid Key'}, status=HTTP_400_BAD_REQUEST)
+            return redirect('http://localhost:3000/checkEmail/failed')
+        except:
+            return redirect('http://localhost:3000/checkEmail/failed')
