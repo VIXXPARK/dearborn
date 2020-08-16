@@ -11,8 +11,8 @@ function LandingPageVote(props) {
 
     const [Posts, setPosts] = useState([])
     const [VotePost, setVotePost] = useState([])
+    const [ModalStyle, setModalStyle] = useState(false)
 
-    
     
     useEffect(() => {
         axios.get('/api/post/getPosts')

@@ -54,6 +54,7 @@ router.get('/getPosts', (req, res) => {
   let sortBy = req.body.sortBy ? req.body.sortBy : "createdAt"
 
   Post.find()
+  .populate('writer')
   .sort([[sortBy, order]])
   .exec((err, posts) => {
     if(err){
@@ -61,6 +62,29 @@ router.get('/getPosts', (req, res) => {
       return res.status(400).json({success:false, err})
     }
     return res.status(200).json({success:true, posts})
+  })
+})
+
+router.post('/getPostDetail', (req, res)=>{
+  Post.find({_id : req.body.postId})
+  .populate('writer')
+  .exec((err, detailPost) => {
+    if(err){
+      console.log(err)
+      return res.status(400).json({success:false, err})
+    }
+    console.log(detailPost)
+    return res.status(200).json({success:true, detailPost})
+  })
+})
+
+router.post('/upView', (req, res)=>{
+  Post.findOneAndUpdate({_id : req.body.postId}, { $inc :{views : 1}})
+  .exec((err, doc)=>{
+    if(err){
+      return res.status(400).json({success:false, err})
+    }
+    return res.status(200).json({success: true})
   })
 })
 

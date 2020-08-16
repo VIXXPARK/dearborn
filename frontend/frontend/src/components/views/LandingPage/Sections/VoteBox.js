@@ -28,13 +28,15 @@ function VoteBox(props) {
             }
         })
     }
-    console.log(props.post)
+
+
+
     return (
         <Col className="item-vote" lg={8} md={12} xd={24}>
             <img className="item-vote-img" src={`http://localhost:5000/${props.post.images[0]}`} alt/>
             <div className="item-vote-show">
                 <div id="go-detail" >
-                    <Link to = {{pathname:'/', search:`?designer=${props.post.writer}`}}>자세히보기</Link>
+                    <Link to = {{pathname:'/', search:`designer=${props.post.writer.nickname}&postId=${props.post._id}`}}>자세히보기</Link>
                 </div>
                 <Button id="button-vote" onClick={onClick} disabled={props.isDisabledVote || Disabled}>투표하기</Button>
             </div>
