@@ -44,7 +44,7 @@ function UploadVotePage(props) {
         formData.append('user', props.user.userData._id)
         formData.append('title', values.title)
         formData.append('content', values.content)
-        axios.post('/api/post/uploadPost/', formData, config)
+        axios.post('/api/post/uploadPost', formData, config)
         .then(response => {
             if(response.data.success){
                 alert('성공')
