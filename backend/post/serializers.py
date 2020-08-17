@@ -9,9 +9,25 @@ class PostImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
    images = PostImageSerializer(many=True, read_only=True)
+   # nickname = serializers.CharField(source='user.nickname')
    class Meta:
       model = Post
-      fields = ('id', 'title', 'content','user', 'images')
+      fields = ('id', 'title','thumbnail', 'content','user','images')
+   def create(self, validated_data):
+      images_data = self.context['request'].FILES
+      post = Post.objects.create(**validated_data)
+      for image_data in images_data.getlist('image'):
+         PostImage.objects.create(post=post, image=image_data)
+       
+      return post
+
+class getPostSerializer(serializers.ModelSerializer):
+   images = PostImageSerializer(many=True, read_only=True)
+   # nickname = serializers.CharField(source='user.nickname')
+   class Meta:
+      model = Post
+      fields = ('id', 'title','thumbnail', 'content','user','images')
+      lookup_field = 'user'
    def create(self, validated_data):
       images_data = self.context['request'].FILES
       post = Post.objects.create(**validated_data)

@@ -5,6 +5,7 @@ class Post(models.Model):
    content = models.TextField()
    updated_dt = models.DateTimeField(auto_now_add=True)
    user = models.ForeignKey(User,on_delete=models.CASCADE)
+   thumbnail = models.ImageField(upload_to="thumb/",null=True)
 class PostImage(models.Model):
    post = models.ForeignKey(Post, on_delete=models.CASCADE)
    image = models.ImageField(upload_to="images/")
