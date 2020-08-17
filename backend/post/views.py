@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer,PostImageSerializer,getPostSerializer
 from .models import Post,PostImage
+from usermanagement.models import User
 from rest_framework import filters
 from rest_framework.generics import ListAPIView
 from django.views.generic.detail import DetailView
@@ -72,8 +73,8 @@ class PostImageViewSet(ListAPIView):
             
 
 class PostList(ListAPIView):
-    permission_classes = (permissions.AllowAny,)
     serializer_class = PostSerializer
+    permission_classes = (permissions.AllowAny,)
     def get_queryset(self):
         queryset = Post.objects.all()
         return queryset
@@ -81,9 +82,16 @@ class PostList(ListAPIView):
     def get(self,request):
         try:
             data=PostSerializer(self.get_queryset(),many=True).data
+<<<<<<< HEAD
+=======
+            # user = request.user
+            # userdata = user.get_info()
+            # data2 = PostImageSerializer(PostImage.get_queryset(),many=True).data
+>>>>>>> 88758c73ff6a058a18b586dd809a865324eb9b28
             context = {
                 'success':True,
                 'data':data,
+                'user':userdata,
             }
             return Response(context,status=HTTP_200_OK)
         except Exception as error:

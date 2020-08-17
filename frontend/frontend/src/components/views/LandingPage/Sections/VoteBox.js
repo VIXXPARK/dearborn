@@ -12,7 +12,12 @@ function VoteBox(props) {
     const [Posts, setPosts] = useState([])
 
     useEffect(() => {
+<<<<<<< HEAD
+        
+        axios.get('/api/post/getPosts')
+=======
         axios.get('/api/post/getPosts/image')
+>>>>>>> be7502fe5502e7d3d58b2a0cdf4bb77f3b1cb5d2
         .then(response => {
             if(response.data.success){
                 setPosts(response.data.data)
@@ -60,7 +65,6 @@ function VoteBox(props) {
 
     return (
         <>
-        
         <div className="container-vote">
             <div className="container-vote-header">
                 Let's Vote!!

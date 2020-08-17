@@ -72,6 +72,11 @@ class User(AbstractUser):
         self.major = extra_fields['major']
         self.job = extra_fields['job']
         self.nickname = extra_fields['nickname']
+    
+    # def get_info(self):
+    #     userDict = {"nickname":self.nickname, "_id":self.id}
+    #     return userDict
+
 
     class Meta:
         ordering = ['nickname']
