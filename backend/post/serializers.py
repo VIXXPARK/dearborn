@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from .models import Post,PostImage
 
+class UserCheckSerializer(serializers.Serializer):
+   nickname = serializers.CharField()
+
 class PostImageSerializer(serializers.ModelSerializer):
    class Meta:
       model = PostImage
@@ -28,6 +31,7 @@ class getPostSerializer(serializers.ModelSerializer):
       model = Post
       fields = ('id', 'title','thumbnail', 'content','user','images')
       lookup_field = 'user'
+   
    def create(self, validated_data):
       images_data = self.context['request'].FILES
       post = Post.objects.create(**validated_data)

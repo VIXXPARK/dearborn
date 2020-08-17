@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from .serializers import PostSerializer,PostImageSerializer,getPostSerializer
+from .serializers import PostSerializer,PostImageSerializer,getPostSerializer,UserCheckSerializer
 from .models import Post,PostImage
 from usermanagement.models import User
 from rest_framework import filters
@@ -19,6 +19,7 @@ from rest_framework.status import(
 from django.db.models import Count
 from usermanagement.models import User
 from django.shortcuts import get_object_or_404
+import json
 
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -33,15 +34,61 @@ class PostViewSet(ModelViewSet):
 
 class getProfileView(ListAPIView):
     queryset = Post.objects.all()
-    serializer_class = getPostSerializer
+    permission_classes = (permissions.AllowAny,)
 
     def get_queryset(self):
-        queryset = Post.objects.all()
+        queryset = PostImage.objects.raw('select * from post_postimage group by post_id')
         return queryset
 
-    def get(self,request):
+    def post(self,request):
+        userSerializer = UserCheckSerializer(data = request.data)
+        if not userSerializer.is_valid():
+            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+            
+        userdata = User.object.get(nickname=userSerializer.validated_data['nickname'])
+        userid = userdata.get_id()
+        postdata = Post.objects.filter(user=userid)
         try:
-            data = getPostSerializer
+            profileImage = userdata.profileImage.url(),
+        except:
+            profileImage = None,
+        user = {
+            'id' : userdata.id,
+            'nickname' : userdata.nickname,
+            'profileImage' : profileImage,
+        }
+        postJson = []
+        
+        for postraw in postdata:
+            image = PostImageSerializer(PostImage.objects.filter(post=postraw.id), many=True).data
+            try:
+                thumbnail = postraw.thumbnail.url(),
+            except:
+                thumbnail = None,
+            
+            post = {
+                'title' : postraw.title,
+                'content' : postraw.content,
+                'updated_dt' : postraw.updated_dt,
+                'writer' : postraw.user.id,
+                'image' : image,
+                'thumbnail' : thumbnail,
+                
+            }
+            postJson.append(post)
+        
+        context={
+            'success': True,
+            'postdata': postJson,
+            'userdata' : user,
+        }
+        return Response(context, status=HTTP_200_OK)
+        # except Exception as error:
+        #     context = {
+        #         'success': False,
+        #         'error':str(error)
+        #     }
+        #     return Response(context, status=HTTP_404_NOT_FOUND)
 
 class PostImageViewSet(ListAPIView):
     queryset = PostImage.objects.all()
@@ -57,7 +104,7 @@ class PostImageViewSet(ListAPIView):
             data=PostImageSerializer(self.get_queryset(),many=True).data
             context={
                 'success':True,
-                'data':data
+                'data':data,
             }
             return Response(context,status=HTTP_200_OK)
         except Exception as error:
@@ -76,9 +123,6 @@ class PostList(ListAPIView):
     def get(self,request):
         try:
             data=PostSerializer(self.get_queryset(),many=True).data
-            # user = request.user
-            # userdata = user.get_info()
-            # data2 = PostImageSerializer(PostImage.get_queryset(),many=True).data
             context = {
                 'success':True,
                 'data':data,
