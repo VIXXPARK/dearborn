@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from .serializers import PostSerializer,PostImageSerializer,getPostSerializer,UserCheckSerializer
+from .serializers import PostSerializer,PostImageSerializer,getPostSerializer,UserCheckSerializer,viewSerializer
 from .models import Post,PostImage
 from usermanagement.models import User
 from rest_framework import filters
@@ -20,6 +20,19 @@ from django.db.models import Count
 from usermanagement.models import User
 from django.shortcuts import get_object_or_404
 import json
+from rest_framework.decorators import api_view, permission_classes
+
+class upViewSet(ModelViewSet):
+    serializer_class = viewSerializer
+    queryset = Post.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    def retrieve(self,request,*args,**kwargs):
+        obj = self.get_object()
+        Post.objects.filter(pk=obj.id).update(view=F('view')+1)
+        serializer = self.get_serializer(obj)
+        return Response(serializer.data)
+
+
 
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.AllowAny,)

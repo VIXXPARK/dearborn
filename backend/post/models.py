@@ -8,7 +8,7 @@ class Post(models.Model):
    updated_dt = models.DateTimeField(auto_now_add=True)
    user = models.ForeignKey(User,on_delete=models.CASCADE)
    thumbnail = models.ImageField(upload_to="thumb/",null=True)
-   
+   view = models.IntegerField(default=0)
    def get_id(slef):
       return self.id
 

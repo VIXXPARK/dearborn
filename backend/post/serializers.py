@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from .models import Post,PostImage
 
+
+class viewSerializer(serializers.ModelSerializer):
+   view = serializers.IntegerField()
+   class Meta:
+      model = Post
+      fields='__all__'
+
 class UserCheckSerializer(serializers.Serializer):
    nickname = serializers.CharField()
 
