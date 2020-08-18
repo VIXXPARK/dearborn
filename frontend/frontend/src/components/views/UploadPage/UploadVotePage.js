@@ -60,7 +60,8 @@ function UploadVotePage(props) {
                     writer : props.user.userData._id,
                     title : values.title,
                     content : values.content,
-                    images : tempArray
+                    images : tempArray,
+                    type : 1
                 }
 
 
