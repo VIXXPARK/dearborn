@@ -3,10 +3,20 @@ from rest_framework.validators import UniqueValidator
 from django.db import IntegrityError
 from .models import User
 
-class ChangePasswordSerizlizer(serializers.Serializer):
+class DeleteUserSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+
+class ChangeProfileSerializer(serializers.Serializer):
+    job = serializers.CharField()
+    major = serializers.CharField()
+    profileImage = serializers.ImageField()
+    content = serializers.CharField()
+    uid = serializers.CharField()
+
+class ChangePasswordSeriallizer(serializers.Serializer):
+    uid = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
     token = serializers.CharField(required=True)
-    uid = serializers.CharField(required=True)
 
 class EmailVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
@@ -24,8 +34,6 @@ class UserSerializer(serializers.ModelSerializer):
     profileImage = serializers.ImageField()
     content = serializers.CharField()
     
-
-
     def create(self, validated_data):
         new_user = User()
         myManager = new_user.objects()

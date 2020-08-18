@@ -83,6 +83,6 @@ class User(AbstractUser):
         self.major = extra_fields['major']
         self.job = extra_fields['job']
         self.nickname = extra_fields['nickname']
-
+    
     class Meta:
         ordering = ['nickname']

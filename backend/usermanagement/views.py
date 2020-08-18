@@ -25,14 +25,16 @@ from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 
-from .serializers import UserSerializer, UserSigninSerializer, EmailVerificationSerializer, ChangePasswordSerizlizer
+from .serializers import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
+from .serializers import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
 from .authentication import token_expire_handler, expires_in
 from .models import User
 from .token import account_activation_token
 from .text import message, changeMessage
-from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY
+from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY, MEDIA_ROOT
 from backend.my_settings import EMAIL
 import jwt, json
+import os
 
 
 @api_view(["POST"])
@@ -189,7 +191,7 @@ class Activate(View):
 @permission_classes((AllowAny, ))
 def ChangePassword(request):
     try:
-        serializer = ChangePasswordSerizlizer(data=request.data)
+        serializer = ChangePasswordSeriallizer(data=request.data)
         if not serializer.is_valid():
             return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
         uid = force_text(urlsafe_base64_decode(serializer.validated_data['uid']))
@@ -204,3 +206,47 @@ def ChangePassword(request):
         return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
     except: 
         return Response({'success':False},status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def changeProfile(request):
+    profileSerializer = ChangeProfileSerializer(data = request.data)
+    if not profileSerializer.is_valid():
+        return Response(profileSerializer.errors, status = HTTP_400_BAD_REQUEST)
+    job = profileSerializer.validated_data['job']
+    major = profileSerializer.validated_data['major']
+    profileImage = profileSerializer.validated_data['profileImage']
+    content = profileSerializer.validated_data['content']
+    uid = profileSerializer.validated_data['uid']
+
+    user = User.object.filter(id = uid)
+    image = user[0].profileImage
+    os.remove(os.path.join(settings.MEDIA_ROOT, + image.storage + image.path))
+
+    user[0].major = major
+    user[0].profileImage = profileImage
+    user[0].job = job
+    user[0].content = content
+
+
+    if not emailVerification(current_site, user, email):
+        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+    return Response({'success': True}, status = HTTP_201_CREATED)
+
+@api_view(["POST"])
+def deleteUser(request):
+    try:
+        user = request.user
+        user.delete()
+        return Response({'success':True}, HTTP_200_OK)
+    except:
+        return Response({'success': False}, HTTP_400_BAD_REQUEST)
+    
+    # serializer = DeleteUserSerializer(data = request.data)
+    # if not serializer.is_valid():
+    #     return Response(serializer.error, status = HTTP_400_BAD_REQUEST)
+    # uid = serializer.validated_data['uid']
+    # user = User.object.filter(id=uid)
+    # user[0].delete()
+    # user[0].is_active = False
+    # user[0].save()
