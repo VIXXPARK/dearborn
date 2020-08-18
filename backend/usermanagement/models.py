@@ -14,6 +14,8 @@ class MyUserManager(BaseUserManager):
             user.set_email(email)
             user.set_extra(job = extra_fields['job'], major = extra_fields['major'], nickname = extra_fields['nickname'], is_staff = extra_fields['is_staff'], is_superuser = extra_fields['is_superuser'])
             user.is_active = extra_fields['is_activate']
+            user.content = extra_fields['content']
+            user.profileImage = extra_fields['profileImage']
             user.set_password(password)
             user.save(using = self._db)
             return user
@@ -58,10 +60,11 @@ class User(AbstractUser):
     )
     id = models.CharField(editable=False, max_length=36, db_index=True, unique=True, default=make_uuid, primary_key=True)
     nickname = models.CharField(max_length=50, unique=True)
-    profileImage = models.ImageField(blank=True)
+    profileImage = models.ImageField(blank=True, upload_to="profileImage/")
     job = models.CharField(max_length=100,choices=JOB_CHOICES)
-    major = models.CharField(max_length=20,choices=MAJOR_CHOICES)
+    major = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
+    content = models.TextField(max_length=1000)
     username = None
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', 'job', 'major']

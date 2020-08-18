@@ -9,7 +9,8 @@ from rest_framework.status import(
     HTTP_404_NOT_FOUND,
     HTTP_200_OK,
     HTTP_201_CREATED,
-    HTTP_502_BAD_GATEWAY
+    HTTP_502_BAD_GATEWAY,
+    HTTP_500_INTERNAL_SERVER_ERROR
 )
 
 from django.shortcuts import redirect
@@ -23,11 +24,11 @@ from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 
-from .serializers import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
+from .serializers import UserSerializer, UserSigninSerializer, EmailVerificationSerializer, ChangePasswordSerizlizer
 from .authentication import token_expire_handler, expires_in
 from .models import User
 from .token import account_activation_token
-from .text import message
+from .text import message, changeMessage
 from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY
 from backend.my_settings import EMAIL
 import jwt, json
@@ -127,6 +128,37 @@ def emailReVerification(request):
         return Response({'success':False}, status=HTTP_404_NOT_FOUND)
     return Response({'success':True}, status=HTTP_200_OK)
 
+def passwordChangeEmail(current_site, user, email):
+    try:    
+        current_site = current_site
+        domain = current_site.domain
+        uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        message_data = ChangeMessage(domain, uid64, token)
+
+        mail_title = "비밀번호 변경 메일입니다"
+        mail_to = email
+        email = EmailMessage(mail_title, message_data, to=[mail_to])
+        email.send()
+        return True
+    except:
+        return False
+
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def changeEmailRequest(request):
+    serializer = EmailVerificationSerializer(data = request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status = HTTP_400_BAD_REQUEST)
+    email = serializer.validated_data['email']
+    user = User.object.get(email = email)
+    current_site = get_current_site(request)
+    result = passwordChangeEmail(current_site, user, email)
+    if not result:
+        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+    return Response({'success':True}, status=HTTP_200_OK)
+
+
 
 class UserView(APIView):
     def get(self, request, format=None):
@@ -153,3 +185,21 @@ class Activate(View):
             return redirect('http://localhost:3000/checkEmail/failed')
         except:
             return redirect('http://localhost:3000/checkEmail/failed')
+
+@permission_classes((AllowAny, ))
+class ChangePassword(View):
+    def get(self, request, uid64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uid64))
+            user = User.object.get(pk=uid)
+            password = ChangePasswordSerizlizer(data=request.data)
+            if not password.is_valid:
+                return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+            
+            if account_activation_token.check_token(user, token):
+                user.set_password(password.validated_data['password'])
+                user.save()
+                return Response({'success':True},status=HTTP_200_OK)
+            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'success':False},status=HTTP_500_INTERNAL_SERVER_ERROR)
