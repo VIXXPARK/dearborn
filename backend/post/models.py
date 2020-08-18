@@ -9,11 +9,25 @@ class Post(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
    thumbnail = models.ImageField(upload_to="thumb/",null=True)
    view = models.IntegerField(default=0)
+   siteType = models.IntegerField(default=0)
    def get_id(slef):
       return self.id
+   
+   def get_view(self):
+      return self.view
 
 class PostImage(models.Model):
    post = models.ForeignKey(Post, on_delete=models.CASCADE)
    image = models.ImageField(upload_to="images/")
    def get_image(self):
       return self.image
+
+class like(models.Model):
+   user = models.ForeignKey(User,on_delete=models.CASCADE)
+   post = models.ForeignKey(Post,on_delete=models.CASCADE)
+
+class disLike(models.Model):
+   user = models.ForeignKey(User,on_delete=models.CASCADE)
+   post = models.ForeignKey(Post,on_delete=models.CASCADE)
+
+

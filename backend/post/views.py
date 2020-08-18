@@ -1,10 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
-from .serializers import PostSerializer,PostImageSerializer,getPostSerializer,UserCheckSerializer,viewSerializer
-from .models import Post,PostImage
+from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer
+from .serializers import likeSerializer,dislikeSerializer
+from .models import Post,PostImage,like,disLike
 from usermanagement.models import User
 from rest_framework import filters
-from rest_framework.generics import ListAPIView
-from django.views.generic.detail import DetailView
+from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.response import Response
@@ -13,24 +13,161 @@ from rest_framework.status import(
     HTTP_404_NOT_FOUND,
     HTTP_200_OK,
     HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
     HTTP_502_BAD_GATEWAY,
     HTTP_500_INTERNAL_SERVER_ERROR
 )
-from django.db.models import Count
 from usermanagement.models import User
-from django.shortcuts import get_object_or_404
 import json
-from rest_framework.decorators import api_view, permission_classes
+from django.views.decorators.csrf import csrf_exempt
+class disLikeView(ListAPIView):
+    queryset = disLike.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = dislikeSerializer
 
-class upViewSet(ModelViewSet):
-    serializer_class = viewSerializer
+    def get_queryset(self):
+        queryset = disLike.objects.all()
+        return queryset
+
+    def get(self,request):
+        try:
+            data = dislikeSerializer(self.get_queryset,many=True).data
+            context = {
+                'success':True,
+                'data':data
+            }
+            return Response(context,status=HTTP_200_OK)
+        except Exception as error:
+            context= {
+                'success':False,
+                'error':str(error)
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def post(self,request):
+        like = dislikeSerializer(data=request.data)
+        if not like.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        like.save()
+        context = {
+            'success':True
+        }
+        return Response(context,status=HTTP_200_OK)
+
+    
+class likeDownView(DestroyAPIView):
+    queryset = like.objects.all()
+    serializer_class = likeSerializer
+    permission_classes = (permissions.AllowAny,)
+    def get_object(self,post,user):
+        try:
+            instance = self.queryset.get(user=user,post=post)
+            return instance
+        except like.DoesNotExist:
+            raise HTTP_404_NOT_FOUND
+    
+    def delete(self,request,format=None):
+        instance = self.get_object(request.data['post'],request.data['user'])
+        instance.delete()
+        return Response({"success":True},status=HTTP_204_NO_CONTENT)
+
+class dislikeDownView(DestroyAPIView):
+    queryset = disLike.objects.all()
+    serializer_class = dislikeSerializer
+    permission_classes = (permissions.AllowAny,)
+    def get_object(self,post,user):
+        try:
+            instance = self.queryset.get(user=user,post=post)
+            return instance
+        except dislike.DoesNotExist:
+            raise HTTP_404_NOT_FOUND
+    
+    def delete(self,request,format=None):
+        instance = self.get_object(request.data['post'],request.data['user'])
+        instance.delete()
+        return Response({"success":True},status=HTTP_204_NO_CONTENT)
+
+
+class likeView(ListAPIView):
+    queryset = like.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = likeSerializer
+
+    def get_queryset(self):
+        queryset = like.objects.all()
+        return queryset
+
+    def get(self,request):
+        try:
+            data = likeSerializer(self.get_queryset,many=True).data
+            context = {
+                'success':True,
+                'data':data
+            }
+            return Response(context,status=HTTP_200_OK)
+        except Exception as error:
+            context= {
+                'success':False,
+                'error':str(error)
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def post(self,request):
+        like = likeSerializer(data=request.data)
+        if not like.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        like.save()
+        context = {
+            'success':True
+        }
+        return Response(context,status=HTTP_200_OK)
+    
+    
+
+
+
+class upViewSet(ListAPIView):
     queryset = Post.objects.all()
     permission_classes = (permissions.AllowAny,)
-    def retrieve(self,request,*args,**kwargs):
-        obj = self.get_object()
-        Post.objects.filter(pk=obj.id).update(view=F('view')+1)
-        serializer = self.get_serializer(obj)
-        return Response(serializer.data)
+    serializer_class = viewSerializer
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        return queryset
+
+    def get(self,request):
+        try:
+            data=viewSerializer(self.get_queryset(),many=True).data
+            context = {
+                'success':True,
+                'data':data,
+            }
+            return Response(context,status=HTTP_200_OK)
+        except Exception as error:
+            context = {
+                'error':str(error),
+                'success':False
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+    def post(self,request):
+        view = viewSerializer(data=request.data)
+        if not view.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        
+        postdata = Post.objects.get(id=view.validated_data['id'])
+        postView = postdata.get_view()
+        postView = postView + 1
+        postdata.view = postView
+        postdata.save()
+        context = {
+            'success':True,
+            'data': postdata.view
+        }
+        return Response(context,status=HTTP_200_OK)
+
 
 
 
