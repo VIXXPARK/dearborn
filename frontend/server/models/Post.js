@@ -26,6 +26,10 @@ const postSchema = mongoose.Schema({
     views : {
         type: Number,
         default : 0,
+    },
+    sitetype : {
+        type: Number, //0이면 저장소, 1이면 투표
+        detault : 0
     }
 }, {timestamps : true})
 

@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import {Typography, Form, Input, Button} from 'antd'
 import {useForm, Controller} from 'react-hook-form'
-import { Input, Form , Typography } from 'antd';
 import axios from 'axios'
+import './LoginPage.css'
 
 const { Title } =Typography;
 
-function CheckImage(props) {
+function ChangePasswordPage(props) {
 
-    const CheckEmailForm = () =>{
+    const ChangePasswordForm = () =>{
         const {control, register, handleSubmit} = useForm();
 
         const onSubmit = data =>{
-            console.log(data)
-            axios.post('/api/user/checkEmail', {email : data.email})
-            props.history.push('/')
+            alert('이메일을 보냈습니다.')
+            axios.post('/api/user/sendChangeEmail', {email : data.email})
         }
 
         return (
@@ -21,7 +21,7 @@ function CheckImage(props) {
                 <Controller
                     as={
                         <Form.Item
-                            label="E-mail 인증"
+                            label="Email"
                             
                         >
                             <Input type="text"/>
@@ -31,7 +31,7 @@ function CheckImage(props) {
                     control={control}
                 />
                 <br/>
-                <input type="submit"></input>
+                <input type="submit" value="이메일 전송"></input>
             </form>
         )
     }
@@ -39,15 +39,15 @@ function CheckImage(props) {
     return (
         <div>
             <div className="auth">
-                <div className="auth-wrapper">
-                    <Title level={2}><a href="/">DEarborn</a></Title>
-                    <section style={{backgroundColor:'white', padding:'25px', borderRadius:'7px'}}>
-                        {CheckEmailForm()}
-                    </section>
-                </div>
+            <div className="auth-wrapper">
+                <Title level={2}><a href="/">DEarborn</a></Title>
+                <section style={{backgroundColor:'white', padding:'25px', borderRadius:'7px'}}>
+                    {ChangePasswordForm()}
+                </section>
+            </div>
             </div>
         </div>
     );
 }
 
-export default CheckImage;
+export default ChangePasswordPage;

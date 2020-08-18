@@ -1,8 +1,9 @@
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.authentication import HTTP_HEADER_ENCODING
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
@@ -134,7 +135,7 @@ def passwordChangeEmail(current_site, user, email):
         domain = current_site.domain
         uid64 = urlsafe_base64_encode(force_bytes(user.pk))
         token = account_activation_token.make_token(user)
-        message_data = ChangeMessage(domain, uid64, token)
+        message_data = changeMessage(domain, uid64, token)
 
         mail_title = "비밀번호 변경 메일입니다"
         mail_to = email
@@ -157,8 +158,6 @@ def changeEmailRequest(request):
     if not result:
         return Response({'success':False}, status=HTTP_404_NOT_FOUND)
     return Response({'success':True}, status=HTTP_200_OK)
-
-
 
 class UserView(APIView):
     def get(self, request, format=None):
@@ -186,20 +185,22 @@ class Activate(View):
         except:
             return redirect('http://localhost:3000/checkEmail/failed')
 
+@api_view(["POST"])
 @permission_classes((AllowAny, ))
-class ChangePassword(View):
-    def get(self, request, uid64, token):
-        try:
-            uid = force_text(urlsafe_base64_decode(uid64))
-            user = User.object.get(pk=uid)
-            password = ChangePasswordSerizlizer(data=request.data)
-            if not password.is_valid:
-                return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
-            
-            if account_activation_token.check_token(user, token):
-                user.set_password(password.validated_data['password'])
-                user.save()
-                return Response({'success':True},status=HTTP_200_OK)
+def ChangePassword(request):
+    try:
+        serializer = ChangePasswordSerizlizer(data=request.data)
+        if not serializer.is_valid():
             return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
-        except:
-            return Response({'success':False},status=HTTP_500_INTERNAL_SERVER_ERROR)
+        uid = force_text(urlsafe_base64_decode(serializer.validated_data['uid']))
+        token = serializer.validated_data['token']
+        password = serializer.validated_data['password']
+        user = User.object.get(id=uid)
+
+        if account_activation_token.check_token(user, token):
+            user.set_password(password)
+            user.save()
+            return Response({'success':True},status=HTTP_200_OK)
+        return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+    except: 
+        return Response({'success':False},status=HTTP_500_INTERNAL_SERVER_ERROR)

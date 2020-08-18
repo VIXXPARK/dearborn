@@ -5,6 +5,8 @@ from .models import User
 
 class ChangePasswordSerizlizer(serializers.Serializer):
     password = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
+    uid = serializers.CharField(required=True)
 
 class EmailVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)

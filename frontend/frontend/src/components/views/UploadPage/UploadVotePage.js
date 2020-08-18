@@ -54,11 +54,33 @@ function UploadVotePage(props) {
         console.log(formData)
         axios.post('/api/post/uploadImages', formData, config)
         .then(response => {
-            if(response.data.success){
-                alert('성공')
-                props.history.push('/')
-            }else{
-                return alert('페이지 업로드 실패')
+            if(!response.data.success)
+                return alert("이미지 업로드 실패")
+            else{
+                var temp = response.data.images
+                var tempArray = temp.slice(0, temp.length-2).split("&&")
+                
+                const posts = {
+                    writer : props.user.userData._id,
+                    title : values.title,
+                    content : values.content,
+                    images : tempArray,
+                    type : 1
+                }
+
+
+                axios.post('/api/post/uploadPost', posts)
+                .then(response => {
+                    if(response.data.success)
+                    {
+                        alert('성공')
+                        props.history.push('/')
+                    }
+                    else{
+                        return alert('페이지 업로드 실패')
+                    }
+                })
+
             }
         })
 

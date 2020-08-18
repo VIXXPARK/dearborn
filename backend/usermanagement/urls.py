@@ -9,6 +9,6 @@ urlpatterns = [
     path('user/logout', views.signout),
     path('user/activate/<str:uid64>/<str:token>', views.Activate.as_view()),
     path('user/checkEmail', views.emailReVerification),
-    path('user/changePassword',views.ChangePassword.as_view()),
+    path('user/changePassword',views.ChangePassword),
     path('user/sendChangeEmail', views.changeEmailRequest)
 ]

@@ -88,4 +88,40 @@ router.post('/upView', (req, res)=>{
   })
 })
 
+router.post('/getProfile', (req, res)=>{ //임시, 삭제예정
+  User.findOne({nickname : req.body.nickname})
+  .exec((err, user)=>{
+    if(err) return res.status(400).json({success:false, err})
+
+    Post.find({writer : user._id})
+    .populate('writer')
+    .exec((err, repos)=>{
+      if(err) return res.status(400).json({success:false, err})
+      return res.status(200).json({success: true, repos, user})
+    })
+  })
+})
+
+router.get('/getRepos', (req, res)=>{
+  Repo.find({})
+  .exec((err, repos)=>{
+      if(err) return res.status(400).json({success:false})
+      return res.status(200).json({success:true, repos})
+  })
+})
+
+router.post('/getProfile', (req, res)=>{
+  User.findOne({nickname : req.body.designer})
+  .exec((err, user)=>{
+      if(err) return res.status(400).json({success:false})
+      Repo.find({writer : user._id})
+      .populate('writer')
+      .exec((err, repos)=>{
+          if(err) return res.status(400).json({success: false})
+          return res.status(200).json({success: true, repos, user})
+      })
+  })
+})
+
+
 module.exports = router
