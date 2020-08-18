@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from .models import Post,PostImage,like,disLike
 
+class getLikeSerializer(serializers.Serializer):
+   user = serializers.CharField()
+   
+
 class likeSerializer(serializers.ModelSerializer):
    class Meta:
       model = like

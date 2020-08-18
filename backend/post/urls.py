@@ -1,5 +1,5 @@
 from .views import PostViewSet,PostList,PostImageViewSet, getProfileView ,upViewSet
-from .views import likeView,disLikeView,likeDownView,dislikeDownView
+from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView
 from django.urls import path,include
 from usermanagement.models import User
 from rest_framework.routers import DefaultRouter
@@ -22,5 +22,6 @@ urlpatterns = [
     path('dislike/up',disLikeView.as_view()),
     path('like/down',likeDownView.as_view()),
     path('dislike/down',dislikeDownView.as_view()),
+    path('like/getlike',getLikeView.as_view())
 ]
 ##content

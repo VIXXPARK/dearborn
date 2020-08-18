@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer
-from .serializers import likeSerializer,dislikeSerializer
+from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer
 from .models import Post,PostImage,like,disLike
 from usermanagement.models import User
 from rest_framework import filters
@@ -19,7 +19,47 @@ from rest_framework.status import(
 )
 from usermanagement.models import User
 import json
-from django.views.decorators.csrf import csrf_exempt
+
+class getLikeView(ListAPIView):
+    queryset = like.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = likeSerializer
+
+    def get_queryset(self):
+        queryset = like.objects.all()
+        # user = self.request.query_params.get('user')
+        queryset.filter(user=self.request.data['user'])
+        return queryset
+
+    def get(self,request):
+        try:
+            data = likeSerializer(self.get_queryset(),many=True).data
+            context={
+                'success':True,
+                'data':data
+            }
+            return Response(context,status=HTTP_200_OK)
+        except Exception as error:
+            context={
+                'success':False,
+                'error':str(error)
+            }
+            return Response(context,status=HTTP_400_BAD_REQUEST)
+    
+    def post(self,request):
+        liked = getLikeSerializer(data=request.data)
+        if not liked.is_valid():
+            return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+        likedata = like.objects.filter(user=liked.validated_data['user'])
+        postlist=[]
+        for likeinstance in likedata:
+            postlist.append(likeinstance.post.get_id())
+        context = {
+            'success':True,
+            'data' : postlist
+        }
+        return Response(context,status=HTTP_200_OK)
+
 class disLikeView(ListAPIView):
     queryset = disLike.objects.all()
     permission_classes = (permissions.AllowAny,)
