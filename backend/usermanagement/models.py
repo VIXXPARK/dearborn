@@ -26,13 +26,13 @@ class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        # extra_fields.setdefault('is_activate', False)
+        extra_fields.setdefault('is_activate', False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        # extra_fields.setdefault('is_activate', True)
+        extra_fields.setdefault('is_activate', True)
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff = True')
         if extra_fields.get('is_superuser') is not True:
@@ -44,24 +44,11 @@ class MyUserManager(BaseUserManager):
 class User(AbstractUser):
     def make_uuid():
         return str(uuid.uuid4())
-
-    JOB_CHOICES = (
-        ('1','무관'),
-        ('2','학생'),
-        ('3','디자이너'),
-    )
-    MAJOR_CHOICES = (
-        ('1','없음'),
-        ('2','상의'),
-        ('3','하의'),
-        ('4','모자'),
-        ('5','신발'),
-        ('6','악세사리'),
-    )
+        
     id = models.CharField(editable=False, max_length=36, db_index=True, unique=True, default=make_uuid, primary_key=True)
     nickname = models.CharField(max_length=50, unique=True)
     profileImage = models.ImageField(blank=True, upload_to="profileImage/")
-    job = models.CharField(max_length=100,choices=JOB_CHOICES)
+    job = models.CharField(max_length=100)
     major = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     content = models.TextField(max_length=1000)

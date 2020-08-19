@@ -1,16 +1,87 @@
-from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
+from rest_framework.status import(
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_502_BAD_GATEWAY,
+    HTTP_500_INTERNAL_SERVER_ERROR
+)
 
 from .models import Comment
-from .serializers import CommentSerializer
+from .serializers import CommentSerializer, GetCommentSerializer, DeleteCommentSerializer, UpdateCommentSerializer
+from usermanagement.models import User
 
-class CommentViewSet(ModelViewSet):
-    permission_classes = (permissions.AllowAny, )
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+class MakeCommentView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request):
+        commentSerializer = CommentSerializer(data=request.data)
+        if not commentSerializer.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        try:
+            comment = commentSerializer.create(commentSerializer.validated_data)
+        except:
+            return Response({'success':False},HTTP_400_BAD_REQUEST)
+        return Response({'success':True}, HTTP_201_CREATED)
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        instance = response.data
-        return Response({'success':True})
+class GetCommentView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request):
+        getCommentSerializer = GetCommentSerializer(data=request.data)
+        if not getCommentSerializer.is_valid():
+            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+        postId = getCommentSerializer.validated_data['postId']
+        commentQuery = Comment.objects.filter(post=postId)
+        commentData = []
+        for query in commentQuery:
+            user = query.user
+            profileImage = user.profileImage.url
+            data = {
+                'contents':query.contents,
+                'userId':user.id,
+                'profileImage':profileImage,
+                'nickname':user.nickname, 
+            }
+            commentData.append(data)
+
+        content = {
+            'commentData' : commentData,
+            'success' : True
+        }
+        return Response(content, status=HTTP_200_OK)
+
+class DeleteCommentView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request):
+        deleteCommentSerializer = DeleteCommentSerializer(data=request.data)
+        if not deleteCommentSerializer.is_valid():
+            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+        commentId = deleteCommentSerializer.validated_data['commentId']
+        try:
+            commentObj = Comment.objects.filter(id=commentId)[0]
+            commentObj.delete()
+            return Response({'success':True},HTTP_200_OK)
+        except:
+            return Response({'success':False},HTTP_400_BAD_REQUEST)
+
+class UpdataCommentView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request):
+        updateCommentSerializer = UpdateCommentSerializer(data=request.data)
+        if not updateCommentSerializer.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        commentId = updateCommentSerializer.validated_data['commentId']
+        contents = updateCommentSerializer.validated_data['contents']
+        try:
+            commentObj = Comment.objects.filter(id=commentId)[0]
+            commentObj.contents = contents
+            commentObj.save()
+            return Response({'success':True},status=HTTP_200_OK)
+        except:
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            

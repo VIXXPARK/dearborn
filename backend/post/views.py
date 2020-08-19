@@ -50,11 +50,6 @@ class getLikeDetail(APIView):
                 }
                 return Response(context,status=HTTP_200_OK)
 
-
-
-
-
-
 class getLikeView(ListAPIView):
     queryset = like.objects.all()
     permission_classes = (permissions.AllowAny,)
@@ -274,7 +269,7 @@ class getProfileView(ListAPIView):
         userid = userdata.get_id()
         postdata = Post.objects.filter(user=userid)
         try:
-            profileImage = userdata.profileImage.url(),
+            profileImage = userdata.profileImage.url,
         except:
             profileImage = None,
         user = {

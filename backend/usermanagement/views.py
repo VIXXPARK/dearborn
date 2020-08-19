@@ -233,10 +233,12 @@ def changeProfile(request):
         return Response({'success':False}, status=HTTP_404_NOT_FOUND)
     return Response({'success': True}, status = HTTP_201_CREATED)
 
-@api_view(["POST"])
+@api_view(["get"])
 def deleteUser(request):
     try:
         user = request.user
+        image = user.profileImage
+        os.remove(os.path.join(settings.MEDIA_ROOT, + image.storage + image.path))
         user.delete()
         return Response({'success':True}, HTTP_200_OK)
     except:

@@ -1,10 +1,9 @@
-from .views import CommentViewSet
+from .views import MakeCommentView,GetCommentView,DeleteCommentView,UpdataCommentView
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-router = DefaultRouter()
-router.register('comment/upComment',CommentViewSet)
 
 urlpatterns = [
-    path('',include(router.urls)),
+    path('comment/upComment', MakeCommentView.as_view()),
+    path('comment/getComment',GetCommentView.as_view()),
+    path('comment/delComment',DeleteCommentView.as_view()),
+    path('comment/fixComment',UpdataCommentView.as_view()),
 ]
