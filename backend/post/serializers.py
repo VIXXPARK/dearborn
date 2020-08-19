@@ -1,10 +1,14 @@
 from rest_framework import serializers
 from .models import Post,PostImage,like,disLike
 
+class getLikeDetailSerializer(serializers.Serializer):
+   user = serializers.CharField()
+   post = serializers.CharField()
+
+
 class getLikeSerializer(serializers.Serializer):
    user = serializers.CharField()
    
-
 class likeSerializer(serializers.ModelSerializer):
    class Meta:
       model = like
@@ -30,7 +34,6 @@ class PostImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
    images = PostImageSerializer(many=True, read_only=True)
-   # nickname = serializers.CharField(source='user.nickname')
    class Meta:
       model = Post
       fields = ('id', 'title','thumbnail', 'content','user','images')

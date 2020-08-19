@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer
-from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer
+from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer
 from .models import Post,PostImage,like,disLike
 from usermanagement.models import User
 from rest_framework import filters
@@ -19,6 +19,42 @@ from rest_framework.status import(
 )
 from usermanagement.models import User
 import json
+from rest_framework.views import APIView
+class getLikeDetail(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self,request):
+        liked = getLikeDetailSerializer(data=request.data)
+        if not liked.is_valid():
+            return Response({'likeSuccess':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+        try:
+            likedata = like.objects.get(user=liked.validated_data['user'],post=liked.validated_data['post'])
+            context = {
+                'success': True,
+                'data' : 1
+            }
+            return Response(context,status=HTTP_200_OK)
+        except:
+            disliked = getLikeDetailSerializer(data=request.data)
+            if not disliked.is_valid():
+                return Response({'disLikeSuccess':False,'data':reqeust.data},status=HTTP_400_BAD_REQUEST)
+            try:
+                dislikedata = disLike.objects.get(user=disliked.validated_data['user'],post=disliked.validated_data['post'])
+                context = {
+                    'success':True,
+                    'data':2
+                }
+                return Response(context,status=HTTP_200_OK)
+            except:
+                context = {
+                    'success':True,
+                    'data': 0
+                }
+                return Response(context,status=HTTP_200_OK)
+
+
+
+
+
 
 class getLikeView(ListAPIView):
     queryset = like.objects.all()
