@@ -44,8 +44,7 @@ function RegisterPage(props) {
             let formData = new FormData()
             let tempMajor = Major.join(':')
             data.major = tempMajor
-
-            formData.append('profileImage', ProfileImage)
+            formData.append('file', ProfileImage)
             formData.append('content', data.content)
             formData.append('major', tempMajor)
             formData.append('email', data.email)
@@ -57,20 +56,21 @@ function RegisterPage(props) {
             if(data.confirmPassword !== data.password){
                 return alert("2차 패스워드가 다릅니다.")
             }
+            dispatch(registerUser(formData)).then(response =>{
+                if(response.payload.success){
+                    props.history.push('/login')
+                }else{
+                    alert(response.payload.err.errmsg)
+                }
+            })
             axios.post('/api/user/checkEmail', {email : data.email})
             .then(response => {
                 if(!response.data.success){
                     return alert('이메일이 이미 있습니다.')
                 }
                 //이메일 중복이 아닐경우 이메일 체킹
-                dispatch(registerUser(formData)).then(response =>{
-                    if(response.payload.success){
-                        props.history.push('/login')
-                    }else{
-                        alert(response.payload.err.errmsg)
-                    }
-                })
             })
+            
         }
 
         const clickMajor = (value) => {

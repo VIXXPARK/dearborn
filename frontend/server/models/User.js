@@ -29,13 +29,16 @@ const userSchema = mongoose.Schema({
         type:String,
     },
     job : {
-        type:Number,
-        default : 1,
+        type:String,
+        default : '1',
     },
     major : {
-        type:Number,
+        type:String,
         default : 1,
     },
+    profileImage : {
+        type:String,
+    }
 })
 
 userSchema.pre('save', function(next){

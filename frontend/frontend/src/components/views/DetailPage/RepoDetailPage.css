@@ -1,0 +1,48 @@
+.repo-container {
+    width: 100%;
+    padding-top: 5%;
+    text-align: center;
+}
+
+.repo-title {
+    border-bottom: 1px solid black;
+}
+
+.repo-span {
+    text-align: end;
+    margin: 3rem;
+
+}
+
+.repo-content {
+    display: block;
+    margin : 2rem;
+    float:left;
+    width:60%;
+}
+
+.repo-content-detail {
+    padding:1rem;
+    font-size: 1rem;
+}
+
+.repo-profile {
+    display: block;
+    float: right;
+    margin-right: 3%;
+    width:300px;
+    height:500px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.repo-profile-header
+{
+    padding-top: 30px;
+    height:120px;
+    font-size: 40px;
+    border-bottom: 1px solid black;
+}
+.repo-profile-content{
+    height:300px;
+}

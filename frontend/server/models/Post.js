@@ -27,7 +27,7 @@ const postSchema = mongoose.Schema({
         type: Number,
         default : 0,
     },
-    sitetype : {
+    siteType : {
         type: Number, //0이면 저장소, 1이면 투표
         detault : 0
     }

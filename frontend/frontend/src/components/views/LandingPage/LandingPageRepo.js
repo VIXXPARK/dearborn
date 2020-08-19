@@ -20,9 +20,10 @@ function LandingPageRepo(props) {
             }
         })
     }, [])
-
+    console.log(Posts)
     const renderItems = (post)=>{
-        return (
+        
+        return  (
         <Card
             className="item"
             hoverable={false}
@@ -35,6 +36,7 @@ function LandingPageRepo(props) {
             />
         </Card>
         )
+        
     }
 
     return (

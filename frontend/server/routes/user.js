@@ -20,7 +20,6 @@ var storage = multer.diskStorage({
       }
       cb(null, true)
     }
-    
 })
 
 var upload = multer({storage : storage}).single('file')
@@ -35,7 +34,6 @@ router.get('/auth', auth, (req, res)=>{
 })
 
 router.post("/register", (req, res)=>{
-
     upload(req, res, err => {
         const data = {
             email : req.body.email,
@@ -46,6 +44,7 @@ router.post("/register", (req, res)=>{
             job : req.body.job,
             major : req.body.major,
         }
+        console.log(data)
         const user = new User(data)
         user.save((err)=>{
             if(err) return res.status(400).json({success:false, err})
@@ -104,6 +103,51 @@ router.get('/logout', auth, (req,res)=> {
         return res.status(200).send({
             success:true
         })
+    })
+})
+
+router.get('/getUser', auth, (req, res)=>{
+    User.findOne({_id:req.user._id})
+    .exec((err, user)=>{
+        if(err) return res.status(400).json({success:false, err})
+        return res.status(200).json({success:true, user})
+    })
+})
+
+router.post('/modify', (req, res) =>{ //플로우만, Django랑 다름
+    upload((req, res, err)=>{
+        if(req.file){     
+            const data = {
+                content : req.body.content,
+                profileImage : req.file.path,
+                job : req.body.job,
+                major : req.body.major,
+            }
+            User.findOneAndUpdate({_id : req.body.uId}, data)
+            .exec((err, user)=>{
+                if(err) return res.status(400).json({success:false, err})
+                return res.status(200).json({success:true})
+            })
+        }else{
+            const data = {
+                content : req.body.content,
+                job : req.body.job,
+                major : req.body.major,
+            }
+            User.findOneAndUpdate({_id : req.body.uId}, data)
+            .exec((err, user)=>{
+                if(err) return res.status(400).json({success:false, err})
+                return res.status(200).json({success:true})
+            })
+        }
+    })
+})
+
+router.get('/delete', auth,  (req, res) => {
+    User.findOneAndDelete({_id : req.user._id})
+    .exec((err, doc)=>{
+        if(err) return res.status(400).json({success: false})
+        return res.status(200).json({success: true})
     })
 })
 

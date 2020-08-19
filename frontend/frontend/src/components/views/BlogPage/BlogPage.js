@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
-import { Button, Typography } from 'antd';
+import { Button, Typography, Card, Avatar } from 'antd';
 
 import './BlogPage.css'
+import Meta from 'antd/lib/card/Meta';
 
 const {Title} = Typography
 
@@ -19,7 +20,6 @@ function BlogPage(props) {
             if(response.data.success){
                 setRepos(response.data.repos)
                 setDesigner(response.data.user)
-                console.log(response.data.user)
             }else{
                 alert('데이터 가져오기 실패')
             }
@@ -27,7 +27,18 @@ function BlogPage(props) {
     }, [])
 
     const renderPost = (repo) => {
-        return <div>{repo.title}<br/></div>
+        return (
+            <Card
+                className="item"
+                cover={<a href={`/${repo.writer.nickname}/${repo._id}`}><img src={`http://localhost:5000/${repo.images[0]}`} alt/></a>}
+            >
+                <Meta
+                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>}
+                    title={repo.title}
+                    description={repo.content}
+                />
+            </Card>
+            )
     }
 
     return (
