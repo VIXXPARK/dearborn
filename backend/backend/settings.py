@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'usermanagement.apps.UsermanagementConfig',
     'post.apps.PostConfig',
     'assess.apps.AssessConfig',
+    'comment.apps.CommentConfig'
 
 ]
 
@@ -135,6 +136,7 @@ REST_FRAMEWORK = {
 }
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
+PASSWORD_RESET_TIMEOUT = 3600
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

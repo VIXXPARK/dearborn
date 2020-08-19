@@ -18,13 +18,24 @@ const userSchema = mongoose.Schema({
         type:String,
         minlength:5,
     },
-    image:String,
+    profileImage:String,
     token : {
         type: String,
     },
     tokenExp :{
         type: Number
-    }
+    },
+    content : {
+        type:String,
+    },
+    job : {
+        type:Number,
+        default : 1,
+    },
+    major : {
+        type:Number,
+        default : 1,
+    },
 })
 
 userSchema.pre('save', function(next){

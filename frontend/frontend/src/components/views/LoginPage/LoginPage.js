@@ -29,15 +29,19 @@ function LoginPage(props) {
             .then(response =>{
                 console.log(response.payload)
                 if(response.payload.success){
-                    window.localStorage.setItem('userId', response.payload.userId)
-                    if(RememberEmail){
-                        window.localStorage.setItem('rememberEmail', data.email)
+                    if(!response.payload.isActive){
+                        props.history.push('/checkEmail')
                     }else{
-                        localStorage.removeItem('rememberEmail')
+                        window.localStorage.setItem('userId', response.payload.userId)
+                        if(RememberEmail){
+                            window.localStorage.setItem('rememberEmail', data.email)
+                        }else{
+                            localStorage.removeItem('rememberEmail')
+                        }
+                        props.history.push('/')
                     }
-                    props.history.push('/')
                 }else{
-                    return alert(response.payload.message)
+                    alert('알수 없는 오류')
                 }
             })
         }

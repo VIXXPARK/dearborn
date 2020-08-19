@@ -23,4 +23,3 @@ urlpatterns = [
     path('like/getlike',getLikeView.as_view()),
     path('like/getLikeDetail',getLikeDetail.as_view()),
 ]
-##content

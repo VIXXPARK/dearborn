@@ -1,3 +1,23 @@
+.profile-content {
+    position: fixed;
+    left : 70%;
+    right : 95%;
+    top : 20%;
+    background-color: white;
+    width:25%;
+    font-size: 1rem;
+    color:black;
+    text-align: center;
+}
+
+.profile-header {
+    border-bottom: 1px black bold;
+}
+
+.profile-span {
+    
+}
+
 .container-detail {
     position: fixed;
     top: 20px;
@@ -22,3 +42,4 @@
     text-align: end;
     margin-right:2rem;
 }
+

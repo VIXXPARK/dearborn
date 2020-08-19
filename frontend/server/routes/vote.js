@@ -17,4 +17,11 @@ router.post('/upVote', (req, res)=> {
     })
 })
 
+router.post('/myVote', (req, res)=>{
+    Vote.find({userId:req.body.userId}, (err, posts)=>{
+        if(err) return res.status(400).json({success: false})
+        return res.json({success: true, posts})
+    })
+})
+
 module.exports = router
