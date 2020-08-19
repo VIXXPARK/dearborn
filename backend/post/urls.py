@@ -11,4 +11,3 @@ urlpatterns = [
     path('post/getPosts/content/',PostList.as_view()),
     path('post/getPosts/image/',PostImageViewSet.as_view())
 ]
-##content
