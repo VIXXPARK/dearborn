@@ -17,7 +17,6 @@ from rest_framework.status import(
     HTTP_502_BAD_GATEWAY,
     HTTP_500_INTERNAL_SERVER_ERROR
 )
-from usermanagement.models import User
 import json
 from rest_framework.views import APIView
 class getLikeDetail(APIView):
