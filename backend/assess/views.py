@@ -26,4 +26,19 @@ class saveAssess(APIView):
             'success':True
         }
         return Response(context,status=HTTP_200_OK)
-        
+
+class getAssess(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self,request):
+        assessed = getValueSerializer(data=request.data)
+        if not assessed.is_valid():
+            return Response({'Success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+        assessData = Assess.objects.filter(post=assessed.validated_data['post'])
+        assessList=[]
+        for assessValue in assessData:
+            assessList.append(assessValue)
+        context = {
+            'success':True,
+            'data':assessList
+        }
+        return Response(context,status=HTTP_200_OK)

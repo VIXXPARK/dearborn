@@ -1,6 +1,7 @@
 from django.db import models
 from usermanagement.models import User
 from post.models import Post
+from usermanagement.models import User
 class Assess(models.Model):
     aesthetics = models.PositiveIntegerField(default = 0)
     originality = models.PositiveIntegerField(default = 0)
@@ -9,4 +10,3 @@ class Assess(models.Model):
     popularity = models.PositiveIntegerField(default = 0)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
-    
