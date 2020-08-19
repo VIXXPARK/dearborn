@@ -5,10 +5,9 @@ class getLikeDetailSerializer(serializers.Serializer):
    user = serializers.CharField()
    post = serializers.CharField()
 
-
 class getLikeSerializer(serializers.Serializer):
    user = serializers.CharField()
-   
+
 class likeSerializer(serializers.ModelSerializer):
    class Meta:
       model = like
@@ -36,7 +35,7 @@ class PostSerializer(serializers.ModelSerializer):
    images = PostImageSerializer(many=True, read_only=True)
    class Meta:
       model = Post
-      fields = ('id', 'title','thumbnail', 'content','user','images')
+      fields = ('id', 'title','thumbnail', 'content','user','images','siteType')
    def create(self, validated_data):
       images_data = self.context['request'].FILES
       post = Post.objects.create(**validated_data)
