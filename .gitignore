@@ -1,6 +1,6 @@
 *.pyc
 /venv
 
-backend/**/migrations
-baekcnd/**/__pychache__
-backend/backend/my_settings
+**/migrations
+**/__pychache__
+backend/my_settings
