@@ -26,8 +26,8 @@ EMAIL = {
     'EMAIL_USE_TLS' : True,
     'EMAIL_PORT' : 587,
     'EMAIL_HOST' : "smtp.gmail.com",
-    'EMAIL_HOST_USER' : "windowed18@gmail.com",
-    'EMAIL_HOST_PASSWORD' : "wlstn125",
-    'SERVER_EMAIL' : "windowed18",
+    'EMAIL_HOST_USER' : "dearborn0819@gmail.com",
+    'EMAIL_HOST_PASSWORD' : "jinminsu0819!@",
+    'SERVER_EMAIL' : "dearborn0819",
     'REDIRECT_PAGE' : "http://localhost:3000",
 }
