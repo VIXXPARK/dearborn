@@ -57,7 +57,6 @@ class getLikeView(ListAPIView):
 
     def get_queryset(self):
         queryset = like.objects.all()
-        # user = self.request.query_params.get('user')
         queryset.filter(user=self.request.data['user'])
         return queryset
 
@@ -303,13 +302,7 @@ class getProfileView(ListAPIView):
             'userdata' : user,
         }
         return Response(context, status=HTTP_200_OK)
-        # except Exception as error:
-        #     context = {
-        #         'success': False,
-        #         'error':str(error)
-        #     }
-        #     return Response(context, status=HTTP_404_NOT_FOUND)
-
+       
 class PostImageViewSet(ListAPIView):
     queryset = PostImage.objects.all()
     serializer_class = PostImageSerializer

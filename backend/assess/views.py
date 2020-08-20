@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import saveValueSerializer,getValueSerializer
+from .serializers import aestheticsSerializer,originalitySerializer,convienienceSerializer,massProductionPossibilitySerializer
+from .serializers import popularitySerializer
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.status import(
@@ -34,11 +36,24 @@ class getAssess(APIView):
         if not assessed.is_valid():
             return Response({'Success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
         assessData = Assess.objects.filter(post=assessed.validated_data['post'])
-        assessList=[]
+        List=[]
         for assessValue in assessData:
-            assessList.append(assessValue)
+            aesthetics = aestheticsSerializer(Assess.objects.filter(user=assessValue.user),many=True).data
+            originality = originalitySerializer(Assess.objects.filter(user=assessValue.user),many=True).data
+            convienience = convienienceSerializer(Assess.objects.filter(user=assessValue.user),many=True).data
+            massProductionPossibility = massProductionPossibilitySerializer(Assess.objects.filter(user=assessValue.user),many=True).data
+            popularity = popularitySerializer(Assess.objects.filter(user=assessValue.user),many=True).data
+
+            post = {
+                'aesthetics': aesthetics,
+                'originiality': originality,
+                'convienience': convienience,
+                'massProductionPossibility':massProductionPossibility,
+                'popularity':popularity,
+            }
+            List.append(post)
         context = {
             'success':True,
-            'data':assessList
+            'data': List
         }
         return Response(context,status=HTTP_200_OK)
