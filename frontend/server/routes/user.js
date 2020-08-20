@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer')
 const {User} = require("../models/User");
+const {Post} = require('../models/Post')
 
 const {auth} = require('../middleware/auth')
 
@@ -144,11 +145,16 @@ router.post('/modify', (req, res) =>{ //플로우만, Django랑 다름
 })
 
 router.get('/delete', auth,  (req, res) => {
-    User.findOneAndDelete({_id : req.user._id})
-    .exec((err, doc)=>{
-        if(err) return res.status(400).json({success: false})
-        return res.status(200).json({success: true})
-    })
+    Post.deleteMany({writer : req.user._id})
+    .exec((err, res=>{
+        if(err) return res.status(400).json({success: false, err})
+        User.findOneAndDelete({_id : req.user._id})
+        .exec((err, doc)=>{
+            if(err) return res.status(400).json({success: false, err})
+            return res.status(200).json({success:true})
+        })
+    }))
+    
 })
 
 module.exports = router

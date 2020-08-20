@@ -30,7 +30,7 @@ function LandingPageRepo(props) {
             cover={<a href={`/${post.writer.nickname}/${post._id}`}><img src={`http://localhost:5000/${post.images[0]}`} alt/></a>}
         >
             <Meta
-                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>}
+                avatar={<Avatar src={`http://localhost:5000/${post.writer.profileImage}`}/>}
                 title={post.title}
                 description={<a href={`/${post.writer.nickname}`}>{post.writer.nickname}</a>}
             />
