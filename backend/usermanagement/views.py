@@ -1,25 +1,40 @@
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.authentication import HTTP_HEADER_ENCODING
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
     HTTP_200_OK,
     HTTP_201_CREATED,
-    HTTP_502_BAD_GATEWAY
+    HTTP_502_BAD_GATEWAY,
+    HTTP_500_INTERNAL_SERVER_ERROR
 )
-from .serializers import UserSerializer, UserSigninSerializer
-from .authentication import token_expire_handler, expires_in
-from django.contrib.auth import authenticate
+
+from django.shortcuts import redirect
+from django.views import View
+from django.contrib.auth import logout, authenticate
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
-from .models import User
+from django.core.mail import EmailMessage
+from django.core.exceptions import ValidationError
 from django.db.models import F
-from backend.settings import SECRET_KEY
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+
+from .serializers import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
+from .serializers import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
+from .authentication import token_expire_handler, expires_in
+from .models import User
+from .token import account_activation_token
+from .text import message, changeMessage
+from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY, MEDIA_ROOT
+from backend.my_settings import EMAIL
 import jwt, json
-from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY
+import os
 
 
 @api_view(["POST"])
@@ -36,10 +51,13 @@ def signin(request):
             password = signin_serializer.validated_data['password'],
         )
     except:
-        return Response({'message': 'Invalid Password'}, status=HTTP_502_BAD_GATEWAY)
-    if not user:
-        return Response({'message': 'Invalid Credentials or activate account'}, status = HTTP_404_NOT_FOUND)
-    
+        return Response({'message': 'Invalid Password','success': False}, status=HTTP_502_BAD_GATEWAY)
+    if user is None:
+        user = User.object.get(email = signin_serializer.validated_data['email'])
+        if not getattr(user,'is_active',None):
+            return Response({'message' : 'Non active','success':True},status=HTTP_200_OK)
+        return Response({'message': 'Invalid Credential','success': False}, status=HTTP_400_BAD_REQUEST)
+
     
     result = Token.objects.get_or_create(user = user)
     token = result[0]
@@ -49,10 +67,18 @@ def signin(request):
 
     response = Response({
         'success' : True,
+        'isActive' : True,
         'userId' : user.get_id(),
     }, status=HTTP_200_OK)
 
     response.set_cookie('w_auth',token)
+    return response
+
+@api_view(["get"])
+def signout(request):
+    logout(request)
+    response = Response({'success' : True}, HTTP_200_OK)
+    response.delete_cookie('w_auth')
     return response
 
 @api_view(["POST"])
@@ -61,9 +87,79 @@ def signup(request):
     signup_serializer = UserSerializer(data = request.data)
     if not signup_serializer.is_valid():
         return Response(signup_serializer.errors, status = HTTP_400_BAD_REQUEST)
-    signup_serializer.create(signup_serializer.validated_data)
-    
+
+    try :
+        user = signup_serializer.create(signup_serializer.validated_data)
+    except:
+        return Response({'success' : False}, HTTP_400_BAD_REQUEST)
+
+
+    current_site = get_current_site(request)
+    email = signup_serializer.validated_data['email']
+
+    if not emailVerification(current_site, user, email):
+        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
     return Response({'success': True}, status = HTTP_201_CREATED)
+
+def emailVerification(current_site, user, email):
+    try:    
+        current_site = current_site
+        domain = current_site.domain
+        uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        message_data = message(domain, uid64, token)
+
+        mail_title = "이메일 인증을 완료해주세요"
+        mail_to = email
+        email = EmailMessage(mail_title, message_data, to=[mail_to])
+        email.send()
+        return True
+    except:
+        return False
+
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def emailReVerification(request):
+    serializer = EmailVerificationSerializer(data = request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status = HTTP_400_BAD_REQUEST)
+    email = serializer.validated_data['email']
+    user = User.object.get(email = email)
+    current_site = get_current_site(request)
+    result = emailVerification(current_site, user, email)
+    if not result:
+        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+    return Response({'success':True}, status=HTTP_200_OK)
+
+def passwordChangeEmail(current_site, user, email):
+    try:    
+        current_site = current_site
+        domain = current_site.domain
+        uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        message_data = changeMessage(domain, uid64, token)
+
+        mail_title = "비밀번호 변경 메일입니다"
+        mail_to = email
+        email = EmailMessage(mail_title, message_data, to=[mail_to])
+        email.send()
+        return True
+    except:
+        return False
+
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def changeEmailRequest(request):
+    serializer = EmailVerificationSerializer(data = request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status = HTTP_400_BAD_REQUEST)
+    email = serializer.validated_data['email']
+    user = User.object.get(email = email)
+    current_site = get_current_site(request)
+    result = passwordChangeEmail(current_site, user, email)
+    if not result:
+        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+    return Response({'success':True}, status=HTTP_200_OK)
 
 class UserView(APIView):
     def get(self, request, format=None):
@@ -75,3 +171,84 @@ class UserView(APIView):
             'isAuth': True,
         }
         return Response(content)
+
+@permission_classes((AllowAny, ))
+class Activate(View):
+    def get(self, request, uid64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uid64))
+            user = User.object.get(pk=uid)
+            
+            if account_activation_token.check_token(user, token):
+                user.is_active = True
+                user.save()
+                return redirect(EMAIL['REDIRECT_PAGE'])
+            return redirect('http://localhost:3000/checkEmail/failed')
+        except:
+            return redirect('http://localhost:3000/checkEmail/failed')
+
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def ChangePassword(request):
+    try:
+        serializer = ChangePasswordSeriallizer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+        uid = force_text(urlsafe_base64_decode(serializer.validated_data['uid']))
+        token = serializer.validated_data['token']
+        password = serializer.validated_data['password']
+        user = User.object.get(id=uid)
+
+        if account_activation_token.check_token(user, token):
+            user.set_password(password)
+            user.save()
+            return Response({'success':True},status=HTTP_200_OK)
+        return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+    except: 
+        return Response({'success':False},status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def changeProfile(request):
+    profileSerializer = ChangeProfileSerializer(data = request.data)
+    if not profileSerializer.is_valid():
+        return Response(profileSerializer.errors, status = HTTP_400_BAD_REQUEST)
+    job = profileSerializer.validated_data['job']
+    major = profileSerializer.validated_data['major']
+    profileImage = profileSerializer.validated_data['profileImage']
+    content = profileSerializer.validated_data['content']
+    uid = profileSerializer.validated_data['uid']
+
+    user = User.object.filter(id = uid)
+    image = user[0].profileImage
+    os.remove(os.path.join(settings.MEDIA_ROOT, + image.storage + image.path))
+
+    user[0].major = major
+    user[0].profileImage = profileImage
+    user[0].job = job
+    user[0].content = content
+
+
+    if not emailVerification(current_site, user, email):
+        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+    return Response({'success': True}, status = HTTP_201_CREATED)
+
+@api_view(["get"])
+def deleteUser(request):
+    try:
+        user = request.user
+        image = user.profileImage
+        os.remove(os.path.join(settings.MEDIA_ROOT, + image.storage + image.path))
+        user.delete()
+        return Response({'success':True}, HTTP_200_OK)
+    except:
+        return Response({'success': False}, HTTP_400_BAD_REQUEST)
+    
+    # serializer = DeleteUserSerializer(data = request.data)
+    # if not serializer.is_valid():
+    #     return Response(serializer.error, status = HTTP_400_BAD_REQUEST)
+    # uid = serializer.validated_data['uid']
+    # user = User.object.filter(id=uid)
+    # user[0].delete()
+    # user[0].is_active = False
+    # user[0].save()

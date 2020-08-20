@@ -9,6 +9,7 @@ import { Row } from 'antd';
 
 function LandingPageVote(props) {
 
+    console.log(props.user.userData)
     const [Posts, setPosts] = useState([])
     const [VotePost, setVotePost] = useState([])
     const [ModalStyle, setModalStyle] = useState(false)

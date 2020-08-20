@@ -9,8 +9,6 @@ import {
     
 } from './types'
 
-import {getCookieValue} from '../components/utils/Cookie'
-
 import {USER_SERVER} from '../components/Config'
 
 export function registerUser(data){
@@ -52,7 +50,12 @@ export function auth(){
 }
 
 export function logoutUser(){
-    const request = axios.get(`${USER_SERVER}/logout`)
+    const config = {
+        headers : {
+            Authorization: `Token ${getCookieValue('w_auth')}`
+        }
+    }
+    const request = axios.get(`${USER_SERVER}/logout`, config)
     .then(response => response.data);
 
     return {

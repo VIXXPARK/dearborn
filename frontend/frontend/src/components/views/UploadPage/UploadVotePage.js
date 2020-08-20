@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 
 import {Form, Input, Upload, Button, Descriptions} from 'antd'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import Modal from 'antd/lib/modal/Modal';
 import {getCookieValue} from '../../utils/Cookie'
-import styles from './customstyle.css'
-
 const {TextArea} = Input
 
 
@@ -17,9 +15,6 @@ function UploadVotePage(props) {
     const [PreviewImage, setPreviewImage] = useState('')
     const [FileList, setFileList] = useState([])
     const [PreviewTitle, setPreviewTitle] = useState('')
-    const [ThumbnailFile, setThumbnailFile] = useState('')
-    const [ThumbnailUrl, setThumbnailUrl] = useState('')
-    const [ThumbLoading, setThumbLoading] = useState(false)
     
     //other
 
@@ -36,51 +31,34 @@ function UploadVotePage(props) {
           reader.onerror = error => reject(error);
         });
     }
-    function getThumbBase64(img, callback) {
-        const reader = new FileReader()
-        reader.addEventListener('load', () => callback(reader.result))
-        reader.readAsDataURL(img)
-    }
     const onFinish = (values) => {
         let formData = new FormData()
         const config = {
+<<<<<<< HEAD
             headers : 
             {
                 'Content-Type' : 'multipart/form-data',
                 Authorization: `Token ${getCookieValue('w_auth')}`
             }
+=======
+            // headers : 
+            // {
+            //     'Content-Type' : 'multipart/form-data',
+            //     Authorization: `Token ${getCookieValue('w_auth')}`
+            // }
+>>>>>>> Jin
         }
-        FileList.forEach(file => formData.append('files', file.originFileObj))
-        console.log(formData)
-        axios.post('/api/post/uploadImages', formData, config)
+        FileList.forEach(file => formData.append('image', file.originFileObj))
+        formData.append('user', props.user.userData._id)
+        formData.append('title', values.title)
+        formData.append('content', values.content)
+        axios.post('/api/post/uploadPost', formData, config)
         .then(response => {
-            if(!response.data.success)
-                return alert("이미지 업로드 실패")
-            else{
-                var temp = response.data.images
-                var tempArray = temp.slice(0, temp.length-2).split("&&")
-                
-                const posts = {
-                    writer : props.user.userData._id,
-                    title : values.title,
-                    content : values.content,
-                    images : tempArray,
-                    type : 1
-                }
-
-
-                axios.post('/api/post/uploadPost', posts)
-                .then(response => {
-                    if(response.data.success)
-                    {
-                        alert('성공')
-                        props.history.push('/')
-                    }
-                    else{
-                        return alert('페이지 업로드 실패')
-                    }
-                })
-
+            if(response.data.success){
+                alert('성공')
+                props.history.push('/')
+            }else{
+                return alert('페이지 업로드 실패')
             }
         })
     }
@@ -102,30 +80,11 @@ function UploadVotePage(props) {
         setFileList(newFileList)
     }
 
-    const handleThumbRemove = ()=> {
-        setThumbnailUrl(null)
-    }
-
     const handleCancel = () => setPreviewVisible(false)
 
     const handleChange = (info) => {
         setFileList(info.fileList)
     }
-
-    const handleThumbChange = (info) => {
-        console.log(info.file.status)
-        if (info.file.status === 'uploading') {
-          setThumbLoading(true)
-          return;
-        }
-        else{
-          getThumbBase64(info.file.originFileObj, imageUrl =>{
-            setThumbnailUrl(imageUrl)
-            setThumbLoading(false)
-          });
-          setThumbnailFile(info.file.originFileObj)
-        }
-      };
     
     const uploadButton = (
         <div>
@@ -134,12 +93,6 @@ function UploadVotePage(props) {
         </div>
       );
 
-    const uploadThumbButton = (
-        <div>
-            {ThumbLoading ? <LoadingOutlined/> : <PlusOutlined />}
-            <div>Upload</div>
-        </div>
-    )
     //other
 
 
@@ -154,18 +107,6 @@ function UploadVotePage(props) {
                         placeholder="제  목"
                     />
                 </Form.Item>
-                <label>썸네일</label>
-                <div className='upload-container' style={{display:'flex'}}>
-
-                <Upload
-                    listType="picture-card"
-                    onPreview={false}
-                    onRemove={handleThumbRemove}
-                    onChange={handleThumbChange}
-                    showUploadList={false}
-                >
-                    {ThumbnailUrl ? <img src={ThumbnailUrl} style={{width:'96px', height:'96px'}}/> : uploadThumbButton}
-                </Upload>
                 <Upload
                     listType="picture-card"
                     fileList={FileList}
@@ -175,7 +116,6 @@ function UploadVotePage(props) {
                 >
                     {FileList.length >= 8 ? null : uploadButton}
                 </Upload>
-                </div>
                 <Modal
                     visible={PreviewVisible}
                     title={PreviewTitle}

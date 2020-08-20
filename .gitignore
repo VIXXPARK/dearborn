@@ -1,5 +1,6 @@
 *.pyc
 /venv
-/usermanagement/migrations
-/usermanagement/__pychache
-/backend/__pychache__
+
+backend/**/migrations
+backend/**/__pychache__
+backend/backend/my_settings.py
