@@ -1,27 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sections/Repo.css'
 import {firstImg} from './Sections/imagePaths'
-import { Card } from 'antd'
+import { Card, Avatar } from 'antd'
+import axios from 'axios'
 
 const { Meta } = Card
 
 function LandingPageRepo(props) {
 
-    const [Photos, setPhotos] = useState([])
+    const [Posts, setPosts] = useState([])
 
-    const renderItems = ()=>{
-        return (
+    useEffect(() => {
+        axios.get('/api/post/getPosts') //나중에 Repo로 바꿔야됨
+        .then(response =>{
+            if(response.data.success){
+                setPosts(response.data.posts)
+            }else{
+                alert('데이터 가져오기 실패')
+            }
+        })
+    }, [])
+    console.log(Posts)
+    const renderItems = (post)=>{
+        
+        return  (
         <Card
             className="item"
-            hoverable={true}
-            cover={<a href><img src={firstImg} alt/></a>}
+            hoverable={false}
+            cover={<a href={`/${post.writer.nickname}/${post._id}`}><img src={`http://localhost:5000/${post.images[0]}`} alt/></a>}
         >
             <Meta
-                title={"제목"}
-                description={"설명"}
+                avatar={<Avatar src={`http://localhost:5000/${post.writer.profileImage}`}/>}
+                title={post.title}
+                description={<a href={`/${post.writer.nickname}`}>{post.writer.nickname}</a>}
             />
         </Card>
         )
+        
     }
 
     return (
@@ -31,12 +46,9 @@ function LandingPageRepo(props) {
             </div>
             <div className="items">
                 <div style={{marginTop: '7px'}}>
-                    {renderItems()}
-                    {renderItems()}
-                    {renderItems()}
-                    {renderItems()}
-                    {renderItems()}
-                    {renderItems()}
+                    {Posts.map((post) => (
+                        renderItems(post)
+                    ))}
                 </div>
             </div>
         </div>

@@ -9,10 +9,15 @@ import {
     
 } from './types'
 
+import {getCookieValue} from '../components/utils/Cookie'
+
 import {USER_SERVER} from '../components/Config'
 
 export function registerUser(data){
-    const request = axios.post(`${USER_SERVER}/register`, data)
+    const config = {
+        header : {'Content-Type' : 'multipart/form-data'}
+    }
+    const request = axios.post(`${USER_SERVER}/register`, data, config)
     .then(response => response.data)
 
     return {

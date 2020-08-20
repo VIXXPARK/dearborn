@@ -1,9 +1,29 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer')
 const {User} = require("../models/User");
+const {Post} = require('../models/Post')
 
 const {auth} = require('../middleware/auth')
 
+
+var storage = multer.diskStorage({
+    destination: (req, file, cb)=> {
+        cb(null, `uploads/profiles/`)
+      },
+    filename : (req, file, cb) => {
+      cb(null, `${Date.now()}_${file.originalname}`)
+    },
+    fileFilter : (req, file, cb) => {
+      const ext = path.extname(file.originalname)
+      if(ext !== '.jpt' || ext !=='.png'){
+        return cb(res.status(400).end('only jpg, png are allowed'), false)
+      }
+      cb(null, true)
+    }
+})
+
+var upload = multer({storage : storage}).single('file')
 
 router.get('/auth', auth, (req, res)=>{
     res.status(200).json({
@@ -15,13 +35,21 @@ router.get('/auth', auth, (req, res)=>{
 })
 
 router.post("/register", (req, res)=>{
-    const user = new User(req.body)
-
-    user.save((err, doc) => {
-        if(err) return res.json({success:false, err})
-
-        return res.status(200).json({
-            success: true
+    upload(req, res, err => {
+        const data = {
+            email : req.body.email,
+            nickname : req.body.nickname,
+            password : req.body.password,
+            content : req.body.content,
+            profileImage : req.file.path,
+            job : req.body.job,
+            major : req.body.major,
+        }
+        console.log(data)
+        const user = new User(data)
+        user.save((err)=>{
+            if(err) return res.status(400).json({success:false, err})
+            return res.status(200).json({success : true})
         })
     })
 })
@@ -77,6 +105,56 @@ router.get('/logout', auth, (req,res)=> {
             success:true
         })
     })
+})
+
+router.get('/getUser', auth, (req, res)=>{
+    User.findOne({_id:req.user._id})
+    .exec((err, user)=>{
+        if(err) return res.status(400).json({success:false, err})
+        return res.status(200).json({success:true, user})
+    })
+})
+
+router.post('/modify', (req, res) =>{ //플로우만, Django랑 다름
+    upload((req, res, err)=>{
+        if(req.file){     
+            const data = {
+                content : req.body.content,
+                profileImage : req.file.path,
+                job : req.body.job,
+                major : req.body.major,
+            }
+            User.findOneAndUpdate({_id : req.body.uId}, data)
+            .exec((err, user)=>{
+                if(err) return res.status(400).json({success:false, err})
+                return res.status(200).json({success:true})
+            })
+        }else{
+            const data = {
+                content : req.body.content,
+                job : req.body.job,
+                major : req.body.major,
+            }
+            User.findOneAndUpdate({_id : req.body.uId}, data)
+            .exec((err, user)=>{
+                if(err) return res.status(400).json({success:false, err})
+                return res.status(200).json({success:true})
+            })
+        }
+    })
+})
+
+router.get('/delete', auth,  (req, res) => {
+    Post.deleteMany({writer : req.user._id})
+    .exec((err, res=>{
+        if(err) return res.status(400).json({success: false, err})
+        User.findOneAndDelete({_id : req.user._id})
+        .exec((err, doc)=>{
+            if(err) return res.status(400).json({success: false, err})
+            return res.status(200).json({success:true})
+        })
+    }))
+    
 })
 
 module.exports = router

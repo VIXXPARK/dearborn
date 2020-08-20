@@ -1,0 +1,20 @@
+.modal-content-style {
+    max-height: calc(100vh);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.modal-content-style::-webkit-scrollbar{
+    display : none;
+}
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    left:5%;
+    right:40%;
+    background-color: white;
+    color: #FFF;
+    font-size: 40px;
+    opacity:100%;
+}

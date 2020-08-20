@@ -18,12 +18,26 @@ const userSchema = mongoose.Schema({
         type:String,
         minlength:5,
     },
-    image:String,
+    profileImage:String,
     token : {
         type: String,
     },
     tokenExp :{
         type: Number
+    },
+    content : {
+        type:String,
+    },
+    job : {
+        type:String,
+        default : '1',
+    },
+    major : {
+        type:String,
+        default : 1,
+    },
+    profileImage : {
+        type:String,
     }
 })
 

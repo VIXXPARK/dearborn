@@ -1,0 +1,20 @@
+.blog-container {
+    width:100%;
+    height:100%;
+    padding-top:5%;
+}
+.blog-header {
+    width:30%;
+    margin : auto;
+    text-align: center;
+    border : solid;
+    border-radius: 3rem;
+}
+.blog-follow {
+    margin-top: 3%;
+    text-align: center;
+}
+.blog-section{
+    margin-top: 5%;
+    border-top: 1px solid;
+}

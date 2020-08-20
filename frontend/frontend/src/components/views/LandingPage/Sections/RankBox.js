@@ -4,7 +4,7 @@ import { List, Skeleton, Button, Avatar } from 'antd';
 
 function RankBox(props) {
     const [list, setlist] = useState([])
-    const [InitLoading, setInitLoading] = useState(true)
+    const [InitLoading, setInitLoading] = useState(false)
     const [Loading, setLoading] = useState(false)
 
     useEffect(() => {
