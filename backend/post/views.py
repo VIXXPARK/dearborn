@@ -237,9 +237,6 @@ class upViewSet(ListAPIView):
         }
         return Response(context,status=HTTP_200_OK)
 
-
-
-
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = Post.objects.all()
