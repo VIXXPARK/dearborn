@@ -3,6 +3,7 @@ from usermanagement.models import User
 from backend.settings import MEDIA_URL
 import os
 from django.dispatch import receiver
+
 def _delete_file(path):
    if os.path.isfile(path):
       os.remove(path)
