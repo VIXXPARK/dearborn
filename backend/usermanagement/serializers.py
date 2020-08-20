@@ -47,11 +47,11 @@ class UserSerializer(serializers.ModelSerializer):
         
         try:
             new_user = myManager.create_user(email, password, nickname = nickname,
-                       job = job, major = major, profileImage=profileImage, content=content)
+                       job = job, major = major,profileImage=profileImage, content=content)
             return new_user
         except:
             raise IntegrityError
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'nickname', 'job', 'major', 'profileImage','content']
+        fields = ['email', 'password', 'nickname', 'job', 'major','profileImage','content']

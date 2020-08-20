@@ -287,7 +287,7 @@ class getProfileView(ListAPIView):
                 'content' : postraw.content,
                 'updated_dt' : postraw.updated_dt,
                 'writer' : postraw.user.id,
-                'image' : image,
+                'images' : image,
                 'thumbnail' : thumbnail,
                 
             }
@@ -295,8 +295,8 @@ class getProfileView(ListAPIView):
         
         context={
             'success': True,
-            'postdata': postJson,
-            'userdata' : user,
+            'repos': postJson,
+            'user' : user,
         }
         return Response(context, status=HTTP_200_OK)
        

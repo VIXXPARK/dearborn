@@ -34,19 +34,11 @@ function UploadVotePage(props) {
     const onFinish = (values) => {
         let formData = new FormData()
         const config = {
-<<<<<<< HEAD
-            headers : 
-            {
-                'Content-Type' : 'multipart/form-data',
-                Authorization: `Token ${getCookieValue('w_auth')}`
-            }
-=======
             // headers : 
             // {
             //     'Content-Type' : 'multipart/form-data',
             //     Authorization: `Token ${getCookieValue('w_auth')}`
             // }
->>>>>>> Jin
         }
         FileList.forEach(file => formData.append('image', file.originFileObj))
         formData.append('user', props.user.userData._id)

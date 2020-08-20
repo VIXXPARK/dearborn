@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from 'antd';
 import axios from 'axios';
 import Modal from 'antd/lib/modal/Modal';
+import {getCookieValue} from '../../utils/Cookie'
 
 function UserInfoMainPage(props) {
 
@@ -15,7 +16,12 @@ function UserInfoMainPage(props) {
     }
 
     const handleOK = (e) => {
-        axios.get('/api/user/delete')
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.get('/api/user/delete', config)
         .then(response =>{
             if(response.data.success){
                 setModalVisible(false)

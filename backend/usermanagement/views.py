@@ -238,7 +238,7 @@ def deleteUser(request):
     try:
         user = request.user
         image = user.profileImage
-        os.remove(os.path.join(settings.MEDIA_ROOT, + image.storage + image.path))
+        os.remove(image.path)
         user.delete()
         return Response({'success':True}, HTTP_200_OK)
     except:
