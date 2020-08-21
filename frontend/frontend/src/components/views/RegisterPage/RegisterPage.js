@@ -44,7 +44,7 @@ function RegisterPage(props) {
             let formData = new FormData()
             let tempMajor = Major.join(':')
             data.major = tempMajor
-            formData.append('file', ProfileImage)
+            formData.append('profileImage', ProfileImage)
             formData.append('content', data.content)
             formData.append('major', tempMajor)
             formData.append('email', data.email)

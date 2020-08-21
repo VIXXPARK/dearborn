@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {Typography, Button} from 'antd'
 
+import LikeDislike from './Sections/LikeDislike'
+
 import './RepoDetailPage.css'
 
 const {Title} = Typography
@@ -43,6 +45,7 @@ function RepoDetailPage(props) {
                     {Repo.content}
                 </div>
                 <br/><br/>
+                <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
             </div>
             <div className="repo-profile">
                 <div className="repo-profile-header">

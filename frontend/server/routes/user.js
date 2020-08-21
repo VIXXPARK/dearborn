@@ -23,7 +23,7 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({storage : storage}).single('file')
+var upload = multer({storage : storage}).single('profileImage')
 
 router.get('/auth', auth, (req, res)=>{
     res.status(200).json({

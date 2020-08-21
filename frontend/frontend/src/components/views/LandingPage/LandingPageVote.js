@@ -15,7 +15,7 @@ function LandingPageVote(props) {
 
     
     useEffect(() => {
-        axios.get('/api/post/getPosts')
+        axios.get('/api/post/getPosts/')
         .then(response => {
             if(response.data.success){
                 setPosts(response.data.posts)
