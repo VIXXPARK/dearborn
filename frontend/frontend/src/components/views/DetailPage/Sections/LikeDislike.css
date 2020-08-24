@@ -29,3 +29,11 @@
 .dislike-button:hover {
     background-color: red;
 }
+
+#liked-checked {
+    background-color: greenyellow;
+}
+
+#disliked-checked {
+    background-color: red;
+}

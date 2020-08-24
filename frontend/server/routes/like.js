@@ -53,10 +53,10 @@ router.post('/unDislikes', (req, res)=> {
     })
 })
 
-router.post('/getDislikes', (req, res)=>{
-    Dislike.find({postId : req.body.postId}, (err, dislikes)=>{
+router.post('/getDisliked', (req, res)=>{
+    Dislike.find({postId : req.body.postId, userId : req.body.userId}, (err, dislike)=>{
         if(err) return res.status(400).json({success: false})
-        return res.json({success: true, dislikes})
+        return res.json({success: true, dislike})
     })
 })
 

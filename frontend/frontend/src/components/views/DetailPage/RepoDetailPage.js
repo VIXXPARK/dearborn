@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Typography, Button} from 'antd'
 
 import LikeDislike from './Sections/LikeDislike'
+import CommentArea from './Sections/CommentArea'
 
 import './RepoDetailPage.css'
 
@@ -46,6 +47,9 @@ function RepoDetailPage(props) {
                 </div>
                 <br/><br/>
                 <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
+                    
+                <br/>
+                <CommentArea postId={postId}/>
             </div>
             <div className="repo-profile">
                 <div className="repo-profile-header">
