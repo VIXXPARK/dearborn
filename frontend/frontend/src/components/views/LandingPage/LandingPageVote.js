@@ -15,23 +15,23 @@ function LandingPageVote(props) {
     const [ModalStyle, setModalStyle] = useState(false)
 
     
-    useEffect(() => {
-        axios.get('/api/post/getPosts')
-        .then(response => {
-            if(response.data.success){
-                setPosts(response.data.posts)
-            }
-        })
-        axios.post('/api/vote/myVote', {userId : localStorage.getItem('userId')})
-        .then(response => {
-            if(response.data.success){
-                let variable = response.data.posts.map(post => post.postId)
-                setVotePost(variable)
-            }else{
-                alert('투표정보 가져오기 실패')
-            }
-        })
-    }, [])
+    // useEffect(() => {
+    //     axios.get('/api/post/getPosts')
+    //     .then(response => {
+    //         if(response.data.success){
+    //             setPosts(response.data.posts)
+    //         }
+    //     })
+    //     axios.post('/api/vote/myVote', {userId : localStorage.getItem('userId')})
+    //     .then(response => {
+    //         if(response.data.success){
+    //             let variable = response.data.posts.map(post => post.postId)
+    //             setVotePost(variable)
+    //         }else{
+    //             alert('투표정보 가져오기 실패')
+    //         }
+    //     })
+    // }, [])
 
     return (
         <div style={{width:'75%', margin:'3rem auto'}}>

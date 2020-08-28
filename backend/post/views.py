@@ -300,43 +300,66 @@ class getProfileView(ListAPIView):
         }
         return Response(context, status=HTTP_200_OK)
        
-class PostImageViewSet(ListAPIView):
-    queryset = PostImage.objects.all()
-    serializer_class = PostImageSerializer
-    permission_classes = (permissions.AllowAny,)
+# class PostImageViewSet(ListAPIView):
+#     queryset = PostImage.objects.all()
+#     serializer_class = PostImageSerializer
+#     permission_classes = (permissions.AllowAny,)
 
-    def get_queryset(self):
-        queryset = PostImage.objects.raw('select * from post_postimage group by post_id')
-        return queryset
+#     def get_queryset(self):
+#         queryset = PostImage.objects.raw('select * from post_postimage group by post_id')
+#         return queryset
 
-    def get(self,request):
-        try:
-            data=PostImageSerializer(self.get_queryset(),many=True).data
-            context={
-                'success':True,
-                'data':data,
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context = {
-                'error':str(error)
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+#     def get(self,request):
+#         try:
+#             data=PostImageSerializer(self.get_queryset(),many=True).data
+#             context={
+#                 'success':True,
+#                 'data':data,
+#             }
+#             return Response(context,status=HTTP_200_OK)
+#         except Exception as error:
+#             context = {
+#                 'error':str(error)
+#             }
+#             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
 
-class PostList(ListAPIView):
+# class PostList(ListAPIView):
+#     serializer_class = PostSerializer
+#     permission_classes = (permissions.AllowAny,)
+#     def get_queryset(self):
+#         queryset = Post.objects.all()
+#         return queryset
+
+#     def get(self,request):
+#         try:
+#             data=PostSerializer(self.get_queryset(),many=True).data
+#             context = {
+#                 'success':True,
+#                 'data':data,
+#                 'user':userdata,
+#             }
+#             return Response(context,status=HTTP_200_OK)
+#         except Exception as error:
+#             context = {
+#                 'error':str(error),
+#                 'success':False
+#             }
+#             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class PostView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.AllowAny,)
-    def get_queryset(self):
-        queryset = Post.objects.all()
-        return queryset
 
     def get(self,request):
         try:
-            data=PostSerializer(self.get_queryset(),many=True).data
+            data=PostSerializer(Post.objects.all(),many=True).data
+           
             context = {
                 'success':True,
                 'data':data,
-                'user':userdata,
+               
+               
             }
             return Response(context,status=HTTP_200_OK)
         except Exception as error:
@@ -345,4 +368,3 @@ class PostList(ListAPIView):
                 'success':False
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
-

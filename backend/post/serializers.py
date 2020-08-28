@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Post,PostImage,like,disLike
 
+
 class getLikeDetailSerializer(serializers.Serializer):
    user = serializers.CharField()
    post = serializers.CharField()

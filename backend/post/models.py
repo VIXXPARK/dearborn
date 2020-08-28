@@ -17,6 +17,7 @@ class Post(models.Model):
    thumbnail = models.ImageField(upload_to="thumb/",null=True)
    view = models.IntegerField(default=0)
    siteType = models.IntegerField(default=0)
+   space = models.BooleanField(default=True)
    def get_id(self):
       return self.id
    
