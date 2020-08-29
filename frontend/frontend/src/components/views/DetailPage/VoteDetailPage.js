@@ -21,7 +21,7 @@ function VoteDetailPage(props) {
                 alert('조회수 에러')
             }
         })
-        axios.post('/api/post/getPostDetail', {postId : params.get('postId')})
+        axios.post('/api/post/getPostDetail', {id : params.get('postId')})
         .then(response => {
             if(response.data.success){
                 
@@ -52,7 +52,6 @@ function VoteDetailPage(props) {
                 </div>
                 <div className="profile-span">
                     {Writer.content}
-                    sfjlskdfjlkdsfjldsjfldsjldsjflkfsdjdlfksjs
                 </div>
             </div>
             <div style={{color:'black'}}>

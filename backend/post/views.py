@@ -352,33 +352,77 @@ class PostView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self,request):
-        # try:
-        data = Post.objects.all()
-        postData = []
-        for post in data:
-            user = User.object.filter(id=post.user.id)
-            postDic = {
-                'id' : post.id,
-                'title' : post.title,
-                'content' : post.content,
-                'updated_dt' : post.updated_dt,
-                'userId' : post.user.id,
-                'thumbnail' : post.thumbnail.url,
-                'writer' : user[0].nickname,
-            }
-            postData.append(postDic)
-                
-                
+        try:
+            data = Post.objects.all()
+            postData = []
+            for post in data:
+                user = User.object.filter(id=post.user.id)
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : post.user.id,
+                    'thumbnail' : post.thumbnail.url,
+                    'writer' : user[0].nickname,
+                    'profileImage' : user[0].profileImage.url,
+                }
+                postData.append(postDic)
            
-        context = {
-            'success':True,
-            'data':postData,
+            context = {
+                'success':True,
+                'data':postData,
                
+            }
+            return Response(context,status=HTTP_200_OK)
+        except Exception as error:
+            context = {
+                'error':str(error),
+                'success':False
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+class getDetailView(ListAPIView):
+    queryset = Post.objects.all()
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self,request):
+        mySerializer = viewSerializer(data = request.data)
+        if not mySerializer.is_valid():
+            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+            
+        postData = Post.objects.filter(id = mySerializer.validated_data['id'])
+        userdata = User.object.get(id = postData[0].user.id)
+        userid = userdata.get_id()
+        try:
+            profileImage = userdata.profileImage.url,
+        except:
+            profileImage = None,
+        user = {
+            'id' : userdata.id,
+            'nickname' : userdata.nickname,
+            'profileImage' : profileImage,
         }
-        return Response(context,status=HTTP_200_OK)
-        # except Exception as error:
-        #     context = {
-        #         'error':str(error),
-        #         'success':False
-        #     }
-        #     return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        image = PostImageSerializer(postData, many=True).data
+        try:
+            thumbnail = postData[0].thumbnail.url(),
+        except:
+            thumbnail = None,
+            
+        postDict = {
+            'title' : postData[0].title,
+            'content' : postData[0].content,
+            'updated_dt' : postData[0].updated_dt,
+            'writer' : postData[0].user.id,
+            'images' : image,
+            'thumbnail' : thumbnail,
+                
+        }
+        
+        context={
+            'success': True,
+            'repos': postDict,
+            'user' : user,
+        }
+        return Response(context, status=HTTP_200_OK)
