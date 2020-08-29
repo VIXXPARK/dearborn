@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer, PostIdSerializer
-from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer,PostThumbnailSerializer
+from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer
 from .models import Post,PostImage,like,disLike
 from usermanagement.models import User
 from rest_framework import filters
 from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
+from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.response import Response
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
@@ -20,6 +20,7 @@ from rest_framework.status import(
 )
 import json
 from rest_framework.views import APIView
+
 class getLikeDetail(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self,request):
@@ -313,10 +314,8 @@ class PostView(ListAPIView):
                 user = User.object.filter(id=post.user.id)
                 try:
                     thumb = post.thumbnail.url
-                    # thumbnail = PostThumbnailSerializer(Post.objects.filter(id=post.id),many=True).data
                 except:
                     thumb=None,
-                    # thumbnail = None,
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
