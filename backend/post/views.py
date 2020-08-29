@@ -276,11 +276,17 @@ class getProfileView(ListAPIView):
             'profileImage' : profileImage,
         }
         postJson = []
-        
+        image = []
         for postraw in postdata:
-            image = PostImageSerializer(PostImage.objects.filter(post=postraw.id), many=True).data
+            jpgs = PostImage.objects.filter(post=postraw.id)
             try:
-                thumbnail = postraw.thumbnail.url(),
+                 for pngs in jpgs:
+                    image.append(pngs.image.url)
+            except:
+                pass
+
+            try:
+                thumbnail = postraw.thumbnail.url()
             except:
                 thumbnail = None,
             
