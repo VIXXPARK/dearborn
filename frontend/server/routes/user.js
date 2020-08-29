@@ -23,7 +23,7 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({storage : storage}).single('file')
+var upload = multer({storage : storage}).single('profileImage')
 
 router.get('/auth', auth, (req, res)=>{
     res.status(200).json({
@@ -90,7 +90,8 @@ router.post('/login', (req,res)=>{
                 res.cookie('w_auth', user.token)
                     .status(200).json({
                         success:true,
-                        userId: user._id
+                        userId: user._id,
+                        isActive : user.isActive,
                     })
             })
         })

@@ -30,6 +30,8 @@ app.use('/uploads', express.static('uploads'))
 app.use('/api/user', require('./routes/user'))
 app.use('/api/post', require('./routes/post'))
 app.use('/api/vote', require('./routes/vote'))
+app.use('/api/like', require('./routes/like'))
+app.use('/api/comment', require('./routes/comment'))
 
 
 app.listen(PORT, ()=>{

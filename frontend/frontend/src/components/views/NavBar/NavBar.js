@@ -64,16 +64,6 @@ function NavBar(props) {
                 </div>
             </div>
         </header>
-        <nav>
-            <div className="menu-container">
-                <div className="menu">Men
-                    <MenCategory />
-                </div>
-                <div className="menu">Women
-                    <WomenCategory />
-                </div>
-            </div>
-        </nav>
         </>
     );
 }

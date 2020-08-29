@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {Typography, Button} from 'antd'
 
+import LikeDislike from './Sections/LikeDislike'
+import CommentArea from './Sections/CommentArea'
+import AssessArea from './Sections/AssessArea';
+
 import './RepoDetailPage.css'
+import AssessShow from './Sections/AssessShow';
+
 
 const {Title} = Typography
 
@@ -10,6 +16,7 @@ function RepoDetailPage(props) {
 
     const [Writer, setWriter] = useState("")
     const [Repo, setRepo] = useState("")
+    const [AssessValue, setAssessValue] = useState([])
     const postId = props.match.params.postId
     useEffect(() => {
         axios.post('/api/post/getPostDetail', {postId : postId, siteType : 0})
@@ -23,6 +30,10 @@ function RepoDetailPage(props) {
             }
         })
     }, [])
+
+    const updateAssess = (value) => {
+        setAssessValue(value)
+    }
 
     return (
         <div className="repo-container">
@@ -43,6 +54,13 @@ function RepoDetailPage(props) {
                     {Repo.content}
                 </div>
                 <br/><br/>
+                <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
+                <br/>
+                <AssessShow assessValue={AssessValue}/>
+                <AssessArea postId={postId} userId={localStorage.getItem('userId')}
+                    updateAssessValue={updateAssess}/>
+                <br/>
+                <CommentArea postId={postId}/>
             </div>
             <div className="repo-profile">
                 <div className="repo-profile-header">
@@ -55,7 +73,9 @@ function RepoDetailPage(props) {
                 <div className="repo-profile-button">
                     <a href={`/${Writer.nickname}`}><Button>블로그로 가기</Button></a>
                 </div>
+
             </div>
+            
         </div>
     );
 }
