@@ -15,9 +15,10 @@ function VoteDetailPage(props) {
         if((params.get('designer') ||params.get('postId')) == null)
             return
         document.body.style.cssText = 'overflow-y : hidden;'
-        axios.post('/api/post/upView', {postId : params.get('postId')})
+        axios.post('/api/post/upView', {id : params.get('postId')})
         .then(response => {
             if(!response.data.success){
+                console.log(response.data)
                 alert('조회수 에러')
             }
         })

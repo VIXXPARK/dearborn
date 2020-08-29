@@ -7,7 +7,7 @@ from usermanagement.models import User
 from rest_framework import filters
 from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser,FormParser
+from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
 from rest_framework.response import Response
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
@@ -226,7 +226,7 @@ class upViewSet(ListAPIView):
     def post(self,request):
         view = viewSerializer(data=request.data)
         if not view.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'data':view.data},status=HTTP_400_BAD_REQUEST)
         
         postdata = Post.objects.get(id=view.validated_data['id'])
         postView = postdata.get_view()
