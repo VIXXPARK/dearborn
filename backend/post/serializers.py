@@ -45,3 +45,5 @@ class PostSerializer(serializers.ModelSerializer):
        
       return post
 
+class PostIdSerializer(serializers.Serializer):
+   id = serializers.IntegerField()

@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer
+from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer, PostIdSerializer
 from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer
 from .models import Post,PostImage,like,disLike
 from usermanagement.models import User
@@ -382,47 +382,52 @@ class PostView(ListAPIView):
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
 
-class getDetailView(ListAPIView):
-    queryset = Post.objects.all()
+class PostDetail(APIView):
+
     permission_classes = (permissions.AllowAny,)
 
     def post(self,request):
-        mySerializer = viewSerializer(data = request.data)
-        if not mySerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
-            
-        postData = Post.objects.filter(id = mySerializer.validated_data['id'])
-        userdata = User.object.get(id = postData[0].user.id)
+        postID = PostIdSerializer(data=request.data)
+        if not postID.is_valid():
+            return Response({'success':False,},status = HTTP_400_BAD_REQUEST)
+        postdata = Post.objects.get(id=postID.validated_data['id'])
+        postimages = PostImage.objects.filter(post=postID.validated_data['id'])
+        userdata = User.object.get(id = postdata.user.id)
         userid = userdata.get_id()
+
+
+
+        Jpost = []
+        for datas in postimages:
+            image = PostImageSerializer(PostImage.objects.filter(post=datas.id),many=True).data
+            try:
+                mainimg =image,
+            except:
+                mainimg = None,
+
+            Jpost.append(mainimg)
         try:
             profileImage = userdata.profileImage.url,
         except:
             profileImage = None,
+
         user = {
-            'id' : userdata.id,
-            'nickname' : userdata.nickname,
-            'profileImage' : profileImage,
+            'nickname':userdata.nickname,
+            'profileImage': profileImage,
+            'content': userdata.content,
         }
-        
-        image = PostImageSerializer(postData, many=True).data
-        try:
-            thumbnail = postData[0].thumbnail.url(),
-        except:
-            thumbnail = None,
-            
-        postDict = {
-            'title' : postData[0].title,
-            'content' : postData[0].content,
-            'updated_dt' : postData[0].updated_dt,
-            'writer' : postData[0].user.id,
-            'images' : image,
-            'thumbnail' : thumbnail,
-                
+
+        detailPost = {
+            'id':postdata.id,
+            'title':postdata.title,
+            'content':postdata.content,
+            'updatedAt' : postdata.updated_dt,
+            'images':Jpost,
         }
-        
-        context={
-            'success': True,
-            'repos': postDict,
+
+        context = {
+            'success' : True,
+            'detailPost' : detailPost,
             'user' : user,
         }
-        return Response(context, status=HTTP_200_OK)
+        return Response(context,status=HTTP_200_OK)

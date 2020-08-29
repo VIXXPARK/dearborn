@@ -1,5 +1,5 @@
 from .views import PostViewSet, getProfileView ,upViewSet
-from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,getDetailView
+from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
 from django.urls import path,include
 from usermanagement.models import User
 from rest_framework.routers import DefaultRouter
@@ -13,7 +13,7 @@ urlpatterns = [
     path('post/uploadPost',post_list,name="post_list"),
     path('post/<int:pk>',post_detail,name="post_detail"),
     path('post/getPosts',PostView.as_view()),
-    path('post/getPostDetail',getDetailView.as_view()),
+    path('post/getPostDetail',PostDetail.as_view()),
     path('post/getProfile',getProfileView.as_view()),
     path('post/upView',upViewSet.as_view()),
     path('like/up',likeView.as_view()),

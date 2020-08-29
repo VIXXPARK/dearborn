@@ -26,8 +26,9 @@ function VoteDetailPage(props) {
             if(response.data.success){
                 
                 setOnModal(true)
-                setDetailPost(response.data.detailPost[0])
-                setWriter(response.data.detailPost[0].writer)
+                console.log(response.data)
+                setDetailPost(response.data.detailPost)
+                setWriter(response.data.user)
             }else{
                 alert('데이터 가져오기 실패')
             }
@@ -64,7 +65,7 @@ function VoteDetailPage(props) {
                 <div className="detail-content">
                     {DetailPost.images && DetailPost.images.map((image, i) => (
                         <div>
-                            <img key={i} src={`http://localhost:5000/${image}`} style={{width:'100%'}} />
+                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
                         </div>
                     ))}
                     {DetailPost.content}
