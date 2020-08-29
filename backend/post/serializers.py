@@ -47,3 +47,6 @@ class PostSerializer(serializers.ModelSerializer):
 
 class PostIdSerializer(serializers.Serializer):
    id = serializers.IntegerField()
+
+class PostThumbnailSerializer(serializers.Serializer):
+   thumbnail = serializers.CharField()

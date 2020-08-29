@@ -1,12 +1,13 @@
+# -*- coding: utf-8 -*-
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer, PostIdSerializer
-from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer
+from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer,PostThumbnailSerializer
 from .models import Post,PostImage,like,disLike
 from usermanagement.models import User
 from rest_framework import filters
 from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser,FormParser
+from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
 from rest_framework.response import Response
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
@@ -357,13 +358,17 @@ class PostView(ListAPIView):
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)
+                try:
+                    thumbnail = PostThumbnailSerializer(Post.objects.filter(id=post.id),many=True).data
+                except:
+                    thumbnail = None,
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
                     'content' : post.content,
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
-                    'thumbnail' : post.thumbnail.url,
+                    'thumbnail' : thumbnail,
                     'writer' : user[0].nickname,
                     'profileImage' : user[0].profileImage.url,
                 }
@@ -385,7 +390,7 @@ class PostView(ListAPIView):
 class PostDetail(APIView):
 
     permission_classes = (permissions.AllowAny,)
-
+    parser_classes = (MultiPartParser,FormParser,JSONParser)
     def post(self,request):
         postID = PostIdSerializer(data=request.data)
         if not postID.is_valid():
@@ -398,14 +403,14 @@ class PostDetail(APIView):
 
 
         Jpost = []
-        for datas in postimages:
-            image = PostImageSerializer(PostImage.objects.filter(post=datas.id),many=True).data
-            try:
-                mainimg =image,
-            except:
-                mainimg = None,
+        
+        image = PostImageSerializer(PostImage.objects.filter(post=postID.validated_data['id']),many=True).data
+        try:
+            mainimg =image,
+        except:
+            mainimg = None,
 
-            Jpost.append(mainimg)
+        Jpost.append(mainimg)
         try:
             profileImage = userdata.profileImage.url,
         except:
