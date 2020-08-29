@@ -312,16 +312,18 @@ class PostView(ListAPIView):
             for post in data:
                 user = User.object.filter(id=post.user.id)
                 try:
-                    thumbnail = PostThumbnailSerializer(Post.objects.filter(id=post.id),many=True).data
+                    thumb = post.thumbnail.url
+                    # thumbnail = PostThumbnailSerializer(Post.objects.filter(id=post.id),many=True).data
                 except:
-                    thumbnail = None,
+                    thumb=None,
+                    # thumbnail = None,
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
                     'content' : post.content,
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
-                    'thumbnail' : thumbnail,
+                    'thumbnail' : thumb,
                     'writer' : user[0].nickname,
                     'profileImage' : user[0].profileImage.url,
                 }
@@ -348,24 +350,21 @@ class PostDetail(APIView):
         postID = PostIdSerializer(data=request.data)
         if not postID.is_valid():
             return Response({'success':False,},status = HTTP_400_BAD_REQUEST)
+
         postdata = Post.objects.get(id=postID.validated_data['id'])
         postimages = PostImage.objects.filter(post=postID.validated_data['id'])
         userdata = User.object.get(id = postdata.user.id)
         userid = userdata.get_id()
 
         Jpost = []
-        
-        image = PostImageSerializer(PostImage.objects.filter(post=postID.validated_data['id']),many=True).data
         jpgs = PostImage.objects.filter(post=postID.validated_data['id'])
 
         try:
-            # mainimg =image,
             for pngs in jpgs:
                 Jpost.append(pngs.image.url)
         except:
             mainimg = None,
 
-        # Jpost.append(mainimg)
         try:
             profileImage = userdata.profileImage.url,
         except:
@@ -392,49 +391,3 @@ class PostDetail(APIView):
         }
         return Response(context,status=HTTP_200_OK)
 
-class getDetailView(ListAPIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def post(self,request):
-        mySerializer = viewSerializer(data = request.data)
-        if not mySerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
-
-        try:
-            postData = Post.objects.get(id = mySerializer.validated_data['id'])
-            userdata = User.object.get(id = postData.user.id)
-        except:
-            return Response({'success':false}, HTTP_204_NO_CONTENT)
-
-        try:
-            userProfile = userdata.profileImage.url,
-        except:
-            userProfile = None,
-        user = {
-            'id' : userdata.id,
-            'nickname' : userdata.nickname,
-            'profileImage' : userProfile,
-            'content' : userdata.content,
-        }
-
-
-        try:
-            image = PostImageSerializer(PostImage.objects.filter(post=postData), many=True).data
-        except:
-            image = None,
-
-
-        postDict = {
-            'title' : postData.title,
-            'content' : postData.content,
-            'updated_dt' : postData.updated_dt,
-            'writer' : postData.user.id,
-            'images' : image,
-        }
-
-        context={
-            'success': True,
-            'detailPost': postDict,
-            'user' : user,
-        }
-        return Response(context, status=HTTP_200_OK)
