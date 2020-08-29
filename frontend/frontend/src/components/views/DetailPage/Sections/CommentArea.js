@@ -26,35 +26,34 @@ function CommentArea(props) {
 
     const onSubmit = (e)=>{
         e.preventDefault()
-        console.log(CommentValue)
         
-        const variables = {
-            content : Comment,
+        const data = {
+            content : CommentValue,
             userId : props.userId,
             postId : props.postId
         }
         
-        axios.post('/api/comment/upComment', variables)
+        axios.post('/api/comment/upComment', data)
         .then(response => {
             if(response.data.success){
-                setComments(...Comments, ...response.data.comment)
+                setComments(Comments.concat(data))
                 alert('성공')
             }else{
                 alert('실패')
             }
         })
-
+        setCommentValue("")
     }
 
     const renderingComments = (comment) => {
         
         return (
             <Comment 
-                author={comment.userId.nickname}
+                author={/*comment.userId.nickname*/ "닉네임"}
                 avatar={<Avatar
                             src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}
                         />}
-                content={<p>{comment.content}</p>}
+                content={<p style={{textAlign:'left'}}>{comment.content}</p>}
             />
         )
     }

@@ -6,7 +6,7 @@ const mkdirp = require('mkdirp')
 const {Comment} =require('../models/Comment')
 
 router.post('/upComment', (req, res)=>{
-    const comment = new Comment(req.body.variables)
+    const comment = new Comment(req.body)
 
     comment.save((err, doc)=>{
         if(err) return res.status(400).json({success:false, err})
