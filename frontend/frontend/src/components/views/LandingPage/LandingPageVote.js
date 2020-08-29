@@ -9,17 +9,17 @@ import { Row } from 'antd';
 
 function LandingPageVote(props) {
 
-    console.log(props.user.userData)
+
     const [Posts, setPosts] = useState([])
     const [VotePost, setVotePost] = useState([])
     const [ModalStyle, setModalStyle] = useState(false)
 
     
     useEffect(() => {
-        axios.get('/api/post/getPosts/')
+        axios.get('/api/post/getPosts')
         .then(response => {
             if(response.data.success){
-                setPosts(response.data.posts)
+                setPosts(response.data.data)
             }
         })
         axios.post('/api/vote/myVote', {userId : localStorage.getItem('userId')})

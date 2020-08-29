@@ -21,6 +21,7 @@ function NavBar(props) {
         dispatch(logoutUser()).then(response =>{
             if(response.payload.success){
                 props.history.push('/login')
+                window.localStorage.setItem('userId', "")
             }else{
                 alert('logout Failed')
             }

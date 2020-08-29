@@ -352,19 +352,33 @@ class PostView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self,request):
-        try:
-            data=PostSerializer(Post.objects.all(),many=True).data
+        # try:
+        data = Post.objects.all()
+        postData = []
+        for post in data:
+            user = User.object.filter(id=post.user.id)
+            postDic = {
+                'id' : post.id,
+                'title' : post.title,
+                'content' : post.content,
+                'updated_dt' : post.updated_dt,
+                'userId' : post.user.id,
+                'thumbnail' : post.thumbnail.url,
+                'writer' : user[0].nickname,
+            }
+            postData.append(postDic)
+                
+                
            
-            context = {
-                'success':True,
-                'data':data,
+        context = {
+            'success':True,
+            'data':postData,
                
-               
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context = {
-                'error':str(error),
-                'success':False
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+        }
+        return Response(context,status=HTTP_200_OK)
+        # except Exception as error:
+        #     context = {
+        #         'error':str(error),
+        #         'success':False
+        #     }
+        #     return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
