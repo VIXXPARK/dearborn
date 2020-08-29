@@ -186,7 +186,7 @@ class likeView(ListAPIView):
     def post(self,request):
         like = likeSerializer(data=request.data)
         if not like.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'data':like.data},status=HTTP_400_BAD_REQUEST)
         like.save()
         context = {
             'success':True

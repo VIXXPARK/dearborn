@@ -28,13 +28,13 @@ function AssessArea(props) {
 
     const SubmitRate = () => {
         const DatasToSubmit = {
-            userId : props.userId,
-            postId : props.postId,
-            One : One,
-            Two : Two,
-            Three : Three,
-            Four : Four,
-            Five : Five,
+            user : props.userId,
+            post : props.postId,
+            aesthetics : One,
+            originality : Two,
+            convienience : Three,
+            massProductionPossibility : Four,
+            popularity : Five,
         }
         console.log(DatasToSubmit)
         Axios.post('/api/assess/saveValue', DatasToSubmit)
@@ -43,11 +43,11 @@ function AssessArea(props) {
             {
                 alert('성공')
                 props.updateAssessValue({
-                    One : One,
-                    Two : Two,
-                    Three : Three,
-                    Four : Four,
-                    Five : Five,
+                    aesthetics : One,
+                    originality : Two,
+                    convienience : Three,
+                    massProductionPossibility : Four,
+                    popularity : Five,
                 })
             }else{
                 alert('실패')

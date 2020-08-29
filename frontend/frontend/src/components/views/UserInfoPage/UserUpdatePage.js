@@ -126,7 +126,7 @@ function UserUpdatePage(props) {
                     </Button>
                 </Upload>
                 <div>미리보기<br/>
-                {ProfileImage ?<Avatar src={Preview} /> : <Avatar src={`http://localhost:5000/${Preview}`} />}
+                {ProfileImage ?<Avatar src={Preview} /> : <Avatar src={`http://localhost:8000${Preview}`} />}
                 </div>
                 <br/><br/>자기소개<br/><br/>
                 <Controller
