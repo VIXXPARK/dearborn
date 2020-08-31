@@ -15,8 +15,8 @@ function VoteBox(props) {
     console.log(props.post)
     const onClick = () =>{
         const variables = {
-            userId : localStorage.getItem('userId'),
-            postId : props.post.id
+            user : localStorage.getItem('userId'),
+            post : props.post.id
         }
         axios.post('/api/vote/upVote', variables)
         .then(response =>{

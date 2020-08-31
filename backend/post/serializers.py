@@ -1,6 +1,13 @@
 from rest_framework import serializers
-from .models import Post,PostImage,like,disLike
+from .models import Post,PostImage,like,disLike,vote
 
+class getVoteSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = vote
+      fields = '__all__'
+
+class getUserSerializer(serializers.Serializer):
+   user = serializers.CharField()
 
 class getLikeDetailSerializer(serializers.Serializer):
    user = serializers.CharField()

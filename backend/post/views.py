@@ -2,7 +2,8 @@
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer, PostIdSerializer
 from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer
-from .models import Post,PostImage,like,disLike
+from .serializers import getUserSerializer,getVoteSerializer
+from .models import Post,PostImage,like,disLike,vote
 from usermanagement.models import User
 from rest_framework import filters
 from rest_framework.generics import ListAPIView,DestroyAPIView
@@ -21,12 +22,42 @@ from rest_framework.status import(
 import json
 from rest_framework.views import APIView
 
+class upVoteView(ListAPIView):
+    permission_classes=(permissions.AllowAny,)
+    def post(self,request):
+        voted =getVoteSerializer(data=request.data)
+        if not voted.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        voted.save()
+        return Response({'success':True},status=HTTP_200_OK)
+
+
+class myVoteView(APIView):
+    permission_classes=(permissions.AllowAny,)
+    def post(self,request):
+        posts = getUserSerializer(data=request.data)
+        if not posts.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        postdata = vote.objects.filter(user=posts.validated_data['user'])
+        postID = []
+        for postcontent in postdata:
+            postID.append(postcontent.post.id)
+        context={
+            'success':True,
+            'posts':postID,
+        }
+        return Response(context,status=HTTP_200_OK)
+        
+
+
+
+
 class getLikeDetail(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self,request):
         liked = getLikeDetailSerializer(data=request.data)
         if not liked.is_valid():
-            return Response({'likeSuccess':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
         try:
             likedata = like.objects.get(user=liked.validated_data['user'],post=liked.validated_data['post'])
             context = {
@@ -37,7 +68,7 @@ class getLikeDetail(APIView):
         except:
             disliked = getLikeDetailSerializer(data=request.data)
             if not disliked.is_valid():
-                return Response({'disLikeSuccess':False,'data':reqeust.data},status=HTTP_400_BAD_REQUEST)
+                return Response({'success':False,'data':reqeust.data},status=HTTP_400_BAD_REQUEST)
             try:
                 dislikedata = disLike.objects.get(user=disliked.validated_data['user'],post=disliked.validated_data['post'])
                 context = {
