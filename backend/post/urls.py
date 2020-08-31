@@ -26,5 +26,5 @@ urlpatterns = [
     path('like/getDisliked',getDisLikeView.as_view()),
     path('like/getLikeDetail',getLikeDetail.as_view()),
     path('vote/myVote',myVoteView.as_view()),
-    path('vote/upVote',upVoteView.as_view()),
+    path('vote/upVote',upVoteView.as_view())
 ]
