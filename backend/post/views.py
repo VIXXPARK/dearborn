@@ -62,34 +62,47 @@ class getLikeView(ListAPIView):
         queryset.filter(user=self.request.data['user'])
         return queryset
 
-    def get(self,request):
-        try:
-            data = likeSerializer(self.get_queryset(),many=True).data
-            context={
-                'success':True,
-                'data':data
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context={
-                'success':False,
-                'error':str(error)
-            }
-            return Response(context,status=HTTP_400_BAD_REQUEST)
-    
     def post(self,request):
         liked = getLikeSerializer(data=request.data)
         if not liked.is_valid():
             return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
-        likedata = like.objects.filter(user=liked.validated_data['user'])
+        likedata = like.objects.filter(post=liked.validated_data['post'])
         postlist=[]
         for likeinstance in likedata:
-            postlist.append(likeinstance.post.get_id())
+            lik = {
+                'post' : likeinstance.post.id,
+                'user' : likeinstance.user.id,
+            }
+            postlist.append(lik)
         context = {
             'success':True,
-            'data' : postlist
+            'likes' : postlist
         }
         return Response(context,status=HTTP_200_OK)
+
+class getDisLikeView(ListAPIView):
+    queryset = disLike.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = getLikeDetailSerializer
+     
+    def post(self,request):
+        liked = getLikeDetailSerializer(data=request.data)
+        if not liked.is_valid():
+            return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+        likedata = disLike.objects.filter(post=liked.validated_data['post'],user=liked.validated_data['user'])
+        postlist=[]
+        for likeinstance in likedata:
+            lik = {
+                'post' : likeinstance.post.id,
+                'user' : likeinstance.user.id,
+            }
+            postlist.append(lik)
+        context = {
+            'success':True,
+            'dislike' : postlist
+        }
+        return Response(context,status=HTTP_200_OK)
+
 
 class disLikeView(ListAPIView):
     queryset = disLike.objects.all()
@@ -142,6 +155,7 @@ class likeDownView(DestroyAPIView):
         instance.delete()
         return Response({"success":True},status=HTTP_204_NO_CONTENT)
 
+
 class dislikeDownView(DestroyAPIView):
     queryset = disLike.objects.all()
     serializer_class = dislikeSerializer
@@ -156,7 +170,10 @@ class dislikeDownView(DestroyAPIView):
     def delete(self,request,format=None):
         instance = self.get_object(request.data['post'],request.data['user'])
         instance.delete()
-        return Response({"success":True},status=HTTP_204_NO_CONTENT)
+        context={
+            'success':True,
+        }
+        return Response(context,status=HTTP_204_NO_CONTENT)
 
 
 class likeView(ListAPIView):
@@ -291,6 +308,7 @@ class getProfileView(ListAPIView):
                 thumbnail = None,
             
             post = {
+                'id' : postraw.id,
                 'title' : postraw.title,
                 'content' : postraw.content,
                 'updated_dt' : postraw.updated_dt,

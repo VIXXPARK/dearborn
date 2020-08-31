@@ -9,17 +9,17 @@ class saveValueSerializer(serializers.ModelSerializer):
 class getValueSerializer(serializers.Serializer):
     post = serializers.CharField()
 
-class aestheticsSerializer(serializers.Serializer):
-    aesthetics = serializers.IntegerField()
+class designSerializer(serializers.Serializer):
+    design = serializers.FloatField()
 
-class originalitySerializer(serializers.Serializer):
-    originality = serializers.IntegerField()
+class individualitySerializer(serializers.Serializer):
+    individuality = serializers.FloatField()
 
-class convienienceSerializer(serializers.Serializer):
-    convienience = serializers.IntegerField()
+class practicalitySerializer(serializers.Serializer):
+    practicality = serializers.FloatField()
 
-class massProductionPossibilitySerializer(serializers.Serializer):
-    massProductionPossibility = serializers.IntegerField()
+class trendSerializer(serializers.Serializer):
+    trend = serializers.FloatField()
 
-class popularitySerializer(serializers.Serializer):
-    popularity = serializers.IntegerField()
+class colorSerializer(serializers.Serializer):
+    color = serializers.FloatField()

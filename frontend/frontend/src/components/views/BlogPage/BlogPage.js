@@ -30,7 +30,7 @@ function BlogPage(props) {
         return (
             <Card
                 className="item"
-                cover={<a href={`/${repo.writer.nickname}/${repo._id}`}><img src={`http://localhost:8000${repo.images[0]}`} alt/></a>}
+                cover={<a href={`/${Designer.nickname}/${repo.id}`}><img src={`http://localhost:8000${repo.images[0]}`} alt/></a>}
             >
                 <Meta
                     avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>}
