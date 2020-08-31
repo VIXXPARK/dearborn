@@ -17,7 +17,7 @@ function LikeDislike(props) {
                 console.log(response.data.likes)
                 setLikes(response.data.likes.length)
                 response.data.likes.map(like => {
-                    if(like.userId === props.userId){
+                    if(like.user === props.userId){
                         setLiked(true)
                     }
                 })
@@ -41,19 +41,20 @@ function LikeDislike(props) {
     const LikeClickHandler = () => {
         if(!props.userId) return alert('로그인하세요')
         if(Liked){
-            axios.post('/api/like/down', {id:props.postId, user : props.userId})
+            axios.delete('/api/like/down', {data : {post : props.postId, user : props.userId}})
             .then(response => {
-                if(response.data.success){
+                if(response.status === 204){
                     setLiked(false)
+                    setLikes(Likes-1)
                 }else{
                     alert('좋아요 취소 실패')
                 }
             })
         }else{
             if(Disliked){
-                axios.post('/api/dislike/down', {postId:props.postId, userId : props.userId})
+                axios.delete('/api/dislike/down', {data : {post : props.postId, user : props.userId}})
                 .then(response => {
-                    if(response.data.success){
+                    if(response.status === 204){
                         setDisliked(false)
                     }else{
                         alert('싫어요 취소 실패')
@@ -75,9 +76,9 @@ function LikeDislike(props) {
         console.log(props.userId)
         if(!props.userId) return alert('로그인하세요')
         if(Disliked){
-            axios.post('/api/dislike/down', {post:props.postId, user : props.userId})
+            axios.delete('/api/dislike/down', {data : {post : props.postId, user : props.userId}})
                 .then(response => {
-                    if(response.data.success){
+                    if(response.status === 204){
                         setDisliked(false)
                     }else{
                         alert('싫어요 취소 실패')
@@ -85,10 +86,11 @@ function LikeDislike(props) {
                 })
         }else{
             if(Liked){
-                axios.post('/api/like/down', {post:props.postId, user : props.userId})
+                axios.delete('/api/like/down', {data : {post : props.postId, user : props.userId}})
                 .then(response => {
-                    if(response.data.success){
+                    if(response.status === 204){
                         setLiked(false)
+                        setLikes(Likes-1)
                     }else{
                         alert('좋아요 취소 실패')
                     }
@@ -98,7 +100,7 @@ function LikeDislike(props) {
             .then(response => {
                 if(response.data.success){
                     setDisliked(true)
-                    setLikes(Likes-1)
+                    
                 }else{
                     alert('싫어요 실패')
                 }

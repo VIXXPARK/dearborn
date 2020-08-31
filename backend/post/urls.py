@@ -1,5 +1,4 @@
-from .views import PostViewSet, getProfileView ,upViewSet
-from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,getDetailView
+from .views import PostViewSet, getProfileView ,upViewSet,getDisLikeView
 from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
 from django.urls import path,include
 from usermanagement.models import User
@@ -23,5 +22,6 @@ urlpatterns = [
     path('like/down',likeDownView.as_view()),
     path('dislike/down',dislikeDownView.as_view()),
     path('like/getlike',getLikeView.as_view()),
+    path('like/getDisliked',getDisLikeView.as_view()),
     path('like/getLikeDetail',getLikeDetail.as_view()),
 ]

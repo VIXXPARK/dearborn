@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import saveValueSerializer,getValueSerializer
-from .serializers import aestheticsSerializer,originalitySerializer,convienienceSerializer,massProductionPossibilitySerializer
-from .serializers import popularitySerializer
+from .serializers import designSerializer,colorSerializer,individualitySerializer,practicalitySerializer
+from .serializers import trendSerializer
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.status import(
@@ -32,28 +32,30 @@ class saveAssess(APIView):
 class getAssess(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self,request):
+        design=0
+        color=0
+        individuality=0
+        trend = 0
+        practicality=0
+        count=0
         assessed = getValueSerializer(data=request.data)
         if not assessed.is_valid():
             return Response({'Success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
         assessData = Assess.objects.filter(post=assessed.validated_data['post'])
         List=[]
         for assessValue in assessData:
-            aesthetics = aestheticsSerializer(Assess.objects.filter(user=assessValue.user),many=True).data
-            originality = originalitySerializer(Assess.objects.filter(user=assessValue.user),many=True).data
-            convienience = convienienceSerializer(Assess.objects.filter(user=assessValue.user),many=True).data
-            massProductionPossibility = massProductionPossibilitySerializer(Assess.objects.filter(user=assessValue.user),many=True).data
-            popularity = popularitySerializer(Assess.objects.filter(user=assessValue.user),many=True).data
-
-            post = {
-                'aesthetics': aesthetics,
-                'originiality': originality,
-                'convienience': convienience,
-                'massProductionPossibility':massProductionPossibility,
-                'popularity':popularity,
-            }
-            List.append(post)
+            design = design+assessValue.design
+            color = color+assessValue.color
+            individuality = individuality+assessValue.individuality
+            trend = trend+assessValue.trend
+            practicality = practicality+assessValue.practicality
+            count=count+1
         context = {
             'success':True,
-            'data': List
+            'design': design/count,
+            'color': color/count,
+            'individuality': individuality/count,
+            'practicality':practicality/count,
+            'trend':trend/count,
         }
         return Response(context,status=HTTP_200_OK)

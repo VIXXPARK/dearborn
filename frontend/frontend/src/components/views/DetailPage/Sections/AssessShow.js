@@ -8,17 +8,19 @@ function AssessShow(props) {
     const [ChartSeries, setChartSeries] = useState([])
 
     useEffect(() => {
-        axios.post('/api/assess/getValue', {postId : props.postId})
+        if(props.postId){
+        axios.post('/api/assess/getValue', {post : props.postId})
         .then(response => {
             if(response.data.success){
+                console.log(response.data)
                 setChartSeries([{
                     data : 
                     [
-                        response.data.one,
-                        response.data.two,
-                        response.data.three,
-                        response.data.four,
-                        response.data.five
+                        response.data.design,
+                        response.data.color,
+                        response.data.individuality,
+                        response.data.practicality,
+                        response.data.trend,
                     ]
                 }])
             }else{
@@ -28,9 +30,8 @@ function AssessShow(props) {
                 }])
                 alert('assess 정보 가져오기 실패')
             }
-        })
-    }, [props.assessValue])
-
+        })}
+    }, [props.assessValue, props.postId])
     const ChartOptions ={
         chart : {
             type : 'radar',

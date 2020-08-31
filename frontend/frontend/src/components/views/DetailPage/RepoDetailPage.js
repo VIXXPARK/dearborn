@@ -56,7 +56,7 @@ function RepoDetailPage(props) {
                 <br/><br/>
                 <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
                 <br/>
-                <AssessShow assessValue={AssessValue}/>
+                <AssessShow assessValue={AssessValue} postId={postId}/>
                 <AssessArea postId={postId} userId={localStorage.getItem('userId')}
                     updateAssessValue={updateAssess}/>
                 <br/>

@@ -7,7 +7,7 @@ class getLikeDetailSerializer(serializers.Serializer):
    post = serializers.CharField()
 
 class getLikeSerializer(serializers.Serializer):
-   user = serializers.CharField()
+   post = serializers.CharField()
 
 class likeSerializer(serializers.ModelSerializer):
    class Meta:
