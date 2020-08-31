@@ -22,7 +22,7 @@ function LandingPageVote(props) {
                 setPosts(response.data.data)
             }
         })
-        axios.post('/api/vote/myVote', {userId : localStorage.getItem('userId')})
+        axios.post('/api/vote/myVote', {user : localStorage.getItem('userId')})
         .then(response => {
             if(response.data.success){
                 let variable = response.data.posts.map(post => post.postId)
