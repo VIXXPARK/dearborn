@@ -58,17 +58,17 @@ function RegisterPage(props) {
             }
             dispatch(registerUser(formData)).then(response =>{
                 if(response.payload.success){
+                    axios.post('/api/user/checkEmail', {email : data.email})
+                .then(response => {
+                    if(!response.data.success){
+                        return alert('이메일이 이미 있습니다.')
+                    }
+                    //이메일 중복이 아닐경우 이메일 체킹
                     props.history.push('/login')
+                })
                 }else{
                     alert(response.payload.err.errmsg)
                 }
-            })
-            axios.post('/api/user/checkEmail', {email : data.email})
-            .then(response => {
-                if(!response.data.success){
-                    return alert('이메일이 이미 있습니다.')
-                }
-                //이메일 중복이 아닐경우 이메일 체킹
             })
             
         }

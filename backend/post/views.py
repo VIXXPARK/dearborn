@@ -1,12 +1,13 @@
+# -*- coding: utf-8 -*-
 from rest_framework.viewsets import ModelViewSet
-from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer
+from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer, PostIdSerializer
 from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer
 from .models import Post,PostImage,like,disLike
 from usermanagement.models import User
 from rest_framework import filters
 from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser,FormParser
+from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
 from rest_framework.response import Response
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
@@ -19,6 +20,7 @@ from rest_framework.status import(
 )
 import json
 from rest_framework.views import APIView
+
 class getLikeDetail(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self,request):
@@ -184,7 +186,7 @@ class likeView(ListAPIView):
     def post(self,request):
         like = likeSerializer(data=request.data)
         if not like.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'data':like.data},status=HTTP_400_BAD_REQUEST)
         like.save()
         context = {
             'success':True
@@ -220,7 +222,7 @@ class upViewSet(ListAPIView):
     def post(self,request):
         view = viewSerializer(data=request.data)
         if not view.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'data':view.data},status=HTTP_400_BAD_REQUEST)
         
         postdata = Post.objects.get(id=view.validated_data['id'])
         postView = postdata.get_view()
@@ -270,11 +272,17 @@ class getProfileView(ListAPIView):
             'profileImage' : profileImage,
         }
         postJson = []
-        
+        image = []
         for postraw in postdata:
-            image = PostImageSerializer(PostImage.objects.filter(post=postraw.id), many=True).data
+            jpgs = PostImage.objects.filter(post=postraw.id)
             try:
-                thumbnail = postraw.thumbnail.url(),
+                 for pngs in jpgs:
+                    image.append(pngs.image.url)
+            except:
+                pass
+
+            try:
+                thumbnail = postraw.thumbnail.url()
             except:
                 thumbnail = None,
             
@@ -344,53 +352,6 @@ class getDetailView(ListAPIView):
         }
         return Response(context, status=HTTP_200_OK)
        
-# class PostImageViewSet(ListAPIView):
-#     queryset = PostImage.objects.all()
-#     serializer_class = PostImageSerializer
-#     permission_classes = (permissions.AllowAny,)
-
-#     def get_queryset(self):
-#         queryset = PostImage.objects.raw('select * from post_postimage group by post_id')
-#         return queryset
-
-#     def get(self,request):
-#         try:
-#             data=PostImageSerializer(self.get_queryset(),many=True).data
-#             context={
-#                 'success':True,
-#                 'data':data,
-#             }
-#             return Response(context,status=HTTP_200_OK)
-#         except Exception as error:
-#             context = {
-#                 'error':str(error)
-#             }
-#             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
-
-# class PostList(ListAPIView):
-#     serializer_class = PostSerializer
-#     permission_classes = (permissions.AllowAny,)
-#     def get_queryset(self):
-#         queryset = Post.objects.all()
-#         return queryset
-
-#     def get(self,request):
-#         try:
-#             data=PostSerializer(self.get_queryset(),many=True).data
-#             context = {
-#                 'success':True,
-#                 'data':data,
-#                 'user':userdata,
-#             }
-#             return Response(context,status=HTTP_200_OK)
-#         except Exception as error:
-#             context = {
-#                 'error':str(error),
-#                 'success':False
-#             }
-#             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 class PostView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.AllowAny,)
@@ -401,13 +362,17 @@ class PostView(ListAPIView):
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)
+                try:
+                    thumb = post.thumbnail.url
+                except:
+                    thumb=None,
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
                     'content' : post.content,
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
-                    'thumbnail' : post.thumbnail.url,
+                    'thumbnail' : thumb,
                     'writer' : user[0].nickname,
                     'profileImage' : user[0].profileImage.url,
                 }
@@ -425,3 +390,53 @@ class PostView(ListAPIView):
                 'success':False
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+class PostDetail(APIView):
+
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = (MultiPartParser,FormParser,JSONParser)
+    def post(self,request):
+        postID = PostIdSerializer(data=request.data)
+        if not postID.is_valid():
+            return Response({'success':False,},status = HTTP_400_BAD_REQUEST)
+
+        postdata = Post.objects.get(id=postID.validated_data['id'])
+        postimages = PostImage.objects.filter(post=postID.validated_data['id'])
+        userdata = User.object.get(id = postdata.user.id)
+        userid = userdata.get_id()
+
+        Jpost = []
+        jpgs = PostImage.objects.filter(post=postID.validated_data['id'])
+
+        try:
+            for pngs in jpgs:
+                Jpost.append(pngs.image.url)
+        except:
+            mainimg = None,
+
+        try:
+            profileImage = userdata.profileImage.url,
+        except:
+            profileImage = None,
+
+        user = {
+            'nickname':userdata.nickname,
+            'profileImage': profileImage,
+            'content': userdata.content,
+        }
+
+        detailPost = {
+            'id':postdata.id,
+            'title':postdata.title,
+            'content':postdata.content,
+            'updatedAt' : postdata.updated_dt,
+            'images':Jpost,
+        }
+
+        context = {
+            'success' : True,
+            'detailPost' : detailPost,
+            'user' : user,
+        }
+        return Response(context,status=HTTP_200_OK)
+

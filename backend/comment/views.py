@@ -22,6 +22,7 @@ class MakeCommentView(APIView):
     def post(self, request):
         commentSerializer = CommentSerializer(data=request.data)
         if not commentSerializer.is_valid():
+            print(request.data)
             return Response({'success':False},status=HTTP_400_BAD_REQUEST)
         try:
             comment = commentSerializer.create(commentSerializer.validated_data)
@@ -50,7 +51,7 @@ class GetCommentView(APIView):
             commentData.append(data)
 
         content = {
-            'commentData' : commentData,
+            'comments' : commentData,
             'success' : True
         }
         return Response(content, status=HTTP_200_OK)

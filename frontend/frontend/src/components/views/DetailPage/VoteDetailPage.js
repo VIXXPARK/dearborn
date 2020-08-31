@@ -15,19 +15,21 @@ function VoteDetailPage(props) {
         if((params.get('designer') ||params.get('postId')) == null)
             return
         document.body.style.cssText = 'overflow-y : hidden;'
-        axios.post('/api/post/upView', {postId : params.get('postId')})
+        axios.post('/api/post/upView', {id : params.get('postId')})
         .then(response => {
             if(!response.data.success){
+                console.log(response.data)
                 alert('조회수 에러')
             }
         })
-        axios.post('/api/post/getPostDetail', {postId : params.get('postId')})
+        axios.post('/api/post/getPostDetail', {id : params.get('postId')})
         .then(response => {
             if(response.data.success){
                 
                 setOnModal(true)
-                setDetailPost(response.data.detailPost[0])
-                setWriter(response.data.detailPost[0].writer)
+                console.log(response.data)
+                setDetailPost(response.data.detailPost)
+                setWriter(response.data.user)
             }else{
                 alert('데이터 가져오기 실패')
             }
@@ -52,7 +54,6 @@ function VoteDetailPage(props) {
                 </div>
                 <div className="profile-span">
                     {Writer.content}
-                    sfjlskdfjlkdsfjldsjfldsjldsjflkfsdjdlfksjs
                 </div>
             </div>
             <div style={{color:'black'}}>
@@ -65,7 +66,7 @@ function VoteDetailPage(props) {
                 <div className="detail-content">
                     {DetailPost.images && DetailPost.images.map((image, i) => (
                         <div>
-                            <img key={i} src={`http://localhost:5000/${image}`} style={{width:'100%'}} />
+                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
                         </div>
                     ))}
                     {DetailPost.content}

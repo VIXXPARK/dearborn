@@ -14,25 +14,25 @@ function LandingPageRepo(props) {
         axios.get('/api/post/getPosts') //나중에 Repo로 바꿔야됨
         .then(response =>{
             if(response.data.success){
-                setPosts(response.data.posts)
+                console.log(response.data.data)
+                setPosts(response.data.data)
             }else{
                 alert('데이터 가져오기 실패')
             }
         })
     }, [])
-    console.log(Posts)
     const renderItems = (post)=>{
         
         return  (
         <Card
             className="item"
             hoverable={false}
-            cover={<a href={`/${post.writer.nickname}/${post._id}`}><img src={`http://localhost:5000/${post.images[0]}`} alt/></a>}
+            cover={<a href={`/${post.writer}/${post.id}`}><img src={`http://localhost:8000${post.thumbnail}`} alt/></a>}
         >
             <Meta
-                avatar={<Avatar src={`http://localhost:5000/${post.writer.profileImage}`}/>}
+                avatar={<Avatar src={`http://localhost:8000${post.profileImage}`}/>}
                 title={post.title}
-                description={<a href={`/${post.writer.nickname}`}>{post.writer.nickname}</a>}
+                description={<a href={`/${post.writer}`}>{post.writer}</a>}
             />
         </Card>
         )
@@ -46,7 +46,7 @@ function LandingPageRepo(props) {
             </div>
             <div className="items">
                 <div style={{marginTop: '7px'}}>
-                    {Posts.map((post) => (
+                    {Posts && Posts.map((post) => (
                         renderItems(post)
                     ))}
                 </div>

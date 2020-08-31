@@ -28,14 +28,15 @@ function CommentArea(props) {
         e.preventDefault()
         
         const data = {
-            content : CommentValue,
-            userId : props.userId,
-            postId : props.postId
+            contents : CommentValue,
+            user : window.localStorage.getItem('userId'),
+            post : props.postId
         }
-        
+        console.log(data)
         axios.post('/api/comment/upComment', data)
         .then(response => {
             if(response.data.success){
+                console.log(Comments)
                 setComments(Comments.concat(data))
                 alert('성공')
             }else{
@@ -49,11 +50,11 @@ function CommentArea(props) {
         
         return (
             <Comment 
-                author={/*comment.userId.nickname*/ "닉네임"}
+                author={comment.nickname}
                 avatar={<Avatar
-                            src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}
+                            src={`http://localhost:8000${comment.profileImage}`}
                         />}
-                content={<p style={{textAlign:'left'}}>{comment.content}</p>}
+                content={<p style={{textAlign:'left'}}>{comment.contents}</p>}
             />
         )
     }

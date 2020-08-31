@@ -12,11 +12,11 @@ function VoteBox(props) {
     const [VotePost, setVotePost] = useState([])
     const [Disabled, setDisabled] = useState(false)
 
-
+    console.log(props.post)
     const onClick = () =>{
         const variables = {
             userId : localStorage.getItem('userId'),
-            postId : props.post._id
+            postId : props.post.id
         }
         axios.post('/api/vote/upVote', variables)
         .then(response =>{
@@ -33,10 +33,10 @@ function VoteBox(props) {
 
     return (
         <Col className="item-vote" lg={8} md={12} xd={24}>
-            <img className="item-vote-img" src={`http://localhost:5000/${props.post.images[0]}`} alt/>
+            <img className="item-vote-img" src={`http://localhost:8000${props.post.thumbnail}`} alt/>
             <div className="item-vote-show">
                 <div id="go-detail" >
-                    <Link to = {{pathname:'/', search:`designer=${props.post && props.post.writer ? props.post.writer.nickname : null}&postId=${props.post ? props.post._id : null}`}}>자세히보기</Link>
+                    <Link to = {{pathname:'/', search:`designer=${props.post ? props.post.writer : null}&postId=${props.post ? props.post.id : null}`}}>자세히보기</Link>
                 </div>
                 <Button id="button-vote" onClick={onClick} disabled={props.isDisabledVote || Disabled}>투표하기</Button>
             </div>

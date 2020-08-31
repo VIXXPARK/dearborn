@@ -31,6 +31,9 @@ class PostImageSerializer(serializers.ModelSerializer):
       model = PostImage
       fields = ['image']
 
+   def get_image(self,postimage:PostImage):
+      return postimage.image.url
+
 
 class PostSerializer(serializers.ModelSerializer):
    images = PostImageSerializer(many=True, read_only=True)
@@ -45,3 +48,5 @@ class PostSerializer(serializers.ModelSerializer):
        
       return post
 
+class PostIdSerializer(serializers.Serializer):
+   id = serializers.IntegerField()

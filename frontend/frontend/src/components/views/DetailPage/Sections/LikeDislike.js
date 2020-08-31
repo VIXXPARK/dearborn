@@ -11,7 +11,7 @@ function LikeDislike(props) {
     const [Disliked, setDisliked] = useState(false)
 
     useEffect(() => {
-        axios.post('/api/like/getLikes', {postId : props.postId})
+        axios.post('/api/like/getlike', {post : props.postId})
         .then(response => {
             if(response.data.success){
                 console.log(response.data.likes)
@@ -26,7 +26,7 @@ function LikeDislike(props) {
             }
         })
 
-        axios.post('/api/like/getDisliked', {postId : props.postId, userId : props.userId})
+        axios.post('/api/like/getDisliked', {post : props.postId, user : props.userId})
         .then(response => {
             console.log(response.data.dislike)
             if(response.data.success){
@@ -41,7 +41,7 @@ function LikeDislike(props) {
     const LikeClickHandler = () => {
         if(!props.userId) return alert('로그인하세요')
         if(Liked){
-            axios.post('/api/like/unLikes', {postId:props.postId, userId : props.userId})
+            axios.post('/api/like/down', {id:props.postId, user : props.userId})
             .then(response => {
                 if(response.data.success){
                     setLiked(false)
@@ -51,7 +51,7 @@ function LikeDislike(props) {
             })
         }else{
             if(Disliked){
-                axios.post('/api/like/unDislikes', {postId:props.postId, userId : props.userId})
+                axios.post('/api/dislike/down', {postId:props.postId, userId : props.userId})
                 .then(response => {
                     if(response.data.success){
                         setDisliked(false)
@@ -60,7 +60,7 @@ function LikeDislike(props) {
                     }
                 })
             }
-            axios.post('/api/like/upLikes', {postId : props.postId, userId : props.userId})
+            axios.post('/api/like/up', {post : props.postId, user : props.userId})
             .then(response => {
                 if(response.data.success){
                     setLiked(true)
@@ -75,7 +75,7 @@ function LikeDislike(props) {
         console.log(props.userId)
         if(!props.userId) return alert('로그인하세요')
         if(Disliked){
-            axios.post('/api/like/unDislikes', {postId:props.postId, userId : props.userId})
+            axios.post('/api/dislike/down', {post:props.postId, user : props.userId})
                 .then(response => {
                     if(response.data.success){
                         setDisliked(false)
@@ -85,7 +85,7 @@ function LikeDislike(props) {
                 })
         }else{
             if(Liked){
-                axios.post('/api/like/unLikes', {postId:props.postId, userId : props.userId})
+                axios.post('/api/like/down', {post:props.postId, user : props.userId})
                 .then(response => {
                     if(response.data.success){
                         setLiked(false)
@@ -94,7 +94,7 @@ function LikeDislike(props) {
                     }
                 })
             }
-            axios.post('/api/like/upDislikes', {postId : props.postId, userId : props.userId})
+            axios.post('/api/dislike/up', {post : props.postId, user : props.userId})
             .then(response => {
                 if(response.data.success){
                     setDisliked(true)
