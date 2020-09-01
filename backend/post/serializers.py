@@ -9,7 +9,7 @@ class getVoteSerializer(serializers.ModelSerializer):
 class getUserSerializer(serializers.Serializer):
    user = serializers.CharField()
 
-class getLikeDetailSerializer(serializers.Serializer):
+class getUserPostSerializer(serializers.Serializer):
    user = serializers.CharField()
    post = serializers.CharField()
 
@@ -25,10 +25,6 @@ class dislikeSerializer(serializers.ModelSerializer):
    class Meta:
       model = disLike
       fields = '__all__'
-
-class viewSerializer(serializers.Serializer):
-   id = serializers.IntegerField()
-   
 
 class UserCheckSerializer(serializers.Serializer):
    nickname = serializers.CharField()
