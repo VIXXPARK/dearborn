@@ -143,21 +143,6 @@ class disLikeView(ListAPIView):
     def get_queryset(self):
         queryset = disLike.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data = dislikeSerializer(self.get_queryset,many=True).data
-            context = {
-                'success':True,
-                'data':data
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context= {
-                'success':False,
-                'error':str(error)
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self,request):
         like = dislikeSerializer(data=request.data)
@@ -215,21 +200,6 @@ class likeView(ListAPIView):
     def get_queryset(self):
         queryset = like.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data = likeSerializer(self.get_queryset,many=True).data
-            context = {
-                'success':True,
-                'data':data
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context= {
-                'success':False,
-                'error':str(error)
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self,request):
         like = likeSerializer(data=request.data)
@@ -249,23 +219,6 @@ class upViewSet(ListAPIView):
     def get_queryset(self):
         queryset = Post.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data=PostIdSerializer(self.get_queryset(),many=True).data
-            context = {
-                'success':True,
-                'data':data,
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context = {
-                'error':str(error),
-                'success':False
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
     def post(self,request):
         view = viewSerializer(data=request.data)
