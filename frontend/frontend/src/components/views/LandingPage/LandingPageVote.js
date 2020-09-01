@@ -22,6 +22,7 @@ function LandingPageVote(props) {
                 setPosts(response.data.data)
             }
         })
+        if(window.localStorage.getItem('userId')){
         axios.post('/api/vote/myVote', {user : window.localStorage.getItem('userId')})
         .then(response => {
             if(response.data.success){
@@ -31,7 +32,7 @@ function LandingPageVote(props) {
             }else{
                 alert('투표정보 가져오기 실패')
             }
-        })
+        })}
     }, [])
     console.log(VotePost)
 
@@ -47,7 +48,7 @@ function LandingPageVote(props) {
                     </div>
                     <div className="container-vote-section">
                         <Row gutter={[16,16]}>
-                            {Posts.map(post => (
+                            {Posts.map((post) => (
                                 <VoteBox post = {post} isDisabledVote={VotePost.indexOf(post.id) !== -1 ? true : false }/>
                             ))}
                         </Row>

@@ -12,7 +12,8 @@ function VoteBox(props) {
     const [VotePost, setVotePost] = useState([])
     const [Disabled, setDisabled] = useState(false)
 
-        
+    const loginedUser = window.localStorage.getItem('userId')
+
     const onClick = () =>{
         const variables = {
             user : window.localStorage.getItem('userId'),
@@ -38,7 +39,7 @@ function VoteBox(props) {
                 <div id="go-detail" >
                     <Link to = {{pathname:'/', search:`designer=${props.post ? props.post.writer : null}&postId=${props.post ? props.post.id : null}`}}>자세히보기</Link>
                 </div>
-                <Button id="button-vote" onClick={onClick} disabled={props.isDisabledVote || Disabled}>투표하기</Button>
+                {loginedUser && <Button id="button-vote" onClick={onClick} disabled={props.isDisabledVote || Disabled}>투표하기</Button>}
             </div>
         </Col>
     )

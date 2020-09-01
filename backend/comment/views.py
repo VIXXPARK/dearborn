@@ -26,9 +26,20 @@ class MakeCommentView(APIView):
             return Response({'success':False},status=HTTP_400_BAD_REQUEST)
         try:
             comment = commentSerializer.create(commentSerializer.validated_data)
+            user = comment.user
+            userDict = {
+                'nickname' : user.nickname,
+                'profileImage' : user.profileImage.url,
+            }
         except:
             return Response({'success':False},HTTP_400_BAD_REQUEST)
-        return Response({'success':True}, HTTP_201_CREATED)
+
+        context = {
+            'success':True,
+            'user' : userDict,
+            'id' : comment.id,
+        }
+        return Response(context, HTTP_201_CREATED)
 
 class GetCommentView(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -43,6 +54,7 @@ class GetCommentView(APIView):
             user = query.user
             profileImage = user.profileImage.url
             data = {
+                'id': query.id,
                 'contents':query.contents,
                 'userId':user.id,
                 'profileImage':profileImage,
