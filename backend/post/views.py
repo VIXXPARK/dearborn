@@ -320,11 +320,13 @@ class getProfileView(ListAPIView):
             'profileImage' : profileImage,
         }
         postJson = []
-        image = []
+        
         for postraw in postdata:
+            image = []
             jpgs = PostImage.objects.filter(post=postraw.id)
             try:
-                 for pngs in jpgs:
+                print(jpgs)
+                for pngs in jpgs:
                     image.append(pngs.image.url)
             except:
                 pass
@@ -345,6 +347,7 @@ class getProfileView(ListAPIView):
                 
             }
             postJson.append(post)
+
         
         context={
             'success': True,
