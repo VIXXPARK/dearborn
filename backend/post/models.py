@@ -28,10 +28,7 @@ class Post(models.Model):
 def delete_file(sender,instance,*args,**kwargs):
    if instance.thumbnail:
       _delete_file(instance.thumbnail.path)
-   
-       
-   
-
+      
 class PostImage(models.Model):
    post = models.ForeignKey(Post, on_delete=models.CASCADE)
    image = models.ImageField(upload_to="images/")

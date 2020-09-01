@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from rest_framework.viewsets import ModelViewSet
-from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer, PostIdSerializer
-from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer
+from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer, PostIdSerializer
+from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getUserPostSerializer
 from .serializers import getUserSerializer,getVoteSerializer
 from .models import Post,PostImage,like,disLike,vote
 from usermanagement.models import User
@@ -55,7 +55,7 @@ class myVoteView(APIView):
 class getLikeDetail(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self,request):
-        liked = getLikeDetailSerializer(data=request.data)
+        liked = getUserPostSerializer(data=request.data)
         if not liked.is_valid():
             return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
         try:
@@ -66,7 +66,7 @@ class getLikeDetail(APIView):
             }
             return Response(context,status=HTTP_200_OK)
         except:
-            disliked = getLikeDetailSerializer(data=request.data)
+            disliked = getUserPostSerializer(data=request.data)
             if not disliked.is_valid():
                 return Response({'success':False,'data':reqeust.data},status=HTTP_400_BAD_REQUEST)
             try:
@@ -114,10 +114,10 @@ class getLikeView(ListAPIView):
 class getDisLikeView(ListAPIView):
     queryset = disLike.objects.all()
     permission_classes = (permissions.AllowAny,)
-    serializer_class = getLikeDetailSerializer
+    serializer_class = getUserPostSerializer
      
     def post(self,request):
-        liked = getLikeDetailSerializer(data=request.data)
+        liked = getUserPostSerializer(data=request.data)
         if not liked.is_valid():
             return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
         likedata = disLike.objects.filter(post=liked.validated_data['post'],user=liked.validated_data['user'])
@@ -143,21 +143,6 @@ class disLikeView(ListAPIView):
     def get_queryset(self):
         queryset = disLike.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data = dislikeSerializer(self.get_queryset,many=True).data
-            context = {
-                'success':True,
-                'data':data
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context= {
-                'success':False,
-                'error':str(error)
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self,request):
         like = dislikeSerializer(data=request.data)
@@ -215,21 +200,6 @@ class likeView(ListAPIView):
     def get_queryset(self):
         queryset = like.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data = likeSerializer(self.get_queryset,many=True).data
-            context = {
-                'success':True,
-                'data':data
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context= {
-                'success':False,
-                'error':str(error)
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self,request):
         like = likeSerializer(data=request.data)
@@ -244,28 +214,11 @@ class likeView(ListAPIView):
 class upViewSet(ListAPIView):
     queryset = Post.objects.all()
     permission_classes = (permissions.AllowAny,)
-    serializer_class = viewSerializer
+    serializer_class = PostIdSerializer
 
     def get_queryset(self):
         queryset = Post.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data=viewSerializer(self.get_queryset(),many=True).data
-            context = {
-                'success':True,
-                'data':data,
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context = {
-                'error':str(error),
-                'success':False
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
     def post(self,request):
         view = viewSerializer(data=request.data)
