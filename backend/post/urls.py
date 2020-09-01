@@ -1,4 +1,4 @@
-from .views import PostViewSet, getProfileView ,upViewSet,getDisLikeView
+from .views import PostViewSet, getProfileView ,upViewSet,getDisLikeView,getDetailView
 from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
 from .views import myVoteView,upVoteView
 from django.urls import path,include

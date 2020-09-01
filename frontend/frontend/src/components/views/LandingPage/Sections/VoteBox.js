@@ -12,10 +12,10 @@ function VoteBox(props) {
     const [VotePost, setVotePost] = useState([])
     const [Disabled, setDisabled] = useState(false)
 
-    console.log(props.post)
+        
     const onClick = () =>{
         const variables = {
-            user : localStorage.getItem('userId'),
+            user : window.localStorage.getItem('userId'),
             post : props.post.id
         }
         axios.post('/api/vote/upVote', variables)

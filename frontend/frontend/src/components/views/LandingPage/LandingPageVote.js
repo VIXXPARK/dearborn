@@ -22,16 +22,18 @@ function LandingPageVote(props) {
                 setPosts(response.data.data)
             }
         })
-        axios.post('/api/vote/myVote', {user : localStorage.getItem('userId')})
+        axios.post('/api/vote/myVote', {user : window.localStorage.getItem('userId')})
         .then(response => {
             if(response.data.success){
-                let variable = response.data.posts.map(post => post.postId)
+                console.log(response.data)
+                let variable = response.data.posts
                 setVotePost(variable)
             }else{
                 alert('투표정보 가져오기 실패')
             }
         })
     }, [])
+    console.log(VotePost)
 
     return (
         <div style={{width:'75%', margin:'3rem auto'}}>
@@ -46,7 +48,7 @@ function LandingPageVote(props) {
                     <div className="container-vote-section">
                         <Row gutter={[16,16]}>
                             {Posts.map(post => (
-                                <VoteBox post = {post} myVote={VotePost} isDisabledVote={VotePost.indexOf(post._id) !== -1 ? true : false }/>
+                                <VoteBox post = {post} isDisabledVote={VotePost.indexOf(post.id) !== -1 ? true : false }/>
                             ))}
                         </Row>
                     </div>
