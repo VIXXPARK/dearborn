@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'usermanagement.apps.UsermanagementConfig',
     'post.apps.PostConfig',
     'assess.apps.AssessConfig',
-    'comment.apps.CommentConfig'
+    'comment.apps.CommentConfig',
+    'event.apps.EventConfig',
 
 ]
 
