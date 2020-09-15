@@ -22,7 +22,6 @@ class MyUserManager(BaseUserManager):
         except IntegrityError:
             raise IntegrityError
 
-
     def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
@@ -33,13 +32,13 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_activate', True)
+        extra_fields.setdefault('profileImage',None)
+        extra_fields.setdefault('content', 'SuperUser')
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff = True')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser = True')
         return self._create_user(email, password, **extra_fields)
-
-
 
 class User(AbstractUser):
     def make_uuid():
