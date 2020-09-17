@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'post.apps.PostConfig',
     'assess.apps.AssessConfig',
     'comment.apps.CommentConfig',
-    'event.apps.EventConfig',
+    'contest.apps.ContestConfig',
 
 ]
 
