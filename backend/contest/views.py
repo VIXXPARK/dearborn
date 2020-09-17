@@ -1,16 +1,16 @@
 from rest_framework.viewsets import ModelViewSet
-from .serializers import EventImageSerializer,EventSerializer,EventPostImageSerializer,EventPostSerializer
-from .models import Event,EventImage,EventPost,EventPostImage
+from .serializers import ContestSerializer,ContestPostSerializer
+from .models import Contest,ContestPost
 from usermanagement.models import User
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
 from rest_framework.response import Response
 from rest_framework import status
 
-class EventViewSet(ModelViewSet):
+class ContestViewSet(ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
+    queryset = Contest.objects.all()
+    serializer_class = ContestSerializer
     parser_classes = (MultiPartParser,FormParser)
 
     def create(self, request, *args, **kwargs):
@@ -18,10 +18,10 @@ class EventViewSet(ModelViewSet):
         instance = response.data
         return Response({'success': True})
 
-class EventPostViewSet(ModelViewSet):
+class ContestPostViewSet(ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset = EventPost.objects.all()
-    serializer_class = EventPostSerializer
+    queryset = ContestPost.objects.all()
+    serializer_class = ContestPostSerializer
     parser_classes = (MultiPartParser,FormParser)
 
     def create(self,request,*args,**kwargs):
