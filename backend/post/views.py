@@ -309,53 +309,53 @@ class getProfileView(ListAPIView):
         }
         return Response(context, status=HTTP_200_OK)
 
-class getDetailView(ListAPIView):
-    permission_classes = (permissions.AllowAny,)
+# class getDetailView(ListAPIView):
+#     permission_classes = (permissions.AllowAny,)
 
-    def post(self,request):
-        mySerializer = viewSerializer(data = request.data)
-        if not mySerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+#     def post(self,request):
+#         mySerializer = viewSerializer(data = request.data)
+#         if not mySerializer.is_valid():
+#             return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
             
-        try:
-            postData = Post.objects.get(id = mySerializer.validated_data['id'])
-            userdata = User.object.get(id = postData.user.id)
-        except:
-            return Response({'success':false}, HTTP_204_NO_CONTENT)
+#         try:
+#             postData = Post.objects.get(id = mySerializer.validated_data['id'])
+#             userdata = User.object.get(id = postData.user.id)
+#         except:
+#             return Response({'success':false}, HTTP_204_NO_CONTENT)
 
-        try:
-            userProfile = userdata.profileImage.url,
-        except:
-            userProfile = None,
+#         try:
+#             userProfile = userdata.profileImage.url,
+#         except:
+#             userProfile = None,
             
-        user = {
-            'id' : userdata.id,
-            'nickname' : userdata.nickname,
-            'profileImage' : userProfile,
-            'content' : userdata.content,
-        }
+#         user = {
+#             'id' : userdata.id,
+#             'nickname' : userdata.nickname,
+#             'profileImage' : userProfile,
+#             'content' : userdata.content,
+#         }
 
 
-        try:
-            image = PostImageSerializer(PostImage.objects.filter(post=postData), many=True).data
-        except:
-            image = None,
+#         try:
+#             image = PostImageSerializer(PostImage.objects.filter(post=postData), many=True).data
+#         except:
+#             image = None,
             
             
-        postDict = {
-            'title' : postData.title,
-            'content' : postData.content,
-            'updated_dt' : postData.updated_dt,
-            'writer' : postData.user.id,
-            'images' : image,              
-        }
+#         postDict = {
+#             'title' : postData.title,
+#             'content' : postData.content,
+#             'updated_dt' : postData.updated_dt,
+#             'writer' : postData.user.id,
+#             'images' : image,              
+#         }
         
-        context={
-            'success': True,
-            'detailPost': postDict,
-            'user' : user,
-        }
-        return Response(context, status=HTTP_200_OK)
+#         context={
+#             'success': True,
+#             'detailPost': postDict,
+#             'user' : user,
+#         }
+#         return Response(context, status=HTTP_200_OK)
        
 class PostView(ListAPIView):
     serializer_class = PostSerializer
