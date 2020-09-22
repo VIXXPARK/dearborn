@@ -1,21 +1,31 @@
-.profile-content {
-    position: fixed;
-    left : 70%;
-    right : 95%;
-    top : 20%;
-    background-color: white;
-    width:25%;
-    font-size: 1rem;
-    color:black;
-    text-align: center;
+@media (min-width:1200px){
+    .profile-content {
+        position: fixed;
+        right : 5%;
+        top : 20%;
+        background-color: white;
+        width:300px;
+        font-size: 1rem;
+        color:black;
+        text-align: center;
+        border-radius: 20px;
+    }
+}
+
+@media (max-width:1199px){
+    .profile-content {
+        display: none;
+    }
 }
 
 .profile-header {
-    border-bottom: 1px black bold;
+    font-size: 30px;
+    margin:20px;
 }
 
 .profile-span {
-    
+    font-size: 20px;
+    margin:10px;
 }
 
 .container-detail {
@@ -32,14 +42,31 @@
 
 .detail-header {
     text-align: center;
-    font-size: 2rem;
+    font-size: 50px;
     padding: 1rem;
-    margin: 5rem 2rem 0rem 2rem;
+    margin: 20px auto;
     border-bottom: black dashed 1px;
 }
 
 .detail-span{
+    font-size: 20px;
     text-align: end;
     margin-right:2rem;
 }
 
+.detail-content{
+    padding-top:30px;
+    padding-bottom: 30px;
+}
+
+.vote-btn{
+    width:150px;
+    height:70px;
+    font-size: 30px;
+    margin: 20px auto;
+    background-color: wheat;
+    text-align: center;
+    line-height: 70px;
+    border-radius: 20px;
+    cursor: pointer;
+}

@@ -75,8 +75,8 @@ function LoginPage(props) {
                 />
                 
                 <div style={{float:'left', marginLeft:'1rem'}}>
-                <input type="checkbox" onChange={handleRememberEmail} checked={RememberEmail}></input>
-                <label> remember Email</label>
+                    <input type="checkbox" onChange={handleRememberEmail} checked={RememberEmail}></input>
+                    <label> remember Email</label>
                 </div><br/>
                 <input type="submit"></input>
                 <div style={{marginTop:'20px', borderTop:'1px solid gray'}}>
@@ -90,7 +90,7 @@ function LoginPage(props) {
     return (
         <div className="auth">
             <div className="auth-wrapper">
-                <Title level={2}><a href="/">DEarborn</a></Title>
+                <p style={{fontSize:'40px', fontWeight:'bold'}}><a href="/">DEarborn</a></p>
                 <section style={{backgroundColor:'white', padding:'25px', borderRadius:'7px'}}>
                     {LoginForm()}
                 </section>

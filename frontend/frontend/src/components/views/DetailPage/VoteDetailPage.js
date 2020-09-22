@@ -49,27 +49,31 @@ function VoteDetailPage(props) {
             }}
         >
             <div className="profile-content">
-                <div className="profile-header">
-                    {Writer.nickname}
-                </div>
-                <div className="profile-span">
-                    {Writer.content}
-                </div>
-            </div>
-            <div style={{color:'black'}}>
                 <div className="detail-header">
                     {DetailPost.title}
                 </div>
                 <div className="detail-span">
                     {DetailPost.updatedAt}
                 </div>
+                {DetailPost.content}
+                <div className="profile-header">
+                    {Writer.nickname}
+                </div>
+                <img style={{width:'200px', height:'200px', borderRadius:'100px'}} src={`http://localhost:8000${Writer.profileImage}`}/>
+                <div className="profile-span">
+                    {Writer.content}
+                </div>
+                <div className="vote-btn">
+                    투표하기
+                </div>
+            </div>
+            <div style={{color:'black'}}>
                 <div className="detail-content">
                     {DetailPost.images && DetailPost.images.map((image, i) => (
                         <div>
                             <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
                         </div>
                     ))}
-                    {DetailPost.content}
                 </div>
             </div>
         </Modal>
