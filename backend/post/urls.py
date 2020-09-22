@@ -1,4 +1,4 @@
-from .views import PostViewSet, getProfileView ,upViewSet,getDisLikeView,getDetailView
+from .views import PostViewSet, getProfileView ,upViewSet,getDisLikeView
 from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
 from .views import myVoteView,upVoteView
 from django.urls import path,include
@@ -16,7 +16,7 @@ urlpatterns = [
     path('post/getPosts',PostView.as_view()),
     path('post/getPostDetail',PostDetail.as_view()),
     path('post/getProfile',getProfileView.as_view()),
-    path('post/getPostDetail',getDetailView.as_view()),
+    # path('post/getPostDetail',getDetailView.as_view()),
     path('post/upView',upViewSet.as_view()),
     path('like/up',likeView.as_view()),
     path('dislike/up',disLikeView.as_view()),

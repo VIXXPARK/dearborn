@@ -57,15 +57,16 @@ function UploadVotePage(props) {
         formData.append('sell', values.sell)
         formData.append('scope', values.scope)
         formData.append('user', window.localStorage.getItem('userId'))
-        formData.append('siteType', 1)
-        axios.post('/api/post/uploadPost', formData, config)
+        axios.post('/api/post/uploadPost', formData,config)
             .then(response => {
+                console.log(response)
                 if(response.data.success)
                 {
                     alert('성공')
                     props.history.push('/')
                 }
                 else{
+                    console.log(response)
                     return alert('페이지 업로드 실패')
                 }
         })
