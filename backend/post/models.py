@@ -16,8 +16,11 @@ class Post(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
    thumbnail = models.ImageField(upload_to="thumb/",null=True)
    view = models.IntegerField(default=0)
-   siteType = models.IntegerField(default=0)
    space = models.BooleanField(default=True)
+   category = models.IntegerField(default=None)
+   expire_dt = models.DateTimeField(default=None)
+   
+
    def get_id(self):
       return self.id
    
@@ -28,10 +31,7 @@ class Post(models.Model):
 def delete_file(sender,instance,*args,**kwargs):
    if instance.thumbnail:
       _delete_file(instance.thumbnail.path)
-   
-       
-   
-
+      
 class PostImage(models.Model):
    post = models.ForeignKey(Post, on_delete=models.CASCADE)
    image = models.ImageField(upload_to="images/")
@@ -54,4 +54,7 @@ class disLike(models.Model):
 
 class vote(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
+   post = models.ForeignKey(Post,on_delete=models.CASCADE)
+
+class myWork(models.Model):
    post = models.ForeignKey(Post,on_delete=models.CASCADE)
