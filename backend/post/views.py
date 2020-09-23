@@ -21,7 +21,7 @@ from rest_framework.status import(
 )
 import json
 from rest_framework.views import APIView
-
+from .pagination import PostPageNumberPagination
 class upVoteView(ListAPIView):
     permission_classes=(permissions.AllowAny,)
     def post(self,request):
@@ -360,7 +360,7 @@ class getProfileView(ListAPIView):
 class PostView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.AllowAny,)
-
+    pagination_class = PostPageNumberPagination
     def get(self,request):
         try:
             data = Post.objects.all()
@@ -385,7 +385,46 @@ class PostView(ListAPIView):
            
             context = {
                 'success':True,
-                'data':postData,
+                'votes':postData,
+               
+            }
+            return Response(context,status=HTTP_200_OK)
+        except Exception as error:
+            context = {
+                'error':str(error),
+                'success':False
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+class ReposView(ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = PostPageNumberPagination
+    def get(self,request):
+        try:
+            data = Post.objects.all()
+            postData = []
+            for post in data:
+                user = User.object.filter(id=post.user.id)
+                try:
+                    thumb = post.thumbnail.url
+                except:
+                    thumb=None,
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : post.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : user[0].nickname,
+                    'profileImage' : user[0].profileImage.url,
+                }
+                postData.append(postDic)
+           
+            context = {
+                'success':True,
+                'repos':postData,
                
             }
             return Response(context,status=HTTP_200_OK)
