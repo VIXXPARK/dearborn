@@ -47,7 +47,6 @@ function LandingPage(props) {
                 alert('투표정보 가져오기 실패')
             }
         })}
-
     }, [])
 
     const renderVoteItems = (post) => {

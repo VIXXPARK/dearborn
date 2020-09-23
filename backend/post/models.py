@@ -16,9 +16,10 @@ class Post(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
    thumbnail = models.ImageField(upload_to="thumb/",null=True)
    view = models.IntegerField(default=0)
-   space = models.BooleanField(default=True)
+   scope = models.IntegerField(default=0)
+   sell = models.IntegerField(default=0)
    category = models.IntegerField(default=None)
-   expire_dt = models.DateTimeField(default=None)
+   expire_dt = models.DateTimeField(auto_now_add=True)
    
 
    def get_id(self):
