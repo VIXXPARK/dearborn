@@ -30,8 +30,8 @@ function RepoListPage(props) {
     const getPosts = (variables) => {
         axios.post(`/api/post/getRepos/?limit=${variables.limit}&offset=${variables.skip}`, variables)
         .then(response => {
-            if(response.data.results.success){
-                setPosts([...Posts, ...response.data.results.posts])
+            if(response.data.success){
+                setPosts([...Posts, ...response.data.posts])
             }else{
                 alert('데이터 가져오기 실패')
             }
