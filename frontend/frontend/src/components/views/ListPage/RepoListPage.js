@@ -15,10 +15,8 @@ function RepoListPage(props) {
     const [Posts, setPosts] = useState([])
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
-    const [Filters, setFilters] = useState({
-        filterList:[],
-        sortValue:1,
-    })
+    const [Ook, setOok] = useState(1); //One of kind
+    const [Sort, setSort] = useState(0)
 
     useEffect(() => {
         const variables = {
@@ -30,14 +28,10 @@ function RepoListPage(props) {
     }, [])
 
     const getPosts = (variables) => {
-        axios.post('/api/post/getPosts', variables)
+        axios.post(`/api/post/getRepos/?limit=${variables.limit}&offset=${variables.skip}`, variables)
         .then(response => {
             if(response.data.success){
-                if(variables.loadMore){
-                    setPosts([...Posts, ...response.data.posts])
-                }else {
-                    setPosts(response.data.posts)
-                }
+                setPosts([...Posts, ...response.data.posts])
             }else{
                 alert('데이터 가져오기 실패')
             }
@@ -54,30 +48,25 @@ function RepoListPage(props) {
         setOpenSort(!OpenSort)
     }
 
-    const showFilteredResults = (filters) =>{
+    const showFilteredResults = (ook) =>{
         const variables = {
             skip : 0,
             limit : Limit,
-            filters : filters
+            ook : ook,
+            sort : Sort,
         }
         getPosts(variables)
         setSkip(0)
     }
 
-    const handleFilters = (filters, category) => {
-        const newFilters = {...Filters}
+    const handleFilters = (ook) => {
+        setOok(ook)
 
-        newFilters[category] = filters
-
-        showFilteredResults(newFilters)
-        setFilters(newFilters)
+        showFilteredResults(ook)
     }
 
     const onSortChange = (e) => {
-        const newFilters = {...Filters}
-        newFilters["sortValue"] =e.target.value
-
-        setFilters(newFilters)
+        setSort(e.target.value)
     }
 
     const renderPage = () => (
@@ -103,7 +92,7 @@ function RepoListPage(props) {
                     <div className="filter-wrapper" id={OpenFilter ? "filter-show" : null}>
                         <FilterBox 
                             open={OpenFilter}
-                            handleFilters={filters => handleFilters(filters, "filterList")}
+                            handleFilters={ook => handleFilters(ook)}
                         />
                     </div>
                 </div>
@@ -111,7 +100,7 @@ function RepoListPage(props) {
                     <div style={{width:'100%', height:'100%'}} onClick={OpenSortClick}>정렬</div>
                     <div className="filter-wrapper" id={OpenSort ? "filter-show" : null}>
                         <div style={OpenSort ? null : {display:'none'}}>
-                            <Radio.Group onChange={onSortChange} value={Filters.sortValue}>
+                            <Radio.Group onChange={onSortChange} value={Sort}>
                                 <Radio value={1}>최신순</Radio><br/>
                                 <Radio value={2}>오래된순</Radio><br/>
                             </Radio.Group>

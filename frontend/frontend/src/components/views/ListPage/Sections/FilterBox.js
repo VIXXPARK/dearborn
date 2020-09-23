@@ -9,19 +9,8 @@ function FilterBox(props) {
     const [Checked, setChecked] = useState([])
 
     const handleToggle = (value)=> {
-        const currentIndex = Checked.indexOf(value)
-        const newChecked = [...Checked]
-
-        if(currentIndex === -1){
-            newChecked.push(value)
-        }else{
-            newChecked.splice(currentIndex, 1)
-        }
-
-        console.log(newChecked)
-
-        setChecked(newChecked)
-        props.handleFilters(newChecked)
+        setChecked(value)
+        props.handleFilters(value)
     }
 
     const renderCheckboxLists = (filterList)=> 
@@ -31,7 +20,7 @@ function FilterBox(props) {
                     <Checkbox
                         onChange={()=>handleToggle(value._id)}
                         type="checkbox"
-                        checked={Checked.indexOf(value._id) === -1 ? false : true}
+                        checked={Checked === value._id ? true : false}
                     />&nbsp;&nbsp;
                     <span>{value.name}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
