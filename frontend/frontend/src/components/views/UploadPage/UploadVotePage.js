@@ -21,7 +21,7 @@ function UploadVotePage(props) {
     //other
 
     const OnCategoryClick = (e) =>{
-        setCategory(e)
+        setCategory(e.target.value)
     }
 
     //upload
@@ -45,6 +45,7 @@ function UploadVotePage(props) {
         console.log(values)
         console.log(ThumbnailFile)
         console.log(FileList);
+        console.log(Category)
         let formData = new FormData()
         const config = {
             header : {'Content-Type' : 'multipart/form-data'}
@@ -57,7 +58,6 @@ function UploadVotePage(props) {
         formData.append('sell', values.sell)
         formData.append('scope', values.scope)
         formData.append('user', window.localStorage.getItem('userId'))
-        formData.append('siteType', 1)
         axios.post('/api/post/uploadPost', formData, config)
             .then(response => {
                 if(response.data.success)

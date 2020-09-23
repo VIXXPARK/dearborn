@@ -24,10 +24,16 @@ function LandingPage(props) {
 
     console.log(RepoPosts)
     useEffect(() => {
-        axios.get('/api/post/getPosts')
+        axios.post('/api/post/getVotes/?limit=4&offset=0')
         .then(response => {
-            if(response.data.success){
-                setVotePosts(response.data.data)
+            if(response.data.results.success){
+                setVotePosts(response.data.results.votes)
+            }
+        })
+        axios.post('/api/post/getRepos/?limit=4&offset=0')
+        .then(response => {
+            if(response.data.results.success){
+                setRepoPosts(response.data.results.repos)
             }
         })
         if(window.localStorage.getItem('userId')){
@@ -41,15 +47,6 @@ function LandingPage(props) {
                 alert('투표정보 가져오기 실패')
             }
         })}
-        axios.get('/api/post/getPosts') //나중에 Repo로 바꿔야됨
-        .then(response =>{
-            if(response.data.success){
-                console.log(response.data.data)
-                setRepoPosts(response.data.data)
-            }else{
-                alert('데이터 가져오기 실패')
-            }
-        })
     }, [])
 
     const renderVoteItems = (post) => {

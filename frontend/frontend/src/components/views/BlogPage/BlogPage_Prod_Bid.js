@@ -13,6 +13,7 @@ const {Title} = Typography
 function BlogPage_Prod_Bid(props) {
 
     const [Bids, setBids] = useState([])
+    const [BidPosts, setBidPosts] = useState([])
     const [Designer, setDesigner] = useState("")
 
     const designer = props.match.params.designer
@@ -22,9 +23,10 @@ function BlogPage_Prod_Bid(props) {
         .then(response => {
             if(response.data.success){
                 setDesigner(response.data.user)
-                axios.post('/api/info/getAbout', {userId : response.data.user.id})
+                axios.post('/api/info/getBid', {userId : response.data.user.id})
                 .then(response2 => {
                     if(response2.data.success){
+                        setBidPosts(response2.data.bidPosts)
                         setBids(response2.data.bids)
                     }else{
                         alert('대표작품 가져오기 실패')
