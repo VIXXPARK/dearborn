@@ -26,7 +26,6 @@ function LandingPage(props) {
     useEffect(() => {
         axios.post('/api/post/getVotes/?limit=4&offset=0')
         .then(response => {
-            console.log(response)
             if(response.data.success){
                 setVotePosts(response.data.votes)
             }

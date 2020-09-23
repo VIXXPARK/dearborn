@@ -358,40 +358,38 @@ class getProfileView(ListAPIView):
 #         return Response(context, status=HTTP_200_OK)
        
 class PostView(ListAPIView):
-    queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (permissions.AllowAny,)
     pagination_class = PostPageNumberPagination
 
-    def get(self,request):
+    def post(self,request):
         try:
-            page = self.paginate_queryset(self.queryset)
-            if page is not None:
-                data = page
-                postData = []
-                for post in data:
-                    user = User.object.filter(id=post.user.id)
-                    try:
-                        thumb = post.thumbnail.url
-                    except:
-                        thumb=None,
-                    postDic = {
-                        'id' : post.id,
-                        'title' : post.title,
-                        'content' : post.content,
-                        'updated_dt' : post.updated_dt,
-                        'userId' : post.user.id,
-                        'thumbnail' : thumb,
-                        'writer' : user[0].nickname,
-                        'profileImage' : user[0].profileImage.url,
-                    }
-                    postData.append(postDic)
-            
-                context = {
-                    'success':True,
-                    'votes':postData,
+            data = self.paginate_queryset(Post.objects.all())
+            postData = []
+            for post in data:
+                user = User.object.filter(id=post.user.id)
+                try:
+                    thumb = post.thumbnail.url
+                except:
+                    thumb=None,
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : post.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : user[0].nickname,
+                    'profileImage' : user[0].profileImage.url,
                 }
-                return Response(context,status=HTTP_200_OK)
+                postData.append(postDic)
+           
+            context = {
+                'success':True,
+                'votes':postData,
+               
+            }
+            return Response(context,status=HTTP_200_OK)
         except Exception as error:
             context = {
                 'error':str(error),
@@ -404,7 +402,7 @@ class ReposView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.AllowAny,)
     pagination_class = PostPageNumberPagination
-    def get(self,request):
+    def post(self,request):
         try:
             data = self.paginate_queryset(Post.objects.all())
             postData = []
