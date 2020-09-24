@@ -41,7 +41,8 @@ export function auth(){
         }
     }
     const request = axios.get(`${USER_SERVER}/auth`, config)
-        .then(response => response.data)
+        .then(response => 
+            response.data)
 
     return{
         type:AUTH_USER,

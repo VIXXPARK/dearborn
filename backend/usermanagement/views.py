@@ -169,6 +169,7 @@ class UserView(APIView):
             '_id': user.id,
             'email': user.email,
             'nickname': user.nickname,
+            'job' : user.job,
             'isAuth': True,
         }
         return Response(content)
@@ -244,12 +245,3 @@ def deleteUser(request):
         return Response({'success':True}, HTTP_200_OK)
     except:
         return Response({'success': False}, HTTP_400_BAD_REQUEST)
-    
-    # serializer = DeleteUserSerializer(data = request.data)
-    # if not serializer.is_valid():
-    #     return Response(serializer.error, status = HTTP_400_BAD_REQUEST)
-    # uid = serializer.validated_data['uid']
-    # user = User.object.filter(id=uid)
-    # user[0].delete()
-    # user[0].is_active = False
-    # user[0].save()

@@ -28,15 +28,6 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('is_activate', False)
         return self._create_user(email, password, **extra_fields)
 
-    # def create_provider(self, email, password=None, **extra_fields):
-    #     extra_fields.setdefault('is_staff', False)
-    #     extra_fields.setdefault('is_superuser', False)
-    #     extra_fields.setdefault('is_activate', False)
-    #     return self._create_user(email, password, **extra_fields)
-
-    def create_consumer(self, email, password=None, **extra_fields):
-        pass
-
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', 3)
@@ -54,7 +45,6 @@ class User(AbstractUser):
         return str(uuid.uuid4())
         
     id = models.CharField(editable=False, max_length=36, db_index=True, unique=True, default=make_uuid, primary_key=True)
-    is_superuser = models.SmallIntegerField()##1-consumer 2-provider 3-addmin
     nickname = models.CharField(max_length=50, unique=True)
     profileImage = models.ImageField(blank=True, upload_to="profileImage/")
     job = models.CharField(max_length=100)
