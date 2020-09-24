@@ -19,7 +19,7 @@ function BlogPage_Prod_About(props) {
         .then(response => {
             if(response.data.success){
                 setDesigner(response.data.user)
-                axios.post('/api/info/getAbout', {userId : response.data.user.id})
+                axios.post('/api/info/getAbout', {nickname:designer})
                 .then(response2 => {
                     if(response2.data.success){
                         setRep(response2.data.rep)
