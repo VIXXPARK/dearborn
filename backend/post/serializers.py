@@ -53,3 +53,9 @@ class PostSerializer(serializers.ModelSerializer):
 
 class PostIdSerializer(serializers.Serializer):
    id = serializers.IntegerField()
+
+class UserIdSerializer(serializers.Serializer):
+   id = serializers.CharField()
+
+class likeUserSerializer(serializers.Serializer):
+   id = serializers.CharField()
