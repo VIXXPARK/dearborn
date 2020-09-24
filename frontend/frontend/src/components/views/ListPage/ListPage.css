@@ -96,9 +96,29 @@
 
 .list-item {
     float:left;
-    background-color: violet;
     border-radius: 20px;
 }
+
+@media (min-width : 1550px){
+    
+    .event-list-item {
+        width:40%;
+        min-width: 600px;
+        margin : 2%;
+        float:left;
+    }
+}
+
+@media (max-width : 1549px){
+    
+    .event-list-item {
+        width:90%;
+        min-width: 600px;
+        margin : 2%;
+        float:left;
+    }
+}
+
 
 .vote-item{
     width:100%;

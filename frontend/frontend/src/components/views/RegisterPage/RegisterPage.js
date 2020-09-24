@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Typography, Input, Form, Select, Radio, Checkbox, Upload, Button, Avatar} from 'antd'
+import {Input, Form, Select, Checkbox, Upload, Button, Avatar} from 'antd'
 import {useForm, Controller} from 'react-hook-form'
 import '../LoginPage/LoginPage.css'
 import {useDispatch} from 'react-redux'
@@ -10,7 +10,6 @@ import {SmileOutlined, UserOutlined} from '@ant-design/icons';
 import {registerUser} from '../../../_actions/user_action'
 import TextArea from 'antd/lib/input/TextArea';
 
-const { Title } =Typography
 const {Option} = Select
 
 function RegisterPage(props) {
@@ -49,7 +48,7 @@ function RegisterPage(props) {
             formData.append('major', tempMajor)
             formData.append('email', data.email)
             formData.append('password', data.password)
-            formData.append('job', data.job)
+            formData.append('job', Job)
             formData.append('nickname', data.nickname)
             
             alert('이메일 인증을 확인해주세요')
@@ -81,6 +80,10 @@ function RegisterPage(props) {
                 setMajor([value[value.length-1]])
             else
                 setMajor(value)
+        }
+
+        const OnChangeJob = (e)=> {
+            setJob(e)
         }
 
         return (
@@ -134,20 +137,13 @@ function RegisterPage(props) {
                     name="nickname"
                     control={control}
                 />
-                <label>직종 : </label>
-                <Controller
-                    as={
-                        <Select style={{width:120}}>
-                            <Option value="1">무관</Option>
-                            <Option value="2">학생</Option>
-                            <Option value="3">디자이너</Option>
-                        </Select>
-                    }
-                    name="job"
-                    control={control}
-                    defaultValue="1"
-                />
-                <br/><br/>
+                <label>직종( 기업 / 디자이너 ) : </label>
+                
+                <Select style={{width:120}} value={Job} onChange={OnChangeJob}>
+                    <Option value={1}>일반 유저(디자이너)</Option>
+                    <Option value={2}>클라이언트</Option>
+                </Select>
+                {Job == 1 && (<><br/><br/>
                 <label>자신 있는 분야 : </label><br/><br/>
                 <Checkbox.Group
                     onChange={clickMajor}
@@ -159,7 +155,7 @@ function RegisterPage(props) {
                     <Checkbox value={4}>모자</Checkbox>
                     <Checkbox value={5}>신발</Checkbox>
                     <Checkbox value={6}>악세서리</Checkbox>
-                </Checkbox.Group>
+                </Checkbox.Group></>)}
                 <br/><br />당신의 프로필을 업로드하세요!<br/><br/>
                 <Upload
                     name='file'
@@ -192,9 +188,9 @@ function RegisterPage(props) {
 
     return (
         <div className="auth">
-            <div className="auth-wrapper" style={{paddingTop:'20px'}}>
-                <Title level={2}><a href="/">DEarborn</a></Title>
-                <section style={{backgroundColor:'white', padding:'25px', borderRadius:'7px'}}>
+            <div className="auth-wrapper" style={{paddingTop:'3px'}}>
+            <p style={{fontSize:'30px', fontWeight:'bold', marginBottom:'5px'}}><a href="/">DEarborn</a></p>
+                <section style={{backgroundColor:'white', padding:'20px', borderRadius:'7px'}}>
                     {RegisterForm()}
                 </section>
             </div>
