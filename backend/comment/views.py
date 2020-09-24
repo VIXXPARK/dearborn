@@ -33,10 +33,11 @@ class MakeCommentView(APIView):
             }
         except:
             return Response({'success':False},HTTP_400_BAD_REQUEST)
-        
+
         context = {
             'success':True,
             'user' : userDict,
+            'id' : comment.id,
         }
         return Response(context, HTTP_201_CREATED)
 
@@ -53,7 +54,11 @@ class GetCommentView(APIView):
             user = query.user
             profileImage = user.profileImage.url
             data = {
+<<<<<<< HEAD
                 'id' : query.id,
+=======
+                'id': query.id,
+>>>>>>> master
                 'contents':query.contents,
                 'userId':user.id,
                 'profileImage':profileImage,

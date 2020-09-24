@@ -1,8 +1,15 @@
 from rest_framework import serializers
-from .models import Post,PostImage,like,disLike
+from .models import Post,PostImage,like,disLike,vote
 
+class getVoteSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = vote
+      fields = '__all__'
 
-class getLikeDetailSerializer(serializers.Serializer):
+class getUserSerializer(serializers.Serializer):
+   user = serializers.CharField()
+
+class getUserPostSerializer(serializers.Serializer):
    user = serializers.CharField()
    post = serializers.CharField()
 
@@ -18,10 +25,6 @@ class dislikeSerializer(serializers.ModelSerializer):
    class Meta:
       model = disLike
       fields = '__all__'
-
-class viewSerializer(serializers.Serializer):
-   id = serializers.IntegerField()
-   
 
 class UserCheckSerializer(serializers.Serializer):
    nickname = serializers.CharField()
@@ -39,7 +42,7 @@ class PostSerializer(serializers.ModelSerializer):
    images = PostImageSerializer(many=True, read_only=True)
    class Meta:
       model = Post
-      fields = ('id', 'title','thumbnail', 'content','user','images','siteType')
+      fields = ('id', 'title','thumbnail', 'content','user','images','category','sell','scope')
    def create(self, validated_data):
       images_data = self.context['request'].FILES
       post = Post.objects.create(**validated_data)

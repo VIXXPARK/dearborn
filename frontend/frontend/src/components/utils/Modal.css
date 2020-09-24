@@ -1,5 +1,6 @@
+
 .modal-content-style {
-    max-height: calc(100vh);
+    max-height: calc(95vh);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -8,13 +9,30 @@
     display : none;
 }
 
-.modal-container {
-    position: fixed;
-    top: 0;
-    left:5%;
-    right:40%;
-    background-color: white;
-    color: #FFF;
-    font-size: 40px;
-    opacity:100%;
+@media (min-width:1200px){
+    .modal-container {
+        position: fixed;
+        top: 30px;
+        left:5%;
+        right:30%;
+        background-color: white;
+        color: #FFF;
+        font-size: 40px;
+        opacity:100%;
+        border-radius: 20px;
+    }
+}
+
+@media (max-width:1199px){
+    .modal-container {
+        position: fixed;
+        top: 30px;
+        width:95%;
+        left:2.5%;
+        background-color: white;
+        color: #FFF;
+        font-size: 40px;
+        opacity:100%;
+        border-radius: 20px;
+    }
 }

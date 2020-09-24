@@ -11,6 +11,8 @@ import {USER_SERVER} from '../../Config'
 import {logoutUser} from '../../../_actions/user_action'
 import { Avatar, Dropdown, Menu } from 'antd';
 
+import Dearborn from '../../assets/Dearborn.png'
+
 function NavBar(props) {
 
     const dispatch = useDispatch()
@@ -43,21 +45,22 @@ function NavBar(props) {
         <>
         <header id="header">
             <div className="container">
-                <div className="row">
-                    <div className="header-title"><a href="/">DEarborn</a></div>
+                <div>
+                    <div className="header-title"><a href="/"><img className="main-logo" src={Dearborn}/></a></div>
+                    <a className="header-a" href="/contest">contest</a>
                     <div className="row-log">
                         {user.userData && !user.userData.isAuth ?
                         (<>
-                        <div className="register pull-right"><a href="/register">회원가입</a></div>
-                        <div className="logged-out pull-right">로그인하세요<a href="/login">로그인</a></div>
+                        <div className="register pull-right"><a href="/register"><div className="navbar-button">회원가입</div></a></div>
+                        <div className="logged-out pull-right">로그인하세요<a href="/login"><div className="navbar-button">로그인</div></a></div>
                         </>) :
                         (<>
-                        <div className="logged-out pull-right"><a onClick={logoutHandler}>로그아웃</a></div>
+                        <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
                         <div className="register pull-right">
                             <Dropdown overlay={menu} placement="bottomLeft" arrow>
                                 <a>{user.userData&& user.userData.nickname ? user.userData.nickname+"님" : null}</a>
                             </Dropdown>
-                            <a href="/upload">업로드</a>
+                            <a href="/upload"><div className="navbar-button">업로드</div></a>
                         </div>
                         </>)
                         }

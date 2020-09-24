@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {Input, Avatar, Button, Comment} from 'antd';
+import {Input, Avatar, Button} from 'antd';
 import axios from 'axios';
+
+import './CommentArea.css'
 
 const {TextArea} = Input
 function CommentArea(props) {
@@ -37,7 +39,15 @@ function CommentArea(props) {
         .then(response => {
             if(response.data.success){
                 console.log(Comments)
-                setComments(Comments.concat(data))
+                const variable = {
+                    contents : data.contents,
+                    user : data.user,
+                    post : data.post,
+                    id : response.data.id,
+                    nickname : response.data.user.nickname,
+                    profileImage : response.data.user.profileImage,
+                }
+                setComments(Comments.concat(variable))
                 alert('성공')
             }else{
                 alert('실패')
@@ -46,16 +56,36 @@ function CommentArea(props) {
         setCommentValue("")
     }
 
+    console.log(Comments)
+
     const renderingComments = (comment) => {
-        
+        const ChangeComment = () =>{
+            
+        }
+        const DeleteComment = () => {
+            axios.post('/api/comment/delComment', {commentId : comment.id})
+            .then(response => {
+                console.log(response.data)
+                if(response.data.success){
+                    alert('성공')
+                    const deleteIndex = Comments.indexOf(comment)
+                    setComments(Comments.slice(0, deleteIndex).concat(Comments.slice(deleteIndex+1, Comments.length)))
+                }else{
+                    alert('실패')
+                }
+            })
+        }
         return (
-            <Comment 
-                author={comment.nickname}
-                avatar={<Avatar
-                            src={`http://localhost:8000${comment.profileImage}`}
-                        />}
-                content={<p style={{textAlign:'left'}}>{comment.contents}</p>}
-            />
+            <div className="comment-form">
+                <div className="comment-nickname">
+                    <Avatar src={`http://localhost:8000${comment.profileImage}`}/>
+                    {comment.nickname}
+                </div>
+                <p className="comment-content">{comment.contents}</p>
+                <div className="comment-action">
+                    <p style={{fontSize : '15px'}}><a onClick={ChangeComment}>수정</a> <a onClick={DeleteComment}>삭제</a></p>
+                </div>
+            </div>
         )
     }
 

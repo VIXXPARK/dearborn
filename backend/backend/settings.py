@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'bid.apps.BidConfig',
     'messanger.apps.MessangerConfig',
     'background_task',
+    'contest.apps.ContestConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -134,6 +136,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400

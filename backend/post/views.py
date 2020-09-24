@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from rest_framework.viewsets import ModelViewSet
-from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer,viewSerializer, PostIdSerializer
-from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getLikeDetailSerializer
-from .models import Post,PostImage,like,disLike
+from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer, PostIdSerializer
+from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getUserPostSerializer
+from .serializers import getUserSerializer,getVoteSerializer
+from .models import Post,PostImage,like,disLike,vote
 from usermanagement.models import User
 from rest_framework import filters
 from rest_framework.generics import ListAPIView,DestroyAPIView
@@ -20,13 +21,43 @@ from rest_framework.status import(
 )
 import json
 from rest_framework.views import APIView
+from .pagination import PostPageNumberPagination
+class upVoteView(ListAPIView):
+    permission_classes=(permissions.AllowAny,)
+    def post(self,request):
+        voted =getVoteSerializer(data=request.data)
+        if not voted.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        voted.save()
+        return Response({'success':True},status=HTTP_200_OK)
+
+
+class myVoteView(APIView):
+    permission_classes=(permissions.AllowAny,)
+    def post(self,request):
+        posts = getUserSerializer(data=request.data)
+        if not posts.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        postdata = vote.objects.filter(user=posts.validated_data['user'])
+        postID = []
+        for postcontent in postdata:
+            postID.append(postcontent.post.id)
+        context={
+            'success':True,
+            'posts':postID,
+        }
+        return Response(context,status=HTTP_200_OK)
+        
+
+
+
 
 class getLikeDetail(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self,request):
-        liked = getLikeDetailSerializer(data=request.data)
+        liked = getUserPostSerializer(data=request.data)
         if not liked.is_valid():
-            return Response({'likeSuccess':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
         try:
             likedata = like.objects.get(user=liked.validated_data['user'],post=liked.validated_data['post'])
             context = {
@@ -35,9 +66,9 @@ class getLikeDetail(APIView):
             }
             return Response(context,status=HTTP_200_OK)
         except:
-            disliked = getLikeDetailSerializer(data=request.data)
+            disliked = getUserPostSerializer(data=request.data)
             if not disliked.is_valid():
-                return Response({'disLikeSuccess':False,'data':reqeust.data},status=HTTP_400_BAD_REQUEST)
+                return Response({'success':False,'data':reqeust.data},status=HTTP_400_BAD_REQUEST)
             try:
                 dislikedata = disLike.objects.get(user=disliked.validated_data['user'],post=disliked.validated_data['post'])
                 context = {
@@ -83,10 +114,10 @@ class getLikeView(ListAPIView):
 class getDisLikeView(ListAPIView):
     queryset = disLike.objects.all()
     permission_classes = (permissions.AllowAny,)
-    serializer_class = getLikeDetailSerializer
+    serializer_class = getUserPostSerializer
      
     def post(self,request):
-        liked = getLikeDetailSerializer(data=request.data)
+        liked = getUserPostSerializer(data=request.data)
         if not liked.is_valid():
             return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
         likedata = disLike.objects.filter(post=liked.validated_data['post'],user=liked.validated_data['user'])
@@ -112,21 +143,6 @@ class disLikeView(ListAPIView):
     def get_queryset(self):
         queryset = disLike.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data = dislikeSerializer(self.get_queryset,many=True).data
-            context = {
-                'success':True,
-                'data':data
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context= {
-                'success':False,
-                'error':str(error)
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self,request):
         like = dislikeSerializer(data=request.data)
@@ -184,21 +200,6 @@ class likeView(ListAPIView):
     def get_queryset(self):
         queryset = like.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data = likeSerializer(self.get_queryset,many=True).data
-            context = {
-                'success':True,
-                'data':data
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context= {
-                'success':False,
-                'error':str(error)
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
     
     def post(self,request):
         like = likeSerializer(data=request.data)
@@ -213,28 +214,11 @@ class likeView(ListAPIView):
 class upViewSet(ListAPIView):
     queryset = Post.objects.all()
     permission_classes = (permissions.AllowAny,)
-    serializer_class = viewSerializer
+    serializer_class = PostIdSerializer
 
     def get_queryset(self):
         queryset = Post.objects.all()
         return queryset
-
-    def get(self,request):
-        try:
-            data=viewSerializer(self.get_queryset(),many=True).data
-            context = {
-                'success':True,
-                'data':data,
-            }
-            return Response(context,status=HTTP_200_OK)
-        except Exception as error:
-            context = {
-                'error':str(error),
-                'success':False
-            }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
     def post(self,request):
         view = viewSerializer(data=request.data)
@@ -289,11 +273,13 @@ class getProfileView(ListAPIView):
             'profileImage' : profileImage,
         }
         postJson = []
-        image = []
+        
         for postraw in postdata:
+            image = []
             jpgs = PostImage.objects.filter(post=postraw.id)
             try:
-                 for pngs in jpgs:
+                print(jpgs)
+                for pngs in jpgs:
                     image.append(pngs.image.url)
             except:
                 pass
@@ -314,6 +300,7 @@ class getProfileView(ListAPIView):
                 
             }
             postJson.append(post)
+
         
         context={
             'success': True,
@@ -322,61 +309,62 @@ class getProfileView(ListAPIView):
         }
         return Response(context, status=HTTP_200_OK)
 
-class getDetailView(ListAPIView):
-    permission_classes = (permissions.AllowAny,)
+# class getDetailView(ListAPIView):
+#     permission_classes = (permissions.AllowAny,)
 
-    def post(self,request):
-        mySerializer = viewSerializer(data = request.data)
-        if not mySerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+#     def post(self,request):
+#         mySerializer = viewSerializer(data = request.data)
+#         if not mySerializer.is_valid():
+#             return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
             
-        try:
-            postData = Post.objects.get(id = mySerializer.validated_data['id'])
-            userdata = User.object.get(id = postData.user.id)
-        except:
-            return Response({'success':false}, HTTP_204_NO_CONTENT)
+#         try:
+#             postData = Post.objects.get(id = mySerializer.validated_data['id'])
+#             userdata = User.object.get(id = postData.user.id)
+#         except:
+#             return Response({'success':false}, HTTP_204_NO_CONTENT)
 
-        try:
-            userProfile = userdata.profileImage.url,
-        except:
-            userProfile = None,
+#         try:
+#             userProfile = userdata.profileImage.url,
+#         except:
+#             userProfile = None,
             
-        user = {
-            'id' : userdata.id,
-            'nickname' : userdata.nickname,
-            'profileImage' : userProfile,
-            'content' : userdata.content,
-        }
+#         user = {
+#             'id' : userdata.id,
+#             'nickname' : userdata.nickname,
+#             'profileImage' : userProfile,
+#             'content' : userdata.content,
+#         }
 
 
-        try:
-            image = PostImageSerializer(PostImage.objects.filter(post=postData), many=True).data
-        except:
-            image = None,
+#         try:
+#             image = PostImageSerializer(PostImage.objects.filter(post=postData), many=True).data
+#         except:
+#             image = None,
             
             
-        postDict = {
-            'title' : postData.title,
-            'content' : postData.content,
-            'updated_dt' : postData.updated_dt,
-            'writer' : postData.user.id,
-            'images' : image,              
-        }
+#         postDict = {
+#             'title' : postData.title,
+#             'content' : postData.content,
+#             'updated_dt' : postData.updated_dt,
+#             'writer' : postData.user.id,
+#             'images' : image,              
+#         }
         
-        context={
-            'success': True,
-            'detailPost': postDict,
-            'user' : user,
-        }
-        return Response(context, status=HTTP_200_OK)
+#         context={
+#             'success': True,
+#             'detailPost': postDict,
+#             'user' : user,
+#         }
+#         return Response(context, status=HTTP_200_OK)
        
 class PostView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.AllowAny,)
+    pagination_class = PostPageNumberPagination
 
-    def get(self,request):
+    def post(self,request):
         try:
-            data = Post.objects.all()
+            data = self.paginate_queryset(Post.objects.all())
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)
@@ -398,7 +386,47 @@ class PostView(ListAPIView):
            
             context = {
                 'success':True,
-                'data':postData,
+                'votes':postData,
+               
+            }
+            return Response(context,status=HTTP_200_OK)
+        except Exception as error:
+            context = {
+                'error':str(error),
+                'success':False
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ReposView(ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = PostPageNumberPagination
+    def post(self,request):
+        try:
+            data = self.paginate_queryset(Post.objects.all())
+            postData = []
+            for post in data:
+                user = User.object.filter(id=post.user.id)
+                try:
+                    thumb = post.thumbnail.url
+                except:
+                    thumb=None,
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : post.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : user[0].nickname,
+                    'profileImage' : user[0].profileImage.url,
+                }
+                postData.append(postDic)
+           
+            context = {
+                'success':True,
+                'repos':postData,
                
             }
             return Response(context,status=HTTP_200_OK)
@@ -457,4 +485,5 @@ class PostDetail(APIView):
             'user' : user,
         }
         return Response(context,status=HTTP_200_OK)
+
 
