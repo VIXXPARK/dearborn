@@ -41,6 +41,7 @@ function BlogPage_Prod_Works(props) {
     }
 
     const renderLikes = (repo) => {
+        console.log(repo)
         return (
             <div className="works-wrapper">
                 <img className="works-thumb" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
