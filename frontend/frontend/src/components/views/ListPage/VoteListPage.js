@@ -15,23 +15,29 @@ function VoteListPage(props) {
     const [Posts, setPosts] = useState([])
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
-    const [Ook, setOok] = useState(1); //One of kind
+    const [Ook, setOok] = useState(-1); //One of kind
     const [Sort, setSort] = useState(0)
 
     useEffect(() => {
         const variables = {
-            skip:Skip,
-            limit:Limit,
+            ook:-1,
+            sort :0,
         }
 
         getPosts(variables)
     }, [])
 
     const getPosts = (variables) => {
-        axios.post(`/api/post/getVotes/?limit=${variables.limit}&offset=${variables.skip}`, variables)
+        console.log(variables)
+        axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
             if(response.data.success){
-                setPosts([...Posts, ...response.data.posts])
+                console.log(response.data.votes)
+                if(Posts.length !==0){
+                    setPosts([...Posts, ...response.data.votes])
+                }else{
+                    setPosts(response.data.votes)
+                }
             }else{
                 alert('데이터 가져오기 실패')
             }
@@ -50,8 +56,6 @@ function VoteListPage(props) {
 
     const showFilteredResults = (ook) =>{
         const variables = {
-            skip : 0,
-            limit : Limit,
             ook : ook,
             sort : Sort,
         }
@@ -67,13 +71,19 @@ function VoteListPage(props) {
 
     const onSortChange = (e) => {
         setSort(e.target.value)
+        const variables = {
+            ook : Ook,
+            sort : e.target.value,
+        }
+        getPosts(variables)
+        setSkip(0)
     }
 
-    const renderPage = () => (
+    const renderPage = (post) => (
         <div className="list-item">
             <a href={`/contest/1`}>
                 <div className="vote-item">
-                    <img className="vote-item-img" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} alt/>
+                    <img className="vote-item-img" src={`http://localhost:8000${post.thumbnail}`} alt/>
                 </div>
             </a>
         </div>
@@ -110,12 +120,7 @@ function VoteListPage(props) {
                 </div>
             </div>
             <div className="list-wrapper">
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
+                {Posts && Posts.map(post => renderPage(post))}
             </div>
         </div>
     );

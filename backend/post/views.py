@@ -2,7 +2,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer, PostIdSerializer
 from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getUserPostSerializer
-from .serializers import getUserSerializer,getVoteSerializer,UserIdSerializer,likeUserSerializer
+from .serializers import getUserSerializer,getVoteSerializer,UserIdSerializer,likeUserSerializer,PostFilterSerializer
 from .models import Post,PostImage,like,disLike,vote
 from usermanagement.models import User
 from rest_framework import filters
@@ -292,7 +292,7 @@ class getWorkView(ListAPIView):
             return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
             
         userdata = User.object.get(id=userSerializer.validated_data['id'])
-        postdata = self.paginate_queryset(Post.objects.filter(user=userdata))
+        postdata = self.paginate_queryset(Post.objects.filter(user=userdata).order_by('-updated_dt'))
         
         postJson = []
         
@@ -307,7 +307,7 @@ class getWorkView(ListAPIView):
                 pass
 
             try:
-                thumbnail = postraw.thumbnail.url()
+                thumbnail = postraw.thumbnail.url
             except:
                 thumbnail = None,
             
@@ -345,40 +345,39 @@ class getWorkLikeView(ListAPIView):
             return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
         
         userId = User.object.get(id=userSerializer.validated_data['id'])    
-        likeObject = like.objects.filter(user=userId.id)
+        likeObject = self.paginate_queryset(like.objects.filter(user=userId.id))
         postJson = []
         
         for postraw in likeObject:
-            # image = []
-            # jpgs = PostImage.objects.filter(post=postraw.post)
-            # try:
-            #     for pngs in jpgs:
-            #         image.append(pngs.image.url)
-            # except:
-            #     pass
+            image = []
+            jpgs = PostImage.objects.filter(post=postraw.post.id)
+            try:
+                for pngs in jpgs:
+                    image.append(pngs.image.url)
+            except:
+                pass
 
-            # try:
-            #     thumbnail = Post.objects.get(id=postraw.post).thumbnail.url
-            # except:
-            #     thumbnail = None,
-            # temp = Post.objects.get(id=postraw.post)
-            # post = {
-            #     'id' : temp.id,
-            #     'title' : temp.title,
-            #     'content' : temp.content,
-            #     'updated_dt' : temp.updated_dt,
-            #     'writer' : temp.user.id,
-            #     'images' : image,
-            #     'thumbnail' : thumbnail,
+            try:
+                thumbnail = Post.objects.get(id=postraw.post.id).thumbnail.url
+            except:
+                thumbnail = None,
+            temp = Post.objects.get(id=postraw.post.id)
+            post = {
+                'id' : temp.id,
+                'title' : temp.title,
+                'content' : temp.content,
+                'updated_dt' : temp.updated_dt,
+                'writer' : temp.user.id,
+                'images' : image,
+                'thumbnail' : thumbnail,
                 
-            # }
-            # postJson.append(post)
-            postJson.append(postraw.post)
+            }
+            postJson.append(post)
 
         
         context={
             'success': True,
-            'repos': postJson,
+            'repos': postJson
         }
         return Response(context, status=HTTP_200_OK)
 
@@ -390,8 +389,21 @@ class PostView(ListAPIView):
     pagination_class = PostPageNumberPagination
 
     def post(self,request):
+        filterSerializer = PostFilterSerializer(data=request.data)
+        if not filterSerializer.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        
         try:
-            data = self.paginate_queryset(Post.objects.all())
+            if(filterSerializer.validated_data['sort']==0):
+                if filterSerializer.validated_data['ook']==-1:
+                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
+                else :
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
+            else:
+                if filterSerializer.validated_data['ook']==-1:
+                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
+                else :
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)
@@ -431,7 +443,7 @@ class ReposView(ListAPIView):
     pagination_class = PostPageNumberPagination
     def post(self,request):
         try:
-            data = self.paginate_queryset(Post.objects.all())
+            data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)
