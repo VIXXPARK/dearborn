@@ -20,7 +20,6 @@ from background_task import background
 class MessageViewSet(ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = SaveMessageSerializer
-    permission_classes = (permissions.AllowAny, )
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
@@ -29,10 +28,30 @@ class MessageViewSet(ModelViewSet):
         return Response({'success':True})
     
     #use "python manage.py process_tasks"
-    @background(schedule=5)
+    @background(schedule=100)
     def AutoDelete(messageID):
         message = Message.objects.filter(id=messageID)
         message[0].delete()
 
     def GetMessage(self, request):
-        pass
+        user = request.user
+        messages = Message.objects.filter(userTo = user)
+        
+        messageList = []
+        for message in messages:
+            context1 = {
+                'fromNickname' : message.userFrom.nickname,
+                'fromId' : message.userFrom.id,
+                'title' : message.title,
+                'message' : message.message,
+                'date' : message.updated_dt,
+            }
+            messageList.append(context1)
+        
+        context = {
+            'success' : True,
+            'messages' : messageList,
+        }
+        return Response(context, status=HTTP_200_OK)
+        
+        

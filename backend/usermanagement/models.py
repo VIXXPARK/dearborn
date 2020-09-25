@@ -30,7 +30,7 @@ class MyUserManager(BaseUserManager):
 
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', 3)
+        extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_activate', True)
         extra_fields.setdefault('profileImage',None)
         extra_fields.setdefault('content', "hello")

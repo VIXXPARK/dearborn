@@ -8,7 +8,6 @@ def _delete_file(path):
    if os.path.isfile(path):
       os.remove(path)
 
-
 class Post(models.Model):
    title = models.CharField(max_length=500)
    content = models.TextField()
