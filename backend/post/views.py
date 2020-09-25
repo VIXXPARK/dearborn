@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer,PostImageSerializer,UserCheckSerializer, PostIdSerializer
-from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getUserPostSerializer
+from .serializers import likeSerializer,dislikeSerializer,getLikeSerializer,getUserPostSerializer,myWorkSerializer
 from .serializers import getUserSerializer,getVoteSerializer,UserIdSerializer,likeUserSerializer,PostFilterSerializer
-from .models import Post,PostImage,like,disLike,vote
+from .models import Post,PostImage,like,disLike,vote,myWork
 from usermanagement.models import User
 from rest_framework import filters
 from rest_framework.generics import ListAPIView,DestroyAPIView
@@ -221,7 +221,7 @@ class upViewSet(ListAPIView):
         return queryset
 
     def post(self,request):
-        view = viewSerializer(data=request.data)
+        view = PostIdSerializer(data=request.data)
         if not view.is_valid():
             return Response({'success':False,'data':view.data},status=HTTP_400_BAD_REQUEST)
         
@@ -255,8 +255,26 @@ class getProfileView(ListAPIView):
         userSerializer = UserCheckSerializer(data = request.data)
         if not userSerializer.is_valid():
             return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
-            
         userdata = User.object.get(nickname=userSerializer.validated_data['nickname'])
+        view=0
+        work=0
+        like=0
+        try:
+            postdata = Post.objects.filter(user=userdata.id)
+            for x in postdata:
+                work=work+1
+                view=x.view+view
+        except:
+            pass
+
+        try:
+            likedata = like.objects.filter(user=userdata.id)
+            for y in likedata:
+                like=like+1
+        except:
+            pass
+       
+
         try:
             profileImage = userdata.profileImage.url,
         except:
@@ -272,6 +290,9 @@ class getProfileView(ListAPIView):
         context={
             'success': True,
             'user' : user,
+            'work':work,
+            'view':view,
+            'like':like
         }
         return Response(context, status=HTTP_200_OK)
 
@@ -497,7 +518,7 @@ class PostDetail(APIView):
             for pngs in jpgs:
                 Jpost.append(pngs.image.url)
         except:
-            mainimg = None,
+           pass
 
         try:
             profileImage = userdata.profileImage.url,
@@ -525,4 +546,31 @@ class PostDetail(APIView):
         }
         return Response(context,status=HTTP_200_OK)
 
+
+
+class mySetWork(ListAPIView):
+    permission_classes=(permissions.AllowAny,)
+    def post(self,request):
+        worked =myWorkSerializer(data=request.data,partial=True)
+        if not worked.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        
+        try:
+            workdata = myWork.objects.filter(user=request.user.id)
+            work=0
+            for x in workdata:
+                work=work+1
+            if work>=1:
+                print(worked)
+                print("this is update now")
+                workdata.update(post=worked.data['post'])
+            else:
+                worked.save(user=request.user)    
+        except:
+            pass
+        return Response({'success':True},status=HTTP_200_OK)
+            
+            
+                
+            
 

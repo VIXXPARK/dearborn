@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post,PostImage,like,disLike,vote
+from .models import Post,PostImage,like,disLike,vote,myWork
 
 class getVoteSerializer(serializers.ModelSerializer):
    class Meta:
@@ -70,3 +70,19 @@ class UserIdSerializer(serializers.Serializer):
 
 class likeUserSerializer(serializers.Serializer):
    id = serializers.CharField()
+
+class myWorkSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = myWork
+      fields= '__all__'
+
+      
+   # Post = serializers.IntegerField()
+   # User = serializers.CharField()
+   # def create(self,validated_data):
+   #    return myWork(**validated_data)
+
+   # def update(self,instance,validated_data):
+   #    instance.Post = validated_data.get('post',instance.Post)
+   #    instance.User = validated_data.get('User',instance.User)
+   #    return instance
