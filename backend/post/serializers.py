@@ -51,6 +51,17 @@ class PostSerializer(serializers.ModelSerializer):
        
       return post
 
+class PostFilterSerializer(serializers.Serializer):
+   ook = serializers.IntegerField()
+   sort = serializers.IntegerField()
+   
+
+class LikeViewSerializer(serializers.ModelSerializer):
+   class Meta:
+      model=like
+      fields = '__all__',
+
+
 class PostIdSerializer(serializers.Serializer):
    id = serializers.IntegerField()
 

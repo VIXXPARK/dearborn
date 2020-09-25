@@ -15,7 +15,7 @@ function VoteListPage(props) {
     const [Posts, setPosts] = useState([])
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
-    const [Ook, setOok] = useState(1); //One of kind
+    const [Ook, setOok] = useState(-1); //One of kind
     const [Sort, setSort] = useState(0)
 
     useEffect(() => {
