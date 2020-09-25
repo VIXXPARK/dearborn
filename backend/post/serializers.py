@@ -74,7 +74,7 @@ class likeUserSerializer(serializers.Serializer):
 class myWorkSerializer(serializers.ModelSerializer):
    class Meta:
       model = myWork
-      fields= '__all__'
+      fields= 'post',
 
       
    # Post = serializers.IntegerField()
