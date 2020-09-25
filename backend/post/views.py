@@ -554,15 +554,13 @@ class mySetWork(ListAPIView):
         worked =myWorkSerializer(data=request.data,partial=True)
         if not worked.is_valid():
             return Response({'success':False},status=HTTP_400_BAD_REQUEST)
-        
         try:
-            workdata = myWork.objects.filter(user=request.user.id)
+            userdata = User.object.get(email=request.user)
+            workdata = myWork.objects.filter(user=userdata.id)
             work=0
             for x in workdata:
                 work=work+1
             if work>=1:
-                print(worked)
-                print("this is update now")
                 workdata.update(post=worked.data['post'])
             else:
                 worked.save(user=request.user)    
