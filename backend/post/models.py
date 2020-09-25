@@ -60,3 +60,5 @@ class vote(models.Model):
 class myWork(models.Model):
    post = models.ForeignKey(Post,on_delete=models.CASCADE)
    user = models.ForeignKey(User,on_delete=models.CASCADE)
+   def get_post(self):
+      return self.post

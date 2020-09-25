@@ -463,8 +463,21 @@ class ReposView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = PostPageNumberPagination
     def post(self,request):
+        filterSerializer = PostFilterSerializer(data=request.data)
+        if not filterSerializer.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+
         try:
-            data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
+            if(filterSerializer.validated_data['sort']==0):
+                if filterSerializer.validated_data['ook']==-1:
+                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
+                else :
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
+            else:
+                if filterSerializer.validated_data['ook']==-1:
+                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
+                else :
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)
@@ -567,6 +580,31 @@ class mySetWork(ListAPIView):
         except:
             pass
         return Response({'success':True},status=HTTP_200_OK)
+
+class getMyWork(APIView):
+    permission_classes=(permissions.AllowAny,)
+
+    def get(self,request):
+        userdata = User.object.get(email=request.user)
+        work = myWork.objects.filter(user=userdata.id)
+        postJson = []
+        for x in work:
+            y=x.get_post()
+            try:
+                thumbnail=y.thumbnail.url
+            except:
+                tumbnail=None,
+            context={
+                'id':y.id,
+                'title':y.title,
+                'thumbnail':thumbnail,
+            }
+            postJson.append(context)
+        content = {
+            'success':True,
+            'work':postJson
+        }
+        return Response(content,status=HTTP_200_OK)
             
             
                 
