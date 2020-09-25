@@ -1,9 +1,10 @@
 #-*- coding: utf-8 -*-
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes, parser_classes
-from rest_framework.permissions import AllowAny##, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.authentication import HTTP_HEADER_ENCODING
 from rest_framework.status import(
@@ -34,6 +35,7 @@ from .token import account_activation_token
 from .text import message, changeMessage
 from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY, MEDIA_ROOT
 from backend.my_settings import EMAIL
+from .permissions import APIPermission
 import jwt, json
 import os
 
@@ -163,6 +165,7 @@ def changeEmailRequest(request):
     return Response({'success':True}, status=HTTP_200_OK)
 
 class UserView(APIView):
+    permission_classes = (APIPermission, )
     def get(self, request, format=None):
         user = request.user
         content = {
@@ -173,6 +176,22 @@ class UserView(APIView):
             'isAuth': True,
         }
         return Response(content)
+
+@api_view(["GET"])
+@permission_classes((AllowAny, ))
+def Auth(request):
+    try:
+        user = request.user
+        content = {
+            '_id': user.id,
+            'email': user.email,
+            'nickname': user.nickname,
+            'job' : user.job,
+            'isAuth': True,
+        }
+        return Response(content)
+    except:
+        return Response({'isAuth':False})
 
 @permission_classes((AllowAny, ))
 class Activate(View):
