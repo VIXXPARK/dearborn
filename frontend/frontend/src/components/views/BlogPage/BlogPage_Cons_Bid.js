@@ -11,8 +11,10 @@ const {Title} = Typography
 
 function BlogPage_Cons_Bid(props) {
 
-    const [Repos, setRepos] = useState([])
+    const [Posts, setPosts] = useState([])
     const [Designer, setDesigner] = useState("")
+    const [Skip, setSkip] = useState(0)
+    const [Limit, setLimit] = useState(4)
 
     const designer = props.match.params.designer
 
@@ -20,13 +22,17 @@ function BlogPage_Cons_Bid(props) {
         axios.post('/api/post/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
-                setRepos(response.data.repos)
                 setDesigner(response.data.user)
+                getPosts(response.data.user.id)
             }else{
                 alert('데이터 가져오기 실패')
             }
         })
     }, [])
+
+    const getPosts = (id) => {
+        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`, )
+    }
 
     const renderPost = (repo) => {
         return (

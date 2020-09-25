@@ -50,9 +50,9 @@ function BlogPage_Prod_About(props) {
                 </div>
                 <div className="blog-section">
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">about</button>
-                    <a href={`/${Designer.nickname}/works`}><button className="blog-tabs-btn">works</button></a>
-                    <a href={`/${Designer.nickname}/likes`}><button className="blog-tabs-btn">likes</button></a>
-                    <a href={`/${Designer.nickname}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
+                    <a href={`/${designer}/works`}><button className="blog-tabs-btn">works</button></a>
+                    <a href={`/${designer}/likes`}><button className="blog-tabs-btn">likes</button></a>
+                    <a href={`/${designer}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
                     <div className="blog-tabs-content">
                         <div className="prod-about">
                             <div className="prod-about-title">

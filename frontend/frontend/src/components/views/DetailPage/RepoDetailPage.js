@@ -59,6 +59,18 @@ function RepoDetailPage(props) {
                             <div>정말로 입찰하시겠습니까?</div>,
                             onOk(){
                                 console.log(Bid)
+                                const variables = {
+                                    postId : Repo.id,
+                                    price : Bid,
+                                }
+                                axios.post('/api/bid/setBid', variables)
+                                .then(response => {
+                                    if(response.data.success){
+                                        alert('성공')
+                                    }else{
+                                        alert('실패')
+                                    }
+                                })
                                 Modal.destroyAll()
                             }
                     })

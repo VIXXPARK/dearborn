@@ -24,13 +24,17 @@ function LandingPage(props) {
 
     console.log(RepoPosts)
     useEffect(() => {
-        axios.post('/api/post/getVotes/?limit=4&offset=0')
+        const variables = {
+            ook : -1,
+            sort : 0,
+        }
+        axios.post('/api/post/getVotes/?limit=4&offset=0', variables)
         .then(response => {
             if(response.data.success){
                 setVotePosts(response.data.votes)
             }
         })
-        axios.post('/api/post/getRepos/?limit=4&offset=0')
+        axios.post('/api/post/getRepos/?limit=4&offset=0', variables)
         .then(response => {
             if(response.data.success){
                 setRepoPosts(response.data.repos)

@@ -307,7 +307,7 @@ class getWorkView(ListAPIView):
                 pass
 
             try:
-                thumbnail = postraw.thumbnail.url()
+                thumbnail = postraw.thumbnail.url
             except:
                 thumbnail = None,
             

@@ -30,9 +30,9 @@ function BlogPage_Prod_Likes(props) {
 
     const getPosts = (id) => {
         axios.post(`/api/info/getLikePosts/?limit=${Limit}&offset=${Skip}`, {id : id})
-        .then(response2 => {
-            if(response2.data.success){
-                setRepos(response2.data.repos)
+        .then(response => {
+            if(response.data.success){
+                setRepos(response.data.repos)
                 setSkip(Skip+Limit)
             }else{
                 alert('대표작품 가져오기 실패')
@@ -68,10 +68,10 @@ function BlogPage_Prod_Likes(props) {
                     <Button>follow</Button>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${Designer.nickname}`}><button className="blog-tabs-btn">about</button></a>
-                    <a href={`/${Designer.nickname}/works`}><button className="blog-tabs-btn">works</button></a>
+                    <a href={`/${designer}`}><button className="blog-tabs-btn">about</button></a>
+                    <a href={`/${designer}/works`}><button className="blog-tabs-btn">works</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">likes</button>
-                    <a href={`/${Designer.nickname}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
+                    <a href={`/${designer}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
                     <div className="blog-tabs-content">
                         <div className="prod-works">
                             {Repos && Repos.map(repo => renderLikes(repo))}

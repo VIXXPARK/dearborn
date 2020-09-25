@@ -22,6 +22,8 @@ function RepoListPage(props) {
         const variables = {
             skip:Skip,
             limit:Limit,
+            ook:-1,
+            sort :-1,
         }
 
         getPosts(variables)
@@ -31,7 +33,12 @@ function RepoListPage(props) {
         axios.post(`/api/post/getRepos/?limit=${variables.limit}&offset=${variables.skip}`, variables)
         .then(response => {
             if(response.data.success){
-                setPosts([...Posts, ...response.data.posts])
+                console.log(response.data.repos)
+                if(Posts.length !==0){
+                    setPosts([...Posts, ...response.data.repos])
+                }else{
+                    setPosts(response.data.repos)
+                }
             }else{
                 alert('데이터 가져오기 실패')
             }
@@ -50,8 +57,6 @@ function RepoListPage(props) {
 
     const showFilteredResults = (ook) =>{
         const variables = {
-            skip : 0,
-            limit : Limit,
             ook : ook,
             sort : Sort,
         }
@@ -67,6 +72,12 @@ function RepoListPage(props) {
 
     const onSortChange = (e) => {
         setSort(e.target.value)
+        const variables = {
+            ook : Ook,
+            sort : e,
+        }
+        getPosts(variables)
+        setSkip(0)
     }
 
     const renderRepoItems = (post)=>{
