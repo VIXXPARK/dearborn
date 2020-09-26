@@ -15,26 +15,24 @@ function RepoListPage(props) {
     const [Posts, setPosts] = useState([])
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
-    const [Ook, setOok] = useState(1); //One of kind
+    const [Ook, setOok] = useState(0); //One of kind
     const [Sort, setSort] = useState(0)
 
     useEffect(() => {
         const variables = {
-            skip:Skip,
-            limit:Limit,
-            ook:-1,
-            sort :-1,
+            ook:0,
+            sort :1,
         }
 
         getPosts(variables)
     }, [])
 
     const getPosts = (variables) => {
-        axios.post(`/api/post/getRepos/?limit=${variables.limit}&offset=${variables.skip}`, variables)
+        axios.post(`/api/post/getRepos/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
             if(response.data.success){
                 console.log(response.data.repos)
-                if(Posts.length !==0){
+                if(Skip !==0){
                     setPosts([...Posts, ...response.data.repos])
                 }else{
                     setPosts(response.data.repos)
@@ -116,8 +114,8 @@ function RepoListPage(props) {
                     <div className="filter-wrapper" id={OpenSort ? "filter-show" : null}>
                         <div style={OpenSort ? null : {display:'none'}}>
                             <Radio.Group onChange={onSortChange} value={Sort}>
-                                <Radio value={1}>최신순</Radio><br/>
-                                <Radio value={2}>오래된순</Radio><br/>
+                                <Radio value={0}>최신순</Radio><br/>
+                                <Radio value={1}>오래된순</Radio><br/>
                             </Radio.Group>
                         </div>
                     </div>

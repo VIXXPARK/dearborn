@@ -258,19 +258,21 @@ class getProfileView(ListAPIView):
         userdata = User.object.get(nickname=userSerializer.validated_data['nickname'])
         view=0
         work=0
-        like=0
+        liked=0
+        print(userdata.id)
         try:
             postdata = Post.objects.filter(user=userdata.id)
             for x in postdata:
+                print(x.id)
                 work=work+1
                 view=x.view+view
         except:
             pass
 
         try:
-            likedata = like.objects.filter(user=userdata.id)
-            for y in likedata:
-                like=like+1
+            likey = like.objects.filter(user=userdata.id)
+            for y in likey:
+                liked=liked+1
         except:
             pass
        
@@ -285,14 +287,14 @@ class getProfileView(ListAPIView):
             'profileImage' : profileImage,
             'job':userdata.job,
             'major':userdata.major,
+            'work':work,
+            'view':view,
+            'like':liked
         }
         
         context={
             'success': True,
             'user' : user,
-            'work':work,
-            'view':view,
-            'like':like
         }
         return Response(context, status=HTTP_200_OK)
 
@@ -416,12 +418,12 @@ class PostView(ListAPIView):
         
         try:
             if(filterSerializer.validated_data['sort']==0):
-                if filterSerializer.validated_data['ook']==-1:
+                if filterSerializer.validated_data['ook']==0:
                     data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
                 else :
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
             else:
-                if filterSerializer.validated_data['ook']==-1:
+                if filterSerializer.validated_data['ook']==0:
                     data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
                 else :
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
@@ -463,8 +465,21 @@ class ReposView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = PostPageNumberPagination
     def post(self,request):
+        filterSerializer = PostFilterSerializer(data=request.data)
+        if not filterSerializer.is_valid():
+            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+
         try:
-            data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
+            if(filterSerializer.validated_data['sort']==0):
+                if filterSerializer.validated_data['ook']==0:
+                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
+                else :
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
+            else:
+                if filterSerializer.validated_data['ook']==0:
+                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
+                else :
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)
@@ -526,6 +541,7 @@ class PostDetail(APIView):
             profileImage = None,
 
         user = {
+            'id':userdata.id,
             'nickname':userdata.nickname,
             'profileImage': profileImage,
             'content': userdata.content,
@@ -567,6 +583,32 @@ class mySetWork(ListAPIView):
         except:
             pass
         return Response({'success':True},status=HTTP_200_OK)
+
+class getMyWork(APIView):
+    permission_classes=(permissions.AllowAny,)
+
+    def post(self,request):
+        username = getUserSerializer(data=request.data)
+        if not username.is_valid():
+            return Response({'success':False,'data':username.data},status=HTTP_400_BAD_REQUEST)
+
+        
+        work = myWork.objects.get(user=username.validated_data['user'])
+        print(work.post)
+        postdata = Post.objects.get(id=work.post.id)
+        try:
+            thumbnail=postdata.thumbnail.url
+        except:
+            thumbnail=None,
+        about = {
+            'id':postdata.id,
+            'thumbnail':thumbnail
+        }
+        content={
+            'success':True,
+            'about':about,
+        }
+        return Response(content,status=HTTP_200_OK)
             
             
                 
