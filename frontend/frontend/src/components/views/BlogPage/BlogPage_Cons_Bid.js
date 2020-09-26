@@ -6,6 +6,7 @@ import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 
 import BidFailIcon from '../../assets/BidFailIcon.png'
+import UserInfoMainPage from '../UserInfoPage/UserInfoMainPage';
 
 const {Title} = Typography
 
@@ -19,7 +20,7 @@ function BlogPage_Cons_Bid(props) {
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/post/getProfile', {nickname:designer})
+        axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
                 setDesigner(response.data.user)
@@ -31,24 +32,39 @@ function BlogPage_Cons_Bid(props) {
     }, [])
 
     const getPosts = (id) => {
-        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`, )
+        const variables = {
+            id : id,
+            job : 1, // consumer
+        }
+        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`, variables)
+        .then(response => {
+            if(response.data.success){
+                setPosts(response.data.bidPosts)
+                setSkip(Skip + Limit)
+            }
+        })
     }
 
-    const renderPost = (repo) => {
+    const renderPost = (post) => {
         return (
-            <Card
-                className="item"
-                cover={<a href={`/${Designer.nickname}/${repo.id}`}><img src={`http://localhost:8000${repo.images[0]}`} alt/></a>}
-            >
-                <Meta
-                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>}
-                    title={repo.title}
-                    description={repo.content}
-                />
-            </Card>
+            <div className="prod-works">
+                <div className="works-wrapper">
+                    <div className="bid-wrap">
+                        <img className="bid-thumb" src={`http://localhost:8000${post.thumbnail}`}/>
+                        <div className="bid-wrap-show">
+                            <img className="bid-icon" src={BidFailIcon}/>
+                        </div>
+                    </div>
+                    <div className="blog-bid-content">
+                        <p>입찰번호 : {post.bid.id}</p>
+                        <p>입찰 최고가 :{post.bid.price}</p>
+                        {post.bid.bidder === props.user.userData ?<button disabled>최고가로 입찰 중</button> : <button>재입찰</button>}
+                    </div>
+                </div>
+            </div>
             )
     }
-
+    console.log(props.user)
     return (
         <div className="blog-container">
             <div className="blog-right-container">
@@ -57,8 +73,8 @@ function BlogPage_Cons_Bid(props) {
                     <Avatar style={{float:'left'}} size={200} src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
-                        <p id="blog-header-p1">Content</p>
-                        <p id="blog-header-p2">job/major</p>
+                        <p id="blog-header-p1">{Designer.content}</p>
+                        <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
                 <div className="blog-follow">
@@ -68,23 +84,11 @@ function BlogPage_Cons_Bid(props) {
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">진행 중</button>
                     <a href={`/${Designer.nickname}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
                     <a href={`/${Designer.nickname}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
-                    <div className="blog-tabs-content">
-                        <div className="prod-works">
-                            <div className="works-wrapper">
-                                <div className="bid-wrap">
-                                    <img className="bid-thumb" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
-                                    <div className="bid-wrap-show">
-                                        <img className="bid-icon" src={BidFailIcon}/>
-                                    </div>
-                                </div>
-                                <div className="blog-bid-content">
-                                    <p>입찰번호 : </p>
-                                    <p>입찰 최고가 :</p>
-                                    <button>재입찰</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {props.user.userData && props.user.userData.nickname == designer ? <div className="blog-tabs-content">
+                        {Posts && Posts.map(post => renderPost(post))}
+                    </div> :
+                    <div className="blog-tabs-content"><p>본인이 아니므로 볼 수 없습니다.</p></div>
+                    }
                 </div>
             </div>
             <div className="blog-left-intro">

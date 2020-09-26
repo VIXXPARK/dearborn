@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Button, Typography, Card, Avatar } from 'antd';
 
+import {getCookieValue} from '../../utils/Cookie'
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 
@@ -9,7 +10,7 @@ const {Title} = Typography
 
 function BlogPage_Prod_About(props) {
 
-    const [Rep, setRep] = useState(null)
+    const [About, setAbout] = useState("")
     const [Designer, setDesigner] = useState("")
 
     const designer = props.match.params.designer
@@ -17,26 +18,31 @@ function BlogPage_Prod_About(props) {
     useEffect(() => {
         axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
+            console.log(response)
             if(response.data.success){
                 setDesigner(response.data.user)
-                axios.post('/api/info/getAbout', {nickname:designer})
-                .then(response2 => {
-                    if(response2.data.success){
-                        setRep(response2.data.rep)
-                    }else{
-                        alert('대표작품 가져오기 실패')
-                    }
-                })
+                getAbout(response.data.user.id)
             }else{
                 alert('데이터 가져오기 실패')
             }
         })
     }, [])
 
+    const getAbout = (id) => {
+        axios.post('/api/info/getAbout', {user:id})
+        .then(response => {
+            console.log(response)
+            if(response.data.success){
+                setAbout(response.data.about)
+            }else{
+                alert('대표작품 가져오기 실패')
+            }
+        })
+    }
+
     return (
         <div className="blog-container">
             <div className="blog-right-container">
-                {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
                     <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
                     <div className="blog-header-content">
@@ -59,16 +65,16 @@ function BlogPage_Prod_About(props) {
                                 User 님의 대표작품
                             </div>
                             <div className="prod-about-content">
-                                <img src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
+                                <a href={`/${designer}/${About.id}`}><img src={`http://localhost:8000${About.thumbnail}`}/></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="blog-left-intro">
-                <h1>Works : {}개</h1>
-                <h1>Likes : {}개</h1>
-                <h1>Views : {}개</h1>
+                <h1>Works : {Designer.work}개</h1>
+                <h1>Likes : {Designer.like}개</h1>
+                <h1>Views : {Designer.view}개</h1>
             </div>
         </div>
     );

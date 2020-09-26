@@ -4,6 +4,7 @@ import { Button, Typography, Card, Avatar } from 'antd';
 
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
+import RepoListPage from '../ListPage/RepoListPage';
 
 const {Title} = Typography
 
@@ -11,33 +12,46 @@ function BlogPage_Cons_Likes(props) {
 
     const [Repos, setRepos] = useState([])
     const [Designer, setDesigner] = useState("")
+    const [Skip, setSkip] = useState(0)
+    const [Limit, setLimit] = useState(4)
 
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/post/getProfile', {nickname:designer})
+        axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
-                setRepos(response.data.repos)
                 setDesigner(response.data.user)
+                getPosts(response.data.user.id)
             }else{
                 alert('데이터 가져오기 실패')
             }
         })
     }, [])
 
+    const getPosts = (id) => {
+        axios.post(`/api/info/getLikePosts/?limit=${Limit}&offset=${Skip}`, {id : id})
+        .then(response => {
+            if(response.data.success){
+                setRepos(response.data.repos)
+                setSkip(Skip+Limit)
+            }else{
+                alert('대표작품 가져오기 실패')
+            }
+        })
+    }
+
     const renderPost = (repo) => {
         return (
-            <Card
-                className="item"
-                cover={<a href={`/${Designer.nickname}/${repo.id}`}><img src={`http://localhost:8000${repo.images[0]}`} alt/></a>}
-            >
-                <Meta
-                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>}
-                    title={repo.title}
-                    description={repo.content}
-                />
-            </Card>
+            <div className="prod-works">
+                <div className="works-wrapper">
+                    <img className="works-thumb" src={`http://localhost:8000${repo.thumbnail}`}/>
+                    <div className="works-content">
+                        <p>{repo.title}</p>
+                        <p>{repo.content}</p>
+                    </div>
+                </div>
+            </div>
             )
     }
 
@@ -46,30 +60,22 @@ function BlogPage_Cons_Likes(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
+                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
-                        <p id="blog-header-p1">Content</p>
-                        <p id="blog-header-p2">job/major</p>
+                        <p id="blog-header-p1">{Designer.content}</p>
+                        <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
                 <div className="blog-follow">
                     <Button>follow</Button>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${Designer.nickname}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
+                    <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">likes</button>
-                    <a href={`/${Designer.nickname}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
+                    <a href={`/${designer}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
                     <div className="blog-tabs-content">
-                        <div className="prod-works">
-                            <div className="works-wrapper">
-                                <img className="works-thumb" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
-                                <div className="works-content">
-                                    <p>Title</p>
-                                    <p>Content</p>
-                                </div>
-                            </div>
-                        </div>
+                        {Repos && Repos.map(repo => renderPost(repo))}
                     </div>
                 </div>
             </div>

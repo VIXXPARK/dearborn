@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import './MessagePage.css'
 import {Button, Input, Typography, Modal} from 'antd'
+import {getCookieValue} from '../../utils/Cookie'
 
 const {confirm} = Modal
 const {Title} = Typography
@@ -13,7 +14,12 @@ function MessagePage(props) {
     const [Messages, setMessages] = useState([])
 
     useEffect(() => {
-        axios.get('/api/message/getMessage')
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.get('/api/message/getMessage', config)
         .then(response => {
             if(response.data.success){
                 setMessages(response.data.messages)
@@ -21,7 +27,7 @@ function MessagePage(props) {
         })
     }, [])
 
-    const renderMessage = () => {
+    const renderMessage = (message) => {
 
         const OpenMessageForm = () => {
             var HireMessage
@@ -30,20 +36,37 @@ function MessagePage(props) {
                 icon:null,
                 content: 
                 <div className="bid-container">
-                    <div className="hire-title">{} 에게 답장</div>
+                    <div className="hire-title">{message.userFrom} 에게 답장</div>
                     <div className="hire-content">메시지<br/><Input.TextArea style={{fontSize:'20px'}} rows={5}  onChange={(e)=>{HireMessage = e.currentTarget.value}}/></div>
                 </div>,
                 okText: "메시지 전송",
                 cancelText: "취소",
                 onOk(){
-                    console.log(HireMessage)
+                    const variables = {
+                        message : HireMessage,
+                        userFrom : props.user.userData._id,
+                        userTo : message.userFrom,
+                    }
+                    const config = {
+                        headers : {
+                            Authorization: `Token ${getCookieValue('w_auth')}`
+                        }
+                    }
+                    axios.post('/api/message/saveMessage', variables, config)
+                    .then(response => {
+                        if(response.data.success){
+                            alert('성공')
+                        }else{
+                            alert('실패')
+                        }
+                    })
                 }
             })
         }
 
         return (
             <tr>
-                <td>Lorem</td><td>Ipsum</td><td>Dolor</td><td><Button style={{width:'55px', textAlign:'center'}} onClick={OpenMessageForm}>답장</Button></td>
+                <td>{message.userFrom}</td><td>{message.message}</td><td>{message.date}</td><td><Button style={{width:'55px', textAlign:'center'}} onClick={OpenMessageForm}>답장</Button></td>
             </tr>
         )
     }
@@ -51,6 +74,7 @@ function MessagePage(props) {
     return (
         <div className="message-container">
             <Title>쪽지 확인</Title>
+            <p style={{textAlign:'right'}}>메시지는 30개까지 저장됩니다.</p>
             <div className="message-form">
                 <table className="message-table">
                     <thead className="message-thead">
@@ -59,31 +83,7 @@ function MessagePage(props) {
                         </tr>
                     </thead>
                     <tbody className="message-tbody">
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
-                        {renderMessage()}
+                        {Messages && Messages.map(message => renderMessage(message))}
                     </tbody>
                 </table>
             </div>

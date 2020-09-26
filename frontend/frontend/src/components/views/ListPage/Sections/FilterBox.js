@@ -6,11 +6,18 @@ const {Panel} = Collapse
 
 function FilterBox(props) {
 
-    const [Checked, setChecked] = useState([])
+    const [Checked, setChecked] = useState(0)
 
     const handleToggle = (value)=> {
-        setChecked(value)
-        props.handleFilters(value)
+        if(Checked === value)
+        {
+            setChecked(0)
+            props.handleFilters(0)
+        }
+        else{
+            setChecked(value)
+            props.handleFilters(value)
+        }
     }
 
     const renderCheckboxLists = (filterList)=> 

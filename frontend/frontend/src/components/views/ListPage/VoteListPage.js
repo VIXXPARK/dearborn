@@ -15,12 +15,12 @@ function VoteListPage(props) {
     const [Posts, setPosts] = useState([])
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
-    const [Ook, setOok] = useState(-1); //One of kind
+    const [Ook, setOok] = useState(0); //One of kind
     const [Sort, setSort] = useState(0)
 
     useEffect(() => {
         const variables = {
-            ook:-1,
+            ook:0,
             sort :0,
         }
 
@@ -33,7 +33,7 @@ function VoteListPage(props) {
         .then(response => {
             if(response.data.success){
                 console.log(response.data.votes)
-                if(Posts.length !==0){
+                if(Skip !==0){
                     setPosts([...Posts, ...response.data.votes])
                 }else{
                     setPosts(response.data.votes)

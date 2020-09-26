@@ -1,10 +1,66 @@
-import React from 'react';
-import {Typography} from 'antd'
-
+import React, { useEffect, useState } from 'react';
+import {Button, Input, Typography, Upload} from 'antd'
+import axios from 'axios';
+import {UploadOutlined} from '@ant-design/icons'
 
 const {Title} = Typography
 
 function ContestDetailPage(props) {
+
+    const [Host, setHost] = useState(null)
+    const [Contest, setContest] = useState(null)
+    const [OpenModal, setOpenModal] = useState(false)
+    const [EventImg, setEventImg] = useState([])
+    const [ImgPreview, setImgPreview] = useState([])
+
+    const contestId = props.match.params.contestId
+
+    useEffect(() => {
+        axios.post('/api/contest/getHost', {id : contestId})
+        .then(response => {
+            if(response.data.success){
+                setHost(response.data.host)
+            }
+        })
+        axios.post('/api/contest/getContest', {id: contestId})
+        .then(response => {
+            if(response.data.success){
+                setContest(response.data.contest)
+            }
+        })
+    }, [])
+
+    const getBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+        });
+    }
+
+    const EventImgChange = async ({file}) => {
+        if(!file.preview){
+            file.preview = await getBase64(file.originFileObj)
+        }
+        setEventImg(file.originFileObj)
+        setImgPreview(file.preview)
+    }
+
+    const OpenUploadForm = () => {
+        setOpenModal(true)
+    }
+
+    const OnCloseEvent = () => {
+        setOpenModal(false)
+    }
+
+    const OnSubmitContest = () => {
+        const variables = {
+
+        }
+    }
+
     return (
         <div className="repo-container">
             <div className="repo-left-container">
@@ -28,23 +84,45 @@ Morbi quis ornare diam. Mauris fringilla, libero vel efficitur eleifend, sem dia
                         <Title>개최자 정보</Title>
                     </div>
                     <div className="repo-span">
-                        이름
+                        Host.nickname
                         {/*Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""*/}
                     </div>
                     <div className="repo-span">
-                        소개
+                        Host.content
                         {/*Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""*/}
                     </div>
-                    <div className="event-right-button">
+                    <a href={`/Host.nickname/cons`}><div className="event-right-button">
                         블로그 가기
-                    </div>
+                    </div></a>
                     <br/>
                 </div>
-                <div className="event-bid-button">
+                <div className="event-bid-button" onClick={OpenUploadForm}>
                     공모전 참여하기
                 </div>
             </div>
-            
+            <div id={OpenModal ? "open-modal" : "close-modal"}>
+                <div className="event-modal-background"></div>
+                <div className="event-modal-container">
+                    <div className="event-modal-wrapper">
+                        <Title>이벤트 개최하기</Title>
+                        <label style={{fontSize:'23px'}}>이미지</label>
+                        <br/>
+                        <Upload
+                            multiple={true}
+                            onChange={EventImgChange}
+                            showUploadList={false}
+                        >
+                            <Button icon={<UploadOutlined/>}>Upload</Button>
+                        </Upload>
+                        {ImgPreview && ImgPreview.map(preview => (
+                            <img style={{width:'50px', height:'75px'}} src={preview}/>
+                        ))}
+                        <br/><br/>
+                        <Button className="event-modal-btn" danger onClick={OnCloseEvent}>취소</Button>
+                        <Button style={{color:'powderBlue', borderColor:'powderBlue'}} className="event-modal-btn" onClick={OnSubmitContest}>제출</Button>
+                    </div>
+                </div>
+            </div>      
         </div>
     );
 }

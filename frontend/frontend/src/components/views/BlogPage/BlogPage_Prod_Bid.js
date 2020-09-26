@@ -20,7 +20,7 @@ function BlogPage_Prod_Bid(props) {
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/post/getProfile', {nickname:designer})
+        axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
                 setDesigner(response.data.user)
@@ -32,7 +32,11 @@ function BlogPage_Prod_Bid(props) {
     }, [])
 
     const getPosts = (id) => {
-        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`, {id:id})
+        const variables = {
+            id : id,
+            job : 0, // producer
+        }
+        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`,variables)
         .then(response => {
             if(response.data.success){
                 setPosts(response.data.bidPosts)

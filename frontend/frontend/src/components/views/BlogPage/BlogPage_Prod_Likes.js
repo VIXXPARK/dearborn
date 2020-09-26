@@ -43,7 +43,7 @@ function BlogPage_Prod_Likes(props) {
     const renderLikes = (repo) => {
         return (
             <div className="works-wrapper">
-                <img className="works-thumb" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
+                <img className="works-thumb" src={`http://localhost:8000${repo.thumbnail}`}/>
                 <div className="works-content">
                     <p>{repo.title}</p>
                     <p>{repo.content}</p>

@@ -43,7 +43,6 @@
     .item-vote-wrap{
         position: relative;
         display: inline-block;
-        background-color: black;
         margin:1rem;
         width:80vw;
         height:calc(80vw * 4 / 3);
@@ -56,7 +55,6 @@
     .item-vote-wrap{
         position: relative;
         display: inline-block;
-        background-color: black;
         margin:1rem;
         width:30vw;
         height:calc(30vw * 4 / 3);
@@ -69,7 +67,6 @@
     .item-vote-wrap{
         position: relative;
         display: inline-block;
-        background-color: black;
         margin:1rem;
         width:17vw;
         height:calc(17vw * 4 / 3);

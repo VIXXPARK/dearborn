@@ -25,7 +25,7 @@ function LandingPage(props) {
     console.log(RepoPosts)
     useEffect(() => {
         const variables = {
-            ook : -1,
+            ook : 0,
             sort : 0,
         }
         axios.post('/api/post/getVotes/?limit=4&offset=0', variables)

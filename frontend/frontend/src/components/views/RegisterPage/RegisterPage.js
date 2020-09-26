@@ -105,7 +105,6 @@ function RegisterPage(props) {
                     as={
                         <Form.Item
                             label="패스워드"
-                            
                         >
                             <Input type="password"/>
                         </Form.Item>
