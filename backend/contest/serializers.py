@@ -32,3 +32,5 @@ class ContestPostSerializer(serializers.ModelSerializer):
         return contestPost
     
 
+class getContestIdSerializer(serializers.Serializer):
+    id = serializers.IntegerField()

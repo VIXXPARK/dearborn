@@ -1,4 +1,4 @@
-from .views import ContestViewSet,ContestPostViewSet
+from .views import ContestViewSet,ContestPostViewSet,getHostView,getContest
 from django.urls import path,include
 contest_list = ContestViewSet.as_view({"get":"list","post":"create"})
 contest_detail = ContestViewSet.as_view(
@@ -14,4 +14,6 @@ urlpatterns = [
     path('contest/<int:pk>',contest_detail,name="contest_detail"),
     path('contest/post/uploadPost',ContestPost_list,name="ContestPost_list"),
     path('contest/post/<int:pk>',ContestPost_detail,name="ContestPost_detail"),
+    path('contest/getHost',getHostView.as_view()),
+    path('contest/getContests',getContest.as_view())
 ]
