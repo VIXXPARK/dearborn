@@ -9,6 +9,7 @@ import AssessArea from './Sections/AssessArea';
 import './RepoDetailPage.css'
 import AssessShow from './Sections/AssessShow';
 import {ContainerOutlined} from '@ant-design/icons'
+import {getCookieValue} from '../../utils/Cookie'
 
 
 const {Title} = Typography
@@ -21,7 +22,7 @@ function RepoDetailPage(props) {
     const [AssessValue, setAssessValue] = useState([])
     const postId = props.match.params.postId
     useEffect(() => {
-        axios.post('/api/post/getPostDetail', {postID : postId})
+        axios.post('/api/post/getPostDetail', {id : postId})
         .then(response => {
             if(response.data.success){
                 console.log(response.data)
@@ -95,12 +96,19 @@ function RepoDetailPage(props) {
             okText: "메시지 전송",
             cancelText: "취소",
             onOk(){
+                const config = {
+                    headers : {
+                        Authorization: `Token ${getCookieValue('w_auth')}`
+                    }
+                }
                 const variables = {
                     message : HireMessage,
                     userFrom : props.user.userData._id,
                     userTo : Writer.id,
                 }
-                axios.post('/api/message/saveMessage', variables)
+                console.log(Writer)
+                console.log(variables)
+                axios.post('/api/message/saveMessage', variables, config)
                 .then(response => {
                     if(response.data.success){
                         alert('성공')
@@ -181,4 +189,4 @@ function RepoDetailPage(props) {
     );
 }
 
-export default RepoDetailPage; s
+export default RepoDetailPage;

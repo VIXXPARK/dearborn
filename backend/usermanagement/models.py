@@ -48,7 +48,7 @@ class User(AbstractUser):
     id = models.CharField(editable=False, max_length=36, db_index=True, unique=True, default=make_uuid, primary_key=True)
     nickname = models.CharField(max_length=50, unique=True)
     profileImage = models.ImageField(blank=True, upload_to="profileImage/")
-    job = models.CharField(max_length=100)
+    job = models.IntegerField()
     major = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     content = models.TextField(max_length=1000)
