@@ -12,6 +12,6 @@ ContestPost_detail = ContestPostViewSet.as_view(
 urlpatterns = [
     path('contest/uploadPost',contest_list,name="contest_list"),
     path('contest/<int:pk>',contest_detail,name="contest_detail"),
-    path('contestPost/uploadPost',ContestPost_list,name="ContestPost_list"),
-    path('contestPost/<int:pk>',ContestPost_detail,name="ContestPost_detail"),
+    path('contest/post/uploadPost',ContestPost_list,name="ContestPost_list"),
+    path('contest/post/<int:pk>',ContestPost_detail,name="ContestPost_detail"),
 ]
