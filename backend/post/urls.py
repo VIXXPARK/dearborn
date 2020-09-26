@@ -1,6 +1,6 @@
 from .views import PostViewSet, getProfileView ,upViewSet,getDisLikeView,ReposView
 from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
-from .views import myVoteView,upVoteView
+from .views import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork
 from django.urls import path,include
 from usermanagement.models import User
 from rest_framework.routers import DefaultRouter
@@ -16,7 +16,9 @@ urlpatterns = [
     path('post/getVotes/',PostView.as_view()),
     path('post/getRepos/',ReposView.as_view()),
     path('post/getPostDetail',PostDetail.as_view()),
-    path('post/getProfile',getProfileView.as_view()),
+    path('info/getProfile',getProfileView.as_view()),
+    path('info/getWorks/',getWorkView.as_view()),
+    path('info/getLikePosts/',getWorkLikeView.as_view()),
     path('post/upView',upViewSet.as_view()),
     path('like/up',likeView.as_view()),
     path('dislike/up',disLikeView.as_view()),
@@ -27,4 +29,5 @@ urlpatterns = [
     path('like/getLikeDetail',getLikeDetail.as_view()),
     path('vote/myVote',myVoteView.as_view()),
     path('vote/upVote',upVoteView.as_view()),
+    path('info/setMyWork',mySetWork.as_view()),
 ]

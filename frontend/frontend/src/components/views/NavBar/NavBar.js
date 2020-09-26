@@ -36,6 +36,9 @@ function NavBar(props) {
                 {user.userData && user.userData.nickname ? <a href={`/${user.userData.nickname}`}>마이 블로그</a>: null}
             </Menu.Item>
             <Menu.Item>
+                <a href='/message'>쪽지 확인</a>
+            </Menu.Item>
+            <Menu.Item>
                 <a href='/modify'>개인정보 수정</a>
             </Menu.Item>
         </Menu>

@@ -54,7 +54,7 @@ function EventListPage(props) {
     }
 
     const renderPage = () => (
-        <div className="list-item">
+        <div className="event-list-item">
             <a href={`/contest/1`}>
                 <div className="event-item">
                     <img className="event-item-img" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} alt/>

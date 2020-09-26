@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post,PostImage,like,disLike,vote
+from .models import Post,PostImage,like,disLike,vote,myWork
 
 class getVoteSerializer(serializers.ModelSerializer):
    class Meta:
@@ -51,5 +51,38 @@ class PostSerializer(serializers.ModelSerializer):
        
       return post
 
+class PostFilterSerializer(serializers.Serializer):
+   ook = serializers.IntegerField()
+   sort = serializers.IntegerField()
+   
+
+class LikeViewSerializer(serializers.ModelSerializer):
+   class Meta:
+      model=like
+      fields = '__all__',
+
+
 class PostIdSerializer(serializers.Serializer):
    id = serializers.IntegerField()
+
+class UserIdSerializer(serializers.Serializer):
+   id = serializers.CharField()
+
+class likeUserSerializer(serializers.Serializer):
+   id = serializers.CharField()
+
+class myWorkSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = myWork
+      fields= 'post',
+
+      
+   # Post = serializers.IntegerField()
+   # User = serializers.CharField()
+   # def create(self,validated_data):
+   #    return myWork(**validated_data)
+
+   # def update(self,instance,validated_data):
+   #    instance.Post = validated_data.get('post',instance.Post)
+   #    instance.User = validated_data.get('User',instance.User)
+   #    return instance

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {auth} from '../_actions/user_action'
 import {useSelector, useDispatch} from 'react-redux'
 
-export default function (SpecificComponent, option, adminRoute = null){
+export default function (SpecificComponent, option, adminRoute = null, ProducerComponent = null){
     function AuthenticationCheck(props){
         let user = useSelector(state => state.user)
         const dispatch = useDispatch()
@@ -11,6 +11,12 @@ export default function (SpecificComponent, option, adminRoute = null){
                 if(!response.payload.isAuth){
                     if(option){
                         props.history.push('/login')
+                    }
+                }else{
+                    if(ProducerComponent){
+                        if(response.payload.category === 4){
+                            return <ProducerComponent {...props} user={user}/>
+                        }
                     }
                 }
             })

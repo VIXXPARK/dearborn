@@ -11,28 +11,42 @@ function BlogPage_Prod_Likes(props) {
 
     const [Repos, setRepos] = useState([])
     const [Designer, setDesigner] = useState("")
+    const [Skip, setSkip] = useState(0)
+    const [Limit, setLimit] = useState(4)
 
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/post/getProfile', {nickname:designer})
+        axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
-                setRepos(response.data.repos)
                 setDesigner(response.data.user)
+                getPosts(response.data.user.id)
             }else{
                 alert('데이터 가져오기 실패')
             }
         })
     }, [])
 
-    const renderLikes = () => {
+    const getPosts = (id) => {
+        axios.post(`/api/info/getLikePosts/?limit=${Limit}&offset=${Skip}`, {id : id})
+        .then(response => {
+            if(response.data.success){
+                setRepos(response.data.repos)
+                setSkip(Skip+Limit)
+            }else{
+                alert('대표작품 가져오기 실패')
+            }
+        })
+    }
+
+    const renderLikes = (repo) => {
         return (
             <div className="works-wrapper">
                 <img className="works-thumb" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
                 <div className="works-content">
-                    <p>Title</p>
-                    <p>Content</p>
+                    <p>{repo.title}</p>
+                    <p>{repo.content}</p>
                 </div>
             </div>
             )
@@ -46,22 +60,21 @@ function BlogPage_Prod_Likes(props) {
                     <Avatar style={{float:'left'}} size={200} src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
-                        <p id="blog-header-p1">Content</p>
-                        <p id="blog-header-p2">job/major</p>
+                        <p id="blog-header-p1">{Designer.content}</p>
+                        <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
                 <div className="blog-follow">
                     <Button>follow</Button>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${Designer.nickname}`}><button className="blog-tabs-btn">about</button></a>
-                    <a href={`/${Designer.nickname}/works`}><button className="blog-tabs-btn">works</button></a>
+                    <a href={`/${designer}`}><button className="blog-tabs-btn">about</button></a>
+                    <a href={`/${designer}/works`}><button className="blog-tabs-btn">works</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">likes</button>
-                    <a href={`/${Designer.nickname}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
+                    <a href={`/${designer}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
                     <div className="blog-tabs-content">
                         <div className="prod-works">
-                            {renderLikes()}
-                            {renderLikes()}
+                            {Repos && Repos.map(repo => renderLikes(repo))}
                         </div>
                     </div>
                 </div>

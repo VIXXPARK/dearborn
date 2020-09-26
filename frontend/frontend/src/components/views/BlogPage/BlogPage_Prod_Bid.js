@@ -12,40 +12,45 @@ const {Title} = Typography
 
 function BlogPage_Prod_Bid(props) {
 
-    const [Bids, setBids] = useState([])
-    const [BidPosts, setBidPosts] = useState([])
+    const [Posts, setPosts] = useState([])
     const [Designer, setDesigner] = useState("")
+    const [Skip, setSkip] = useState(0)
+    const [Limit, setLimit] = useState(4)
 
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/info/getProfile', {nickname:designer})
+        axios.post('/api/post/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
                 setDesigner(response.data.user)
-                axios.post('/api/info/getBid', {userId : response.data.user.id})
-                .then(response2 => {
-                    if(response2.data.success){
-                        setBidPosts(response2.data.bidPosts)
-                        setBids(response2.data.bids)
-                    }else{
-                        alert('대표작품 가져오기 실패')
-                    }
-                })
+                getPosts(response.data.user.id)
             }else{
                 alert('데이터 가져오기 실패')
             }
         })
     }, [])
 
-    const renderPost = () => {
+    const getPosts = (id) => {
+        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`, {id:id})
+        .then(response => {
+            if(response.data.success){
+                setPosts(response.data.bidPosts)
+                setSkip(Skip+Limit)
+            }else{
+                alert('실패')
+            }
+        })
+    }
+
+    const renderPost = (post) => {
         return (
             <div className="works-wrapper">
                 <div className="bid-wrap">
-                    <img className="bid-thumb" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
+                    <img className="bid-thumb" src={`http://localhost:8000${post.thumbnail}`}/>
                 </div>
                 <div className="blog-bid-content">
-                    <p>입찰 최고가 : {Bids.price}</p>
+                    <p>입찰 최고가 : {post.bid.price}</p>
                 </div>
             </div>
         )
@@ -67,14 +72,13 @@ function BlogPage_Prod_Bid(props) {
                     <Button>follow</Button>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${Designer.nickname}`}><button className="blog-tabs-btn">about</button></a>
-                    <a href={`/${Designer.nickname}/works`}><button className="blog-tabs-btn">works</button></a>
-                    <a href={`/${Designer.nickname}/likes`}><button className="blog-tabs-btn">likes</button></a>
+                    <a href={`/${designer}`}><button className="blog-tabs-btn">about</button></a>
+                    <a href={`/${designer}/works`}><button className="blog-tabs-btn">works</button></a>
+                    <a href={`/${designer}/likes`}><button className="blog-tabs-btn">likes</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">진행 중</button>
                     <div className="blog-tabs-content">
                         <div className="prod-works">
-                            {renderPost()}
-                            {renderPost()}
+                            {Posts && Posts.map(post => renderPost(post))}
                         </div>
                     </div>
                 </div>

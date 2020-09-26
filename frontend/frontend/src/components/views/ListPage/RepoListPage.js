@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Radio, Typography} from 'antd'
+import {Avatar, Card, Radio, Typography} from 'antd'
 
 import './ListPage.css'
 import Meta from 'antd/lib/card/Meta';
@@ -22,6 +22,8 @@ function RepoListPage(props) {
         const variables = {
             skip:Skip,
             limit:Limit,
+            ook:-1,
+            sort :-1,
         }
 
         getPosts(variables)
@@ -31,7 +33,12 @@ function RepoListPage(props) {
         axios.post(`/api/post/getRepos/?limit=${variables.limit}&offset=${variables.skip}`, variables)
         .then(response => {
             if(response.data.success){
-                setPosts([...Posts, ...response.data.posts])
+                console.log(response.data.repos)
+                if(Posts.length !==0){
+                    setPosts([...Posts, ...response.data.repos])
+                }else{
+                    setPosts(response.data.repos)
+                }
             }else{
                 alert('데이터 가져오기 실패')
             }
@@ -50,8 +57,6 @@ function RepoListPage(props) {
 
     const showFilteredResults = (ook) =>{
         const variables = {
-            skip : 0,
-            limit : Limit,
             ook : ook,
             sort : Sort,
         }
@@ -67,21 +72,31 @@ function RepoListPage(props) {
 
     const onSortChange = (e) => {
         setSort(e.target.value)
+        const variables = {
+            ook : Ook,
+            sort : e,
+        }
+        getPosts(variables)
+        setSkip(0)
     }
 
-    const renderPage = () => (
-        <div className="list-item">
-            <a href={`/contest/1`}>
-                <div className="event-item">
-                    <img className="event-item-img" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} alt/>
-                    <div className="event-item-content">
-                        <h1>Title</h1>
-                        <h2>Description</h2>
-                    </div>
-                </div>
-            </a>
-        </div>
-    )
+    const renderRepoItems = (post)=>{
+        
+        return  (
+        <Card
+            className="item"
+            hoverable={false}
+            cover={<a href={`/${post.writer}/${post.id}`}><img src={`http://localhost:8000${post.thumbnail}`} alt/></a>}
+        >
+            <Meta
+                avatar={<Avatar src={`http://localhost:8000${post.profileImage}`}/>}
+                title={post.title}
+                description={<a href={`/${post.writer}`}>{post.writer}</a>}
+            />
+        </Card>
+        )
+        
+    }
 
     return (
         <div className="list-container">
@@ -109,12 +124,7 @@ function RepoListPage(props) {
                 </div>
             </div>
             <div className="list-wrapper">
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
+                {Posts && Posts.map( (post) => renderRepoItems(post))}
             </div>
         </div>
     );

@@ -19,7 +19,7 @@ function BlogPage_Prod_About(props) {
         .then(response => {
             if(response.data.success){
                 setDesigner(response.data.user)
-                axios.post('/api/info/getAbout', {userId : response.data.user.id})
+                axios.post('/api/info/getAbout', {nickname:designer})
                 .then(response2 => {
                     if(response2.data.success){
                         setRep(response2.data.rep)
@@ -38,7 +38,7 @@ function BlogPage_Prod_About(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Rep}`}/>
+                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
@@ -50,9 +50,9 @@ function BlogPage_Prod_About(props) {
                 </div>
                 <div className="blog-section">
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">about</button>
-                    <a href={`/${Designer.nickname}/works`}><button className="blog-tabs-btn">works</button></a>
-                    <a href={`/${Designer.nickname}/likes`}><button className="blog-tabs-btn">likes</button></a>
-                    <a href={`/${Designer.nickname}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
+                    <a href={`/${designer}/works`}><button className="blog-tabs-btn">works</button></a>
+                    <a href={`/${designer}/likes`}><button className="blog-tabs-btn">likes</button></a>
+                    <a href={`/${designer}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
                     <div className="blog-tabs-content">
                         <div className="prod-about">
                             <div className="prod-about-title">
