@@ -541,6 +541,7 @@ class PostDetail(APIView):
             profileImage = None,
 
         user = {
+            'id':userdata.id,
             'nickname':userdata.nickname,
             'profileImage': profileImage,
             'content': userdata.content,
