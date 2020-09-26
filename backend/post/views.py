@@ -522,9 +522,7 @@ class PostDetail(APIView):
             return Response({'success':False,},status = HTTP_400_BAD_REQUEST)
 
         postdata = Post.objects.get(id=postID.validated_data['id'])
-        postimages = PostImage.objects.filter(post=postID.validated_data['id'])
         userdata = User.object.get(id = postdata.user.id)
-        userid = userdata.get_id()
 
         Jpost = []
         jpgs = PostImage.objects.filter(post=postID.validated_data['id'])
