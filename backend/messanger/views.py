@@ -42,7 +42,6 @@ class MessageViewSet(ModelViewSet):
             context1 = {
                 'fromNickname' : message.userFrom.nickname,
                 'fromId' : message.userFrom.id,
-                'title' : message.title,
                 'message' : message.message,
                 'date' : message.updated_dt,
             }

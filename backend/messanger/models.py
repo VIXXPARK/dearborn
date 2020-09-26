@@ -3,7 +3,6 @@ from usermanagement.models import User
 
 
 class Message(models.Model):
-    title = models.TextField(max_length=100, null=True)
     message = models.TextField(max_length=1000)
     userFrom = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'From')
     userTo = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'To')

@@ -59,6 +59,18 @@ function RepoDetailPage(props) {
                             <div>정말로 입찰하시겠습니까?</div>,
                             onOk(){
                                 console.log(Bid)
+                                const variables = {
+                                    postId : Repo.id,
+                                    price : Bid,
+                                }
+                                axios.post('/api/bid/setBid', variables)
+                                .then(response => {
+                                    if(response.data.success){
+                                        alert('성공')
+                                    }else{
+                                        alert('실패')
+                                    }
+                                })
                                 Modal.destroyAll()
                             }
                     })
@@ -83,7 +95,19 @@ function RepoDetailPage(props) {
             okText: "메시지 전송",
             cancelText: "취소",
             onOk(){
-                console.log(HireMessage)
+                const variables = {
+                    message : HireMessage,
+                    userFrom : props.user.userData._id,
+                    userTo : Writer.id,
+                }
+                axios.post('/api/message/saveMessage', variables)
+                .then(response => {
+                    if(response.data.success){
+                        alert('성공')
+                    }else{
+                        alert('실패')
+                    }
+                })
             }
         })
     }
@@ -157,4 +181,4 @@ function RepoDetailPage(props) {
     );
 }
 
-export default RepoDetailPage;
+export default RepoDetailPage; s
