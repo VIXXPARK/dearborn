@@ -10,32 +10,31 @@ const {Title} = Typography
 function EventListPage(props) {
 
     const [OpenSort, setOpenSort] = useState(false)
-    const [Posts, setPosts] = useState([])
+    const [Contests, setContests] = useState([])
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
-    const [Filters, setFilters] = useState({
-        filterList:[],
-        sortValue:1,
-    })
+    const [Sort, setSort] = useState(0)
 
     useEffect(() => {
         const variables = {
-            skip:Skip,
-            limit:Limit,
+            sort : 0
         }
 
         getPosts(variables)
     }, [])
-
+    console.log(Contests)
     const getPosts = (variables) => {
-        axios.post('/api/post/getPosts', variables)
+        console.log(variables)
+        axios.post(`/api/contest/getContests/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
+            console.log(response)
             if(response.data.success){
-                if(variables.loadMore){
-                    setPosts([...Posts, ...response.data.posts])
+                if(Skip !== 0){
+                    setContests([...Contests, ...response.data.contests])
                 }else {
-                    setPosts(response.data.posts)
+                    setContests(response.data.contests)
                 }
+                setSkip(Skip+Limit)
             }else{
                 alert('데이터 가져오기 실패')
             }
@@ -46,21 +45,29 @@ function EventListPage(props) {
         setOpenSort(!OpenSort)
     }
 
-    const onSortChange = (e) => {
-        const newFilters = {...Filters}
-        newFilters["sortValue"] =e.target.value
-
-        setFilters(newFilters)
+    const setFilters = (sort) =>{
+        const variables = {
+            sort : sort,
+        }
+        setSkip(0)
+        getPosts(variables)
+        
     }
 
-    const renderPage = () => (
+    const onSortChange = (e) => {
+        setSort(e.target.value)
+        console.log(e.target.value)
+        setFilters(e.target.value)
+    }
+
+    const renderContest = (contest) => (
         <div className="event-list-item">
-            <a href={`/contest/1`}>
+            <a href={`/contest/${contest.id}`}>
                 <div className="event-item">
-                    <img className="event-item-img" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} alt/>
+                    <img className="event-item-img" src={`http://localhost:8000${contest.image}`} alt/>
                     <div className="event-item-content">
-                        <h1>Title</h1>
-                        <h2>Description</h2>
+                        <h1>{contest.title}</h1>
+                        <h2>{contest.description}</h2>
                     </div>
                 </div>
             </a>
@@ -75,21 +82,16 @@ function EventListPage(props) {
                     <div style={{width:'100%', height:'100%'}} onClick={OpenSortClick}>정렬</div>
                     <div className="filter-wrapper" id={OpenSort ? "filter-show" : null}>
                         <div style={OpenSort ? null : {display:'none'}}>
-                            <Radio.Group onChange={onSortChange} value={Filters.sortValue}>
-                                <Radio value={1}>최신순</Radio><br/>
-                                <Radio value={2}>오래된순</Radio><br/>
+                            <Radio.Group onChange={onSortChange} value={Sort}>
+                                <Radio value={0}>최신순</Radio><br/>
+                                <Radio value={1}>오래된순</Radio><br/>
                             </Radio.Group>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="list-wrapper">
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
+                {Contests && Contests.map(contest => renderContest(contest))}
             </div>
         </div>
     );
