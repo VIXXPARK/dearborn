@@ -22,7 +22,6 @@ class MyUserManager(BaseUserManager):
         except IntegrityError:
             raise IntegrityError
 
-
     def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
@@ -42,8 +41,6 @@ class MyUserManager(BaseUserManager):
         
         return self._create_user(email, password, **extra_fields)
 
-
-
 class User(AbstractUser):
     def make_uuid():
         return str(uuid.uuid4())
@@ -51,7 +48,7 @@ class User(AbstractUser):
     id = models.CharField(editable=False, max_length=36, db_index=True, unique=True, default=make_uuid, primary_key=True)
     nickname = models.CharField(max_length=50, unique=True)
     profileImage = models.ImageField(blank=True, upload_to="profileImage/")
-    job = models.CharField(max_length=100)
+    job = models.IntegerField()
     major = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     content = models.TextField(max_length=1000)

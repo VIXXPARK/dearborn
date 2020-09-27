@@ -98,6 +98,14 @@ function RepoDetailPage(props) {
             okText: "메시지 전송",
             cancelText: "취소",
             onOk(){
+<<<<<<< HEAD
+=======
+                const config = {
+                    headers : {
+                        Authorization: `Token ${getCookieValue('w_auth')}`
+                    }
+                }
+>>>>>>> a59d6033fda9bdd28561d14e76bb14d37bec35ae
                 const variables = {
                     message : HireMessage,
                     userFrom : props.user.userData._id,

@@ -54,7 +54,7 @@ class GetCommentView(APIView):
             user = query.user
             profileImage = user.profileImage.url
             data = {
-                'id': query.id,
+                'id' : query.id,
                 'contents':query.contents,
                 'userId':user.id,
                 'profileImage':profileImage,

@@ -22,16 +22,22 @@ function EventListPage(props) {
 
         getPosts(variables)
     }, [])
-
+    console.log(Contests)
     const getPosts = (variables) => {
+<<<<<<< HEAD
+=======
+        console.log(variables)
+>>>>>>> a59d6033fda9bdd28561d14e76bb14d37bec35ae
         axios.post(`/api/contest/getContests/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
+            console.log(response)
             if(response.data.success){
                 if(Skip !== 0){
                     setContests([...Contests, ...response.data.contests])
                 }else {
                     setContests(response.data.contests)
                 }
+                setSkip(Skip+Limit)
             }else{
                 alert('데이터 가져오기 실패')
             }

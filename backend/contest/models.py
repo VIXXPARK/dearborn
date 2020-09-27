@@ -10,10 +10,17 @@ class Contest(models.Model):
 
 
 class ContestPost(models.Model):
-    event = models.ForeignKey(Contest,on_delete=models.CASCADE)
+    contest = models.ForeignKey(Contest,on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     description = models.TextField(default=None)
     updated_dt = models.DateTimeField(auto_now_add=True)
     expire_dt = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to="eventPost/")
+    thumbnail = models.ImageField(upload_to="contestPost/")
+
+
+class ContestPostImage(models.Model):
+    contestPost = models.ForeignKey(ContestPost,on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="contestImages/")
+    
+
 

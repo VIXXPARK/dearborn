@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(min_length=8, write_only=True)
     nickname = serializers.CharField()
-    job = serializers.CharField()
+    job = serializers.IntegerField()
     major = serializers.CharField()
     profileImage = serializers.ImageField()
     content = serializers.CharField()

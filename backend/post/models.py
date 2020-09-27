@@ -8,7 +8,6 @@ def _delete_file(path):
    if os.path.isfile(path):
       os.remove(path)
 
-
 class Post(models.Model):
    title = models.CharField(max_length=500)
    content = models.TextField()
@@ -59,3 +58,6 @@ class vote(models.Model):
 
 class myWork(models.Model):
    post = models.ForeignKey(Post,on_delete=models.CASCADE)
+   user = models.ForeignKey(User,on_delete=models.CASCADE)
+   def get_post(self):
+      return self.post
