@@ -5,12 +5,13 @@ import { Button, Typography, Card, Avatar, Input ,Upload} from 'antd';
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 import UploadOutlined from '@ant-design/icons'
+import { render } from 'react-dom';
 
 const {Title} = Typography
 
 function BlogPage_Cons_Event(props) {
 
-    const [Repos, setRepos] = useState([])
+    const [Contests, setContests] = useState([])
     const [Designer, setDesigner] = useState("")
     const [EventImg, setEventImg] = useState("")
     const [ImgPreview, setImgPreview] = useState("")
@@ -19,20 +20,34 @@ function BlogPage_Cons_Event(props) {
     const [EventTitle, setEventTitle] = useState("")
     const [EventDesc, setEventDesc] = useState("")
 
+    const [Skip, setSkip] = useState(0)
+    const [Limit, setLimit] = useState(2)
+
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/post/getProfile', {nickname:designer})
+        axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
-                setRepos(response.data.repos)
                 setDesigner(response.data.user)
+                getPosts(response.data.user.id)
             }else{
                 alert('데이터 가져오기 실패')
             }
         })
     }, [])
 
+    const getPosts = (id) => {
+        axios.post(`/api/info/getContests/?limit=${Limit}&offset=${Skip}`, {user : id})
+        .then(response => {
+            if(response.data.success){
+                setContests(response.data.contests)
+                setSkip(Skip+Limit)
+            }else{
+                alert('대표작품 가져오기 실패')
+            }
+        })
+    }
     const getBase64 = (file) => {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -42,18 +57,17 @@ function BlogPage_Cons_Event(props) {
         });
     }
 
-    const renderPost = (repo) => {
+    const renderContest = (contest) => {
         return (
-            <Card
-                className="item"
-                cover={<a href={`/${Designer.nickname}/${repo.id}`}><img src={`http://localhost:8000${repo.images[0]}`} alt/></a>}
-            >
-                <Meta
-                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>}
-                    title={repo.title}
-                    description={repo.content}
-                />
-            </Card>
+            <div className="prod-works">
+                <div className="works-wrapper">
+                    <img className="works-thumb" src={`http://localhost:8000${contest.image}`}/>
+                    <div className="works-content">
+                        <p>{contest.title}</p>
+                        <p>{contest.description}</p>
+                    </div>
+                </div>
+            </div>
             )
     }
 
@@ -86,13 +100,20 @@ function BlogPage_Cons_Event(props) {
     }
 
     const OnHoldEvent= () =>{
-        const variable = {
-            title : EventTitle,
-            description : EventDesc,
-            image : EventImg
-        }
+        const formData = new FormData();
+        formData.append('user', props.user.userData._id)
+        formData.append('title', EventTitle)
+        formData.append('description', EventDesc)
+        formData.append('image', EventImg)
 
-        console.log(variable)
+        axios.post('/api/contest/uploadContest', formData)
+        .then(response => {
+            if(response.data.success){
+                alert('성공')
+            }else{
+                alert('실패')
+            }
+        })
         setEventTitle("")
         setEventDesc("")
         setEventImg(null)
@@ -108,30 +129,22 @@ function BlogPage_Cons_Event(props) {
                     <Avatar style={{float:'left'}} size={200} src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
-                        <p id="blog-header-p1">Content</p>
-                        <p id="blog-header-p2">job/major</p>
+                        <p id="blog-header-p1">{Designer.content}</p>
+                        <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
                 <div className="blog-follow">
                     <Button>follow</Button>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${Designer.nickname}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
-                    <a href={`/${Designer.nickname}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
+                    <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
+                    <a href={`/${designer}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">이벤트</button>
                     <div className="blog-tabs-content">
-                        <div className="prod-works">
-                            <div className="works-wrapper">
-                                <img className="works-thumb" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
-                                <div className="works-content">
-                                    <p>Title</p>
-                                    <p>Content</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="event-open-btn" onClick={OnOpenEvent}>
+                        {Contests && Contests.map(contest => renderContest(contest))}
+                        {props.user.userData && props.user.userData.nickname === designer && <div className="event-open-btn" onClick={OnOpenEvent}>
                             이벤트 개최
-                        </div>  
+                        </div> }
                     </div>
                 </div>
             </div>
