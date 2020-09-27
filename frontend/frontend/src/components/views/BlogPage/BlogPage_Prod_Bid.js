@@ -20,7 +20,7 @@ function BlogPage_Prod_Bid(props) {
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/post/getProfile', {nickname:designer})
+        axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
                 setDesigner(response.data.user)
@@ -32,10 +32,13 @@ function BlogPage_Prod_Bid(props) {
     }, [])
 
     const getPosts = (id) => {
-        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`, {id:id})
+        const variables = {
+            uid : id
+        }
+        axios.post(`/api/info/getBid/?limit=${Limit}&offset=${Skip}`,variables)
         .then(response => {
             if(response.data.success){
-                setPosts(response.data.bidPosts)
+                setPosts(response.data.posts)
                 setSkip(Skip+Limit)
             }else{
                 alert('실패')
@@ -44,13 +47,15 @@ function BlogPage_Prod_Bid(props) {
     }
 
     const renderPost = (post) => {
+        console.log(post)
         return (
             <div className="works-wrapper">
                 <div className="bid-wrap">
                     <img className="bid-thumb" src={`http://localhost:8000${post.thumbnail}`}/>
                 </div>
                 <div className="blog-bid-content">
-                    <p>입찰 최고가 : {post.bid.price}</p>
+                    <p>{post.title}</p>
+                    <p>입찰 최고가 : {post.price}</p>
                 </div>
             </div>
         )
@@ -84,9 +89,9 @@ function BlogPage_Prod_Bid(props) {
                 </div>
             </div>
             <div className="blog-left-intro">
-                <h1>Works : {}개</h1>
-                <h1>Likes : {}개</h1>
-                <h1>Views : {}개</h1>
+                <h1>Works : {Designer.work}개</h1>
+                <h1>Likes : {Designer.like}개</h1>
+                <h1>Views : {Designer.view}개</h1>
             </div>
         </div>
     );

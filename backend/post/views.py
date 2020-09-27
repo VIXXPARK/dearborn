@@ -48,10 +48,6 @@ class myVoteView(APIView):
         }
         return Response(context,status=HTTP_200_OK)
         
-
-
-
-
 class getLikeDetail(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self,request):

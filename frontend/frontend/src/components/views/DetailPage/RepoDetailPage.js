@@ -10,6 +10,7 @@ import './RepoDetailPage.css'
 import AssessShow from './Sections/AssessShow';
 import {ContainerOutlined} from '@ant-design/icons'
 import {getCookieValue} from '../../utils/Cookie'
+import {config} from '../../utils/Token'
 
 
 const {Title} = Typography
@@ -61,10 +62,11 @@ function RepoDetailPage(props) {
                             onOk(){
                                 console.log(Bid)
                                 const variables = {
-                                    postId : Repo.id,
+                                    user : props.user.userData._id,
+                                    post : Repo.id,
                                     price : Bid,
                                 }
-                                axios.post('/api/bid/setBid', variables)
+                                axios.post('/api/bid/setBid', variables, config)
                                 .then(response => {
                                     if(response.data.success){
                                         alert('성공')
@@ -96,11 +98,6 @@ function RepoDetailPage(props) {
             okText: "메시지 전송",
             cancelText: "취소",
             onOk(){
-                const config = {
-                    headers : {
-                        Authorization: `Token ${getCookieValue('w_auth')}`
-                    }
-                }
                 const variables = {
                     message : HireMessage,
                     userFrom : props.user.userData._id,
@@ -119,24 +116,16 @@ function RepoDetailPage(props) {
             }
         })
     }
-
+    console.log(Writer)
     return (
         <div className="repo-container">
             <div className="repo-left-container">
                 <div className="repo-content">
                     {Repo.images && Repo.images.map((image, i) => (
                         <div>
-                            <img key={i} src={`http://localhost:5000/${image}`} style={{width:'100%'}} />
+                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
                         </div>
                     ))}
-                    
-                        <div>
-                            <img src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} style={{width:'100%'}} />
-                        </div>
-                        <div>
-                            <img src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} style={{width:'100%'}} />
-                        </div>
-                    
                     <br/><br/>
                     <CommentArea postId={postId}/>
                 </div>
