@@ -36,7 +36,7 @@ function MessagePage(props) {
                 icon:null,
                 content: 
                 <div className="bid-container">
-                    <div className="hire-title">{message.userFrom} 에게 답장</div>
+                    <div className="hire-title">{message.fromNickname} 에게 답장</div>
                     <div className="hire-content">메시지<br/><Input.TextArea style={{fontSize:'20px'}} rows={5}  onChange={(e)=>{HireMessage = e.currentTarget.value}}/></div>
                 </div>,
                 okText: "메시지 전송",
@@ -45,7 +45,7 @@ function MessagePage(props) {
                     const variables = {
                         message : HireMessage,
                         userFrom : props.user.userData._id,
-                        userTo : message.userFrom,
+                        userTo : message.fromId,
                     }
                     const config = {
                         headers : {
@@ -66,7 +66,7 @@ function MessagePage(props) {
 
         return (
             <tr>
-                <td>{message.userFrom}</td><td>{message.message}</td><td>{message.date}</td><td><Button style={{width:'55px', textAlign:'center'}} onClick={OpenMessageForm}>답장</Button></td>
+                <td>{message.fromNickname}</td><td>{message.message}</td><td>{message.date}</td><td><Button style={{width:'55px', textAlign:'center'}} onClick={OpenMessageForm}>답장</Button></td>
             </tr>
         )
     }

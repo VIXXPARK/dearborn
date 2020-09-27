@@ -38,7 +38,7 @@ function BlogPage_Cons_Event(props) {
     }, [])
 
     const getPosts = (id) => {
-        axios.post(`/api/info/getContests/?limit=${Limit}&offset=${Skip}`, {id : id})
+        axios.post(`/api/info/getContests/?limit=${Limit}&offset=${Skip}`, {user : id})
         .then(response => {
             if(response.data.success){
                 setContests(response.data.contests)
@@ -64,7 +64,7 @@ function BlogPage_Cons_Event(props) {
                     <img className="works-thumb" src={`http://localhost:8000${contest.image}`}/>
                     <div className="works-content">
                         <p>{contest.title}</p>
-                        <p>{contest.content}</p>
+                        <p>{contest.description}</p>
                     </div>
                 </div>
             </div>
@@ -100,13 +100,20 @@ function BlogPage_Cons_Event(props) {
     }
 
     const OnHoldEvent= () =>{
-        const variable = {
-            title : EventTitle,
-            description : EventDesc,
-            image : EventImg
-        }
+        const formData = new FormData();
+        formData.append('user', props.user.userData._id)
+        formData.append('title', EventTitle)
+        formData.append('description', EventDesc)
+        formData.append('image', EventImg)
 
-        console.log(variable)
+        axios.post('/api/contest/uploadContest', formData)
+        .then(response => {
+            if(response.data.success){
+                alert('성공')
+            }else{
+                alert('실패')
+            }
+        })
         setEventTitle("")
         setEventDesc("")
         setEventImg(null)
@@ -130,8 +137,8 @@ function BlogPage_Cons_Event(props) {
                     <Button>follow</Button>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${Designer.nickname}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
-                    <a href={`/${Designer.nickname}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
+                    <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
+                    <a href={`/${designer}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">이벤트</button>
                     <div className="blog-tabs-content">
                         {Contests && Contests.map(contest => renderContest(contest))}

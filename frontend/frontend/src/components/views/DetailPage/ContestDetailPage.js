@@ -7,25 +7,22 @@ const {Title} = Typography
 
 function ContestDetailPage(props) {
 
-    const [Host, setHost] = useState(null)
-    const [Contest, setContest] = useState(null)
+    const [Host, setHost] = useState("")
+    const [Contest, setContest] = useState("")
     const [OpenModal, setOpenModal] = useState(false)
-    const [EventImg, setEventImg] = useState([])
+    const [EventImgs, setEventImgs] = useState([])
     const [ImgPreview, setImgPreview] = useState([])
+    const [EventThumbnailImg, setEventThumbnailImg] = useState("")
+    const [ThumbnailPreview, setThumbnailPreview] = useState("")
 
     const contestId = props.match.params.contestId
 
     useEffect(() => {
-        axios.post('/api/contest/getHost', {id : contestId})
-        .then(response => {
-            if(response.data.success){
-                setHost(response.data.host)
-            }
-        })
         axios.post('/api/contest/getContest', {id: contestId})
         .then(response => {
             if(response.data.success){
                 setContest(response.data.contest)
+                setHost(response.data.host)
             }
         })
     }, [])
@@ -41,10 +38,20 @@ function ContestDetailPage(props) {
 
     const EventImgChange = async ({file}) => {
         if(!file.preview){
+            console.log(1)
             file.preview = await getBase64(file.originFileObj)
+            setEventImgs([...EventImgs, file.originFileObj])
+            setImgPreview([...ImgPreview, file.preview])
         }
-        setEventImg(file.originFileObj)
-        setImgPreview(file.preview)
+    }
+    console.log(ImgPreview)
+    const EventThumbnailImgChange = async ({file}) => {
+        if(!file.preview){
+            console.log(1)
+            file.preview = await getBase64(file.originFileObj)
+            setEventThumbnailImg(file.originFileObj)
+            setThumbnailPreview(file.preview)
+        }
     }
 
     const OpenUploadForm = () => {
@@ -56,11 +63,18 @@ function ContestDetailPage(props) {
     }
 
     const OnSubmitContest = () => {
-        const variables = {
-
-        }
+        const formData = new FormData()
+        EventImgs.forEach(file => formData.append('images', file))
+        formData.append('thumbnail', EventThumbnailImg)
+        axios.post('/api/contest/post/uploadContest', formData)
+        .then(response => {
+            if(response.data.success){
+                alert('성공')
+            }else{
+                alert('실패')
+            }
+        })
     }
-
     return (
         <div className="repo-container">
             <div className="repo-left-container">
@@ -68,12 +82,10 @@ function ContestDetailPage(props) {
                     <div style={{border:'1px solid black', borderRadius:'20px'}}>
                         <br/><br/>
                         <div style={{borderBottom:'1px solid black'}}>
-                            <Title>Title</Title>
+                            <Title>{Contest.title}</Title>
                         </div>
-                        <img src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} style={{width:'100%'}} />
-                        <p style={{marginTop:'50px', textAlign:'left'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras id nibh tristique, blandit lorem et, aliquet nunc. Curabitur venenatis porttitor lorem sit amet fringilla. Sed at maximus ipsum, vitae volutpat lacus. Fusce nec risus semper, ultrices libero nec, bibendum tortor. Phasellus non diam non nisi semper lobortis ut vitae tortor. Nunc vitae lacus sit amet nisi malesuada dictum sit amet sed nunc. Aliquam ac viverra dolor, nec consectetur tortor. Mauris augue urna, euismod ut arcu vitae, mattis bibendum purus. Nunc eu est a lorem accumsan fermentum nec et arcu.
-
-Morbi quis ornare diam. Mauris fringilla, libero vel efficitur eleifend, sem diam finibus augue, id rhoncus odio odio at neque. Vestibulum vestibulum sodales vehicula. Duis nunc velit, condimentum sed ipsum in, ultricies aliquam libero. Nulla a facilisis leo, vitae malesuada enim. Nullam eu sapien ut sem auctor condimentum. Quisque aliquam elit ligula, ac dapibus ex imperdiet lobortis. Pellentesque ut ligula quis nulla blandit dignissim sit amet vulputate ligula. Integer turpis arcu, fringilla eu cursus placerat, vehicula ac diam. Donec a congue augue. Sed quis mattis ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Maecenas malesuada erat in orci venenatis, interdum cursus nunc faucibus. Phasellus vel vulputate turpis.</p>
+                        <img src={`http://localhost:8000${Contest.image}`} style={{width:'100%'}} />
+                        <p style={{marginTop:'50px', textAlign:'left'}}>{Contest.description}</p>
                     </div>
                     <br/><br/>
                 </div>
@@ -84,14 +96,14 @@ Morbi quis ornare diam. Mauris fringilla, libero vel efficitur eleifend, sem dia
                         <Title>개최자 정보</Title>
                     </div>
                     <div className="repo-span">
-                        Host.nickname
+                        {Host.nickname}
                         {/*Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""*/}
                     </div>
                     <div className="repo-span">
-                        Host.content
+                        {Host.content}
                         {/*Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""*/}
                     </div>
-                    <a href={`/Host.nickname/cons`}><div className="event-right-button">
+                    <a href={`/${Host.nickname}/cons`}><div className="event-right-button">
                         블로그 가기
                     </div></a>
                     <br/>
@@ -104,19 +116,42 @@ Morbi quis ornare diam. Mauris fringilla, libero vel efficitur eleifend, sem dia
                 <div className="event-modal-background"></div>
                 <div className="event-modal-container">
                     <div className="event-modal-wrapper">
-                        <Title>이벤트 개최하기</Title>
-                        <label style={{fontSize:'23px'}}>이미지</label>
-                        <br/>
-                        <Upload
-                            multiple={true}
-                            onChange={EventImgChange}
-                            showUploadList={false}
-                        >
-                            <Button icon={<UploadOutlined/>}>Upload</Button>
-                        </Upload>
-                        {ImgPreview && ImgPreview.map(preview => (
-                            <img style={{width:'50px', height:'75px'}} src={preview}/>
-                        ))}
+                        <Title>이벤트 참여하기</Title>
+                        <div className="modal-body">
+                            <div className="modal-body-section">
+                                <label style={{fontSize:'23px'}}>썸네일</label>
+                                <br/><br/>
+                                <Upload
+                                    multiple
+                                    onChange={EventThumbnailImgChange}
+                                    showUploadList={false}
+                                >
+                                    <div style={{width:'200px', height:'300px', border:'1px solid black', borderRadius:'20px'}}>{
+                                    ThumbnailPreview ? <img style={{width:'100%', height:'100%',borderRadius:'20px', cursor:'pointer'}} src={ThumbnailPreview}/> 
+                                    : 
+                                    <div style={{textAlign:'center', marginTop:'135px'}}><Button icon={<UploadOutlined/>}>Upload</Button></div>
+                                    }</div>
+                                </Upload>
+                            </div>
+                            <div className="modal-body-section">
+                                <label style={{fontSize:'23px'}}>이미지 첨부하기</label>
+                                <br/><br/>
+                                <Upload
+                                    multiple
+                                    onChange={EventImgChange}
+                                    showUploadList={false}
+                                >
+                                    <Button icon={<UploadOutlined/>}>Upload</Button>
+                                </Upload>
+                                <div className="event-img-box">
+                                {ImgPreview && ImgPreview.map(preview => (
+                                    <div style={{width:'100px', height:'150px', float:'left', margin:'10px'}}>
+                                        <img style={{width:'100%', height:'100%',borderRadius:'10px'}} src={preview}/>
+                                    </div>
+                                ))}
+                                </div>
+                            </div>
+                        </div>
                         <br/><br/>
                         <Button className="event-modal-btn" danger onClick={OnCloseEvent}>취소</Button>
                         <Button style={{color:'powderBlue', borderColor:'powderBlue'}} className="event-modal-btn" onClick={OnSubmitContest}>제출</Button>

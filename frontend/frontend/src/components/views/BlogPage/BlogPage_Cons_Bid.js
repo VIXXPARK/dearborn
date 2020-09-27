@@ -82,8 +82,8 @@ function BlogPage_Cons_Bid(props) {
                 </div>
                 <div className="blog-section">
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">진행 중</button>
-                    <a href={`/${Designer.nickname}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
-                    <a href={`/${Designer.nickname}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
+                    <a href={`/${designer}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
+                    <a href={`/${designer}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
                     {props.user.userData && props.user.userData.nickname == designer ? <div className="blog-tabs-content">
                         {Posts && Posts.map(post => renderPost(post))}
                     </div> :

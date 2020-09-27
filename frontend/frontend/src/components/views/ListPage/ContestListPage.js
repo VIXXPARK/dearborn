@@ -35,6 +35,7 @@ function EventListPage(props) {
             }else{
                 alert('데이터 가져오기 실패')
             }
+            setSkip(Skip+Limit)
         })
     }
 
@@ -46,8 +47,8 @@ function EventListPage(props) {
         const variables = {
             sort : sort,
         }
-        getPosts(variables)
         setSkip(0)
+        getPosts(variables)
     }
 
     const onSortChange = (e) => {
@@ -56,14 +57,14 @@ function EventListPage(props) {
         setFilters(e.target.value)
     }
 
-    const renderPage = (contest) => (
+    const renderContest = (contest) => (
         <div className="event-list-item">
-            <a href={`/contest/1`}>
+            <a href={`/contest/${contest.id}`}>
                 <div className="event-item">
-                    <img className="event-item-img" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} alt/>
+                    <img className="event-item-img" src={`http://localhost:8000${contest.image}`} alt/>
                     <div className="event-item-content">
-                        <h1>Title</h1>
-                        <h2>Description</h2>
+                        <h1>{contest.title}</h1>
+                        <h2>{contest.description}</h2>
                     </div>
                 </div>
             </a>
@@ -87,12 +88,7 @@ function EventListPage(props) {
                 </div>
             </div>
             <div className="list-wrapper">
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
-                {renderPage()}
+                {Contests && Contests.map(contest => renderContest(contest))}
             </div>
         </div>
     );

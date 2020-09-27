@@ -96,9 +96,9 @@ function BlogPage_Prod_Works(props) {
                 </div>
             </div>
             <div className="blog-left-intro">
-                <h1>Works : {}개</h1>
-                <h1>Likes : {}개</h1>
-                <h1>Views : {}개</h1>
+                <h1>Works : {Designer.work}개</h1>
+                <h1>Likes : {Designer.like}개</h1>
+                <h1>Views : {Designer.view}개</h1>
             </div>
         </div>
     );
