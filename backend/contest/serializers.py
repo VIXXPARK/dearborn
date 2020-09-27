@@ -38,6 +38,3 @@ class getUserSerializer(serializers.Serializer):
 
 class sortSerializer(serializers.Serializer):
     sort = serializers.IntegerField()
-
-class getUserSerializer(serializers.Serializer):
-    contest = serializers.IntegerField()

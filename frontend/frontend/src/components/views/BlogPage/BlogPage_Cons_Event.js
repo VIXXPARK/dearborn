@@ -36,6 +36,7 @@ function BlogPage_Cons_Event(props) {
             }
         })
     }, [])
+    console.log(Designer)
 
     const getPosts = (id) => {
         axios.post(`/api/info/getContests/?limit=${Limit}&offset=${Skip}`, {user : id})

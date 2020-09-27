@@ -33,10 +33,9 @@ function BlogPage_Prod_Bid(props) {
 
     const getPosts = (id) => {
         const variables = {
-            id : id,
-            job : 0, // producer
+            uid : id
         }
-        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`,variables)
+        axios.post(`/api/info/getBid/?limit=${Limit}&offset=${Skip}`,variables)
         .then(response => {
             if(response.data.success){
                 setPosts(response.data.bidPosts)
@@ -54,7 +53,7 @@ function BlogPage_Prod_Bid(props) {
                     <img className="bid-thumb" src={`http://localhost:8000${post.thumbnail}`}/>
                 </div>
                 <div className="blog-bid-content">
-                    <p>입찰 최고가 : {post.bid.price}</p>
+                    <p>입찰 최고가 : {post.price}</p>
                 </div>
             </div>
         )

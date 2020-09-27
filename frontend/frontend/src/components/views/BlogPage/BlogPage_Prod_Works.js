@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Button, Typography, Card, Avatar, Modal } from 'antd';
-
+import {config} from '../../utils/Token'
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 
@@ -47,7 +47,7 @@ function BlogPage_Prod_Works(props) {
                 icon : null,
                 content: <p>대표작품으로 지정하시겠습니까?</p>,
                 onOk(){
-                    axios.post('/api/info/SetMyWork', {id : repo.id})
+                    axios.post('/api/info/setMyWork', {post : repo.id}, config)
                     .then(response => {
                         if(!response.data.success)
                             alert('실패')

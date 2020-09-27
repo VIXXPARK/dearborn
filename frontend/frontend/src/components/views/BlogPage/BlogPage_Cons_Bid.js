@@ -33,10 +33,9 @@ function BlogPage_Cons_Bid(props) {
 
     const getPosts = (id) => {
         const variables = {
-            id : id,
-            job : 1, // consumer
+            uid : id,
         }
-        axios.post(`/api/info/getBidPosts/?limit=${Limit}&offset=${Skip}`, variables)
+        axios.post(`/api/info/getBid/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
             if(response.data.success){
                 setPosts(response.data.bidPosts)
@@ -56,9 +55,8 @@ function BlogPage_Cons_Bid(props) {
                         </div>
                     </div>
                     <div className="blog-bid-content">
-                        <p>입찰번호 : {post.bid.id}</p>
                         <p>입찰 최고가 :{post.bid.price}</p>
-                        {post.bid.bidder === props.user.userData ?<button disabled>최고가로 입찰 중</button> : <button>재입찰</button>}
+                        {post.bid.bidder === props.user.userData._id ?<button disabled>최고가로 입찰 중</button> : <button>재입찰</button>}
                     </div>
                 </div>
             </div>

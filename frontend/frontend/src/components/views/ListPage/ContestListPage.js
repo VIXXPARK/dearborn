@@ -16,32 +16,22 @@ function EventListPage(props) {
     const [Sort, setSort] = useState(0)
 
     useEffect(() => {
-        const variables = {
-            sort : 0
-        }
-
-        getPosts(variables)
+        getPosts({sort : 0})
     }, [])
-    console.log(Contests)
+    
     const getPosts = (variables) => {
-<<<<<<< HEAD
-=======
-        console.log(variables)
->>>>>>> a59d6033fda9bdd28561d14e76bb14d37bec35ae
         axios.post(`/api/contest/getContests/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
-            console.log(response)
+            console.log(3)
             if(response.data.success){
                 if(Skip !== 0){
                     setContests([...Contests, ...response.data.contests])
                 }else {
                     setContests(response.data.contests)
                 }
-                setSkip(Skip+Limit)
             }else{
                 alert('데이터 가져오기 실패')
             }
-            setSkip(Skip+Limit)
         })
     }
 
@@ -53,8 +43,9 @@ function EventListPage(props) {
         const variables = {
             sort : sort,
         }
-        setSkip(0)
+        console.log(1)
         getPosts(variables)
+        setSkip(0)
     }
 
     const onSortChange = (e) => {

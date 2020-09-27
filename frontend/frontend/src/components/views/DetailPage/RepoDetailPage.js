@@ -62,7 +62,7 @@ function RepoDetailPage(props) {
                             onOk(){
                                 console.log(Bid)
                                 const variables = {
-                                    user : Writer.id,
+                                    user : props.user.userData._id,
                                     post : Repo.id,
                                     price : Bid,
                                 }
@@ -98,14 +98,6 @@ function RepoDetailPage(props) {
             okText: "메시지 전송",
             cancelText: "취소",
             onOk(){
-<<<<<<< HEAD
-=======
-                const config = {
-                    headers : {
-                        Authorization: `Token ${getCookieValue('w_auth')}`
-                    }
-                }
->>>>>>> a59d6033fda9bdd28561d14e76bb14d37bec35ae
                 const variables = {
                     message : HireMessage,
                     userFrom : props.user.userData._id,
@@ -134,14 +126,6 @@ function RepoDetailPage(props) {
                             <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
                         </div>
                     ))}
-                    
-                        <div>
-                            <img src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} style={{width:'100%'}} />
-                        </div>
-                        <div>
-                            <img src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} style={{width:'100%'}} />
-                        </div>
-                    
                     <br/><br/>
                     <CommentArea postId={postId}/>
                 </div>

@@ -6,6 +6,7 @@ import axios from 'axios'
 import Modal from 'antd/lib/modal/Modal';
 import {getCookieValue} from '../../utils/Cookie'
 import styles from './customstyle.css'
+import moment from 'moment'
 import './UploadVotePage.css'
 
 
@@ -57,6 +58,7 @@ function UploadVotePage(props) {
         formData.append('category', Category)
         formData.append('sell', values.sell)
         formData.append('scope', values.scope)
+        formData.append('expire_dt', moment('2020-10-10', 'YYYY-MM-DD'))
         formData.append('user', window.localStorage.getItem('userId'))
         axios.post('/api/post/uploadPost', formData, config)
             .then(response => {
@@ -214,8 +216,9 @@ function UploadVotePage(props) {
                             <Form.Item
                                 style={{marginTop:'50px'}}
                                 name="sell"
+                                rules={[{required:true, message:'판매 여부를 결정해주세요'}]} 
                             >
-                                <Radio.Group style={{width:'500px', height:'50px'}} defaultValue={1}>
+                                <Radio.Group style={{width:'500px', height:'50px'}}>
                                     <Radio.Button className="scope-radio-button" value={1}>수락</Radio.Button>
                                     <Radio.Button className="scope-radio-button" value={2}>거절</Radio.Button>
                                 </Radio.Group>
@@ -224,8 +227,9 @@ function UploadVotePage(props) {
                             <Form.Item
                                 style={{marginTop:'50px'}}
                                 name="scope"
+                                rules={[{required:true, message:'공개 범위를 결정해주세요'}]} 
                             >
-                                <Radio.Group style={{width:'500px', height:'50px'}} defaultValue={1}>
+                                <Radio.Group style={{width:'500px', height:'50px'}} >
                                     <Radio.Button className="scope-radio-button" value={1}>Public</Radio.Button>
                                     <Radio.Button className="scope-radio-button" value={2}>Private</Radio.Button>
                                 </Radio.Group>
