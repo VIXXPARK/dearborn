@@ -75,14 +75,3 @@ class myWorkSerializer(serializers.ModelSerializer):
    class Meta:
       model = myWork
       fields= 'post',
-
-      
-   # Post = serializers.IntegerField()
-   # User = serializers.CharField()
-   # def create(self,validated_data):
-   #    return myWork(**validated_data)
-
-   # def update(self,instance,validated_data):
-   #    instance.Post = validated_data.get('post',instance.Post)
-   #    instance.User = validated_data.get('User',instance.User)
-   #    return instance

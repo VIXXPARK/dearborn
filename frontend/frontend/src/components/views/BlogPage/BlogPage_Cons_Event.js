@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Button, Typography, Card, Avatar, Input ,Upload} from 'antd';
 
 import './BlogPage.css'
+import moment from 'moment'
 import Meta from 'antd/lib/card/Meta';
 import UploadOutlined from '@ant-design/icons'
 import { render } from 'react-dom';
@@ -106,6 +107,7 @@ function BlogPage_Cons_Event(props) {
         formData.append('title', EventTitle)
         formData.append('description', EventDesc)
         formData.append('image', EventImg)
+        formData.append('contest_expire', moment.utc('2020-10-10T02:00:00Z').format())
 
         axios.post('/api/contest/uploadContest', formData)
         .then(response => {
