@@ -18,7 +18,7 @@ class Post(models.Model):
    scope = models.IntegerField(default=0)
    sell = models.IntegerField(default=0)
    category = models.IntegerField(default=None)
-   expire_dt = models.DateTimeField(auto_now_add=True)
+   expire_dt = models.DateTimeField()
    
 
    def get_id(self):

@@ -58,6 +58,7 @@ function RepoListPage(props) {
             ook : ook,
             sort : Sort,
         }
+
         getPosts(variables)
         setSkip(0)
     }
@@ -72,7 +73,7 @@ function RepoListPage(props) {
         setSort(e.target.value)
         const variables = {
             ook : Ook,
-            sort : e,
+            sort : e.target.value,
         }
         getPosts(variables)
         setSkip(0)
