@@ -13,6 +13,8 @@ function RepoListPage(props) {
     const [OpenSort, setOpenSort] = useState(false)
     const [OpenFilter, setOpenFilter] = useState(false)
     const [Posts, setPosts] = useState([])
+    const [LoadMore, setLoadMore] = useState(true)
+    const [IsBottom, setIsBottom] = useState(false)
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
     const [Ook, setOok] = useState(0); //One of kind
@@ -25,13 +27,24 @@ function RepoListPage(props) {
         }
 
         getPosts(variables)
+        window.addEventListener('scroll', handleScroll)
+        return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
+
+    useEffect(() => {
+        if(IsBottom && LoadMore){
+            addPosts()
+        }
+    }, [IsBottom])
 
     const getPosts = (variables) => {
         axios.post(`/api/post/getRepos/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
             if(response.data.success){
                 console.log(response.data.repos)
+                if(response.data.repos < Limit ){
+                    setLoadMore(false)
+                }
                 if(Skip !==0){
                     setPosts([...Posts, ...response.data.repos])
                 }else{
@@ -41,6 +54,28 @@ function RepoListPage(props) {
                 alert('데이터 가져오기 실패')
             }
         })
+    }
+
+    const handleScroll = () => {
+        const scrollTop= (document.documentElement 
+            && document.documentElement.scrollTop)
+            || document.body.scrollTop
+        const scrollHeight= (document.documentElement 
+            && document.documentElement.scrollHeight)
+            || document.body.scrollHeight;
+        if(scrollTop + window.innerHeight >= scrollHeight){
+            setIsBottom(true)
+        }
+    }
+
+    const addPosts = () => {
+        const variables = {
+            ook : Ook,
+            sort : Sort
+        }
+        setSkip(Skip+Limit)
+        getPosts(variables)
+        setIsBottom(false)
     }
 
     const OpenFilterClick = () => {
@@ -58,6 +93,7 @@ function RepoListPage(props) {
             ook : ook,
             sort : Sort,
         }
+
         getPosts(variables)
         setSkip(0)
     }
@@ -72,7 +108,7 @@ function RepoListPage(props) {
         setSort(e.target.value)
         const variables = {
             ook : Ook,
-            sort : e,
+            sort : e.target.value,
         }
         getPosts(variables)
         setSkip(0)

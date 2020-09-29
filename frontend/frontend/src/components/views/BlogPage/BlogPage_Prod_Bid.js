@@ -38,7 +38,9 @@ function BlogPage_Prod_Bid(props) {
         axios.post(`/api/info/getBid/?limit=${Limit}&offset=${Skip}`,variables)
         .then(response => {
             if(response.data.success){
-                setPosts(response.data.bidPosts)
+                if(response.data.user.job === 2)
+                    props.history.push(`/${designer}/cons`)
+                setPosts(response.data.posts)
                 setSkip(Skip+Limit)
             }else{
                 alert('실패')
@@ -53,6 +55,7 @@ function BlogPage_Prod_Bid(props) {
                     <img className="bid-thumb" src={`http://localhost:8000${post.thumbnail}`}/>
                 </div>
                 <div className="blog-bid-content">
+                    <p>{post.title}</p>
                     <p>입찰 최고가 : {post.price}</p>
                 </div>
             </div>
@@ -64,15 +67,17 @@ function BlogPage_Prod_Bid(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
+                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
-                <div className="blog-follow">
-                    <Button>follow</Button>
+                <div className="blog-intro">
+                    <h1>Works : {Designer.work}개</h1>
+                    <h1>Likes : {Designer.like}개</h1>
+                    <h1>Views : {Designer.view}개</h1>
                 </div>
                 <div className="blog-section">
                     <a href={`/${designer}`}><button className="blog-tabs-btn">about</button></a>
@@ -85,11 +90,6 @@ function BlogPage_Prod_Bid(props) {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="blog-left-intro">
-                <h1>Works : {Designer.work}개</h1>
-                <h1>Likes : {Designer.like}개</h1>
-                <h1>Views : {Designer.view}개</h1>
             </div>
         </div>
     );

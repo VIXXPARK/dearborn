@@ -14,8 +14,10 @@ export default function (SpecificComponent, option, adminRoute = null, ProducerC
                     }
                 }else{
                     if(ProducerComponent){
-                        if(response.payload.category === 4){
+                        if(response.payload.category === 2){
                             return <ProducerComponent {...props} user={user}/>
+                        }else{
+                            return <SpecificComponent {...props} user={user}/>
                         }
                     }
                 }

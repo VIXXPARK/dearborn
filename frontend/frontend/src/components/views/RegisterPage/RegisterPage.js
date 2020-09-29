@@ -139,8 +139,8 @@ function RegisterPage(props) {
                 <label>직종( 기업 / 디자이너 ) : </label>
                 
                 <Select style={{width:120}} value={Job} onChange={OnChangeJob}>
-                    <Option value={0}>일반 유저(디자이너)</Option>
-                    <Option value={1}>클라이언트</Option>
+                    <Option value={1}>일반 유저(디자이너)</Option>
+                    <Option value={2}>클라이언트</Option>
                 </Select>
                 {Job == 1 && (<><br/><br/>
                 <label>자신 있는 분야 : </label><br/><br/>

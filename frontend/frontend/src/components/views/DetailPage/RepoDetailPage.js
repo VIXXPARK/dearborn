@@ -39,52 +39,6 @@ function RepoDetailPage(props) {
         setAssessValue(value)
     }
 
-    const showBiddingForm = () => {
-        var Bid
-        
-        confirm({
-            width:800,
-            icon: null,
-            content: 
-            <div className="bid-container">
-                <div className="bid-title">현재 입찰가 : &&원</div>
-                <div className="bid-content"><p>희망가격 : </p><Input style={{width:'70px'}} value={Bid} onChange={(e)=>{Bid = e.currentTarget.value}}/> ,000원</div>
-            </div>,
-            onOk(){
-                console.log(Bid)
-                if(!Bid){
-                    return alert('가격을 적어주세요')
-                }else{
-                    confirm({
-                        icon:null,
-                        content:
-                            <div>정말로 입찰하시겠습니까?</div>,
-                            onOk(){
-                                console.log(Bid)
-                                const variables = {
-                                    user : props.user.userData._id,
-                                    post : Repo.id,
-                                    price : Bid,
-                                }
-                                axios.post('/api/bid/setBid', variables, config)
-                                .then(response => {
-                                    if(response.data.success){
-                                        alert('성공')
-                                    }else{
-                                        alert('실패')
-                                    }
-                                })
-                                Modal.destroyAll()
-                            }
-                    })
-                }
-            },
-            onCancel(){
-
-            }
-        })
-    }
-
     const showHireForm = () => {
         var HireMessage
         confirm({
@@ -122,8 +76,8 @@ function RepoDetailPage(props) {
             <div className="repo-left-container">
                 <div className="repo-content">
                     {Repo.images && Repo.images.map((image, i) => (
-                        <div>
-                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
+                        <div className="repo-content-img">
+                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%', height:'100%'}} />
                         </div>
                     ))}
                     <br/><br/>
@@ -134,19 +88,21 @@ function RepoDetailPage(props) {
                 <div className="repo-right-detail">
                     <div className="repo-title">
                         <Title>TITLE12312{/*Repo.title*/}</Title>
+                        <div className="repo-profile">
+                            <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={`http://localhost:8000${Writer.profileImage}`}/>
+                            <div className="repo-profile-header">
+                                <a href={`/${Writer.nickname}`}>{Writer.nickname}</a>
+                            </div>
+                        </div>
                     </div>
                     <div className="repo-span">
-                        CONTENTCONTENTCONTENTCONTENTCONTENTCONTENT
-                        {/*Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""*/}
+                        {Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""}
                     </div>
                     <div className="repo-content-detail">
                         {Repo.content}
                     </div>
                     <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
                     <br/>
-                    <div className="repo-right-button" onClick={showBiddingForm}>
-                        입찰
-                    </div>
                     <div className="repo-right-button" onClick={showHireForm}>
                         채용
                     </div>
@@ -159,19 +115,6 @@ function RepoDetailPage(props) {
                         updateAssessValue={updateAssess}/>
                 </div>
                 <br/>
-            </div>
-            <div className="repo-profile">
-                <div className="repo-profile-header">
-                    {Writer.nickname}
-                </div>
-                <div className="repo-profile-content">
-                    {Writer.content}
-                </div>
-                <br/>
-                <div className="repo-profile-button">
-                    <a href={`/${Writer.nickname}`}><Button>블로그로 가기</Button></a>
-                </div>
-
             </div>
             
         </div>

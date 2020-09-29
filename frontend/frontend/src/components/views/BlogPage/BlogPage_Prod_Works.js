@@ -21,6 +21,8 @@ function BlogPage_Prod_Works(props) {
         axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
+                if(response.data.user.job === 2)
+                    props.history.push(`/${designer}/cons`)
                 setDesigner(response.data.user)
                 getPosts(response.data.user.id)
             }else{
@@ -58,12 +60,11 @@ function BlogPage_Prod_Works(props) {
         }
         return (
             <div className="works-wrapper">
-                <img className="works-thumb" src={`http://localhost:8000${repo.thumbnail}`}/>
+                <div className="works-thumb"><img style={{width:'100%', height:'100%'}} src={`http://localhost:8000${repo.thumbnail}`}/></div>
                 <div className="works-content">
                     <p>{repo.title}</p>
-                    <p>{repo.content}</p>
+                    <Button onClick={onMyWorkPick}>대표작품 지정</Button>
                 </div>
-                <Button style={{float:'right', marginTop:'100px'}} onClick={onMyWorkPick}>대표작품 지정</Button>
             </div>
             )
     }
@@ -80,8 +81,10 @@ function BlogPage_Prod_Works(props) {
                         <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
-                <div className="blog-follow">
-                    <Button>follow</Button>
+                <div className="blog-intro">
+                    <h1>Works : {Designer.work}개</h1>
+                    <h1>Likes : {Designer.like}개</h1>
+                    <h1>Views : {Designer.view}개</h1>
                 </div>
                 <div className="blog-section">
                     <a href={`/${designer}`}><button className="blog-tabs-btn">about</button></a>
@@ -94,11 +97,6 @@ function BlogPage_Prod_Works(props) {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="blog-left-intro">
-                <h1>Works : {Designer.work}개</h1>
-                <h1>Likes : {Designer.like}개</h1>
-                <h1>Views : {Designer.view}개</h1>
             </div>
         </div>
     );

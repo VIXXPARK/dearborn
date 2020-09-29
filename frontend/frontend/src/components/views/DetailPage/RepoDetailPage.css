@@ -14,15 +14,14 @@
 }
 @media (max-width:1400px){
     .repo-left-container {
-        width:800px;
-
+        width:90%;
+        margin:0 auto;
     }
 }
 @media (min-width:1401px){
     .repo-right-container {
         width:40%;
         float:left;
-        margin : 
     }
 }
 @media (max-width:1400px){
@@ -31,36 +30,57 @@
     }
 }
 
+.repo-content-img{
+    width:90%;
+    margin: 0 auto;
+}
+
 .repo-right-detail {
     width:450px;
     margin: 0 auto;
     padding:30px;
-    background-color: blue;
+    border: 2px solid gray;
 }
 .repo-title{
     width:300px;
     font-size:40px;
     padding-top: 10px;
     margin:0 auto;
+    border-bottom: 1px solid gray;
+}
+.repo-title h1{
+    margin-bottom: 0px;
 }
 .repo-span {
     width:400px;
-    font-size:30px;
-    margin:0 auto;
+    font-size:15px;
+    text-align: right;
     word-break: keep-all;
     word-wrap:break-word;
+}
+.repo-content-detail{
+    text-align: left;
+    font-size:20px;
+    margin-left: 30px;
 }
 
 .repo-assess {
     width:450px;
     margin:50px auto;
-    background-color: gray;
 }
 
 .repo-assess-area {
     width:400px;
-    background-color: gray;
     margin: 50px auto;
+}
+
+.repo-profile{
+    text-align: left;
+    height:60px;
+}
+.repo-profile-header{
+    display: inline-block;
+    font-size: 15px;
 }
 
 .repo-right-button {
@@ -68,7 +88,8 @@
     height:60px;
     font-size: 40px;
     margin:30px auto;
-    background-color: white;
+    background-color: wheat;
+    border-radius: 20px;
     cursor: pointer;
 }
 

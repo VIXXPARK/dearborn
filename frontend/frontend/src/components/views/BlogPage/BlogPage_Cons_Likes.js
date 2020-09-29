@@ -21,6 +21,8 @@ function BlogPage_Cons_Likes(props) {
         axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
+                if(response.data.user.job === 1)
+                    props.history.push(`/${designer}`)
                 setDesigner(response.data.user)
                 getPosts(response.data.user.id)
             }else{
@@ -67,8 +69,10 @@ function BlogPage_Cons_Likes(props) {
                         <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
-                <div className="blog-follow">
-                    <Button>follow</Button>
+                <div className="blog-intro">
+                    <h1>Works : {Designer.work}개</h1>
+                    <h1>Likes : {Designer.like}개</h1>
+                    <h1>Views : {Designer.view}개</h1>
                 </div>
                 <div className="blog-section">
                     <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
@@ -78,11 +82,6 @@ function BlogPage_Cons_Likes(props) {
                         {Repos && Repos.map(repo => renderPost(repo))}
                     </div>
                 </div>
-            </div>
-            <div className="blog-left-intro">
-                <h1>입찰 진행중 : {}개</h1>
-                <h1>입찰 완료 : {}개</h1>
-                <h1>이벤트 개최중 : {}개</h1>
             </div>
         </div>
     );

@@ -47,6 +47,7 @@ function UploadVotePage(props) {
         console.log(ThumbnailFile)
         console.log(FileList);
         console.log(Category)
+        const restDay = parseInt(moment().endOf('week').fromNow()[3])+1
         let formData = new FormData()
         const config = {
             header : {'Content-Type' : 'multipart/form-data'}
@@ -58,7 +59,7 @@ function UploadVotePage(props) {
         formData.append('category', Category)
         formData.append('sell', values.sell)
         formData.append('scope', values.scope)
-        formData.append('expire_dt', moment('2020-10-10', 'YYYY-MM-DD'))
+        formData.append('expire_dt', moment.utc(moment().format('YYYY-MM-DD') + "T11:59:59Z").add(restDay, 'd').format())
         formData.append('user', window.localStorage.getItem('userId'))
         axios.post('/api/post/uploadPost', formData, config)
             .then(response => {
@@ -73,7 +74,6 @@ function UploadVotePage(props) {
         })
 
     }
-
     const handleRemove = (file) =>{
         const index = FileList.indexOf(file)
         const newFileList = FileList.slice()
