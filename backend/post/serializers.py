@@ -42,7 +42,7 @@ class PostSerializer(serializers.ModelSerializer):
    images = PostImageSerializer(many=True, read_only=True)
    class Meta:
       model = Post
-      fields = ('id', 'title','thumbnail', 'content','user','images','category','sell','scope')
+      fields = ('id', 'title','thumbnail', 'content','user','images','category','sell','scope','expire_dt')
    def create(self, validated_data):
       images_data = self.context['request'].FILES
       post = Post.objects.create(**validated_data)
@@ -75,14 +75,3 @@ class myWorkSerializer(serializers.ModelSerializer):
    class Meta:
       model = myWork
       fields= 'post',
-
-      
-   # Post = serializers.IntegerField()
-   # User = serializers.CharField()
-   # def create(self,validated_data):
-   #    return myWork(**validated_data)
-
-   # def update(self,instance,validated_data):
-   #    instance.Post = validated_data.get('post',instance.Post)
-   #    instance.User = validated_data.get('User',instance.User)
-   #    return instance

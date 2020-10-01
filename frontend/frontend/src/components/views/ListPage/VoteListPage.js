@@ -12,28 +12,62 @@ function VoteListPage(props) {
 
     const [OpenSort, setOpenSort] = useState(false)
     const [OpenFilter, setOpenFilter] = useState(false)
+    const [LoadMore, setLoadMore] = useState(true)
     const [Posts, setPosts] = useState([])
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
     const [Ook, setOok] = useState(0); //One of kind
     const [Sort, setSort] = useState(0)
 
+    const [IsBottom, setIsBottom] = useState(false)
+
     useEffect(() => {
         const variables = {
             ook:0,
             sort :0,
         }
-
         getPosts(variables)
+        //infinite scroll https://hackernoon.com/builing-an-infinite-scroll-using-react-hooks-pe113urj
+        window.addEventListener('scroll', handleScroll)
+        return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
+    useEffect(() => {
+        if(IsBottom && LoadMore){
+            addPosts()
+        }
+    }, [IsBottom])
 
+    const handleScroll = () => {
+        const scrollTop= (document.documentElement 
+            && document.documentElement.scrollTop)
+            || document.body.scrollTop
+        const scrollHeight= (document.documentElement 
+            && document.documentElement.scrollHeight)
+            || document.body.scrollHeight;
+        if(scrollTop + window.innerHeight >= scrollHeight){
+            setIsBottom(true)
+        }
+    }
+
+    const addPosts = () => {
+        const variables = {
+            ook : Ook,
+            sort : Sort
+        }
+        setSkip(Skip+Limit)
+        getPosts(variables)
+        setIsBottom(false)
+    }
     const getPosts = (variables) => {
         console.log(variables)
         axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
             if(response.data.success){
-                console.log(response.data.votes)
+                console.log(response)
+                if(response.data.votes.length < Limit)
+                    setLoadMore(false)
                 if(Skip !==0){
+                    console.log(1)
                     setPosts([...Posts, ...response.data.votes])
                 }else{
                     setPosts(response.data.votes)

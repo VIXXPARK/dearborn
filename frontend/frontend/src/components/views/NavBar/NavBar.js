@@ -33,7 +33,7 @@ function NavBar(props) {
     const menu = (
         <Menu>
             <Menu.Item>
-                {user.userData && user.userData.nickname ? <a href={`/${user.userData.nickname}`}>마이 블로그</a>: null}
+                {user.userData && user.userData.nickname ? user.userData.job === 1 ? <a href={`/${user.userData.nickname}`}>마이 블로그</a> : <a href={`/${user.userData.nickname}/cons`}>마이 블로그</a>: null}
             </Menu.Item>
             <Menu.Item>
                 <a href='/message'>쪽지 확인</a>

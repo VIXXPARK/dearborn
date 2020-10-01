@@ -9,7 +9,6 @@ import './App.css';
 import Auth from './hoc/auth'
 
 import NavBar from './components/views/NavBar/NavBar'
-import FixedBar from './components/views/FixedBar/FixedBar'
 import Footer from './components/views/Footer/Footer'
 import LandingPage from './components/views/LandingPage/LandingPage'
 import LoginPage from './components/views/LoginPage/LoginPage'

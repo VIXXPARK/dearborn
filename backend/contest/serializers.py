@@ -4,9 +4,10 @@ from .models import Contest,ContestPost,ContestPostImage
 
 
 class ContestSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Contest
-        fields = ('id','user','title','description','expire_dt' ,'image',)
+        fields = ('id','user','title','description','contest_expire' ,'image',)
 
 class ContestPostImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,6 +39,3 @@ class getUserSerializer(serializers.Serializer):
 
 class sortSerializer(serializers.Serializer):
     sort = serializers.IntegerField()
-
-class getUserSerializer(serializers.Serializer):
-    contest = serializers.IntegerField()

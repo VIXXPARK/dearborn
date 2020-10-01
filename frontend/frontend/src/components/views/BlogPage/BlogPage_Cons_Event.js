@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
-import { Button, Typography, Card, Avatar, Input ,Upload} from 'antd';
+import { Button, Typography, Card, Avatar, Input ,Upload, Select} from 'antd';
 
 import './BlogPage.css'
+import moment from 'moment'
 import Meta from 'antd/lib/card/Meta';
 import UploadOutlined from '@ant-design/icons'
 import { render } from 'react-dom';
@@ -15,6 +16,7 @@ function BlogPage_Cons_Event(props) {
     const [Designer, setDesigner] = useState("")
     const [EventImg, setEventImg] = useState("")
     const [ImgPreview, setImgPreview] = useState("")
+    const [RestDay, setRestDay] = useState(7)
 
     const [OpenModal, setOpenModal] = useState(false)
     const [EventTitle, setEventTitle] = useState("")
@@ -29,6 +31,8 @@ function BlogPage_Cons_Event(props) {
         axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
+                if(response.data.user.job === 1)
+                    props.history.push(`/${designer}`)
                 setDesigner(response.data.user)
                 getPosts(response.data.user.id)
             }else{
@@ -60,13 +64,16 @@ function BlogPage_Cons_Event(props) {
     const renderContest = (contest) => {
         return (
             <div className="prod-works">
-                <div className="works-wrapper">
-                    <img className="works-thumb" src={`http://localhost:8000${contest.image}`}/>
-                    <div className="works-content">
+                <a href={`/contest/${contest.id}`}>
+                <div className="contest-item-wrapper">
+                    <div className="contest-item-title">
                         <p>{contest.title}</p>
-                        <p>{contest.description}</p>
+                    </div>
+                    <div className="contest-item-img">
+                        <img  src={`http://localhost:8000${contest.image}`}/>
                     </div>
                 </div>
+                </a>
             </div>
             )
     }
@@ -98,13 +105,14 @@ function BlogPage_Cons_Event(props) {
     const onEventDescChange = (e) =>{
         setEventDesc(e.currentTarget.value)
     }
-
     const OnHoldEvent= () =>{
+        
         const formData = new FormData();
         formData.append('user', props.user.userData._id)
         formData.append('title', EventTitle)
         formData.append('description', EventDesc)
         formData.append('image', EventImg)
+        formData.append('contest_expire', moment.utc(moment().format('YYYY-MM-DD') + "T11:59:59Z").add(RestDay, 'd').format())
 
         axios.post('/api/contest/uploadContest', formData)
         .then(response => {
@@ -120,21 +128,26 @@ function BlogPage_Cons_Event(props) {
         setImgPreview(null)
         setOpenModal(false)
     }
+    const OnSelectRestDay = (e) => {
+        setRestDay(e)
+    }
 
     return (
         <div className="blog-container">
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
+                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
-                <div className="blog-follow">
-                    <Button>follow</Button>
+                <div className="blog-intro">
+                    <h1>Works : {Designer.work}개</h1>
+                    <h1>Likes : {Designer.like}개</h1>
+                    <h1>Views : {Designer.view}개</h1>
                 </div>
                 <div className="blog-section">
                     <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
@@ -170,15 +183,17 @@ function BlogPage_Cons_Event(props) {
                         </Upload>
                         {ImgPreview ? <img style={{width:'50px', height:'50px'}} src={ImgPreview}/>:null}
                         <br/><br/>
+                        <label style={{fontSize:'28px'}}>개최일수</label>
+                        <Select style={{width:'130px'}} defaultValue={7} Value={RestDay} onChange={OnSelectRestDay}>
+                            <Select.Option value={7}>1주일(2$)</Select.Option>
+                            <Select.Option value={14}>2주일(3$)</Select.Option>
+                            <Select.Option value={28}>4주일(4$)</Select.Option>
+                        </Select>
+                        <br/><br/>
                         <Button className="event-modal-btn" danger onClick={OnCloseEvent}>취소</Button>
                         <Button style={{color:'powderBlue', borderColor:'powderBlue'}} className="event-modal-btn" onClick={OnHoldEvent}>개최</Button>
                     </div>
                 </div>
-            </div>
-            <div className="blog-left-intro">
-                <h1>입찰 진행중 : {}개</h1>
-                <h1>입찰 완료 : {}개</h1>
-                <h1>이벤트 개최중 : {}개</h1>
             </div>
         </div>
     );

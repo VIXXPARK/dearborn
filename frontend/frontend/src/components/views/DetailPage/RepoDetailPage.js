@@ -39,6 +39,7 @@ function RepoDetailPage(props) {
         setAssessValue(value)
     }
 
+<<<<<<< HEAD
     const showBiddingForm = () => {
         var Bid
         
@@ -85,6 +86,8 @@ function RepoDetailPage(props) {
         })
     }
 
+=======
+>>>>>>> 06119b5662f7c47d2ebd260a47be0980f41e680d
     const showHireForm = () => {
         var HireMessage
         confirm({
@@ -122,8 +125,13 @@ function RepoDetailPage(props) {
             <div className="repo-left-container">
                 <div className="repo-content">
                     {Repo.images && Repo.images.map((image, i) => (
+<<<<<<< HEAD
                         <div>
                             <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
+=======
+                        <div className="repo-content-img">
+                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%', height:'100%'}} />
+>>>>>>> 06119b5662f7c47d2ebd260a47be0980f41e680d
                         </div>
                     ))}
                     <br/><br/>
@@ -134,19 +142,21 @@ function RepoDetailPage(props) {
                 <div className="repo-right-detail">
                     <div className="repo-title">
                         <Title>TITLE12312{/*Repo.title*/}</Title>
+                        <div className="repo-profile">
+                            <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={`http://localhost:8000${Writer.profileImage}`}/>
+                            <div className="repo-profile-header">
+                                <a href={`/${Writer.nickname}`}>{Writer.nickname}</a>
+                            </div>
+                        </div>
                     </div>
                     <div className="repo-span">
-                        CONTENTCONTENTCONTENTCONTENTCONTENTCONTENT
-                        {/*Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""*/}
+                        {Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""}
                     </div>
                     <div className="repo-content-detail">
                         {Repo.content}
                     </div>
                     <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
                     <br/>
-                    <div className="repo-right-button" onClick={showBiddingForm}>
-                        입찰
-                    </div>
                     <div className="repo-right-button" onClick={showHireForm}>
                         채용
                     </div>
@@ -159,19 +169,6 @@ function RepoDetailPage(props) {
                         updateAssessValue={updateAssess}/>
                 </div>
                 <br/>
-            </div>
-            <div className="repo-profile">
-                <div className="repo-profile-header">
-                    {Writer.nickname}
-                </div>
-                <div className="repo-profile-content">
-                    {Writer.content}
-                </div>
-                <br/>
-                <div className="repo-profile-button">
-                    <a href={`/${Writer.nickname}`}><Button>블로그로 가기</Button></a>
-                </div>
-
             </div>
             
         </div>

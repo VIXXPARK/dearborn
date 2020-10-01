@@ -37,8 +37,9 @@
 
 
 .list-wrapper {
-    width:95%;
+    width:98%;
     margin: 0 auto;
+    text-align: left;
 }
 
 @media (max-width:729px){
@@ -58,25 +59,14 @@
         margin: 10px;
     }
 }
-
-@media (min-width:800px){
-    .list-item{
-        display: inline-block;
-        width:40vw;
-        height:calc(40vw * 4 / 3);
-        margin: 10px;
-    }
-}
-
 @media (min-width:1000px){
     .list-item{
         display: inline-block;
-        width:24vw;
-        height:calc(24vw * 4 / 3);
+        width:25vw;
+        height:calc(28vw * 4 / 3);
         margin: 10px;
     }
 }
-
 @media (min-width:1300px){
     .list-item{
         display: inline-block;
@@ -86,14 +76,6 @@
     }
 }
 
-@media (min-width:1500px){
-    .list-item{
-        display: inline-block;
-        width:12vw;
-        height:calc(12vw * 4 / 3);
-        margin: 10px;
-    }
-}
 
 .list-item {
     float:left;

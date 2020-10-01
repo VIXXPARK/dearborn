@@ -2,7 +2,7 @@
     .profile-content {
         position: fixed;
         right : 5%;
-        top : 20%;
+        top : 50px;
         background-color: white;
         width:300px;
         font-size: 1rem;
@@ -21,6 +21,8 @@
 .profile-header {
     font-size: 30px;
     margin:20px;
+    border-top: 1px solid gray;
+
 }
 
 .profile-span {

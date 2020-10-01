@@ -138,7 +138,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'EXCEPTION_HANDLER': 'backend.my_exc.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'backend.my_exc.custom_exception_handler',
 }
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400

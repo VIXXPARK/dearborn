@@ -20,6 +20,8 @@ function BlogPage_Prod_Likes(props) {
         axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
+                if(response.data.user.job === 2)
+                    props.history.push(`/${designer}/cons`)
                 setDesigner(response.data.user)
                 getPosts(response.data.user.id)
             }else{
@@ -43,7 +45,7 @@ function BlogPage_Prod_Likes(props) {
     const renderLikes = (repo) => {
         return (
             <div className="works-wrapper">
-                <img className="works-thumb" src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
+                <img className="works-thumb" src={`http://localhost:8000${repo.thumbnail}`}/>
                 <div className="works-content">
                     <p>{repo.title}</p>
                     <p>{repo.content}</p>
@@ -57,15 +59,17 @@ function BlogPage_Prod_Likes(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}/>
+                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
-                <div className="blog-follow">
-                    <Button>follow</Button>
+                <div className="blog-intro">
+                    <h1>Works : {Designer.work}개</h1>
+                    <h1>Likes : {Designer.like}개</h1>
+                    <h1>Views : {Designer.view}개</h1>
                 </div>
                 <div className="blog-section">
                     <a href={`/${designer}`}><button className="blog-tabs-btn">about</button></a>
@@ -78,11 +82,6 @@ function BlogPage_Prod_Likes(props) {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="blog-left-intro">
-                <h1>Works : {}개</h1>
-                <h1>Likes : {}개</h1>
-                <h1>Views : {}개</h1>
             </div>
         </div>
     );

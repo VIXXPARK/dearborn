@@ -20,6 +20,8 @@ function BlogPage_Prod_About(props) {
         .then(response => {
             console.log(response)
             if(response.data.success){
+                if(response.data.user.job === 2)
+                    props.history.push(`/${designer}/cons`)
                 setDesigner(response.data.user)
                 getAbout(response.data.user.id)
             }else{
@@ -44,15 +46,17 @@ function BlogPage_Prod_About(props) {
         <div className="blog-container">
             <div className="blog-right-container">
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
+                    <Avatar style={{display:'inline-block'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
                     </div>
                 </div>
-                <div className="blog-follow">
-                    <Button>follow</Button>
+                <div className="blog-intro">
+                    <h1>Works : {Designer.work}개</h1>
+                    <h1>Likes : {Designer.like}개</h1>
+                    <h1>Views : {Designer.view}개</h1>
                 </div>
                 <div className="blog-section">
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">about</button>
@@ -65,16 +69,11 @@ function BlogPage_Prod_About(props) {
                                 User 님의 대표작품
                             </div>
                             <div className="prod-about-content">
-                                <a href={`/${designer}/${About.id}`}><img src={`http://localhost:8000${About.thumbnail}`}/></a>
+                                {About && <a href={`/${designer}/${About.id}`}><img src={`http://localhost:8000${About.thumbnail}`}/></a>}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="blog-left-intro">
-                <h1>Works : {Designer.work}개</h1>
-                <h1>Likes : {Designer.like}개</h1>
-                <h1>Views : {Designer.view}개</h1>
             </div>
         </div>
     );
