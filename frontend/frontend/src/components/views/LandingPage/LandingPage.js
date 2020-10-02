@@ -31,6 +31,7 @@ function LandingPage(props) {
         axios.post('/api/post/getVotes/?limit=4&offset=0', variables)
         .then(response => {
             if(response.data.success){
+                console.log(response.data.votes)
                 setVotePosts(response.data.votes)
             }
         })

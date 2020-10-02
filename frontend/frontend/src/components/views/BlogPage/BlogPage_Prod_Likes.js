@@ -13,6 +13,8 @@ function BlogPage_Prod_Likes(props) {
     const [Designer, setDesigner] = useState("")
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(4)
+    const [LoadMore, setLoadMore] = useState(true)
+    const [IsBottom, setIsBottom] = useState(false)
 
     const designer = props.match.params.designer
 
@@ -28,13 +30,39 @@ function BlogPage_Prod_Likes(props) {
                 alert('데이터 가져오기 실패')
             }
         })
+        window.addEventListener('scroll', handleScroll)
+        return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
+
+    useEffect(() => {
+        if(IsBottom && LoadMore){
+            getPosts(Designer.id)
+        }
+    }, [IsBottom])
+
+    const handleScroll = () => {
+        const scrollTop= (document.documentElement 
+            && document.documentElement.scrollTop)
+            || document.body.scrollTop
+        const scrollHeight= (document.documentElement 
+            && document.documentElement.scrollHeight)
+            || document.body.scrollHeight;
+        if(scrollTop + window.innerHeight >= scrollHeight){
+            setIsBottom(true)
+        }
+    }
 
     const getPosts = (id) => {
         axios.post(`/api/info/getLikePosts/?limit=${Limit}&offset=${Skip}`, {id : id})
         .then(response => {
             if(response.data.success){
-                setRepos(response.data.repos)
+                if(response.data.repos.length < Limit)
+                    setLoadMore(false)
+                if(Skip !==0){
+                    setRepos([...Repos, ...response.data.repos])
+                }else{
+                    setRepos(response.data.repos)
+                }
                 setSkip(Skip+Limit)
             }else{
                 alert('대표작품 가져오기 실패')

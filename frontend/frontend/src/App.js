@@ -42,7 +42,7 @@ function App(props) {
     
     <Router>
       <Route path={ new RegExp("^(?!.*(/register|/login|/checkEmail|/changePassword|/modify)).*$") } component={NavBar}/>
-      <div style={{minHeight:'calc(100vh - 80px)'}}>
+      <div style={{paddingTop:'66px'}}>
         <Switch>
           <Route exact path='/' component={Auth(LandingPage, null)}/>
           <Route exact path='/login' component={Auth(LoginPage, false)}/>

@@ -1,8 +1,6 @@
 import React from 'react';
 
 import './Sections/NavBar.css'
-import MenCategory from './Sections/MenCategory';
-import WomenCategory from './Sections/WomenCategory';
 import { useSelector } from 'react-redux';
 import Axios from 'axios';
 import {useDispatch} from 'react-redux'
@@ -51,6 +49,7 @@ function NavBar(props) {
                 <div>
                     <div className="header-title"><a href="/"><img className="main-logo" src={Dearborn}/></a></div>
                     <a className="header-a" href="/contest">contest</a>
+                    <a className="header-a" href="/membership">membership</a>
                     <div className="row-log">
                         {user.userData && !user.userData.isAuth ?
                         (<>
@@ -60,10 +59,12 @@ function NavBar(props) {
                         (<>
                         <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
                         <div className="register pull-right">
-                            <Dropdown overlay={menu} placement="bottomLeft" arrow>
-                                <a>{user.userData&& user.userData.nickname ? user.userData.nickname+"님" : null}</a>
-                            </Dropdown>
                             <a href="/upload"><div className="navbar-button">업로드</div></a>
+                        </div>
+                        <div className="nav-bar-profile pull-right">
+                            <Dropdown overlay={menu} placement="bottomLeft" arrow>
+                                <a style={{color:'white'}}>{user.userData && user.userData.nickname ? user.userData.nickname+"님" : null}</a>
+                            </Dropdown>
                         </div>
                         </>)
                         }

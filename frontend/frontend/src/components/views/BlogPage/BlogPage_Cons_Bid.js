@@ -16,6 +16,8 @@ function BlogPage_Cons_Bid(props) {
     const [Designer, setDesigner] = useState("")
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(4)
+    const [LoadMore, setLoadMore] = useState(true)
+    const [IsBottom, setIsBottom] = useState(false)
 
     const designer = props.match.params.designer
 
@@ -31,7 +33,27 @@ function BlogPage_Cons_Bid(props) {
                 alert('데이터 가져오기 실패')
             }
         })
+        window.addEventListener('scroll', handleScroll)
+        return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
+
+    useEffect(() => {
+        if(IsBottom && LoadMore){
+            getPosts()
+        }
+    }, [IsBottom])
+
+    const handleScroll = () => {
+        const scrollTop= (document.documentElement 
+            && document.documentElement.scrollTop)
+            || document.body.scrollTop
+        const scrollHeight= (document.documentElement 
+            && document.documentElement.scrollHeight)
+            || document.body.scrollHeight;
+        if(scrollTop + window.innerHeight >= scrollHeight){
+            setIsBottom(true)
+        }
+    }
 
     const getPosts = (id) => {
         const variables = {
@@ -40,7 +62,14 @@ function BlogPage_Cons_Bid(props) {
         axios.post(`/api/info/getBid/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
             if(response.data.success){
-                setPosts(response.data.posts)
+                if(response.data.posts.length < Limit)
+                    setLoadMore(false)
+                if(Skip !==0){
+                    setPosts([...Posts, ...response.data.posts])
+                }else{
+                    setPosts(response.data.posts)
+                }
+                
                 setSkip(Skip + Limit)
             }
         })
