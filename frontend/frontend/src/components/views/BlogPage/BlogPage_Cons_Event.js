@@ -17,6 +17,8 @@ function BlogPage_Cons_Event(props) {
     const [EventImg, setEventImg] = useState("")
     const [ImgPreview, setImgPreview] = useState("")
     const [RestDay, setRestDay] = useState(7)
+    const [LoadMore, setLoadMore] = useState(true)
+    const [IsBottom, setIsBottom] = useState(false)
 
     const [OpenModal, setOpenModal] = useState(false)
     const [EventTitle, setEventTitle] = useState("")
@@ -39,13 +41,39 @@ function BlogPage_Cons_Event(props) {
                 alert('데이터 가져오기 실패')
             }
         })
+        window.addEventListener('scroll', handleScroll)
+        return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
+
+    useEffect(() => {
+        if(IsBottom && LoadMore){
+            getPosts()
+        }
+    }, [IsBottom])
+
+    const handleScroll = () => {
+        const scrollTop= (document.documentElement 
+            && document.documentElement.scrollTop)
+            || document.body.scrollTop
+        const scrollHeight= (document.documentElement 
+            && document.documentElement.scrollHeight)
+            || document.body.scrollHeight;
+        if(scrollTop + window.innerHeight >= scrollHeight){
+            setIsBottom(true)
+        }
+    }
 
     const getPosts = (id) => {
         axios.post(`/api/info/getContests/?limit=${Limit}&offset=${Skip}`, {user : id})
         .then(response => {
             if(response.data.success){
-                setContests(response.data.contests)
+                if(response.data.contests.length < Limit)
+                    setLoadMore(false)
+                if(Skip !==0){
+                    setContests([...Contests, ...response.data.contests])
+                }else{
+                    setContests(response.data.contests)
+                }
                 setSkip(Skip+Limit)
             }else{
                 alert('대표작품 가져오기 실패')

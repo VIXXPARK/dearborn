@@ -74,6 +74,7 @@ function UploadVotePage(props) {
         })
 
     }
+    console.log(moment.utc(moment().format('YYYY-MM-DD') + "T11:59:59Z").add(parseInt(moment().endOf('week').fromNow()[3])+1, 'd').format())
     const handleRemove = (file) =>{
         const index = FileList.indexOf(file)
         const newFileList = FileList.slice()
