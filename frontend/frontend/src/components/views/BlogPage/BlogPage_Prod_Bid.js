@@ -38,11 +38,8 @@ function BlogPage_Prod_Bid(props) {
         axios.post(`/api/info/getBid/?limit=${Limit}&offset=${Skip}`,variables)
         .then(response => {
             if(response.data.success){
-<<<<<<< HEAD
-=======
                 if(response.data.user.job === 2)
                     props.history.push(`/${designer}/cons`)
->>>>>>> 06119b5662f7c47d2ebd260a47be0980f41e680d
                 setPosts(response.data.posts)
                 setSkip(Skip+Limit)
             }else{
@@ -95,14 +92,6 @@ function BlogPage_Prod_Bid(props) {
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
-            <div className="blog-left-intro">
-                <h1>Works : {Designer.work}개</h1>
-                <h1>Likes : {Designer.like}개</h1>
-                <h1>Views : {Designer.view}개</h1>
-            </div>
-=======
->>>>>>> 06119b5662f7c47d2ebd260a47be0980f41e680d
         </div>
     );
 }

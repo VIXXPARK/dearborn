@@ -19,7 +19,7 @@ class Post(models.Model):
    sell = models.IntegerField(default=0)
    category = models.IntegerField(default=None)
    expire_dt = models.DateTimeField()
-   
+   is_repo = models.BooleanField(default=False)
 
    def get_id(self):
       return self.id

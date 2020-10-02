@@ -1,6 +1,6 @@
 from .views import PostViewSet, getProfileView ,upViewSet,getDisLikeView,ReposView
 from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
-from .views import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork,getMyWork
+from .views import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork,getMyWork, voteExpired
 from django.urls import path,include
 from usermanagement.models import User
 from rest_framework.routers import DefaultRouter
@@ -32,3 +32,4 @@ urlpatterns = [
     path('info/setMyWork',mySetWork.as_view()),
     path('info/getAbout',getMyWork.as_view()),
 ]
+voteExpired(repeat=5,repeat_until=None)

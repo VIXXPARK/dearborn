@@ -39,55 +39,6 @@ function RepoDetailPage(props) {
         setAssessValue(value)
     }
 
-<<<<<<< HEAD
-    const showBiddingForm = () => {
-        var Bid
-        
-        confirm({
-            width:800,
-            icon: null,
-            content: 
-            <div className="bid-container">
-                <div className="bid-title">현재 입찰가 : &&원</div>
-                <div className="bid-content"><p>희망가격 : </p><Input style={{width:'70px'}} value={Bid} onChange={(e)=>{Bid = e.currentTarget.value}}/> ,000원</div>
-            </div>,
-            onOk(){
-                console.log(Bid)
-                if(!Bid){
-                    return alert('가격을 적어주세요')
-                }else{
-                    confirm({
-                        icon:null,
-                        content:
-                            <div>정말로 입찰하시겠습니까?</div>,
-                            onOk(){
-                                console.log(Bid)
-                                const variables = {
-                                    user : props.user.userData._id,
-                                    post : Repo.id,
-                                    price : Bid,
-                                }
-                                axios.post('/api/bid/setBid', variables, config)
-                                .then(response => {
-                                    if(response.data.success){
-                                        alert('성공')
-                                    }else{
-                                        alert('실패')
-                                    }
-                                })
-                                Modal.destroyAll()
-                            }
-                    })
-                }
-            },
-            onCancel(){
-
-            }
-        })
-    }
-
-=======
->>>>>>> 06119b5662f7c47d2ebd260a47be0980f41e680d
     const showHireForm = () => {
         var HireMessage
         confirm({
@@ -125,13 +76,8 @@ function RepoDetailPage(props) {
             <div className="repo-left-container">
                 <div className="repo-content">
                     {Repo.images && Repo.images.map((image, i) => (
-<<<<<<< HEAD
-                        <div>
-                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
-=======
                         <div className="repo-content-img">
                             <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%', height:'100%'}} />
->>>>>>> 06119b5662f7c47d2ebd260a47be0980f41e680d
                         </div>
                     ))}
                     <br/><br/>
