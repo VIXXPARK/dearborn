@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 
 ]
 
@@ -130,6 +131,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = 'whitenoise.storage.CompressedStaticFilesStorage
+
+출처: https://wangkisa.tistory.com/48 [오늘의 기록]'
 
 AUTH_USER_MODEL = 'usermanagement.User'
 
