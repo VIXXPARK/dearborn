@@ -132,7 +132,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = 'whitenoise.storage.CompressedStaticFilesStorage
+STATIC_ROOT = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 출처: https://wangkisa.tistory.com/48 [오늘의 기록]'
 
