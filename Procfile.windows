@@ -1,4 +1,1 @@
-run : python manage.py runserver
-process : python manage.py process_tasks
-migrate : python manage.py migrate
-makemigrations : python manage.py makemigrations
+web: gunicorn dearborn.backend.wsgi --log-file -
