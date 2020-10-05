@@ -27,4 +27,5 @@ urlpatterns = [
     path('api/', include('bid.urls')),
     path('api/',include('messanger.urls')),
     path('api/',include('contest.urls')),
+    path('api/',include('assess.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

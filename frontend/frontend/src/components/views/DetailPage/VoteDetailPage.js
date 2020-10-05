@@ -17,6 +17,8 @@ function VoteDetailPage(props) {
     const params = new URLSearchParams(props.location.search)
 
     useEffect(() => {
+        if(props.user.userData && !props.user.userData.isAuth)
+            props.history.push('/login')
         if((params.get('designer') ||params.get('postId')) == null)
             return
         document.body.style.cssText = 'overflow-y : hidden;'

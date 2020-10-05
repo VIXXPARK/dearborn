@@ -47,7 +47,7 @@ function NavBar(props) {
         <header id="header">
             <div className="container">
                 <div>
-                    <div className="header-title"><a href="/"><img className="main-logo" src={Dearborn}/></a></div>
+                    <div className="header-title"><a href="/"><img style={{marginTop:'11px'}} className="main-logo" src={Dearborn}/></a></div>
                     <a className="header-a" href="/contest">contest</a>
                     <a className="header-a" href="/membership">membership</a>
                     <div className="row-log">

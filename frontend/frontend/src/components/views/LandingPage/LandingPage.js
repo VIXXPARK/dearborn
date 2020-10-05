@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
 import RankBox from './Sections/RankBox'
-import './Sections/Vote.css'
-import './Sections/Repo.css'
+import './Sections/LandingPage.css'
 import { Row, Card, Avatar } from 'antd';
 import {Link} from 'react-router-dom'
+import Sketch from '../../assets/Sketch.png'
 
 import RepoLogo from '../../assets/RepoLogo.png'
 import VoteLogo from '../../assets/VoteLogo.png'
@@ -89,6 +89,15 @@ function LandingPage(props) {
     return (
         <>
         <div style={{width:'95%', margin:'3rem auto'}}>
+            <div className="main-banner-container">
+                <div className="main-banner-sketch">
+                    <img style={{width:'90%', height:'90%',margin:'5%'}} src={Sketch}/>
+                </div>
+                <div className="main-banner-text">
+                    당신의 패션 디자인을 팔아보세요.<br/>
+                    아마추어 디자이너들을 환영합니다!
+                </div>
+            </div>
             <div className="rank">
                 <label style={{fontSize:'30px', textAlign:'left'}}>지난 주 랭킹</label>
                 <RankBox />

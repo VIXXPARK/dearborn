@@ -42,7 +42,7 @@ function App(props) {
     
     <Router>
       <Route path={ new RegExp("^(?!.*(/register|/login|/checkEmail|/changePassword|/modify)).*$") } component={NavBar}/>
-      <div style={{paddingTop:'66px'}}>
+      <div style={{minHeight:'calc(100vh - 66px)'}}>
         <Switch>
           <Route exact path='/' component={Auth(LandingPage, null)}/>
           <Route exact path='/login' component={Auth(LoginPage, false)}/>
@@ -56,7 +56,7 @@ function App(props) {
           <Route exact path='/repo' component={Auth(RepoListPage, null)}/>
           <Route exact path='/contest' component={Auth(ContestListPage, null)}/>
           <Route exact path='/contest/manage' component={Auth(ContestManagePage, null)}/>
-          <Route exact path='/contest/:contestId' component={Auth(ContestDetailPage, null)}/>
+          <Route exact path='/contest/:contestId' component={Auth(ContestDetailPage, true)}/>
           <Route exact path='/message' component={Auth(MessagePage, true)}/>
           <Route exact path='/:designer' component={Auth(BlogPage_Prod_About, null)}/>
           <Route exact path='/:designer/works' component={Auth(BlogPage_Prod_Works, null)}/>
@@ -65,7 +65,7 @@ function App(props) {
           <Route exact path='/:designer/cons' component={Auth(BlogPage_Cons_Bid, null)}/>
           <Route exact path='/:designer/cons/likes' component={Auth(BlogPage_Cons_Likes, null)}/>
           <Route exact path='/:designer/cons/event' component={Auth(BlogPage_Cons_Event, null)}/>
-          <Route exact path='/:designer/:postId' component={Auth(RepoDetailPage, null)}/>
+          <Route exact path='/:designer/:postId' component={Auth(RepoDetailPage, true)}/>
           <Route exact path='/changePassword/1' component={Auth(ChangePasswordPage, null)}/>
           <Route exact path='/changePassword/2/:uid/:token' component={Auth(ChangePasswordPage2, null)}/>
         </Switch>

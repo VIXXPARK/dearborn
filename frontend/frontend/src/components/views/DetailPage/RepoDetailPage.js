@@ -39,6 +39,23 @@ function RepoDetailPage(props) {
         setAssessValue(value)
     }
 
+    const showPurchaseForm = () => {
+        var purchasePrice
+        confirm({
+            width:800,
+            icon:null,
+            content: 
+            <div className="bid-container">
+                정말로 구매하시겠습니까?
+            </div>,
+            okText: "구매",
+            cancelText: "취소",
+            onOk(){
+                console.log("구매")
+            }
+        })
+    }
+
     const showHireForm = () => {
         var HireMessage
         confirm({
@@ -103,9 +120,17 @@ function RepoDetailPage(props) {
                     </div>
                     <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
                     <br/>
+                    {props.user.userData && props.user.userData.job === 2 &&
+                    <>
+                    <label>원하는 가격 : {10000}원</label>
+                    <div className="repo-right-button" onClick={showPurchaseForm}>
+                        판매
+                    </div>
                     <div className="repo-right-button" onClick={showHireForm}>
                         채용
                     </div>
+                    </>
+                    }
                 </div>
                 <div className="repo-assess">
                     <AssessShow assessValue={AssessValue} postId={postId}/>
