@@ -22,6 +22,23 @@ from rest_framework.status import(
 import json
 from rest_framework.views import APIView
 from .pagination import PostPageNumberPagination
+from background_task import background
+from datetime import datetime, timedelta
+
+
+@background()
+def voteExpired():
+    posts = Post.objects.filter(is_repo=False)
+    for post in posts:
+        
+        # post.is_repo = True
+        # post.save()
+        expired_dt = post.expire_dt
+        now = datetime.now()
+        if(expired_dt - now <= timedelta(0)):
+            post.is_repo = True
+            post.save()
+
 class upVoteView(ListAPIView):
     permission_classes=(permissions.AllowAny,)
     def post(self,request):
@@ -30,7 +47,8 @@ class upVoteView(ListAPIView):
             return Response({'success':False},status=HTTP_400_BAD_REQUEST)
         voted.save()
         return Response({'success':True},status=HTTP_200_OK)
-
+            
+            
 
 class myVoteView(APIView):
     permission_classes=(permissions.AllowAny,)
@@ -48,10 +66,6 @@ class myVoteView(APIView):
         }
         return Response(context,status=HTTP_200_OK)
         
-
-
-
-
 class getLikeDetail(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self,request):
@@ -419,14 +433,14 @@ class PostView(ListAPIView):
         try:
             if(filterSerializer.validated_data['sort']==0):
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(is_repo=False).order_by('-updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('updated_dt'))
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)
@@ -472,14 +486,14 @@ class ReposView(ListAPIView):
         try:
             if(filterSerializer.validated_data['sort']==0):
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('-updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=True).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=True).order_by('updated_dt'))
             postData = []
             for post in data:
                 user = User.object.filter(id=post.user.id)

@@ -28,7 +28,7 @@ class MessageViewSet(ModelViewSet):
         return Response({'success':True})
     
     #use "python manage.py process_tasks"
-    @background(schedule=100)
+    @background(schedule=5)
     def AutoDelete(messageID):
         message = Message.objects.filter(id=messageID)
         message[0].delete()

@@ -49,6 +49,7 @@ function BlogPage_Prod_Bid(props) {
     }
 
     const renderPost = (post) => {
+        console.log(post)
         return (
             <div className="works-wrapper">
                 <div className="bid-wrap">
