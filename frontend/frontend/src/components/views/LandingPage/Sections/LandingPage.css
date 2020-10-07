@@ -264,3 +264,29 @@
         transform: rotate(-7deg);
     }
 }
+
+.rank-container{
+    width:40%;
+    margin:0 auto;
+}
+
+.rank-item{
+    height:60px;
+    margin:5px;
+    border-bottom: 1px solid gray;
+}
+
+.rank-item:last-child{
+    border-bottom: 0;
+}
+
+.rank-img{
+    float:left;
+    width:40px;
+    height:40px;
+}
+
+.rank-content {
+    font-size: 20px;
+    line-height: 40px;
+}

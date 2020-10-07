@@ -87,7 +87,15 @@ function RepoDetailPage(props) {
             }
         })
     }
-    console.log(Writer)
+
+    const onModifyClick = () => {
+
+    }
+
+    const onDeleteClick = () => {
+        
+    }
+
     return (
         <div className="repo-container">
             <div className="repo-left-container">
@@ -104,6 +112,11 @@ function RepoDetailPage(props) {
             <div className="repo-right-container">
                 <div className="repo-right-detail">
                     <div className="repo-title">
+                        {props.user.userData && props.user.userData._id === Writer.id &&
+                        <div className="repo-title-btn-wrapper">
+                            <button className="repo-detail-btn" onClick={onModifyClick}>수정</button>
+                            <button className="repo-detail-btn" onClick={onDeleteClick}>삭제</button>
+                        </div>}
                         <Title>TITLE12312{/*Repo.title*/}</Title>
                         <div className="repo-profile">
                             <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={`http://localhost:8000${Writer.profileImage}`}/>

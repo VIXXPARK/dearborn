@@ -23,6 +23,8 @@ function BlogPage_Prod_Bid(props) {
         axios.post('/api/info/getProfile', {nickname:designer})
         .then(response => {
             if(response.data.success){
+                if(response.data.user.job === 2)
+                    props.history.push(`/${designer}/cons`)
                 setDesigner(response.data.user)
                 getPosts(response.data.user.id)
             }else{
@@ -38,8 +40,6 @@ function BlogPage_Prod_Bid(props) {
         axios.post(`/api/info/getBid/?limit=${Limit}&offset=${Skip}`,variables)
         .then(response => {
             if(response.data.success){
-                if(response.data.user.job === 2)
-                    props.history.push(`/${designer}/cons`)
                 setPosts(response.data.posts)
                 setSkip(Skip+Limit)
             }else{

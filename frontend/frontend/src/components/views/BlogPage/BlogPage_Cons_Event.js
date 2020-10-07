@@ -14,6 +14,7 @@ function BlogPage_Cons_Event(props) {
 
     const [Contests, setContests] = useState([])
     const [Designer, setDesigner] = useState("")
+    const [Banner, setBanner] = useState("")
     const [EventImg, setEventImg] = useState("")
     const [ImgPreview, setImgPreview] = useState("")
     const [RestDay, setRestDay] = useState(7)
@@ -114,6 +115,10 @@ function BlogPage_Cons_Event(props) {
         setImgPreview(file.preview)
     }
 
+    const EventBannerChange = ({file}) => {
+        setBanner(file.originFileObj)
+    }
+
     const OnOpenEvent = () => {
         setOpenModal(true)
     }
@@ -139,6 +144,7 @@ function BlogPage_Cons_Event(props) {
         formData.append('user', props.user.userData._id)
         formData.append('title', EventTitle)
         formData.append('description', EventDesc)
+        formData.append('banner', Banner)
         formData.append('image', EventImg)
         formData.append('contest_expire', moment.utc(moment().format('YYYY-MM-DD') + "T11:59:59Z").add(RestDay, 'd').format())
 
@@ -200,6 +206,17 @@ function BlogPage_Cons_Event(props) {
                         <label style={{fontSize:'25px'}}>설명</label>
                         <Input.TextArea rows={10} value={EventDesc} onChange={onEventDescChange}/>
                         <br/><br/><br/>
+                        <label style={{fontSize:'23px'}}>배너</label>
+                        <br/>
+                        <Upload
+                            multiple={false}
+                            onChange={EventBannerChange}
+                            showUploadList={false}
+                        >
+                            <Button icon={<UploadOutlined/>}>Upload</Button>
+                        </Upload>
+                        {Banner && <p>{Banner.name}</p>}
+                        <br/><br/>
                         <label style={{fontSize:'23px'}}>포스터</label>
                         <br/>
                         <Upload

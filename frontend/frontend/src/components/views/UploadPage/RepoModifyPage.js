@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {Form, Input, Upload, Button, TreeSelect, Radio} from 'antd'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios'
-import Modal from 'antd/lib/modal/Modal';
-import {getCookieValue} from '../../utils/Cookie'
-import styles from './customstyle.css'
 import moment from 'moment'
+import {PlusOutlined} from '@ant-design/icons'
 import './UploadVotePage.css'
 
 
 const {TreeNode} = TreeSelect
 
-function UploadVotePage(props) {
+function RepoModifyPage(props) {
 
     //upload
     const [FileList, setFileList] = useState([])
@@ -22,6 +19,14 @@ function UploadVotePage(props) {
     const [Category, setCategory] = useState(undefined)
     const [Sell, setSell] = useState(undefined)
     
+    useEffect(() => {
+        axios.post('/api/post/getRepo', )
+        .then(response => {
+            if(response.data.success){
+                
+            }
+        })
+    }, [])
     //other
 
     const OnCategoryClick = (value) =>{
@@ -36,7 +41,6 @@ function UploadVotePage(props) {
 
 
     const getBase64 = (file) => {
-        console.log(1)
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.readAsDataURL(file);
@@ -290,4 +294,4 @@ function UploadVotePage(props) {
     );
 }
 
-export default UploadVotePage;
+export default RepoModifyPage;

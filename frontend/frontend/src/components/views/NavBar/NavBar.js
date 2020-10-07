@@ -58,9 +58,9 @@ function NavBar(props) {
                         </>) :
                         (<>
                         <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
-                        <div className="register pull-right">
+                        {user.userData && user.userData.job ===1 &&<div className="register pull-right">
                             <a href="/upload"><div className="navbar-button">업로드</div></a>
-                        </div>
+                        </div>}
                         <div className="nav-bar-profile pull-right">
                             <Dropdown overlay={menu} placement="bottomLeft" arrow>
                                 <a style={{color:'white'}}>{user.userData && user.userData.nickname ? user.userData.nickname+"님" : null}</a>

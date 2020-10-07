@@ -7,6 +7,5 @@ def custom_exception_handler(exc, context):
         response = Response({'isAuth':False})
     else:
         response = views.exception_handler(exc, context)
-    response = views.exception_handler(exc, context)
 
     return response

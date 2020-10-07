@@ -92,6 +92,16 @@
     border-radius: 20px;
     cursor: pointer;
 }
+.repo-title-btn-wrapper{
+    text-align: right;
+}
+
+.repo-detail-btn{
+    width: 40px;
+    height:20px;
+    font-size: 10px;
+    margin-left:20px;
+}
 
 .bid-container {
     text-align: center;

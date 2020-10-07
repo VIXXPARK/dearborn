@@ -24,21 +24,42 @@ from rest_framework.views import APIView
 from .pagination import PostPageNumberPagination
 from background_task import background
 from datetime import datetime, timedelta
-
+from pytz import timezone
+from usermanagement.models import User
+from bid.models import BidInfo
+from messanger.models import Message
+from messanger.serializers import SaveMessageSerializer
 
 @background()
 def voteExpired():
     posts = Post.objects.filter(is_repo=False)
     for post in posts:
-        
-        # post.is_repo = True
-        # post.save()
+
+        KST = timezone('Asia/Seoul')
+        now = datetime.now(tz=KST)
         expired_dt = post.expire_dt
-        now = datetime.now()
-        if(expired_dt - now <= timedelta(0)):
+
+        if expired_dt <= now:
+            user = User.object.get(nickname='admin', is_superuser=True)
+
+            bid = BidInfo.objects.filter(post=post).order_by('-price')
+            try:
+                price = bid[0].price
+                message = price + "가격으로 판매됐읍니다\n Vote -> Repo로 넘어갑니다."
+            except:
+                message = "판매로 넘어갑니다\n Vote -> Repo로 넘어갑니다."
+            data = {
+                'userFrom' : user.id,
+                'userTo' : post.user.id,
+                'message' : message,
+            }
+            messageSerializer = SaveMessageSerializer(data = data)
+            if not messageSerializer.is_valid():
+                raise messageSerializer.errors
+
+            messageSerializer.create(messageSerializer.validated_data)
             post.is_repo = True
             post.save()
-
 class upVoteView(ListAPIView):
     permission_classes=(permissions.AllowAny,)
     def post(self,request):
@@ -329,7 +350,7 @@ class getWorkView(ListAPIView):
             return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
             
         userdata = User.object.get(id=userSerializer.validated_data['id'])
-        postdata = self.paginate_queryset(Post.objects.filter(user=userdata).order_by('-updated_dt'))
+        postdata = self.paginate_queryset(Post.objects.filter(user=userdata, is_repo=True).order_by('-updated_dt'))
         
         postJson = []
         

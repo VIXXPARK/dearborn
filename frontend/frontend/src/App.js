@@ -17,6 +17,7 @@ import VoteListPage from './components/views/ListPage/VoteListPage'
 import VoteDetailPage from './components/views/DetailPage/VoteDetailPage'
 import RepoListPage from './components/views/ListPage/RepoListPage'
 import RepoDetailPage from './components/views/DetailPage/RepoDetailPage'
+import RepoModifyPage from './components/views/UploadPage/RepoModifyPage'
 import UploadVotePage from './components/views/UploadPage/UploadVotePage'
 import CheckEmailPage from './components/views/LoginPage/CheckEmailPage'
 import CheckEmailFailPage from './components/views/LoginPage/CheckEmailFailPage'
@@ -66,6 +67,7 @@ function App(props) {
           <Route exact path='/:designer/cons/likes' component={Auth(BlogPage_Cons_Likes, null)}/>
           <Route exact path='/:designer/cons/event' component={Auth(BlogPage_Cons_Event, null)}/>
           <Route exact path='/:designer/:postId' component={Auth(RepoDetailPage, true)}/>
+          <Route exact path='/:designer/:postId/modify' component={Auth(RepoModifyPage, true)}/>
           <Route exact path='/changePassword/1' component={Auth(ChangePasswordPage, null)}/>
           <Route exact path='/changePassword/2/:uid/:token' component={Auth(ChangePasswordPage2, null)}/>
         </Switch>
