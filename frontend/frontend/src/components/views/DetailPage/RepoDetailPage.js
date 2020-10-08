@@ -39,6 +39,23 @@ function RepoDetailPage(props) {
         setAssessValue(value)
     }
 
+    const showPurchaseForm = () => {
+        var purchasePrice
+        confirm({
+            width:800,
+            icon:null,
+            content: 
+            <div className="bid-container">
+                정말로 구매하시겠습니까?
+            </div>,
+            okText: "구매",
+            cancelText: "취소",
+            onOk(){
+                console.log("구매")
+            }
+        })
+    }
+
     const showHireForm = () => {
         var HireMessage
         confirm({
@@ -70,7 +87,15 @@ function RepoDetailPage(props) {
             }
         })
     }
-    console.log(Writer)
+
+    const onModifyClick = () => {
+
+    }
+
+    const onDeleteClick = () => {
+        
+    }
+
     return (
         <div className="repo-container">
             <div className="repo-left-container">
@@ -87,6 +112,11 @@ function RepoDetailPage(props) {
             <div className="repo-right-container">
                 <div className="repo-right-detail">
                     <div className="repo-title">
+                        {props.user.userData && props.user.userData._id === Writer.id &&
+                        <div className="repo-title-btn-wrapper">
+                            <button className="repo-detail-btn" onClick={onModifyClick}>수정</button>
+                            <button className="repo-detail-btn" onClick={onDeleteClick}>삭제</button>
+                        </div>}
                         <Title>TITLE12312{/*Repo.title*/}</Title>
                         <div className="repo-profile">
                             <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={`http://localhost:8000${Writer.profileImage}`}/>
@@ -103,9 +133,17 @@ function RepoDetailPage(props) {
                     </div>
                     <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
                     <br/>
+                    {props.user.userData && props.user.userData.job === 2 &&
+                    <>
+                    <label>원하는 가격 : {10000}원</label>
+                    <div className="repo-right-button" onClick={showPurchaseForm}>
+                        판매
+                    </div>
                     <div className="repo-right-button" onClick={showHireForm}>
                         채용
                     </div>
+                    </>
+                    }
                 </div>
                 <div className="repo-assess">
                     <AssessShow assessValue={AssessValue} postId={postId}/>

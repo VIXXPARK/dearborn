@@ -32,4 +32,4 @@ urlpatterns = [
     path('info/setMyWork',mySetWork.as_view()),
     path('info/getAbout',getMyWork.as_view()),
 ]
-voteExpired(repeat=5,repeat_until=None)
+voteExpired(repeat=100000,repeat_until=None)

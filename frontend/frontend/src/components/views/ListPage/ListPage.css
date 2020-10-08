@@ -122,7 +122,7 @@
 }
 
 .event-item{
-    margin:0 auto;
+    display: inline-block;
 }
 
 .event-item-content{

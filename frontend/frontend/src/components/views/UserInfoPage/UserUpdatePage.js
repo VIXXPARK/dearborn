@@ -89,20 +89,8 @@ function UserUpdatePage(props) {
                 <Title level={2}><a href="/">DEarborn</a></Title>
                 <section style={{backgroundColor:'white', padding:'25px', borderRadius:'7px'}}>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                <label>직종 : </label>
-                <Controller
-                    as={
-                        <Select style={{width:120}} defaultValue={Job}>
-                            <Option value={'1'}>무관</Option>
-                            <Option value={'2'}>학생</Option>
-                            <Option value={'3'}>디자이너</Option>
-                        </Select>
-                    }
-                    name="job"
-                    control={control}
-                    defaultValue={Job}
-                />
-                <br/><br/>
+                {Job === 1 &&
+                <>
                 <label>자신 있는 분야 : </label><br/><br/>
                 <Checkbox.Group
                     onChange={clickMajor}
@@ -115,6 +103,7 @@ function UserUpdatePage(props) {
                     <Checkbox value={'5'}>신발</Checkbox>
                     <Checkbox value={'6'}>악세서리</Checkbox>
                 </Checkbox.Group>
+                </>}
                 <br/><br />당신의 프로필을 업로드하세요!<br/><br/>
                 <Upload
                     name='file'

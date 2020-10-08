@@ -47,7 +47,7 @@ function NavBar(props) {
         <header id="header">
             <div className="container">
                 <div>
-                    <div className="header-title"><a href="/"><img className="main-logo" src={Dearborn}/></a></div>
+                    <div className="header-title"><a href="/"><img style={{marginTop:'11px'}} className="main-logo" src={Dearborn}/></a></div>
                     <a className="header-a" href="/contest">contest</a>
                     <a className="header-a" href="/membership">membership</a>
                     <div className="row-log">
@@ -58,9 +58,9 @@ function NavBar(props) {
                         </>) :
                         (<>
                         <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
-                        <div className="register pull-right">
+                        {user.userData && user.userData.job ===1 &&<div className="register pull-right">
                             <a href="/upload"><div className="navbar-button">업로드</div></a>
-                        </div>
+                        </div>}
                         <div className="nav-bar-profile pull-right">
                             <Dropdown overlay={menu} placement="bottomLeft" arrow>
                                 <a style={{color:'white'}}>{user.userData && user.userData.nickname ? user.userData.nickname+"님" : null}</a>

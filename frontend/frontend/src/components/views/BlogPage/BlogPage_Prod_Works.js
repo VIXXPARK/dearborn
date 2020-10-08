@@ -89,7 +89,9 @@ function BlogPage_Prod_Works(props) {
         }
         return (
             <div className="works-wrapper">
+                <a href={`/${designer}/${repo.id}`}>
                 <div className="works-thumb"><img style={{width:'100%', height:'100%'}} src={`http://localhost:8000${repo.thumbnail}`}/></div>
+                </a>
                 <div className="works-content">
                     <p>{repo.title}</p>
                     <Button onClick={onMyWorkPick}>대표작품 지정</Button>

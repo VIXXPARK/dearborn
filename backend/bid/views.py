@@ -44,18 +44,22 @@ def GetBid(request):
         except:
             return Response({'success' : False}, HTTP_400_BAD_REQUEST)
         job = user.job
-        
+
         if job == 1:
-            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,sell=1), request)
+            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,sell=1, is_repo=0), request)
             sellPost = []
             for item in postData:
                 if item.sell == 1:
                     bid = BidInfo.objects.filter(post = item.id).order_by('-price')
+                    try:
+                        price = bid[0].price
+                    except:
+                        price = 0
                     post = {
                         'thumbnail' : item.thumbnail.url,
                         'id' : item.id,
                         'title' : item.title,
-                        'price' : bid[0].price,
+                        'price' : price,
                     }
                     sellPost.append(post)
             context = {
