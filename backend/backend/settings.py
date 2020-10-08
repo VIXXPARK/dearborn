@@ -14,7 +14,7 @@ import dj_database_url
 import django_heroku
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG',True))
 DEBUG = False
 
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(REACT_DIR,'frontend/frontend/public')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
