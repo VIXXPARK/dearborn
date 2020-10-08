@@ -1,11 +1,11 @@
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dearborn',
-        'USER': 'jinminsu200703',
-        'PASSWORD': 'H0@6340@8740$801',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME':'dearborn',
+        'USER': 'dearborn',
+        'PASSWORD': '0000',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': ''
     }
 }
 
