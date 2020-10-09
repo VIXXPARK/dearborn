@@ -1,7 +1,7 @@
 *.pyc
 /venv
 
-backend/**/migrations
+# backend/**/migrations
 backend/**/__pychache__
 # backend/backend/my_settings.py
 backend/media
