@@ -14,7 +14,7 @@ import dj_database_url
 import django_heroku
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG',True))
 DEBUG = False
 
@@ -110,10 +110,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+
+STATIC_ROOT = os.path.join(REACT_DIR,'build''static')
 
 # STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR,'static'),
+#     os.path.join(REACT_DIR,'build''static'),
 # )
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
