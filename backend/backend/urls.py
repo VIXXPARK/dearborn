@@ -1,5 +1,4 @@
 """backend URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
 Examples:
@@ -14,10 +13,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include,re_path
+from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
-# from .views import FrontendAppView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +26,4 @@ urlpatterns = [
     path('api/', include('bid.urls')),
     path('api/',include('messanger.urls')),
     path('api/',include('contest.urls')),
-    path('api/',include('assess.urls')),
-    # re_path(r'^', FrontendAppView.as_view()),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
