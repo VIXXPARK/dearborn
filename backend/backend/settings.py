@@ -16,7 +16,7 @@ import django_heroku
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG',True))
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','.herokuapp.com']
 
@@ -149,16 +149,16 @@ EMAIL_HOST_PASSWORD = my_settings.EMAIL['EMAIL_HOST_PASSWORD']
 SERVER_EMAIL = my_settings.EMAIL['SERVER_EMAIL']
 
 SECRET_KEY = my_settings.SECRET_KEY
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dearborn',
-        'USER': 'jinminsu200703',
-        'PASSWORD': 'H0@6340@8740$801',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dearborn',
+#         'USER': 'jinminsu200703',
+#         'PASSWORD': 'H0@6340@8740$801',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 
 db_from_env = dj_database_url.config(conn_max_age=500)
