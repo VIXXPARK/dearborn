@@ -63,7 +63,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(REACT_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -112,7 +112,7 @@ STATIC_URL = '/static/'
 
 # STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
-STATIC_ROOT = os.path.join(REACT_DIR,'build''static')
+STATIC_ROOT = os.path.join(REACT_DIR,'build','static')
 
 # STATICFILES_DIRS = (
 #     os.path.join(REACT_DIR,'build''static'),
