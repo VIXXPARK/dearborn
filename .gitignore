@@ -2,9 +2,9 @@
 /venv
 
 # backend/**/migrations
-backend/**/__pychache__
+# backend/**/__pychache__
 # backend/backend/my_settings.py
-backend/media
+# backend/media
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
