@@ -114,9 +114,10 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(REACT_DIR,'build','static')
 
-# STATICFILES_DIRS = (
-#     os.path.join(REACT_DIR,'build''static'),
-# )
+STATICFILES_DIRS = (
+    os.path.join(REACT_DIR,'build''static'),
+    os.path.join(REACT_DIR,'build')
+)
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
