@@ -26,5 +26,5 @@ urlpatterns = [
     path('api/', include('bid.urls')),
     path('api/',include('messanger.urls')),
     path('api/',include('contest.urls')),
-    re_path(r'^',FrontendAppView.as_view()),
+    re_path('^(.*)$',FrontendAppView.as_view()),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
