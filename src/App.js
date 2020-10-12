@@ -41,7 +41,7 @@ function App(props) {
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
     
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Route path={ new RegExp("^(?!.*(/register|/login|/checkEmail|/changePassword|/modify)).*$") } component={NavBar}/>
       <div style={{minHeight:'calc(100vh - 66px)'}}>
         <Switch>
