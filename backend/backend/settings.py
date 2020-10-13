@@ -142,7 +142,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-DATABASES = my_settings.DATABASES
+# DATABASES = my_settings.DATABASES
 
 EMAIL_BACKEND = my_settings.EMAIL['EMAIL_BACKEND']
 EMAIL_USE_TLS = my_settings.EMAIL['EMAIL_USE_TLS']
@@ -153,16 +153,16 @@ EMAIL_HOST_PASSWORD = my_settings.EMAIL['EMAIL_HOST_PASSWORD']
 SERVER_EMAIL = my_settings.EMAIL['SERVER_EMAIL']
 
 SECRET_KEY = my_settings.SECRET_KEY
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'dearborn',
-#         'USER': 'jinminsu200703',
-#         'PASSWORD': 'H0@6340@8740$801',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dearborn',
+        'USER': 'jinminsu200703',
+        'PASSWORD': 'H0@6340@8740$801',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 
 # db_from_env = dj_database_url.config(conn_max_age=500)
