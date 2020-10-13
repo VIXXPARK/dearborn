@@ -10,15 +10,15 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import datetime
 from backend import my_settings
-import dj_database_url
-import django_heroku
+# import dj_database_url
+# import django_heroku
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG',True))
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','.herokuapp.com']
+# ALLOWED_HOSTS = ['127.0.0.1','.herokuapp.com']
 
 
 INSTALLED_APPS = [
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(REACT_DIR, 'build')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,13 +114,13 @@ STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 # STATIC_ROOT = os.path.join(REACT_DIR,'build','static')
 
-STATICFILES_DIRS = (
-    # os.path.join(REACT_DIR,'build','static'),
-    os.path.join(REACT_DIR,'build'),
-    # os.path.join(REACT_DIR,'build','static','css'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(REACT_DIR,'build','static'),
+#     # os.path.join(REACT_DIR,'build'),
+#     # os.path.join(REACT_DIR,'build','static','css'),
+# )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_USER_MODEL = 'usermanagement.User'
 
@@ -165,10 +165,10 @@ SECRET_KEY = my_settings.SECRET_KEY
 # }
 
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','q447m#bi8j30@q(72b2-kxr^ubb241g596&epaazu^6fu95$l8')
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 # heroku start!!!!
