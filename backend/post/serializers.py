@@ -50,6 +50,16 @@ class PostSerializer(serializers.ModelSerializer):
          PostImage.objects.create(post=post, image=image_data)
        
       return post
+   
+   def update(self,instance,validated_data):
+      images = self.context['request'].FILES
+      if images :
+         # post_image_model_instance = [PostImage(post=instance, image=image) for image in images]
+         # PostImage.objects.bulk_create(post_image_model_instance)
+         for image in images.getlist('images'):
+            PostImage.objects.create(post=instance, image=image)
+      return super().update(instance, validated_data)
+     
 
 class PostFilterSerializer(serializers.Serializer):
    ook = serializers.IntegerField()
