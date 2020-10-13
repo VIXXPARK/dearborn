@@ -142,7 +142,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-# DATABASES = my_settings.DATABASES
+DATABASES = my_settings.DATABASES
 
 EMAIL_BACKEND = my_settings.EMAIL['EMAIL_BACKEND']
 EMAIL_USE_TLS = my_settings.EMAIL['EMAIL_USE_TLS']
