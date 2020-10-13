@@ -135,9 +135,6 @@ class contestPostListView(ListAPIView):
         contestdata =getContestIdSerializer(data=request.data)
         if not contestdata.is_valid():
             return Response({'success':False},status=status.HTTP_400_BAD_REQUEST)
-        print("++++++++++++++++++")
-        print(contestdata.data)
-        print("++++++++++++++++++")
         contestPostdata = self.paginate_queryset(ContestPost.objects.filter(contest=contestdata.validated_data['id']).order_by('-updated_dt'))
         postJson = []
         for x in contestPostdata:
@@ -179,3 +176,52 @@ class contestPostDetail(APIView):
             }
             return Response(content,status=status.HTTP_200_OK)
 
+class ContestDetail(APIView):
+
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = (MultiPartParser,FormParser,JSONParser)
+    def post(self,request):
+        contestID = getContestIdSerializer(data=request.data)
+        if not contestID.is_valid():
+            return Response({'success':False,},status = status.HTTP_400_BAD_REQUEST)
+
+        contestdata = Contest.objects.get(id=contestID.validated_data['id'])
+        userdata = User.object.get(id = contestdata.user.id)
+
+        
+        try:
+            profileImage = userdata.profileImage.url,
+        except:
+            profileImage = None,
+
+        try:
+            banner=contestdata.thumbnail.url,
+        except:
+            banner=None,
+        
+        try:
+            image = contestdata.banner.url,
+        except:
+            image=None,
+        user = {
+            'id':userdata.id,
+            'nickname':userdata.nickname,
+            'profileImage': profileImage,
+            'content': userdata.content,
+        }
+
+        detailContest = {
+            'id':contestdata.id,
+            'title':contestdata.title,
+            'content':contestdata.content,
+            'updatedAt' : contestdata.updated_dt,
+            'banner':banner,
+            'image':image,
+        }
+
+        context = {
+            'success' : True,
+            'detailContest' : detailContest,
+            'user' : user,
+        }
+        return Response(context,status=status.HTTP_200_OK)

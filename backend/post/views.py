@@ -573,6 +573,10 @@ class PostDetail(APIView):
         except:
             profileImage = None,
 
+        try:
+            thumbnail=postdata.thumbnail.url,
+        except:
+            thumbnail=None,
         user = {
             'id':userdata.id,
             'nickname':userdata.nickname,
@@ -585,6 +589,7 @@ class PostDetail(APIView):
             'title':postdata.title,
             'content':postdata.content,
             'updatedAt' : postdata.updated_dt,
+            'thumbnail':thumbnail,
             'images':Jpost,
         }
 
