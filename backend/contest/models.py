@@ -9,6 +9,8 @@ class Contest(models.Model):
     updated_dt = models.DateTimeField(auto_now_add=True)
     contest_expire = models.DateTimeField()
     image = models.ImageField(upload_to="event/")
+    banner = models.ImageField(upload_to="banner/",null=True)
+
 
 
 

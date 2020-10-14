@@ -54,7 +54,7 @@ class User(AbstractUser):
     content = models.TextField(max_length=1000)
     username = None
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nickname', 'job', 'major']
+    REQUIRED_FIELDS = ['nickname',]
     objects = MyUserManager
     object = MyUserManager()
 

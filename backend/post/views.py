@@ -558,7 +558,7 @@ class PostDetail(APIView):
 
         postdata = Post.objects.get(id=postID.validated_data['id'])
         userdata = User.object.get(id = postdata.user.id)
-
+        
         Jpost = []
         jpgs = PostImage.objects.filter(post=postID.validated_data['id'])
 
@@ -573,6 +573,10 @@ class PostDetail(APIView):
         except:
             profileImage = None,
 
+        try:
+            thumbnail=postdata.thumbnail.url,
+        except:
+            thumbnail=None,
         user = {
             'id':userdata.id,
             'nickname':userdata.nickname,
@@ -585,7 +589,11 @@ class PostDetail(APIView):
             'title':postdata.title,
             'content':postdata.content,
             'updatedAt' : postdata.updated_dt,
+            'thumbnail':thumbnail,
             'images':Jpost,
+            'sell':postdata.sell,
+            'category':postdata.category,
+            'scope':postdata.scope,
         }
 
         context = {
