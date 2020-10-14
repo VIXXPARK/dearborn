@@ -1,18 +1,4 @@
 
-*.pyc
-/venv
-
-backend/contest/migrations
-backend/comment/migrations
-backend/assess/migrations
-backend/bid/migrations
-backend/post/migrations
-backend/messanger/migrations
-backend/usermanagement/migrations
-backend/**/__pychache__
-backend/backend/my_settings.py
-backend/media
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies

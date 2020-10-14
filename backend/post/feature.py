@@ -66,7 +66,6 @@ def Similarity(postId):
 
     image_array, image_file_name, image_id = GetImageArray(postId)
     vectors = GetFeatureVector(image_array)
-    SaveFeatureVector(vectors, image_file_name)
     
     feature_vectors = glob.glob('feature_vectors/*.npz')
     annoy = AnnoyIndex(dims,'angular')
@@ -84,6 +83,7 @@ def Similarity(postId):
                 'imageId' : image_id[index]
             }
             similarities.append(similarity_set)
+    SaveFeatureVector(vectors, image_file_name)
     return similarities
     
     

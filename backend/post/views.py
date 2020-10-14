@@ -29,7 +29,7 @@ from usermanagement.models import User
 from bid.models import BidInfo
 from messanger.models import Message
 from messanger.serializers import SaveMessageSerializer
-from .feature import Similarity
+from .feature import Similarity,GetFeatureVector,SaveFeatureVector
 
 @background()
 def voteExpired():
@@ -300,8 +300,13 @@ class PostViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         
         response = super().create(request, *args, **kwargs)
+        similarity = Similarity(response.data.postId)
+        context = {
+            'similarity' : similarity,
+            'success' : True,
+        }
         instance = response.data
-        return Response({'success': True})
+        return Response(context,HTTP_201_CREATED)
 
 class getProfileView(ListAPIView):
     queryset = Post.objects.all()
