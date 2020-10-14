@@ -14,7 +14,6 @@ from rest_framework.status import(
     HTTP_502_BAD_GATEWAY,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
-
 from background_task import background
 
 class MessageViewSet(ModelViewSet):

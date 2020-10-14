@@ -42,7 +42,7 @@ class PostSerializer(serializers.ModelSerializer):
    images = PostImageSerializer(many=True, read_only=True)
    class Meta:
       model = Post
-      fields = ('id', 'title','thumbnail', 'content','user','images','category','sell','scope','expire_dt')
+      fields = ('id', 'title','thumbnail', 'content','user','images','category','sell','scope','expire_dt','bidPrice','sellPrice')
    def create(self, validated_data):
       images_data = self.context['request'].FILES
       post = Post.objects.create(**validated_data)
