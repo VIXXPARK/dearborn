@@ -93,16 +93,19 @@ function BlogPage_Cons_Event(props) {
     const renderContest = (contest) => {
         return (
             <div className="prod-works">
-                <a href={`/contest/${contest.id}`}>
                 <div className="contest-item-wrapper">
                     <div className="contest-item-title">
                         <p>{contest.title}</p>
                     </div>
                     <div className="contest-item-img">
-                        <img  src={`http://localhost:8000${contest.image}`}/>
+                        <a href={`/contest/${contest.id}`}>
+                            <img  src={`http://localhost:8000${contest.image}`}/>
+                        </a>
+                        <div className="go-manage" onClick={()=>props.history.push(`/contest/manage/${contest.id}`)}>
+                            공모전 관리
+                        </div>
                     </div>
                 </div>
-                </a>
             </div>
             )
     }
@@ -191,7 +194,7 @@ function BlogPage_Cons_Event(props) {
                         {Contests && Contests.map(contest => renderContest(contest))}
                         {props.user.userData && props.user.userData.nickname === designer && <div className="event-open-btn" onClick={OnOpenEvent}>
                             이벤트 개최
-                        </div> }
+                        </div>}
                     </div>
                 </div>
             </div>

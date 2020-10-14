@@ -19,6 +19,7 @@ import RepoListPage from './components/views/ListPage/RepoListPage'
 import RepoDetailPage from './components/views/DetailPage/RepoDetailPage'
 import RepoModifyPage from './components/views/UploadPage/RepoModifyPage'
 import UploadVotePage from './components/views/UploadPage/UploadVotePage'
+import UploadModifyPage from './components/views/UploadPage/UploadModifyPage'
 import CheckEmailPage from './components/views/LoginPage/CheckEmailPage'
 import CheckEmailFailPage from './components/views/LoginPage/CheckEmailFailPage'
 import BlogPage_Prod_About from './components/views/BlogPage/BlogPage_Prod_About'
@@ -49,6 +50,7 @@ function App(props) {
           <Route exact path='/login' component={Auth(LoginPage, false)}/>
           <Route exact path='/register' component={Auth(RegisterPage, false)}/>
           <Route exact path='/upload' component={Auth(UploadVotePage, true)}/>
+          <Route exact path='/upload/modify/:postId' component={Auth(UploadModifyPage, true)}/>
           <Route exact path='/checkEmail' component={Auth(CheckEmailPage, null)}/>
           <Route exact path='/checkEmail/failed' component={Auth(CheckEmailFailPage, null)}/>
           <Route exact path='/modify' component={Auth(UserInfoMainPage, true)}/>
@@ -56,9 +58,10 @@ function App(props) {
           <Route exact path='/vote' component={Auth(VoteListPage, null)}/>
           <Route exact path='/repo' component={Auth(RepoListPage, null)}/>
           <Route exact path='/contest' component={Auth(ContestListPage, null)}/>
-          <Route exact path='/contest/manage' component={Auth(ContestManagePage, null)}/>
+          <Route exact path='/contest/manage/:contestId' component={Auth(ContestManagePage, null)}/>
           <Route exact path='/contest/:contestId' component={Auth(ContestDetailPage, true)}/>
           <Route exact path='/message' component={Auth(MessagePage, true)}/>
+
           <Route exact path='/:designer' component={Auth(BlogPage_Prod_About, null)}/>
           <Route exact path='/:designer/works' component={Auth(BlogPage_Prod_Works, null)}/>
           <Route exact path='/:designer/likes' component={Auth(BlogPage_Prod_Likes, null)}/>
@@ -68,6 +71,7 @@ function App(props) {
           <Route exact path='/:designer/cons/event' component={Auth(BlogPage_Cons_Event, null)}/>
           <Route exact path='/:designer/:postId' component={Auth(RepoDetailPage, true)}/>
           <Route exact path='/:designer/:postId/modify' component={Auth(RepoModifyPage, true)}/>
+
           <Route exact path='/changePassword/1' component={Auth(ChangePasswordPage, null)}/>
           <Route exact path='/changePassword/2/:uid/:token' component={Auth(ChangePasswordPage2, null)}/>
         </Switch>

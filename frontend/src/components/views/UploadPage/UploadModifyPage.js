@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {Form, Input, Upload, Button, TreeSelect, Radio} from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
@@ -12,16 +12,46 @@ import './UploadVotePage.css'
 
 const {TreeNode} = TreeSelect
 
-function UploadVotePage(props) {
 
+function UploadModifyPage(props) {
+
+    const postId = props.match.params.postId
     //upload
     const [FileList, setFileList] = useState([])
+    const [Previews, setPreviews] = useState([])
     const [ThumbnailFile, setThumbnailFile] = useState('')
     const [ThumbnailUrl, setThumbnailUrl] = useState('')
     const [ThumbLoading, setThumbLoading] = useState(false)
     const [Category, setCategory] = useState(undefined)
     const [Sell, setSell] = useState(undefined)
+    const [Scope, setScope] = useState(undefined)
+    const [Title, setTitle] = useState("")
+    const [Content, setContent] = useState("")
+    const [BidPrice, setBidPrice] = useState(0)
+    const [SellPrice, setSellPrice] = useState(0)
     
+
+    useEffect(() => {
+        axios.post('/api/post/getPostDetail', {id : postId})
+        .then(response => {
+            if(response.data.success){
+                console.log(response.data)
+                if(response.data.user.id !== window.localStorage.getItem('userId'))
+                    props.history.push('/')
+                setThumbnailUrl(response.data.detailPost.thumbnail)
+                setPreviews(response.data.detailPost.images)
+                setTitle(response.data.detailPost.title)
+                setContent(response.data.detailPost.content)
+                setCategory(response.data.detailPost.category)
+                setSell(response.data.detailPost.sell)
+                setScope(response.data.detailPost.scope)
+                setBidPrice(response.data.detailPost.bidPrice)
+                setSellPrice(response.data.detailPost.sellPrice)
+            }else {
+                alert("포스트 정보 가져오기 실패")
+            }
+        })
+    }, [])
     //other
 
     const OnCategoryClick = (value) =>{
@@ -103,13 +133,9 @@ function UploadVotePage(props) {
     }
 
     const handleChange = async (info) => {
-        if(!info.file.preview){
-            console.log(1)
-            info.file.preview = await getBase64(info.file.originFileObj)
-        }
+        setPreviews(...Previews, await getBase64(info.file.originFileObj))
         setFileList(info.fileList)
     }
-
     const handleThumbChange = (info) => {
         if (info.file.status === 'uploading') {
           setThumbLoading(true)
@@ -169,6 +195,12 @@ function UploadVotePage(props) {
             </div>
             <div className="upload-right-container">
                 <Form 
+                    initialValues={{
+                        ['title'] : Title,
+                        ['description'] : Content,
+                        ['sell'] : Sell,
+                        ['scope']: Scope,
+                    }}
                     onFinish={onFinish}
                 >
                     <div className="upload-left-block-container">
@@ -290,4 +322,4 @@ function UploadVotePage(props) {
     );
 }
 
-export default UploadVotePage;
+export default UploadModifyPage;

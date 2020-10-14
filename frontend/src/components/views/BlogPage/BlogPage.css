@@ -254,6 +254,7 @@
 }
 
 .contest-item-img{
+    position: relative;
     width:30vw;
     min-width:300px;
     max-width:400px;
@@ -261,6 +262,20 @@
     min-height:calc(300px * 4/3);
     max-height:calc(400px * 4/3);
     
+}
+.go-manage {
+    position: absolute;
+    width:200px;
+    height:70px;
+    bottom:30px;
+    right:40px;
+    line-height: 70px;
+    text-align: center;
+    background-color: ghostwhite;
+    font-size: 30px;
+    border-radius: 20px;
+    box-shadow: 5px 5px;
+    cursor: pointer;
 }
 .contest-item-img img{
     width:100%;

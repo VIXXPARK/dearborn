@@ -89,11 +89,19 @@ function RepoDetailPage(props) {
     }
 
     const onModifyClick = () => {
-
+        props.history.push(`/upload/modify/${postId}`)
     }
 
     const onDeleteClick = () => {
-        
+        axios.delete(`/api/post/${postId}`)
+        .then(response => {
+            if(response.status === 204){
+                alert('삭제 성공')
+                props.history.push('/')
+            }else{
+                alert('실패')
+            }
+        })
     }
 
     return (
