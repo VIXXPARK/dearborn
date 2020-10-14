@@ -142,11 +142,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-<<<<<<< HEAD
-#DATABASES = my_settings.DATABASES
-=======
 # DATABASES = my_settings.DATABASES
->>>>>>> 23c59bc8dcbabca84ecc23cc277c13995ce8d80d
 
 EMAIL_BACKEND = my_settings.EMAIL['EMAIL_BACKEND']
 EMAIL_USE_TLS = my_settings.EMAIL['EMAIL_USE_TLS']
@@ -166,11 +162,7 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3306',
     }
-<<<<<<< HEAD
- }
-=======
 }
->>>>>>> 23c59bc8dcbabca84ecc23cc277c13995ce8d80d
 
 
 # db_from_env = dj_database_url.config(conn_max_age=500)
