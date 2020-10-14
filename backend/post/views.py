@@ -29,6 +29,7 @@ from usermanagement.models import User
 from bid.models import BidInfo
 from messanger.models import Message
 from messanger.serializers import SaveMessageSerializer
+from .feature import Similarity
 
 @background()
 def voteExpired():
@@ -40,8 +41,23 @@ def voteExpired():
         expired_dt = post.expire_dt
 
         if expired_dt <= now:
-            user = User.object.get(nickname='admin', is_superuser=True)
 
+            votes = vote.objects.count(post = post.id)
+            try:
+                postUser = User.object.get(id = post.user.id)
+            except:
+                return Response({'success' : False}, HTTP_204_NO_CONTENT)                
+            
+            try:
+                user = User.object.get(nickname='admin', is_superuser=True)    
+            except:
+                return Response({'success' : False}, HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            if not postUser.now_updating:
+                postUser.now_updating = True
+                postUser.rankData = 0
+            postUser.rankData += votes
+            
             bid = BidInfo.objects.filter(post=post).order_by('-price')
             try:
                 price = bid[0].price
@@ -58,8 +74,14 @@ def voteExpired():
                 raise messageSerializer.errors
 
             messageSerializer.create(messageSerializer.validated_data)
+            postUser.save()
             post.is_repo = True
             post.save()
+    
+    users = User.objects.all()
+    for user in users:
+        user.now_updating = False
+
 class upVoteView(ListAPIView):
     permission_classes=(permissions.AllowAny,)
     def post(self,request):
@@ -67,9 +89,7 @@ class upVoteView(ListAPIView):
         if not voted.is_valid():
             return Response({'success':False},status=HTTP_400_BAD_REQUEST)
         voted.save()
-        return Response({'success':True},status=HTTP_200_OK)
-            
-            
+        return Response({'success':True},status=HTTP_200_OK) 
 
 class myVoteView(APIView):
     permission_classes=(permissions.AllowAny,)
@@ -278,6 +298,7 @@ class PostViewSet(ModelViewSet):
     parser_classes = (MultiPartParser,FormParser)
     
     def create(self, request, *args, **kwargs):
+        
         response = super().create(request, *args, **kwargs)
         instance = response.data
         return Response({'success': True})
@@ -332,7 +353,6 @@ class getProfileView(ListAPIView):
             'user' : user,
         }
         return Response(context, status=HTTP_200_OK)
-
 
 
 class getWorkView(ListAPIView):
