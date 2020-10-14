@@ -675,8 +675,3 @@ class getMyWork(APIView):
             'about':about,
         }
         return Response(content,status=HTTP_200_OK)
-            
-            
-                
-            
-
