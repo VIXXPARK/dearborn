@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath backend backend.wsgi --log-file - --log-level debug
+web: bin/boot
