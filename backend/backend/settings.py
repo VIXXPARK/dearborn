@@ -18,7 +18,7 @@ REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG',True))
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
