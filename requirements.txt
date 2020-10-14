@@ -41,3 +41,9 @@ urllib3==1.25.9
 win-inet-pton==1.1.0
 wincertstore==0.2
 zipp==3.1.0
+absl-py==0.10.0
+annoy==1.17.0
+numpy==1.18.5
+scipy==1.5.2
+tensorflow==2.3.1
+tensorflow-hub==0.9.0
