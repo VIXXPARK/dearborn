@@ -1,0 +1,27 @@
+{
+  "name": "dearborn",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "frontend/src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-prebuild": "NODE_ENV=production cd frontend/ && npm install && npm run build && cd .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VIXXPARK/dearborn.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VIXXPARK/dearborn/issues"
+  },
+  "homepage": "https://github.com/VIXXPARK/dearborn#readme",
+  "engines": {
+    "node":"12.14.1",
+    "npm": "6.13.4"
+  },
+  "cacheDirectories": [
+    "frontend/node_modules"
+  ]
+}
