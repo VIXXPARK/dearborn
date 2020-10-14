@@ -1,10 +1,29 @@
+
 *.pyc
 /venv
 
-backend/*/migrations
-backend/*/__pychache__
-backend/backend/my_settings.py
-backend/media
+
+/backend/assess/migrations
+/backend/bid/migrations
+/backend/comment/migrations
+/backend/contest/migrations
+/backend/messanger/migrations
+/backend/post/migrations
+/backend/usermanagement/migrations
+
+/backend/assess/__pychache__
+/backend/bid/__pychache__
+/backend/comment/__pychache__
+/backend/contest/__pychache__
+/backend/messanger/__pychache__
+/backend/post/__pychache__
+/backend/usermanagement/__pychache__
+/backend/backend/__pychache__
+
+/backend/backend/my_settings.py
+/backend/media
+
+
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
