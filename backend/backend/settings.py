@@ -171,4 +171,4 @@ DATABASES['default'].update(db_from_env)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','q447m#bi8j30@q(72b2-kxr^ubb241g596&epaazu^6fu95$l8')
 django_heroku.settings(locals())
 
-# heroku start
+# heroku start!!
