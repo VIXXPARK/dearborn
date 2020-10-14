@@ -7,7 +7,7 @@ class ContestSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Contest
-        fields = ('id','user','title','description','contest_expire' ,'image',)
+        fields = ('id','user','title','description','contest_expire' ,'image','banner')
 
 class ContestPostImageSerializer(serializers.ModelSerializer):
     class Meta:
