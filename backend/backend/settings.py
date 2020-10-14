@@ -115,7 +115,8 @@ STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 # STATIC_ROOT = os.path.join(REACT_DIR,'build','static')
 
 STATICFILES_DIRS = (
-    os.path.join(REACT_DIR,'build','static'),
+    os.path.join(REACT_DIR,'app','build','static'),
+    # os.path.join(BASE_DIR,'static'),
     # os.path.join(REACT_DIR,'build'),
     # os.path.join(REACT_DIR,'build','static','css'),
 )
