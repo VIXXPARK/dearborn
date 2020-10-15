@@ -29,7 +29,7 @@ djangorestframework-jwt==1.11.0
 djangorestframework-simplejwt==4.4.0
 djoser==2.0.3
 filelock==3.0.12
-gast==0.3.3
+gast==0.2.2
 google-auth==1.22.1
 google-auth-oauthlib==0.4.1
 google-pasta==0.2.0
