@@ -20,7 +20,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -112,7 +111,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
-# STATIC_ROOT = os.path.join(REACT_DIR,'build','static')
+
 
 STATICFILES_DIRS = (
     os.path.join(REACT_DIR,'build','static'),
@@ -171,4 +170,3 @@ DATABASES['default'].update(db_from_env)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','q447m#bi8j30@q(72b2-kxr^ubb241g596&epaazu^6fu95$l8')
 django_heroku.settings(locals())
 
-# heroku start!!!
