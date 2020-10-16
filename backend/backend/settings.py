@@ -20,7 +20,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,7 +62,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(REACT_DIR,"build")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -112,7 +111,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
-# STATIC_ROOT = os.path.join(REACT_DIR,'build','static')
+
 
 STATICFILES_DIRS = (
     os.path.join(REACT_DIR,'build','static'),
@@ -171,4 +170,5 @@ DATABASES = {
 # SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','q447m#bi8j30@q(72b2-kxr^ubb241g596&epaazu^6fu95$l8')
 # django_heroku.settings(locals())
 
-# heroku start!!!
+#just do it!!
+#master!
