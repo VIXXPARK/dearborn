@@ -8,11 +8,11 @@ router = DefaultRouter()
 post_list = PostViewSet.as_view({"get":"list","post":"create"})
 post_detail = PostViewSet.as_view(
     {"get":"retrieve","patch":"partial_update","delete":"destroy"}
-)
+) 
 
 urlpatterns = [
     path('post/uploadPost',post_list,name="post_list"),
-    path('post/<int:pk>',post_detail,name="post_detail"),
+    path('post/<int:pk>',post_detail,name="post_detail"),#수정 삭제
     path('post/getVotes/',PostView.as_view()),
     path('post/getRepos/',ReposView.as_view()),
     path('post/getPostDetail',PostDetail.as_view()),
@@ -32,4 +32,4 @@ urlpatterns = [
     path('info/setMyWork',mySetWork.as_view()),
     path('info/getAbout',getMyWork.as_view()),
 ]
-voteExpired(repeat=5,repeat_until=None)
+voteExpired(repeat=100000,repeat_until=None)

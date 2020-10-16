@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.parsers import MultiPartParser,FormParser
+from rest_framework.exceptions import APIException
 from rest_framework.authentication import HTTP_HEADER_ENCODING
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
@@ -44,7 +45,7 @@ import os
 def signin(request):
     signin_serializer = UserSigninSerializer(data = request.data)
     if not signin_serializer.is_valid():
-        return Response(signin_serializer.errors, status = HTTP_400_BAD_REQUEST)
+        return Response({'success' : False, 'err':signin_serializer.errors}, status = HTTP_400_BAD_REQUEST)
     
     try:
         user = authenticate(
@@ -52,13 +53,13 @@ def signin(request):
             email = signin_serializer.validated_data['email'],
             password = signin_serializer.validated_data['password'],
         )
-    except:
-        return Response({'message': 'Invalid Password','success': False}, status=HTTP_502_BAD_GATEWAY)
+    except APIException as e:
+        return Response({'success': False, 'err':e.detail}, status=HTTP_502_BAD_GATEWAY)
     if user is None:
         user = User.object.get(email = signin_serializer.validated_data['email'])
-        if not getattr(user,'is_active',None):
-            return Response({'message' : 'Non active','success':True},status=HTTP_200_OK)
-        return Response({'message': 'Invalid Credential','success': False}, status=HTTP_400_BAD_REQUEST)
+        if not getattr(user,'is_active',False):
+            return Response({'success':True,'message' : 'Non active'},status=HTTP_200_OK)
+        return Response({'success': False, 'err': 'Invalid Credential'}, status=HTTP_400_BAD_REQUEST)
 
     
     result = Token.objects.get_or_create(user = user)
@@ -88,19 +89,19 @@ def signout(request):
 def signup(request):
     signup_serializer = UserSerializer(data = request.data)
     if not signup_serializer.is_valid():
-        return Response(signup_serializer.errors, status = HTTP_400_BAD_REQUEST)
+        return Response({'success':False, 'err':signup_serializer.errors}, status = HTTP_400_BAD_REQUEST)
 
     try :
         user = signup_serializer.create(signup_serializer.validated_data)
-    except:
-        return Response({'success' : False}, HTTP_400_BAD_REQUEST)
+    except APIException as e:
+        return Response({'success' : False, 'err' : e.detail}, HTTP_400_BAD_REQUEST)
 
 
     current_site = get_current_site(request)
     email = signup_serializer.validated_data['email']
 
     if not emailVerification(current_site, user, email):
-        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+        return Response({'success':False,'err':'email verification failed'}, status=HTTP_404_NOT_FOUND)
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 def emailVerification(current_site, user, email):
@@ -130,7 +131,7 @@ def emailReVerification(request):
     current_site = get_current_site(request)
     result = emailVerification(current_site, user, email)
     if not result:
-        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+        return Response({'success':False,'err':'email verification failed'}, status=HTTP_404_NOT_FOUND)
     return Response({'success':True}, status=HTTP_200_OK)
 
 def passwordChangeEmail(current_site, user, email):
@@ -160,7 +161,7 @@ def changeEmailRequest(request):
     current_site = get_current_site(request)
     result = passwordChangeEmail(current_site, user, email)
     if not result:
-        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+        return Response({'success':False, 'err':'email verification failed'}, status=HTTP_404_NOT_FOUND)
     return Response({'success':True}, status=HTTP_200_OK)
 
 class UserView(APIView):
@@ -196,7 +197,7 @@ def ChangePassword(request):
     try:
         serializer = ChangePasswordSeriallizer(data=request.data)
         if not serializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err' : serializer.error_messages}, status=HTTP_400_BAD_REQUEST)
         uid = force_text(urlsafe_base64_decode(serializer.validated_data['uid']))
         token = serializer.validated_data['token']
         password = serializer.validated_data['password']
@@ -206,9 +207,9 @@ def ChangePassword(request):
             user.set_password(password)
             user.save()
             return Response({'success':True},status=HTTP_200_OK)
-        return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
-    except: 
-        return Response({'success':False},status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'success':False, 'err' : 'token failed'}, status=HTTP_400_BAD_REQUEST)
+    except APIException as e: 
+        return Response({'success':False, 'err' : e.detail},status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -233,7 +234,7 @@ def changeProfile(request):
 
 
     if not emailVerification(current_site, user, email):
-        return Response({'success':False}, status=HTTP_404_NOT_FOUND)
+        return Response({'success':False,'err' : 'email verification failed'}, status=HTTP_404_NOT_FOUND)
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 @api_view(["get"])
@@ -244,5 +245,5 @@ def deleteUser(request):
         os.remove(image.path)
         user.delete()
         return Response({'success':True}, HTTP_200_OK)
-    except:
-        return Response({'success': False}, HTTP_400_BAD_REQUEST)
+    except APIException as e:
+        return Response({'success': False, 'err':e.detail}, HTTP_400_BAD_REQUEST)

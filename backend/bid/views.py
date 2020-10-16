@@ -9,6 +9,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.exceptions import APIException
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
@@ -23,9 +24,14 @@ class BidViewSet(ModelViewSet):
     queryset = BidInfo.objects.all()
     serializer_class = MakeBidSerializer
     def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        instance = response.data
-        return Response({'success':True})
+        try:
+            response = super().create(request, *args, **kwargs)
+            instance = response.data
+            return Response({'success':True})
+        except APIException as e:
+            return Response({'success':False, 'err' : e.detail})
+
+        
 
 '''
 expire 수정 필요
@@ -37,25 +43,29 @@ def GetBid(request):
         my_serializer = GetBidSerializer(data = request.data)
         paginator = LimitOffsetPagination()
         if not my_serializer.is_valid():
-            return Response({'success':False}, status = HTTP_400_BAD_REQUEST)
+            return Response({'success':False, 'err' : my_serializer.error_messages}, status = HTTP_400_BAD_REQUEST)
         uid = my_serializer.validated_data['uid']
         try:
             user = User.object.get(id = uid)
-        except:
-            return Response({'success' : False}, HTTP_400_BAD_REQUEST)
+        except APIException as e:
+            return Response({'success' : False, 'err' : e.detail}, HTTP_400_BAD_REQUEST)
         job = user.job
-        
+
         if job == 1:
-            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,sell=1), request)
+            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,sell=1, is_repo=0), request)
             sellPost = []
             for item in postData:
                 if item.sell == 1:
                     bid = BidInfo.objects.filter(post = item.id).order_by('-price')
+                    try:
+                        price = bid[0].price
+                    except:
+                        price = 0
                     post = {
                         'thumbnail' : item.thumbnail.url,
                         'id' : item.id,
                         'title' : item.title,
-                        'price' : bid[0].price,
+                        'price' : price,
                     }
                     sellPost.append(post)
             context = {
@@ -69,8 +79,8 @@ def GetBid(request):
             for item in bids:
                 try:
                     post = Post.objects.get(id = item.post.id)
-                except:
-                    return Response({'success' : False}, HTTP_400_BAD_REQUEST)
+                except APIException as e:
+                    return Response({'success' : False, 'err' : e.detail}, HTTP_400_BAD_REQUEST)
                 bidData = BidInfo.objects.filter(post = post.id).order_by('-price')
                 bid = {
                     'price' : bidData[0].price,

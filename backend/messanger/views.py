@@ -5,6 +5,7 @@ from datetime import timedelta
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.exceptions import APIException
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
@@ -14,7 +15,6 @@ from rest_framework.status import(
     HTTP_502_BAD_GATEWAY,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
-
 from background_task import background
 
 class MessageViewSet(ModelViewSet):
@@ -22,10 +22,14 @@ class MessageViewSet(ModelViewSet):
     serializer_class = SaveMessageSerializer
 
     def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        instance = response.data
-        self.AutoDelete(instance['id'])
-        return Response({'success':True})
+        try:
+            response = super().create(request, *args, **kwargs)
+            instance = response.data
+            self.AutoDelete(instance['id'])
+            return Response({'success':True})
+        except APIException as e:
+            return Response({'success':False, 'err':e.detail})
+       
     
     #use "python manage.py process_tasks"
     @background(schedule=5)

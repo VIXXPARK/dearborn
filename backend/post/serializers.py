@@ -42,14 +42,20 @@ class PostSerializer(serializers.ModelSerializer):
    images = PostImageSerializer(many=True, read_only=True)
    class Meta:
       model = Post
-      fields = ('id', 'title','thumbnail', 'content','user','images','category','sell','scope','expire_dt')
+      fields = ('id', 'title','thumbnail', 'content','user','images','category','sell','scope','expire_dt','bidPrice','sellPrice')
    def create(self, validated_data):
       images_data = self.context['request'].FILES
       post = Post.objects.create(**validated_data)
       for image_data in images_data.getlist('images'):
-         PostImage.objects.create(post=post, image=image_data)
-       
+         PostImage.objects.create(post=post, image=image_data)  
       return post
+   
+   # def update(self,instance,validated_data):
+   #    images = self.context['request'].FILES
+   #    for image_data in images.getlist('images'):
+   #       PostImage.objects.create(post=post, image=image_data)
+   #    return super().update(instance, validated_data)
+     
 
 class PostFilterSerializer(serializers.Serializer):
    ook = serializers.IntegerField()

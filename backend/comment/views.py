@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
+from rest_framework.exceptions import APIException
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
@@ -22,8 +23,7 @@ class MakeCommentView(APIView):
     def post(self, request):
         commentSerializer = CommentSerializer(data=request.data)
         if not commentSerializer.is_valid():
-            print(request.data)
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False, 'err' : commentSerializer.error_messages},status=HTTP_400_BAD_REQUEST)
         try:
             comment = commentSerializer.create(commentSerializer.validated_data)
             user = comment.user
@@ -31,8 +31,8 @@ class MakeCommentView(APIView):
                 'nickname' : user.nickname,
                 'profileImage' : user.profileImage.url,
             }
-        except:
-            return Response({'success':False},HTTP_400_BAD_REQUEST)
+        except APIException as e:
+            return Response({'success':False, 'err' : e.detail},HTTP_400_BAD_REQUEST)
 
         context = {
             'success':True,
@@ -46,7 +46,7 @@ class GetCommentView(APIView):
     def post(self, request):
         getCommentSerializer = GetCommentSerializer(data=request.data)
         if not getCommentSerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False, 'err':getCommentSerializer.error_messages}, status=HTTP_400_BAD_REQUEST)
         postId = getCommentSerializer.validated_data['postId']
         commentQuery = Comment.objects.filter(post=postId)
         commentData = []
@@ -73,21 +73,21 @@ class DeleteCommentView(APIView):
     def post(self, request):
         deleteCommentSerializer = DeleteCommentSerializer(data=request.data)
         if not deleteCommentSerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False, 'err':deleteCommentSerializer.error_messages}, status=HTTP_400_BAD_REQUEST)
         commentId = deleteCommentSerializer.validated_data['commentId']
         try:
             commentObj = Comment.objects.filter(id=commentId)[0]
             commentObj.delete()
             return Response({'success':True},HTTP_200_OK)
-        except:
-            return Response({'success':False},HTTP_400_BAD_REQUEST)
+        except APIException as e:
+            return Response({'success':False, 'err':e.detail},HTTP_400_BAD_REQUEST)
 
 class UpdataCommentView(APIView):
     permission_classes = (permissions.AllowAny,)
     def post(self, request):
         updateCommentSerializer = UpdateCommentSerializer(data=request.data)
         if not updateCommentSerializer.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False, 'err':updateCommentSerializer.error_messages},status=HTTP_400_BAD_REQUEST)
         commentId = updateCommentSerializer.validated_data['commentId']
         contents = updateCommentSerializer.validated_data['contents']
         try:
@@ -95,6 +95,6 @@ class UpdataCommentView(APIView):
             commentObj.contents = contents
             commentObj.save()
             return Response({'success':True},status=HTTP_200_OK)
-        except:
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+        except APIException as e:
+            return Response({'success':False,'err':e.detail},status=HTTP_400_BAD_REQUEST)
             

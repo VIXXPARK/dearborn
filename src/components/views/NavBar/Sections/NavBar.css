@@ -1,0 +1,77 @@
+@import '~antd/dist/antd.css';
+
+#header {
+    height: 66px;
+    min-width: 570px;
+    z-index : 40;
+    top: 0px;
+    border-bottom: 0.01px solid gray;
+    background-color: white;
+}
+@media(min-width:900px){
+    .header-a{
+        text-align: center;
+        font-weight: bold;
+        line-height: 35px;
+        margin-top:14px;
+        font-size: 20px;
+        margin-left:20px;
+        margin-right:20px;
+        opacity: 80%;
+        float:left;
+}
+}
+@media(max-width:899px){
+    .header-a{
+        display: none;
+    }
+}
+
+.main-logo{
+    width: 150px;
+    float :left;
+    margin-left: 20px;
+}
+
+
+.header-title a{
+    font-size:20px;
+    font-weight: bold;
+}
+
+.logged-out, .register {
+    margin-right: 2rem;
+    margin-top: 14px;
+}
+
+.logged-out a, .register a{
+    font-size:16px; 
+    font-weight:normal;
+    padding:6px 0px 6px 12px;
+}
+
+.pull-right {
+    float : right;
+}
+
+.navbar-button {
+    display: inline-block;
+    width:100px;
+    height:40px;
+    background-color: powderblue;
+    color: blue;
+    border-radius: 30px;
+    font-size: 20px;
+    font-style: bold;
+    text-align: center;
+    padding-top: 5px;
+    opacity: 80%;
+}
+
+.nav-bar-profile{
+    margin-top: 8px;
+    font-size: 25px;
+    padding: 5px;
+    border-radius: 15px;
+    background-color: #809edf;
+}

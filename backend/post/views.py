@@ -10,6 +10,7 @@ from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
 from rest_framework.response import Response
+from rest_framework.exceptions import APIException
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
@@ -24,38 +25,82 @@ from rest_framework.views import APIView
 from .pagination import PostPageNumberPagination
 from background_task import background
 from datetime import datetime, timedelta
-
+from pytz import timezone
+from usermanagement.models import User
+from bid.models import BidInfo
+from messanger.models import Message
+from messanger.serializers import SaveMessageSerializer
+# from .feature import Similarity,GetFeatureVector,SaveFeatureVector
 
 @background()
 def voteExpired():
     posts = Post.objects.filter(is_repo=False)
     for post in posts:
-        
-        # post.is_repo = True
-        # post.save()
+
+        KST = timezone('Asia/Seoul')
+        now = datetime.now(tz=KST)
         expired_dt = post.expire_dt
-        now = datetime.now()
-        if(expired_dt - now <= timedelta(0)):
-            post.is_repo = True
-            post.save()
+
+        if expired_dt <= now:
+
+            votes = vote.objects.count(post = post.id)
+            try:
+                postUser = User.object.get(id = post.user.id)
+            except APIException as e:
+                raise e                
+            
+            try:
+                user = User.object.get(nickname='admin', is_superuser=True)    
+            except APIException as e:
+                raise e      
+            
+            if not postUser.now_updating:
+                postUser.now_updating = True
+                postUser.rankData = 0
+            postUser.rankData += votes
+            
+            bid = BidInfo.objects.filter(post=post).order_by('-price')
+            try:
+                price = bid[0].price
+                message = price + "가격으로 판매됐읍니다\n Vote -> Repo로 넘어갑니다."
+            except:
+                message = "판매로 넘어갑니다\n Vote -> Repo로 넘어갑니다."
+            data = {
+                'userFrom' : user.id,
+                'userTo' : post.user.id,
+                'message' : message,
+            }
+            messageSerializer = SaveMessageSerializer(data = data)
+            if not messageSerializer.is_valid():
+                raise messageSerializer.errors
+
+            try:
+                messageSerializer.create(messageSerializer.validated_data)
+                postUser.save()
+                post.is_repo = True
+                post.save()
+            except APIException as e:
+                raise e
+
+    users = User.objects.all()
+    for user in users:
+        user.now_updating = False
 
 class upVoteView(ListAPIView):
     permission_classes=(permissions.AllowAny,)
     def post(self,request):
         voted =getVoteSerializer(data=request.data)
         if not voted.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':voted.error_messages},status=HTTP_400_BAD_REQUEST)
         voted.save()
-        return Response({'success':True},status=HTTP_200_OK)
-            
-            
+        return Response({'success':True},status=HTTP_200_OK) 
 
 class myVoteView(APIView):
     permission_classes=(permissions.AllowAny,)
     def post(self,request):
         posts = getUserSerializer(data=request.data)
         if not posts.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':posts.error_messages},status=HTTP_400_BAD_REQUEST)
         postdata = vote.objects.filter(user=posts.validated_data['user'])
         postID = []
         for postcontent in postdata:
@@ -71,7 +116,7 @@ class getLikeDetail(APIView):
     def post(self,request):
         liked = getUserPostSerializer(data=request.data)
         if not liked.is_valid():
-            return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':liked.error_messages},status=HTTP_400_BAD_REQUEST)
         try:
             likedata = like.objects.get(user=liked.validated_data['user'],post=liked.validated_data['post'])
             context = {
@@ -82,7 +127,7 @@ class getLikeDetail(APIView):
         except:
             disliked = getUserPostSerializer(data=request.data)
             if not disliked.is_valid():
-                return Response({'success':False,'data':reqeust.data},status=HTTP_400_BAD_REQUEST)
+                return Response({'success':False,'err':disliked.error_messages},status=HTTP_400_BAD_REQUEST)
             try:
                 dislikedata = disLike.objects.get(user=disliked.validated_data['user'],post=disliked.validated_data['post'])
                 context = {
@@ -110,7 +155,7 @@ class getLikeView(ListAPIView):
     def post(self,request):
         liked = getLikeSerializer(data=request.data)
         if not liked.is_valid():
-            return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':liked.error_messages},status=HTTP_400_BAD_REQUEST)
         likedata = like.objects.filter(post=liked.validated_data['post'])
         postlist=[]
         for likeinstance in likedata:
@@ -133,7 +178,7 @@ class getDisLikeView(ListAPIView):
     def post(self,request):
         liked = getUserPostSerializer(data=request.data)
         if not liked.is_valid():
-            return Response({'success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':liked.error_messages},status=HTTP_400_BAD_REQUEST)
         likedata = disLike.objects.filter(post=liked.validated_data['post'],user=liked.validated_data['user'])
         postlist=[]
         for likeinstance in likedata:
@@ -161,7 +206,7 @@ class disLikeView(ListAPIView):
     def post(self,request):
         like = dislikeSerializer(data=request.data)
         if not like.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':like.error_messages},status=HTTP_400_BAD_REQUEST)
         like.save()
         context = {
             'success':True
@@ -181,10 +226,12 @@ class likeDownView(DestroyAPIView):
             raise HTTP_404_NOT_FOUND
     
     def delete(self,request,format=None):
-        instance = self.get_object(request.data['post'],request.data['user'])
-        instance.delete()
-        return Response({"success":True},status=HTTP_204_NO_CONTENT)
-
+        try:
+            instance = self.get_object(request.data['post'],request.data['user'])
+            instance.delete()
+            return Response({"success":True},status=HTTP_200_OK)
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
 
 class dislikeDownView(DestroyAPIView):
     queryset = disLike.objects.all()
@@ -198,12 +245,16 @@ class dislikeDownView(DestroyAPIView):
             raise HTTP_404_NOT_FOUND
     
     def delete(self,request,format=None):
-        instance = self.get_object(request.data['post'],request.data['user'])
-        instance.delete()
-        context={
-            'success':True,
-        }
-        return Response(context,status=HTTP_204_NO_CONTENT)
+        try:
+            instance = self.get_object(request.data['post'],request.data['user'])
+            instance.delete()
+            context={
+                'success':True,
+            }
+            return Response(context,status=HTTP_200_OK)
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
+        
 
 
 class likeView(ListAPIView):
@@ -218,7 +269,7 @@ class likeView(ListAPIView):
     def post(self,request):
         like = likeSerializer(data=request.data)
         if not like.is_valid():
-            return Response({'success':False,'data':like.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':like.error_messages},status=HTTP_400_BAD_REQUEST)
         like.save()
         context = {
             'success':True
@@ -237,9 +288,12 @@ class upViewSet(ListAPIView):
     def post(self,request):
         view = PostIdSerializer(data=request.data)
         if not view.is_valid():
-            return Response({'success':False,'data':view.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':view.error_messages},status=HTTP_400_BAD_REQUEST)
         
-        postdata = Post.objects.get(id=view.validated_data['id'])
+        try:
+            postdata = Post.objects.get(id=view.validated_data['id'])
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
         postView = postdata.get_view()
         postView = postView + 1
         postdata.view = postView
@@ -257,9 +311,18 @@ class PostViewSet(ModelViewSet):
     parser_classes = (MultiPartParser,FormParser)
     
     def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
+        
+        try:
+            response = super().create(request, *args, **kwargs)
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
+        #similarity = Similarity(response.data.postId)
+        context = {
+            # 'similarity' : similarity,
+            'success' : True,
+        }
         instance = response.data
-        return Response({'success': True})
+        return Response(context,HTTP_201_CREATED)
 
 class getProfileView(ListAPIView):
     queryset = Post.objects.all()
@@ -268,12 +331,15 @@ class getProfileView(ListAPIView):
     def post(self,request):
         userSerializer = UserCheckSerializer(data = request.data)
         if not userSerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
-        userdata = User.object.get(nickname=userSerializer.validated_data['nickname'])
+            return Response({'success':False,'err':userSerializer.error_messages}, status=HTTP_400_BAD_REQUEST)
+        try:
+            userdata = User.object.get(nickname=userSerializer.validated_data['nickname'])
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
         view=0
         work=0
         liked=0
-        print(userdata.id)
+
         try:
             postdata = Post.objects.filter(user=userdata.id)
             for x in postdata:
@@ -313,7 +379,6 @@ class getProfileView(ListAPIView):
         return Response(context, status=HTTP_200_OK)
 
 
-
 class getWorkView(ListAPIView):
     queryset = Post.objects.all()
     permission_classes = (permissions.AllowAny,)
@@ -326,10 +391,14 @@ class getWorkView(ListAPIView):
     def post(self,request):
         userSerializer = UserIdSerializer(data = request.data)
         if not userSerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':userSerializer.error_messages}, status=HTTP_400_BAD_REQUEST)
             
-        userdata = User.object.get(id=userSerializer.validated_data['id'])
-        postdata = self.paginate_queryset(Post.objects.filter(user=userdata).order_by('-updated_dt'))
+        try:
+            userdata = User.object.get(id=userSerializer.validated_data['id'])
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
+        
+        postdata = self.paginate_queryset(Post.objects.filter(user=userdata, is_repo=True).order_by('-updated_dt'))
         
         postJson = []
         
@@ -379,7 +448,7 @@ class getWorkLikeView(ListAPIView):
     def post(self,request):
         userSerializer = likeUserSerializer(data = request.data)
         if not userSerializer.is_valid():
-            return Response({'success':False}, status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':userSerializer.error_messages}, status=HTTP_400_BAD_REQUEST)
         
         userId = User.object.get(id=userSerializer.validated_data['id'])    
         likeObject = self.paginate_queryset(like.objects.filter(user=userId.id))
@@ -428,7 +497,7 @@ class PostView(ListAPIView):
     def post(self,request):
         filterSerializer = PostFilterSerializer(data=request.data)
         if not filterSerializer.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False, 'err':filterSerializer.error_messages},status=HTTP_400_BAD_REQUEST)
         
         try:
             if(filterSerializer.validated_data['sort']==0):
@@ -466,9 +535,9 @@ class PostView(ListAPIView):
                
             }
             return Response(context,status=HTTP_200_OK)
-        except Exception as error:
+        except APIException as e:
             context = {
-                'error':str(error),
+                'err':e.detail,
                 'success':False
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
@@ -481,7 +550,7 @@ class ReposView(ListAPIView):
     def post(self,request):
         filterSerializer = PostFilterSerializer(data=request.data)
         if not filterSerializer.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':filterSerializer.error_messages},status=HTTP_400_BAD_REQUEST)
 
         try:
             if(filterSerializer.validated_data['sort']==0):
@@ -519,9 +588,9 @@ class ReposView(ListAPIView):
                
             }
             return Response(context,status=HTTP_200_OK)
-        except Exception as error:
+        except APIException as e:
             context = {
-                'error':str(error),
+                'err':e.detail,
                 'success':False
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
@@ -533,11 +602,15 @@ class PostDetail(APIView):
     def post(self,request):
         postID = PostIdSerializer(data=request.data)
         if not postID.is_valid():
-            return Response({'success':False,},status = HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':postID.error_messages},status = HTTP_400_BAD_REQUEST)
 
-        postdata = Post.objects.get(id=postID.validated_data['id'])
-        userdata = User.object.get(id = postdata.user.id)
-
+        try:
+            postdata = Post.objects.get(id=postID.validated_data['id'])
+            userdata = User.object.get(id = postdata.user.id)
+        except APIException as e:
+            return Response({'success':False, 'err':e.detail}, status=HTTP_204_NO_CONTENT)
+        
+        
         Jpost = []
         jpgs = PostImage.objects.filter(post=postID.validated_data['id'])
 
@@ -552,6 +625,10 @@ class PostDetail(APIView):
         except:
             profileImage = None,
 
+        try:
+            thumbnail=postdata.thumbnail.url,
+        except:
+            thumbnail=None,
         user = {
             'id':userdata.id,
             'nickname':userdata.nickname,
@@ -564,7 +641,11 @@ class PostDetail(APIView):
             'title':postdata.title,
             'content':postdata.content,
             'updatedAt' : postdata.updated_dt,
+            'thumbnail':thumbnail,
             'images':Jpost,
+            'sell':postdata.sell,
+            'category':postdata.category,
+            'scope':postdata.scope,
         }
 
         context = {
@@ -581,7 +662,7 @@ class mySetWork(ListAPIView):
     def post(self,request):
         worked =myWorkSerializer(data=request.data,partial=True)
         if not worked.is_valid():
-            return Response({'success':False},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':worked.error_messages},status=HTTP_400_BAD_REQUEST)
         try:
             userdata = User.object.get(email=request.user)
             workdata = myWork.objects.filter(user=userdata.id)
@@ -602,7 +683,7 @@ class getMyWork(APIView):
     def post(self,request):
         username = getUserSerializer(data=request.data)
         if not username.is_valid():
-            return Response({'success':False,'data':username.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':username.error_messages},status=HTTP_400_BAD_REQUEST)
 
         
         work = myWork.objects.get(user=username.validated_data['user'])

@@ -1,0 +1,141 @@
+.list-container{
+    width:90%;
+    margin:50px auto;
+    text-align: center;
+}
+
+.filter-container{
+    text-align: end;
+}
+
+.filter-btn{
+    position: relative;
+    display: inline-block;
+    width:100px;
+    height:40px;
+    font-size: 20px;
+    border-radius: 30px;
+    line-height: 35px;
+    cursor: pointer;
+    margin: 10px;
+    text-align: center;
+    background-color: powderblue;
+}
+
+
+#filter-show{
+    position: absolute;
+    top: 40px;
+    right:0px;
+    width:250px;
+    margin:1px;
+    border: 1px solid powderblue;
+    border-radius: 20px;
+    background-color: white;
+    z-index: 10000;
+}
+
+
+.list-wrapper {
+    width:98%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+@media (max-width:729px){
+    .list-item{
+        display: inline-block;
+        width:70vw;
+        height:calc(70vw * 4 / 3);
+        margin: 10px;
+    }
+}
+
+@media (min-width:730px){
+    .list-item{
+        display: inline-block;
+        width:40vw;
+        height:calc(40vw * 4 / 3);
+        margin: 10px;
+    }
+}
+@media (min-width:1000px){
+    .list-item{
+        display: inline-block;
+        width:25vw;
+        height:calc(28vw * 4 / 3);
+        margin: 10px;
+    }
+}
+@media (min-width:1300px){
+    .list-item{
+        display: inline-block;
+        width:19vw;
+        height:calc(19vw * 4 / 3);
+        margin: 10px;
+    }
+}
+
+
+.list-item {
+    float:left;
+    border-radius: 20px;
+}
+
+@media (min-width : 1550px){
+    
+    .event-list-item {
+        width:40%;
+        min-width: 600px;
+        margin : 2%;
+        float:left;
+    }
+}
+
+@media (max-width : 1549px){
+    
+    .event-list-item {
+        width:90%;
+        min-width: 600px;
+        margin : 2%;
+        float:left;
+    }
+}
+
+
+.vote-item{
+    width:100%;
+    height:100%;
+}
+
+.vote-item-img{
+    width:100%;
+    height:100%;
+    border-radius: 20px;
+}
+
+
+.event-item-img{
+    width:200px;
+    height:300px; 
+    float:left;
+}
+
+.event-item{
+    display: inline-block;
+}
+
+.event-item-content{
+    background-color: wheat;
+    height:300px;
+    text-align: left;
+    border-radius: 25px;
+}
+
+.event-item-content h1 {
+    line-height: 170px;
+}
+
+.event-item-content h1, h2 {
+    padding-left: 250px;
+}
