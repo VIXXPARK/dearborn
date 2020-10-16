@@ -8,19 +8,19 @@ class MyUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
-        try:
-            email = self.normalize_email(email)
-            user = User()
-            user.set_email(email)
-            user.set_extra(job = extra_fields['job'], major = extra_fields['major'], nickname = extra_fields['nickname'], is_staff = extra_fields['is_staff'], is_superuser = extra_fields['is_superuser'])
-            user.is_active = extra_fields['is_activate']
-            user.content = extra_fields['content']
-            user.profileImage = extra_fields['profileImage']
-            user.set_password(password)
-            user.save(using = self._db)
-            return user
-        except IntegrityError:
-            raise IntegrityError
+        # try:
+        email = self.normalize_email(email)
+        user = User()
+        user.set_email(email)
+        user.set_extra(job = extra_fields['job'], major = extra_fields['major'], nickname = extra_fields['nickname'], is_staff = extra_fields['is_staff'], is_superuser = extra_fields['is_superuser'])
+        user.is_active = extra_fields['is_activate']
+        user.content = extra_fields['content']
+        user.profileImage = extra_fields['profileImage']
+        user.set_password(password)
+        user.save(using = self._db)
+        return user
+        # except IntegrityError:
+        #     raise IntegrityError
 
     def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
@@ -34,6 +34,8 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('is_activate', True)
         extra_fields.setdefault('profileImage',None)
         extra_fields.setdefault('content', "hello")
+        extra_fields.setdefault('job', 1)
+        extra_fields.setdefault('major', "1")
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff = True')
         if extra_fields.get('is_superuser') is not True:
@@ -52,7 +54,7 @@ class User(AbstractUser):
     major = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     content = models.TextField(max_length=1000)
-    rankData = models.IntegerField()
+    rankData = models.IntegerField(null=True)
     now_updating = models.BooleanField(default=False)
     username = None
     USERNAME_FIELD = 'email'
