@@ -43,6 +43,7 @@ class getAssess(APIView):
             return Response({'Success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
         assessData = Assess.objects.filter(post=assessed.validated_data['post'])
         List=[]
+        
         for assessValue in assessData:
             design = design+assessValue.design
             color = color+assessValue.color
@@ -50,12 +51,22 @@ class getAssess(APIView):
             trend = trend+assessValue.trend
             practicality = practicality+assessValue.practicality
             count=count+1
-        context = {
-            'success':True,
-            'design': design/count,
-            'color': color/count,
-            'individuality': individuality/count,
-            'practicality':practicality/count,
-            'trend':trend/count,
-        }
+        if count!=0:
+            context = {
+                'success':True,
+                'design': design/count,
+                'color': color/count,
+                'individuality': individuality/count,
+                'practicality':practicality/count,
+                'trend':trend/count,
+            }
+        else:
+            context = {
+                'success':True,
+                'design': 0,
+                'color': 0,
+                'individuality': 0,
+                'practicality':0,
+                'trend':0,
+            }
         return Response(context,status=HTTP_200_OK)
