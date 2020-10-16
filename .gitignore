@@ -1,7 +1,7 @@
 
 *.pyc
 /venv
-backend/secrets.json
+/backend/secrets.json
 # backend/contest/migrations
 # backend/comment/migrations
 # backend/assess/migrations
