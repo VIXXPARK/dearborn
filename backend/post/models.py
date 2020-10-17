@@ -1,6 +1,6 @@
 from django.db import models
 from usermanagement.models import User
-from backend.settings import MEDIA_URL
+from backend.settings.base import MEDIA_URL
 import os
 from django.dispatch import receiver
 
