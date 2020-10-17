@@ -34,7 +34,7 @@ from .authentication import token_expire_handler, expires_in
 from .models import User
 from .token import account_activation_token
 from .text import message, changeMessage
-from backend.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY, MEDIA_ROOT
+from backend.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT
 from backend.settings.base import EMAIL
 import jwt, json
 import os
