@@ -41,7 +41,7 @@ function LoginPage(props) {
                         props.history.push('/')
                     }
                 }else{
-                    alert('알수 없는 오류')
+                    console.log(response.payload.err)
                 }
             })
         }

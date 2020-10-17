@@ -25,8 +25,7 @@ function VoteDetailPage(props) {
         axios.post('/api/post/upView', {id : params.get('postId')})
         .then(response => {
             if(!response.data.success){
-                console.log(response.data)
-                alert('조회수 에러')
+                console.log(response.data.err)
             }
         })
         axios.post('/api/post/getPostDetail', {id : params.get('postId')})
@@ -38,7 +37,7 @@ function VoteDetailPage(props) {
                 setDetailPost(response.data.detailPost)
                 setWriter(response.data.user)
             }else{
-                alert('데이터 가져오기 실패')
+                console.log(response.data.err)
             }
         })
         return ()=>{

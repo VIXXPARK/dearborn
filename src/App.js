@@ -13,7 +13,6 @@ import Footer from './components/views/Footer/Footer'
 import LandingPage from './components/views/LandingPage/LandingPage'
 import LoginPage from './components/views/LoginPage/LoginPage'
 import RegisterPage from './components/views/RegisterPage/RegisterPage'
-import VoteListPage from './components/views/ListPage/VoteListPage'
 import VoteDetailPage from './components/views/DetailPage/VoteDetailPage'
 import RepoListPage from './components/views/ListPage/RepoListPage'
 import RepoDetailPage from './components/views/DetailPage/RepoDetailPage'
@@ -37,6 +36,7 @@ import ContestListPage from './components/views/ListPage/ContestListPage'
 import ContestDetailPage from './components/views/DetailPage/ContestDetailPage'
 import ContestManagePage from './components/views/DetailPage/ContestManagePage'
 import MessagePage from './components/views/MessagePage/MessagePage'
+import FindFeaturePage from './components/views/FindFeaturePage/FindFeaturePage'
 
 function App(props) {
   return (
@@ -55,12 +55,12 @@ function App(props) {
           <Route exact path='/checkEmail/failed' component={Auth(CheckEmailFailPage, null)}/>
           <Route exact path='/modify' component={Auth(UserInfoMainPage, true)}/>
           <Route exact path='/modify/settings' component={Auth(UserUpdatePage, true)}/>
-          <Route exact path='/vote' component={Auth(VoteListPage, null)}/>
           <Route exact path='/repo' component={Auth(RepoListPage, null)}/>
           <Route exact path='/contest' component={Auth(ContestListPage, null)}/>
           <Route exact path='/contest/manage/:contestId' component={Auth(ContestManagePage, null)}/>
           <Route exact path='/contest/:contestId' component={Auth(ContestDetailPage, true)}/>
           <Route exact path='/message' component={Auth(MessagePage, true)}/>
+          <Route exact path='/feature' component={Auth(FindFeaturePage, null)}/>
 
           <Route exact path='/:designer' component={Auth(BlogPage_Prod_About, null)}/>
           <Route exact path='/:designer/works' component={Auth(BlogPage_Prod_Works, null)}/>

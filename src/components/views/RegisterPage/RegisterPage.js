@@ -60,13 +60,13 @@ function RegisterPage(props) {
                     axios.post('/api/user/checkEmail', {email : data.email})
                 .then(response => {
                     if(!response.data.success){
-                        return alert('이메일이 이미 있습니다.')
+                        console.log(response.data.err)
                     }
                     //이메일 중복이 아닐경우 이메일 체킹
                     props.history.push('/login')
                 })
                 }else{
-                    alert(response.payload.err.errmsg)
+                    alert(response.payload.err)
                 }
             })
             

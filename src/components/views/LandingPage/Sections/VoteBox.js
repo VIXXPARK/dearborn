@@ -25,7 +25,7 @@ function VoteBox(props) {
                 alert('투표되었습니다')
                 setDisabled(true)
             }else{
-                alert('투표 실패')
+                console.log(response.data.err)
             }
         })
     }

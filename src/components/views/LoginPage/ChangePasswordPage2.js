@@ -29,7 +29,7 @@ function ChangePasswordPage(props) {
                     alert('비밀번호 변경 성공')
                     props.history.push('/login')
                 }else{
-                    alert('비밀번호 변경 실패')
+                    console.log(response.data.err)
                 }
             })
         }

@@ -23,7 +23,7 @@ function NavBar(props) {
                 props.history.push('/login')
                 window.localStorage.setItem('userId', "")
             }else{
-                alert('logout Failed')
+                console.log(response.payload.err)
             }
         })
     }
