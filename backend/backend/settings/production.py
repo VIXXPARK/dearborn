@@ -21,6 +21,12 @@ REDIRECT_PAGE_FAILED = os.environ.get("REDIRECT_PAGE_FAILED")
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+    }
+}
+
 EMAIL = {
     'EMAIL_BACKEND' : EMAIL_BACKEND,
     'EMAIL_USE_TLS' : EMAIL_USE_TLS,
