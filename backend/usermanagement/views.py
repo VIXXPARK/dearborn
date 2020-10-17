@@ -34,8 +34,8 @@ from .authentication import token_expire_handler, expires_in
 from .models import User
 from .token import account_activation_token
 from .text import message, changeMessage
-from backend.settings import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY, MEDIA_ROOT
-from backend.my_settings import EMAIL
+from backend.settings.local import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY, MEDIA_ROOT
+from backend.settings.base import EMAIL
 import jwt, json
 import os
 
@@ -187,9 +187,9 @@ class Activate(View):
                 user.is_active = True
                 user.save()
                 return redirect(EMAIL['REDIRECT_PAGE'])
-            return redirect('http://localhost:3000/checkEmail/failed')
+            return redirect(EMAIL['REDIRECT_PAGE_FAILED'])
         except:
-            return redirect('http://localhost:3000/checkEmail/failed')
+            return redirect(EMAIL['REDIRECT_PAGE_FAILED'])
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
