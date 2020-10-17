@@ -6,12 +6,24 @@ const {SubMenu} = Menu
 
 function FindFeaturePage(props) {
     const [CurrentStep, setCurrentStep] = useState(1)
+    const [Modal, setModal] = useState(false)
+    const [Preview, setPreview] = useState(undefined)
     const handleCategoryClick = (e) => {
         console.log(e)
     }
 
     const OnNextClick = () =>{
         setCurrentStep(CurrentStep+1);
+    }
+
+    const OnModalClose = () => {
+        setModal(false)
+    }
+
+    const OnModalOpen = () => {
+        setModal(true)
+        setPreview(1)
+        console.log(1)
     }
     return (
         <div className="feature-container">
@@ -132,7 +144,7 @@ function FindFeaturePage(props) {
                     </div>
                     <div className="post-list-show-container">
                         <div className="post-list-show-wrapper">
-                            <div className="post-list-show-item">
+                            <div className="post-list-show-item" onClick={OnModalOpen}>
                                 <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
                             </div>
                             <div className="post-list-show-item">
@@ -180,8 +192,12 @@ function FindFeaturePage(props) {
                     </div>
                 </div>
             </div>
-            <div className="preview-modal">
-                ㅎㅇ
+            <div id={Modal ? "open-modal" : "close-modal"}>
+                <div className="preview-modal" onClick={OnModalClose}>
+                </div>
+                <div className="preview-modal-image">
+                    <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                </div>
             </div>
         </div>
     );
