@@ -105,20 +105,20 @@ def signup(request):
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 def emailVerification(current_site, user, email):
-    # try:    
-    current_site = current_site
-    domain = current_site.domain
-    uid64 = urlsafe_base64_encode(force_bytes(user.pk))
-    token = account_activation_token.make_token(user)
-    message_data = message(domain, uid64, token)
+    try:    
+        current_site = current_site
+        domain = current_site.domain
+        uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        message_data = message(domain, uid64, token)
 
-    mail_title = "이메일 인증을 완료해주세요"
-    mail_to = email
-    email = EmailMessage(mail_title, message_data, to=[mail_to])
-    email.send()
-    #     return True
-    # except:
-    #     return False
+        mail_title = "이메일 인증을 완료해주세요"
+        mail_to = email
+        email = EmailMessage(mail_title, message_data, to=[mail_to])
+        email.send()
+        return True
+    except:
+        return False
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -189,6 +189,7 @@ class Activate(View):
                 return redirect(EMAIL['REDIRECT_PAGE'])
             return redirect(EMAIL['REDIRECT_PAGE_FAILED'])
         except:
+            print(EMAIL['REDIRECT_PAGE_FAILED'])
             return redirect(EMAIL['REDIRECT_PAGE_FAILED'])
 
 @api_view(["POST"])
