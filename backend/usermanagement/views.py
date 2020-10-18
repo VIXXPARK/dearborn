@@ -36,7 +36,7 @@ from .token import account_activation_token
 from .text import message, changeMessage
 from backend.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT
 from backend.settings.base import EMAIL
-from smtplib import SMTPException
+from smtplib import SMTPException, SMTPConnectError
 import jwt, json
 import os
 
@@ -120,8 +120,8 @@ def emailVerification(current_site, user, email):
         sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
         sendEmail.send()
         return True
-    except SMTPException as smtpE:
-        raise smtpE
+    except Exception as e:
+        raise SMTPConnectError
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
