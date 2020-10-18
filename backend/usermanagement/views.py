@@ -36,7 +36,7 @@ from .token import account_activation_token
 from .text import message, changeMessage
 from backend.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT
 from backend.settings.base import EMAIL
-from smtplib import SMTPException, SMTPConnectError
+from smtplib import SMTPException
 import jwt, json
 import os
 
@@ -101,10 +101,9 @@ def signup(request):
     current_site = get_current_site(request)
     email = signup_serializer.validated_data['email']
 
-    try:
-        emailVerification(current_site, user, email)
-    except SMTPException as smtpE:
-        return Response({'success':False,'err':smtpE.strerror}, status=HTTP_200_OK)
+    result = emailVerification(current_site, user, email)
+    if not result:
+        return Response({'success':False,'err':result}, status=HTTP_200_OK)
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 def emailVerification(current_site, user, email):
@@ -120,8 +119,8 @@ def emailVerification(current_site, user, email):
         sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
         sendEmail.send()
         return True
-    except Exception as e:
-        raise SMTPConnectError
+    except SMTPException as smtpE:
+        return smtpE.with_traceback.
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -132,10 +131,9 @@ def emailReVerification(request):
     email = serializer.validated_data['email']
     user = User.object.get(email = email)
     current_site = get_current_site(request)
-    try:
-        result = emailVerification(current_site, user, email)
-    except SMTPException as smtpE:
-        return Response({'success':False,'err':smtpE.strerror}, status=HTTP_200_OK)
+    result = emailVerification(current_site, user, email)
+    if not result:
+        return Response({'success':False,'err':result}, status=HTTP_200_OK)
     return Response({'success':True}, status=HTTP_200_OK)
 
 def passwordChangeEmail(current_site, user, email):
@@ -150,8 +148,9 @@ def passwordChangeEmail(current_site, user, email):
         mail_to = email
         sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
         sendEmail.send()
+        return True
     except SMTPException as smtpE:
-        raise smtpE
+        return smtpE.with_traceback
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -162,10 +161,10 @@ def changeEmailRequest(request):
     email = serializer.validated_data['email']
     user = User.object.get(email = email)
     current_site = get_current_site(request)
-    try:
-        passwordChangeEmail(current_site, user, email)
-    except SMTPException as smtpE:
-        return Response({'success':False, 'err':smtpE.strerror}, status=HTTP_200_OK)
+
+    result = passwordChangeEmail(current_site, user, email)
+    if not result:
+        return Response({'success':False, 'err':result}, status=HTTP_200_OK)
     return Response({'success':True}, status=HTTP_200_OK)
 
 class UserView(APIView):
@@ -235,11 +234,10 @@ def changeProfile(request):
     user[0].profileImage = profileImage
     user[0].job = job
     user[0].content = content
-
-    try:
-        emailVerification(current_site, user, email)
-    except SMTPException as smtpE:
-        return Response({'success':False,'err' : smtpE.strerror}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    result = emailVerification(current_site, user, email)
+    if not result:
+        return Response({'success':False,'err' : result}, status=HTTP_500_INTERNAL_SERVER_ERROR)
         
     return Response({'success': True}, status = HTTP_201_CREATED)
 
