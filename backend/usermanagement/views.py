@@ -104,7 +104,7 @@ def signup(request):
     try:
         emailVerification(current_site, user, email)
     except SMTPException as smtpE:
-        return Response({'success':False,'err':smtpE.strerror}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'success':False,'err':smtpE.strerror}, status=HTTP_200_OK)
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 def emailVerification(current_site, user, email):
@@ -135,7 +135,7 @@ def emailReVerification(request):
     try:
         result = emailVerification(current_site, user, email)
     except SMTPException as smtpE:
-        return Response({'success':False,'err':smtpE.strerror}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'success':False,'err':smtpE.strerror}, status=HTTP_200_OK)
     return Response({'success':True}, status=HTTP_200_OK)
 
 def passwordChangeEmail(current_site, user, email):
@@ -165,7 +165,7 @@ def changeEmailRequest(request):
     try:
         passwordChangeEmail(current_site, user, email)
     except SMTPException as smtpE:
-        return Response({'success':False, 'err':smtpE.strerror}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'success':False, 'err':smtpE.strerror}, status=HTTP_200_OK)
     return Response({'success':True}, status=HTTP_200_OK)
 
 class UserView(APIView):
