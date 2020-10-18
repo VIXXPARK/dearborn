@@ -193,7 +193,6 @@ class Activate(View):
                 return redirect(EMAIL['REDIRECT_PAGE'])
             return redirect(EMAIL['REDIRECT_PAGE_FAILED'])
         except:
-            print(EMAIL['REDIRECT_PAGE_FAILED'])
             return redirect(EMAIL['REDIRECT_PAGE_FAILED'])
 
 @api_view(["POST"])
@@ -238,7 +237,7 @@ def changeProfile(request):
     user[0].content = content
 
     try:
-        emailVerification(current_site, user, email):
+        emailVerification(current_site, user, email)
     except SMTPException as smtpE:
         return Response({'success':False,'err' : smtpE.strerror}, status=HTTP_500_INTERNAL_SERVER_ERROR)
         
