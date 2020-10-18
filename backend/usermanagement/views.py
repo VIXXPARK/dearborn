@@ -22,7 +22,7 @@ from django.views import View
 from django.contrib.auth import logout, authenticate
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, get_connection
 from django.core.exceptions import ValidationError
 from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -116,8 +116,11 @@ def emailVerification(current_site, user, email):
 
         mail_title = "이메일 인증을 완료해주세요"
         mail_to = email
-        sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
+        connection = get_connection()
+        connection.open()
+        sendEmail = EmailMessage(mail_title, message_data, to=[mail_to], connection=connection)
         sendEmail.send()
+        connection.close()
         return True
     except SMTPException as smtpE:
         return smtpE.strerror
@@ -146,8 +149,11 @@ def passwordChangeEmail(current_site, user, email):
 
         mail_title = "비밀번호 변경 메일입니다"
         mail_to = email
-        sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
+        connection = get_connection()
+        connection.open()
+        sendEmail = EmailMessage(mail_title, message_data, to=[mail_to],connection=connection)
         sendEmail.send()
+        connection.close()
         return True
     except SMTPException as smtpE:
         return smtpE.strerror
