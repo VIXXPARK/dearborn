@@ -120,7 +120,7 @@ def emailVerification(current_site, user, email):
         sendEmail.send()
         return True
     except SMTPException as smtpE:
-        return smtpE.with_traceback
+        return smtpE.strerror
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -150,7 +150,7 @@ def passwordChangeEmail(current_site, user, email):
         sendEmail.send()
         return True
     except SMTPException as smtpE:
-        return smtpE.with_traceback
+        return smtpE.strerror
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
