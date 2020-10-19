@@ -119,8 +119,6 @@ def emailVerification(current_site, user, email):
     connection = get_connection()
     connection.open()
     sendEmail = EmailMessage(mail_title, message_data, to=[mail_to], connection=connection)
-    print(EMAIL['EMAIL_HOST_USER'])
-    print(EMAIL['EMAIL_HOST_PSSSWORD'])
     sendEmail.send()
     connection.close()
     #     return True
