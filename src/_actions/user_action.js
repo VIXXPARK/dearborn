@@ -40,7 +40,7 @@ export function auth(){
             Authorization: `Token ${getCookieValue('w_auth')}`
         }
     }
-    const request = axios.get(`${USER_SERVER}/auth`, config)
+    const request = axios.get(`${USER_SERVER}/auth/`, config)
         .then(response => response.data)
             
 

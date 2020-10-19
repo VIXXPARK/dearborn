@@ -13,6 +13,11 @@ function CheckImage(props) {
         const onSubmit = data =>{
             console.log(data)
             axios.post('/api/user/checkEmail', {email : data.email})
+            .then(response => {
+                if(!response.data.success){
+                    console.log(response.data.err)
+                }
+            })
             props.history.push('/')
         }
 
