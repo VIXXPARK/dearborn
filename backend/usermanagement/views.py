@@ -107,23 +107,23 @@ def signup(request):
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 def emailVerification(current_site, user, email):
-    try:    
-        current_site = current_site
-        domain = current_site.domain
-        uid64 = urlsafe_base64_encode(force_bytes(user.pk))
-        token = account_activation_token.make_token(user)
-        message_data = message(domain, uid64, token)
+    # try:    
+    current_site = current_site
+    domain = current_site.domain
+    uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+    token = account_activation_token.make_token(user)
+    message_data = message(domain, uid64, token)
 
-        mail_title = "이메일 인증을 완료해주세요"
-        mail_to = email
-        connection = get_connection()
-        connection.open()
-        sendEmail = EmailMessage(mail_title, message_data, to=[mail_to], connection=connection)
-        sendEmail.send()
-        connection.close()
-        return True
-    except SMTPException as smtpE:
-        return smtpE.strerror
+    mail_title = "이메일 인증을 완료해주세요"
+    mail_to = email
+    connection = get_connection()
+    connection.open()
+    sendEmail = EmailMessage(mail_title, message_data, to=[mail_to], connection=connection)
+    sendEmail.send()
+    connection.close()
+    #     return True
+    # except SMTPException as smtpE:
+    #     return smtpE.strerror
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
@@ -140,23 +140,23 @@ def emailReVerification(request):
     return Response({'success':True}, status=HTTP_200_OK)
 
 def passwordChangeEmail(current_site, user, email):
-    try:    
-        current_site = current_site
-        domain = current_site.domain
-        uid64 = urlsafe_base64_encode(force_bytes(user.pk))
-        token = account_activation_token.make_token(user)
-        message_data = changeMessage(domain, uid64, token)
+    # try:    
+    current_site = current_site
+    domain = current_site.domain
+    uid64 = urlsafe_base64_encode(force_bytes(user.pk))
+    token = account_activation_token.make_token(user)
+    message_data = changeMessage(domain, uid64, token)
 
-        mail_title = "비밀번호 변경 메일입니다"
-        mail_to = email
-        connection = get_connection()
-        connection.open()
-        sendEmail = EmailMessage(mail_title, message_data, to=[mail_to],connection=connection)
-        sendEmail.send()
-        connection.close()
-        return True
-    except SMTPException as smtpE:
-        return smtpE.strerror
+    mail_title = "비밀번호 변경 메일입니다"
+    mail_to = email
+    connection = get_connection()
+    connection.open()
+    sendEmail = EmailMessage(mail_title, message_data, to=[mail_to],connection=connection)
+    sendEmail.send()
+    connection.close()
+    #     return True
+    # except SMTPException as smtpE:
+    #     return smtpE.strerror
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))

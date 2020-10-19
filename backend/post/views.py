@@ -502,13 +502,17 @@ class PostView(ListAPIView):
         try:
             if(filterSerializer.validated_data['sort']==0):
                 if filterSerializer.validated_data['ook']==0:
+                    print(1)
                     data = self.paginate_queryset(Post.objects.filter(is_repo=False).order_by('-updated_dt'))
                 else :
+                    print(2)
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
+                    print(3)
                     data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('updated_dt'))
                 else :
+                    print(4)
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('updated_dt'))
             postData = []
             for post in data:
