@@ -4,7 +4,7 @@ import os
 from .base import *
 from .base import EMAIL
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
