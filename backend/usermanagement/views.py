@@ -34,7 +34,7 @@ from .authentication import token_expire_handler, expires_in
 from .models import User
 from .token import account_activation_token
 from .text import message, changeMessage
-from backend.settings.local import TOKEN_EXPIRED_AFTER_SECONDS, SECRET_KEY, MEDIA_ROOT
+from backend.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT
 from backend.settings.base import EMAIL
 import jwt, json
 import os
@@ -114,8 +114,8 @@ def emailVerification(current_site, user, email):
 
         mail_title = "이메일 인증을 완료해주세요"
         mail_to = email
-        email = EmailMessage(mail_title, message_data, to=[mail_to])
-        email.send()
+        sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
+        sendEmail.send()
         return True
     except:
         return False
@@ -144,8 +144,8 @@ def passwordChangeEmail(current_site, user, email):
 
         mail_title = "비밀번호 변경 메일입니다"
         mail_to = email
-        email = EmailMessage(mail_title, message_data, to=[mail_to])
-        email.send()
+        sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
+        sendEmail.send()
         return True
     except:
         return False
@@ -189,6 +189,7 @@ class Activate(View):
                 return redirect(EMAIL['REDIRECT_PAGE'])
             return redirect(EMAIL['REDIRECT_PAGE_FAILED'])
         except:
+            print(EMAIL['REDIRECT_PAGE_FAILED'])
             return redirect(EMAIL['REDIRECT_PAGE_FAILED'])
 
 @api_view(["POST"])

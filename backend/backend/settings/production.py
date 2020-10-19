@@ -1,5 +1,6 @@
 import dj_database_url
 import django_heroku
+import os
 from .base import *
 from .base import EMAIL
 
@@ -25,6 +26,11 @@ CLOUD_NAME= os.environ.get('CLOUD_NAME')
 API_KEY = os.environ.get('API_KEY')
 API_SECRET = os.environ.get('API_SECRET')
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+    }
+}
 
 EMAIL = {
     'EMAIL_BACKEND' : EMAIL_BACKEND,
