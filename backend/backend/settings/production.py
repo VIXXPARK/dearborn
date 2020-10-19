@@ -19,7 +19,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 REDIRECT_PAGE = os.environ.get("REDIRECT_PAGE")
 REDIRECT_PAGE_FAILED = os.environ.get("REDIRECT_PAGE_FAILED")
-
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 CLOUD_NAME= os.environ.get('CLOUD_NAME')
