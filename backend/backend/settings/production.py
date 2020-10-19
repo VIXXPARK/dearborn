@@ -21,6 +21,9 @@ REDIRECT_PAGE_FAILED = os.environ.get("REDIRECT_PAGE_FAILED")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
+print(EMAIL_HOST_USER)
+print(EMAIL_HOST_PASSWORD)
+
 CLOUD_NAME= os.environ.get('CLOUD_NAME')
 API_KEY = os.environ.get('API_KEY')
 API_SECRET = os.environ.get('API_SECRET')
