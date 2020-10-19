@@ -12,6 +12,7 @@ MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
 EMAIL_PORT = os.environ.get("EMAIL_PORT")
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
