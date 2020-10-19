@@ -20,7 +20,6 @@ SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 REDIRECT_PAGE = os.environ.get("REDIRECT_PAGE")
 REDIRECT_PAGE_FAILED = os.environ.get("REDIRECT_PAGE_FAILED")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
-
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 CLOUD_NAME= os.environ.get('CLOUD_NAME')
@@ -37,9 +36,9 @@ EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
 EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'YOUR_CLOUD_NAME',
-    'API_KEY': 'YOUR_API_KEY',
-    'API_SECRET' : 'YOUR_API_SECRET',
+    'CLOUD_NAME': 'CLOUD_NAME',
+    'API_KEY': 'API_KEY',
+    'API_SECRET' : 'API_SECRET',
 }
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -49,3 +48,4 @@ db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
 django_heroku.settings(locals())
+#heroku!!
