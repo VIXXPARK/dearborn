@@ -6,6 +6,6 @@ def custom_exception_handler(exc, context):
     if isinstance(exc, (exceptions.AuthenticationFailed, exceptions.NotAuthenticated)):
         response = Response({'isAuth':False})
     else:
-        response = views.exception_handler(exc, context)
+        response = response = views.exception_handler(exc, context)
 
     return response

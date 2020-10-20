@@ -12,10 +12,7 @@ import {
 import {USER_SERVER} from '../components/Config'
 
 export function registerUser(data){
-    const config = {
-        header : {'Content-Type' : 'multipart/form-data'}
-    }
-    const request = axios.post(`${USER_SERVER}/register`, data, config)
+    const request = axios.post(`${USER_SERVER}/register`, data)
     .then(response => response.data)
 
     return {
@@ -40,7 +37,7 @@ export function auth(){
             Authorization: `Token ${getCookieValue('w_auth')}`
         }
     }
-    const request = axios.get(`${USER_SERVER}/auth`, config)
+    const request = axios.get(`${USER_SERVER}/auth/`, config)
         .then(response => response.data)
             
 

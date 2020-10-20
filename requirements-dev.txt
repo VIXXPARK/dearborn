@@ -1,5 +1,4 @@
 absl-py==0.10.0
-allauth-django==0.42.6
 annoy==1.17.0
 appdirs==1.4.4
 asgiref==3.2.10
@@ -25,11 +24,8 @@ django-mysql==3.8.1
 django-rest-auth==0.9.5
 django-templated-mail==1.1.1
 djangorestframework==3.11.0
-djangorestframework-jwt==1.11.0
-djangorestframework-simplejwt==4.4.0
-djoser==2.0.3
 filelock==3.0.12
-gast==0.3.3
+gast==0.2.2
 google-auth==1.22.1
 google-auth-oauthlib==0.4.1
 google-pasta==0.2.0
@@ -44,6 +40,8 @@ Keras-Preprocessing==1.1.2
 lazy-object-proxy==1.4.3
 Markdown==3.2.2
 mccabe==0.6.1
+mysql-connector-python==8.0.20
+mysqlclient==2.0.1
 numpy==1.18.5
 oauthlib==3.1.0
 opt-einsum==3.3.0
@@ -74,7 +72,6 @@ typed-ast==1.4.1
 urllib3==1.25.9
 Werkzeug==1.0.1
 white==0.1.2
-whitenoise==5.2.0
 win-inet-pton==1.1.0
 wincertstore==0.2
 wrapt==1.12.1

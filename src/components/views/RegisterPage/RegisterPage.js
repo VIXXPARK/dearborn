@@ -50,6 +50,13 @@ function RegisterPage(props) {
             formData.append('password', data.password)
             formData.append('job', Job)
             formData.append('nickname', data.nickname)
+            console.log(ProfileImage)
+            console.log( data.content)
+            console.log(tempMajor)
+            console.log(data.email)
+            console.log( data.password)
+            console.log( Job)
+            console.log( data.nickname)
             
             alert('이메일 인증을 확인해주세요')
             if(data.confirmPassword !== data.password){

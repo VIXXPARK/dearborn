@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './Sections/NavBar.css'
 import { useSelector } from 'react-redux';
@@ -7,8 +7,8 @@ import {useDispatch} from 'react-redux'
 import {USER_SERVER} from '../../Config'
 
 import {logoutUser} from '../../../_actions/user_action'
-import { Avatar, Dropdown, Menu } from 'antd';
-
+import { Avatar, Button, Drawer, Dropdown, Menu } from 'antd';
+import {MenuOutlined} from '@ant-design/icons'
 import Dearborn from '../../assets/Dearborn.png'
 
 function NavBar(props) {
@@ -16,6 +16,8 @@ function NavBar(props) {
     const dispatch = useDispatch()
 
     const user = useSelector(state => state.user)
+
+    const [Visible, setVisible] = useState(false)
 
     const logoutHandler = () =>{
         dispatch(logoutUser()).then(response =>{
@@ -26,6 +28,14 @@ function NavBar(props) {
                 console.log(response.payload.err)
             }
         })
+    }
+
+    const showDrawer = () => {
+        setVisible(true)
+    }
+
+    const onClose = () => {
+        setVisible(false)
     }
 
     const menu = (
@@ -63,12 +73,24 @@ function NavBar(props) {
                         </div>}
                         <div className="nav-bar-profile pull-right">
                             <Dropdown overlay={menu} placement="bottomLeft" arrow>
-                                <a style={{color:'white'}}>{user.userData && user.userData.nickname ? user.userData.nickname+"님" : null}</a>
+                                <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'26px' }} size="middle" gap={4}>
+                                    {user.userData && user.userData.nickname ? user.userData.nickname[0] : null}
+                                </Avatar>
                             </Dropdown>
                         </div>
                         </>)
                         }
                     </div>
+                    <Button className="drawer" type="primary" onClick={showDrawer}>
+                        <MenuOutlined />
+                    </Button>
+                    <Drawer
+                        closable={false}
+                        onClose={onClose}
+                        visible={Visible}
+                    >
+
+                    </Drawer>
                 </div>
             </div>
         </header>

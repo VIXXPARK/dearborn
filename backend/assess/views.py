@@ -22,7 +22,7 @@ class saveAssess(APIView):
     def post(self,request):
         assessed = saveValueSerializer(data=request.data)
         if not assessed.is_valid():
-            return Response({'Success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'Success':False,'err':assessed.error_messages},status=HTTP_400_BAD_REQUEST)
         assessed.save()
         context={
             'success':True
@@ -40,7 +40,7 @@ class getAssess(APIView):
         count=0
         assessed = getValueSerializer(data=request.data)
         if not assessed.is_valid():
-            return Response({'Success':False,'data':request.data},status=HTTP_400_BAD_REQUEST)
+            return Response({'Success':False,'err':assessed.error_messages},status=HTTP_400_BAD_REQUEST)
         assessData = Assess.objects.filter(post=assessed.validated_data['post'])
         List=[]
         

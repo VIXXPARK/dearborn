@@ -1,5 +1,6 @@
 import { Menu } from 'antd';
 import React, { useState } from 'react';
+import {LoadingOutlined, RightSquareOutlined} from '@ant-design/icons'
 
 import './FindFeaturePage.css'
 const {SubMenu} = Menu
@@ -8,12 +9,17 @@ function FindFeaturePage(props) {
     const [CurrentStep, setCurrentStep] = useState(1)
     const [Modal, setModal] = useState(false)
     const [Preview, setPreview] = useState(undefined)
+    const [Loading, setLoading] = useState(false)
     const handleCategoryClick = (e) => {
         console.log(e)
     }
 
     const OnNextClick = () =>{
-        setCurrentStep(CurrentStep+1);
+        setLoading(true)
+        setTimeout(function(){
+            setCurrentStep(CurrentStep+1)
+            setLoading(false)
+        }, 2000);
     }
 
     const OnModalClose = () => {
@@ -34,7 +40,7 @@ function FindFeaturePage(props) {
                     </div>
                     <Menu
                         onClick={handleCategoryClick}
-                        style={{width:400, height:'300px',overflowX:'hidden', overflowY:'scroll'}}
+                        style={{border:"1px solid black",width:400, height:'300px',overflowX:'hidden', overflowY:'scroll'}}
                         defaultOpenKeys={['clothes','accessory','shoes']}
                         mode="inline"
                     >
@@ -87,7 +93,7 @@ function FindFeaturePage(props) {
                         </SubMenu>
                     </Menu>
                     <div className="next-btn-wrapper">
-                        <button className="next-btn" onClick={OnNextClick}>다음 STEP</button>
+                        <button className="next-btn" onClick={OnNextClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
                     </div>
                 </div>
                 <div className="feature-step2" id={CurrentStep === 2 ? "step-on" : "step-off"}>
@@ -96,7 +102,7 @@ function FindFeaturePage(props) {
                     </div>
                     <div className="post-list-show-container">
                         <div className="post-list-show-wrapper">
-                            <div className="post-list-show-item">
+                            <div className="post-list-show-item" onClick={OnModalOpen}>
                                 <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
                             </div>
                             <div className="post-list-show-item">
@@ -135,11 +141,11 @@ function FindFeaturePage(props) {
                         </div>
                     </div>
                     <div className="next-btn-wrapper">
-                        <button className="next-btn" onClick={OnNextClick}>다음 STEP</button>
+                        <button className="next-btn" onClick={OnNextClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
                     </div>
                 </div>
                 <div className="feature-step3" id={CurrentStep === 3 ? "step-on" : "step-off"}>
-                <div className="feature-title2">
+                    <div className="feature-title2">
                         <span style={{textAlign:'left',marginLeft:'10px', fontSize:'30px', fontWeight:'bold'}}>STEP 3:<br/> 원하는<br/> 포스트 선택</span>
                     </div>
                     <div className="post-list-show-container">
@@ -183,12 +189,58 @@ function FindFeaturePage(props) {
                         </div>
                     </div>
                     <div className="next-btn-wrapper">
-                        <button className="next-btn" onClick={OnNextClick}>다음 STEP</button>
+                        <button className="next-btn" onClick={OnNextClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
                     </div>
                 </div>
                 <div className="feature-step4" id={CurrentStep === 4 ? "step-on" : "step-off"}>
                     <div className="feature-title">
                         <h1>STEP 4: 카테고리 설정</h1>
+                    </div>
+                    <div className="feature-result-container">
+                        <div className="feature-result-item">
+                            <div className="feature-result-item-thumb">
+                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                            </div>
+                            <div className="feature-result-item-title">
+                                타이틀
+                            </div>
+                            <div className="feature-result-item-btn">
+                                <RightSquareOutlined/>
+                            </div>
+                        </div>
+                        <div className="feature-result-item">
+                            <div className="feature-result-item-thumb">
+                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                            </div>
+                            <div className="feature-result-item-title">
+                                타이틀
+                            </div>
+                            <div className="feature-result-item-btn">
+                                <RightSquareOutlined/>
+                            </div>
+                        </div>
+                        <div className="feature-result-item">
+                            <div className="feature-result-item-thumb">
+                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                            </div>
+                            <div className="feature-result-item-title">
+                                타이틀
+                            </div>
+                            <div className="feature-result-item-btn">
+                                <RightSquareOutlined/>
+                            </div>
+                        </div>
+                        <div className="feature-result-item">
+                            <div className="feature-result-item-thumb">
+                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                            </div>
+                            <div className="feature-result-item-title">
+                                타이틀
+                            </div>
+                            <div className="feature-result-item-btn">
+                                <RightSquareOutlined/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

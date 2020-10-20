@@ -1,4 +1,5 @@
 from .base import *
+from .base import EMAIL
 
 DEBUG = True
 
@@ -23,7 +24,7 @@ def get_secret(setting, secrets=secrets):
         print("check",secrets[setting])
         return secrets[setting]
     except:
-        print("111")
+        pass
 SECRET_KEY = get_secret("SECRET_KEY")
 
 EMAIL_BACKEND = get_secret("EMAIL_BACKEND")
@@ -33,6 +34,8 @@ EMAIL_HOST = get_secret("EMAIL_HOST")
 EMAIL_HOST_USER = get_secret("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = get_secret("EMAIL_HOST_PASSWORD")
 SERVER_EMAIL = get_secret("SERVER_EMAIL")
+REDIRECT_PAGE = get_secret("REDIRECT_PAGE")
+REDIRECT_PAGE_FAILED = get_secret("REDIRECT_PAGE_FAILED")
 
 EMAIL = {
     'EMAIL_BACKEND' : EMAIL_BACKEND,
@@ -42,5 +45,6 @@ EMAIL = {
     'EMAIL_HOST_USER' : EMAIL_HOST_USER,
     'EMAIL_HOST_PASSWORD' : EMAIL_HOST_PASSWORD,
     'SERVER_EMAIL' : SERVER_EMAIL,
-
+    'REDIRECT_PAGE' : REDIRECT_PAGE,
+    'REDIRECT_PAGE_FAILED' : REDIRECT_PAGE_FAILED,
 }

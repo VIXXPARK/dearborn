@@ -8,6 +8,7 @@ from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import APIException
 from rest_framework.pagination import LimitOffsetPagination
 class ContestViewSet(ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -16,9 +17,15 @@ class ContestViewSet(ModelViewSet):
     parser_classes = (MultiPartParser,FormParser)
 
     def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        instance = response.data
-        return Response({'success': True})
+        try:
+            response = super().create(request, *args, **kwargs)
+            instance = response.data
+            return Response({'success': True})
+        except APIException as e:
+            return Response({'success':True, 'err':e.detail}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        
+        
 
 class ContestPostViewSet(ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -27,9 +34,13 @@ class ContestPostViewSet(ModelViewSet):
     parser_classes = (MultiPartParser,FormParser)
 
     def create(self,request,*args,**kwargs):
-        response = super().create(request, *args, **kwargs)
-        instance = response.data
-        return Response({'success': True})
+        try:
+            response = super().create(request, *args, **kwargs)
+            instance = response.data
+            return Response({'success': True})
+        except APIException as e:
+            return Response({'success': False, 'err':e.detail}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
 class getHostView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
@@ -37,7 +48,7 @@ class getHostView(ListAPIView):
     def post(self,request):
         contestId = getContestIdSerializer(data=request.data)
         if not contestId.is_valid():
-            return Response({'success':False},status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':contestId.error_messages},status=status.HTTP_400_BAD_REQUEST)
        
         contestdata = Contest.objects.get(id=contestId.validated_data['id'])
         userdata = User.object.get(email=contestdata.user)
@@ -74,7 +85,7 @@ class getContest(ListAPIView):
     def post(self,request):
         sortdata = sortSerializer(data=request.data)
         if not sortdata.is_valid():
-            return Response({'succes':False},status=status.HTTP_400_BAD_REQUEST)
+            return Response({'succes':False,'err':sortdata.error_messages},status=status.HTTP_400_BAD_REQUEST)
         if(sortdata.validated_data['sort']==0):
             contestVal = self.paginate_queryset(Contest.objects.all().order_by('-updated_dt'))
         else:
@@ -105,7 +116,7 @@ class infoContest(ListAPIView):
     def post(self,request):
         userdata = getUserSerializer(data=request.data)
         if not userdata.is_valid():
-            return Response({'success':False},status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':userdata.error_messages},status=status.HTTP_400_BAD_REQUEST)
         data = self.paginate_queryset(Contest.objects.filter(user=userdata.validated_data['user']).order_by('-updated_dt'))
         postJson = []
         for x in data:
@@ -134,7 +145,7 @@ class contestPostListView(ListAPIView):
     def post(self,request):
         contestdata =getContestIdSerializer(data=request.data)
         if not contestdata.is_valid():
-            return Response({'success':False},status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':contestdata.error_messages},status=status.HTTP_400_BAD_REQUEST)
         contestPostdata = self.paginate_queryset(ContestPost.objects.filter(contest=contestdata.validated_data['id']).order_by('-updated_dt'))
         postJson = []
         for x in contestPostdata:
@@ -159,7 +170,7 @@ class contestPostDetail(APIView):
         def post(self,request):
             itemdata = getContestIdSerializer(data=request.data)
             if not itemdata.is_valid():
-                return Response({'success':False},status=status.HTTP_400_BAD_REQUEST)
+                return Response({'success':False,'err':itemdata.error_messages},status=status.HTTP_400_BAD_REQUEST)
             contestItemData = ContestPost.objects.get(id=itemdata.validated_data['id'])
             contestImageData = ContestPostImage.objects.filter(contestPost=contestItemData.id)
             images = []
@@ -183,7 +194,7 @@ class ContestDetail(APIView):
     def post(self,request):
         contestID = getContestIdSerializer(data=request.data)
         if not contestID.is_valid():
-            return Response({'success':False,},status = status.HTTP_400_BAD_REQUEST)
+            return Response({'success':False,'err':contestID.error_messages},status = status.HTTP_400_BAD_REQUEST)
 
         contestdata = Contest.objects.get(id=contestID.validated_data['id'])
         userdata = User.object.get(id = contestdata.user.id)
