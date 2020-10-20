@@ -18,6 +18,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'background_task',
+    'cloudinary_storage',
+    'cloudinary',
 
     'usermanagement.apps.UsermanagementConfig',
     'post.apps.PostConfig',

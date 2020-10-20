@@ -45,12 +45,11 @@ class UserSerializer(serializers.ModelSerializer):
         profileImage = validated_data['profileImage']
         content = validated_data['content']
         
-        # try:
-        new_user = myManager.create_user(email, password, nickname = nickname,
-            job = job, major = major,profileImage=profileImage, content=content)
-        return new_user
-        # except:
-            # raise IntegrityError
+        try:
+            new_user = myManager.create_user(email, password, nickname = nickname, job = job, major = major,profileImage=profileImage, content=content)
+            return new_user
+        except:
+            raise IntegrityError
 
     class Meta:
         model = User
