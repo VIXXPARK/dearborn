@@ -152,11 +152,11 @@ function UploadVotePage(props) {
                     onChange={handleThumbChange}
                     showUploadList={false}
                 >
-                    {ThumbnailUrl ? <img src={ThumbnailUrl} style={{width:'300px', height:'400px', backgroundColor:'white'}}/> : uploadThumbButton}
+                    {ThumbnailUrl ? <div style={{width:'300px', height:'400px', backgroundColor:'white'}}><img src={ThumbnailUrl} style={{width:'100%', height:'100%'}}/><div style={{position:'relative', backgroundColor:'gray', height:'50px', top:-400, left:0,color:'white', opacity:'50%', fontSize:'20px', lineHeight:'50px'}}>썸 네 일</div></div> : uploadThumbButton}
                 </Upload>
                 {FileList && FileList.map((file, i)=>(
                     <div key={i} className="upload-block-prev">
-                        <img style={{width:'300px',height:'400px', backgroundColor:'white'}} src={file.preview}/>
+                        <img style={{width:'100%', height:'100%'}} src={file.preview}/>
                     </div>
                 ))}
                 <Upload

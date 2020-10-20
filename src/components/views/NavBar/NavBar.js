@@ -73,7 +73,7 @@ function NavBar(props) {
                         </div>}
                         <div className="nav-bar-profile pull-right">
                             <Dropdown overlay={menu} placement="bottomLeft" arrow>
-                                <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'26px' }} size="middle" gap={4}>
+                                <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} size="middle" gap={4}>
                                     {user.userData && user.userData.nickname ? user.userData.nickname[0] : null}
                                 </Avatar>
                             </Dropdown>
