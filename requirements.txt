@@ -49,7 +49,6 @@ mccabe==0.6.1
 mysql-connector-python==8.0.20
 mysqlclient==2.0.1
 numpy==1.18.5
-oauthlib==3.1.0
 opt-einsum==3.3.0
 Pillow==7.2.0
 protobuf==3.13.0
