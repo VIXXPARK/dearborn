@@ -114,7 +114,7 @@ function UploadModifyPage(props) {
                     props.history.push('/')
                 }
                 else{
-                    return alert('페이지 업로드 실패')
+                    console.log(response.data.err)
                 }
         })
 

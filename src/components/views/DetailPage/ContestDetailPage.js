@@ -23,6 +23,8 @@ function ContestDetailPage(props) {
             if(response.data.success){
                 setContest(response.data.contest)
                 setHost(response.data.host)
+            }else{
+                console.log(response.data.err)
             }
         })
     }, [])
@@ -71,7 +73,7 @@ function ContestDetailPage(props) {
             if(response.data.success){
                 alert('성공')
             }else{
-                alert('실패')
+                console.log(response.data.err)
             }
         })
     }

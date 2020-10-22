@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './Sections/NavBar.css'
 import { useSelector } from 'react-redux';
@@ -7,8 +7,8 @@ import {useDispatch} from 'react-redux'
 import {USER_SERVER} from '../../Config'
 
 import {logoutUser} from '../../../_actions/user_action'
-import { Avatar, Dropdown, Menu } from 'antd';
-
+import { Avatar, Button, Drawer, Dropdown, Menu } from 'antd';
+import {MenuOutlined} from '@ant-design/icons'
 import Dearborn from '../../assets/Dearborn.png'
 
 function NavBar(props) {
@@ -17,15 +17,25 @@ function NavBar(props) {
 
     const user = useSelector(state => state.user)
 
+    const [Visible, setVisible] = useState(false)
+
     const logoutHandler = () =>{
         dispatch(logoutUser()).then(response =>{
             if(response.payload.success){
                 props.history.push('/login')
                 window.localStorage.setItem('userId', "")
             }else{
-                alert('logout Failed')
+                console.log(response.payload.err)
             }
         })
+    }
+
+    const showDrawer = () => {
+        setVisible(true)
+    }
+
+    const onClose = () => {
+        setVisible(false)
     }
 
     const menu = (
@@ -57,18 +67,30 @@ function NavBar(props) {
                         <div className="logged-out pull-right">로그인하세요<a href="/login"><div className="navbar-button">로그인</div></a></div>
                         </>) :
                         (<>
-                        <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
+                        <div className="logged-out pull-right"><div className="navbar-button"><a onClick={logoutHandler}>로그아웃</a></div></div>
                         {user.userData && user.userData.job ===1 &&<div className="register pull-right">
                             <a href="/upload"><div className="navbar-button">업로드</div></a>
                         </div>}
                         <div className="nav-bar-profile pull-right">
                             <Dropdown overlay={menu} placement="bottomLeft" arrow>
-                                <a style={{color:'white'}}>{user.userData && user.userData.nickname ? user.userData.nickname+"님" : null}</a>
+                                <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} size="middle" gap={4}>
+                                    {user.userData && user.userData.nickname ? user.userData.nickname[0] : null}
+                                </Avatar>
                             </Dropdown>
                         </div>
                         </>)
                         }
                     </div>
+                    <Button className="drawer" type="primary" onClick={showDrawer}>
+                        <MenuOutlined />
+                    </Button>
+                    <Drawer
+                        closable={false}
+                        onClose={onClose}
+                        visible={Visible}
+                    >
+
+                    </Drawer>
                 </div>
             </div>
         </header>

@@ -17,7 +17,7 @@ function CommentArea(props) {
                 console.log(response.data.comments)
                 setComments(response.data.comments)
             }else{
-                alert('댓글 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }, [])
@@ -50,7 +50,7 @@ function CommentArea(props) {
                 setComments(Comments.concat(variable))
                 alert('성공')
             }else{
-                alert('실패')
+                console.log(response.data.err)
             }
         })
         setCommentValue("")
@@ -71,7 +71,7 @@ function CommentArea(props) {
                     const deleteIndex = Comments.indexOf(comment)
                     setComments(Comments.slice(0, deleteIndex).concat(Comments.slice(deleteIndex+1, Comments.length)))
                 }else{
-                    alert('실패')
+                    console.log(response.data.err)
                 }
             })
         }

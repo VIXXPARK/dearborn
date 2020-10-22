@@ -25,7 +25,7 @@ function BlogPage_Prod_About(props) {
                 setDesigner(response.data.user)
                 getAbout(response.data.user.id)
             }else{
-                alert('데이터 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }, [])
@@ -37,7 +37,7 @@ function BlogPage_Prod_About(props) {
             if(response.data.success){
                 setAbout(response.data.about)
             }else{
-                alert('대표작품 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }

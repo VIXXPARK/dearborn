@@ -28,7 +28,7 @@ function AssessShow(props) {
                     data : 
                     [ 0, 0, 0, 0, 0 ]
                 }])
-                alert('assess 정보 가져오기 실패')
+                console.log(response.data.err)
             }
         })}
     }, [props.assessValue, props.postId])

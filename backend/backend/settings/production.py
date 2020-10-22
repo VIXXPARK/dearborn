@@ -31,9 +31,7 @@ DATABASES = {
 EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
 EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
 
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)

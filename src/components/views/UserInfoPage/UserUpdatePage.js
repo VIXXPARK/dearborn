@@ -32,7 +32,7 @@ function UserUpdatePage(props) {
                 setPreview(response.data.user.profileImage)
                 setContent(response.data.user.content)
             }else{
-                alert('데이터 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }, [])
@@ -69,7 +69,7 @@ function UserUpdatePage(props) {
             if(response.data.success){
                 props.history.push('/modify')
             }else{
-                alert('실패')
+                console.log(response.data.err)
             }
         })
     }

@@ -50,6 +50,13 @@ function RegisterPage(props) {
             formData.append('password', data.password)
             formData.append('job', Job)
             formData.append('nickname', data.nickname)
+            console.log(ProfileImage)
+            console.log( data.content)
+            console.log(tempMajor)
+            console.log(data.email)
+            console.log( data.password)
+            console.log( Job)
+            console.log( data.nickname)
             
             alert('이메일 인증을 확인해주세요')
             if(data.confirmPassword !== data.password){
@@ -60,13 +67,13 @@ function RegisterPage(props) {
                     axios.post('/api/user/checkEmail', {email : data.email})
                 .then(response => {
                     if(!response.data.success){
-                        return alert('이메일이 이미 있습니다.')
+                        console.log(response.data.err)
                     }
                     //이메일 중복이 아닐경우 이메일 체킹
                     props.history.push('/login')
                 })
                 }else{
-                    alert(response.payload.err.errmsg)
+                    alert(response.payload.err)
                 }
             })
             

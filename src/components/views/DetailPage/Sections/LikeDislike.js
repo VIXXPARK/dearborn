@@ -22,7 +22,7 @@ function LikeDislike(props) {
                     }
                 })
             }else{
-                alert('좋아요 가져오기 실패')
+                console.log(response.data.err)
             }
         })
 
@@ -33,7 +33,7 @@ function LikeDislike(props) {
                 if(response.data.dislike.length !== 0)
                     setDisliked(true)
             }else{
-                alert('싫어요 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }, [])
@@ -47,7 +47,7 @@ function LikeDislike(props) {
                     setLiked(false)
                     setLikes(Likes-1)
                 }else{
-                    alert('좋아요 취소 실패')
+                    console.log(response.data.err)
                 }
             })
         }else{
@@ -57,7 +57,7 @@ function LikeDislike(props) {
                     if(response.status === 204){
                         setDisliked(false)
                     }else{
-                        alert('싫어요 취소 실패')
+                        console.log(response.data.err)
                     }
                 })
             }
@@ -67,7 +67,7 @@ function LikeDislike(props) {
                     setLiked(true)
                     setLikes(Likes+1)
                 }else{
-                    alert('좋아요 실패')
+                    console.log(response.data.err)
                 }
             })
         }
@@ -81,7 +81,7 @@ function LikeDislike(props) {
                     if(response.status === 204){
                         setDisliked(false)
                     }else{
-                        alert('싫어요 취소 실패')
+                        console.log(response.data.err)
                     }
                 })
         }else{
@@ -92,7 +92,7 @@ function LikeDislike(props) {
                         setLiked(false)
                         setLikes(Likes-1)
                     }else{
-                        alert('좋아요 취소 실패')
+                        console.log(response.data.err)
                     }
                 })
             }
@@ -102,7 +102,7 @@ function LikeDislike(props) {
                     setDisliked(true)
                     
                 }else{
-                    alert('싫어요 실패')
+                    console.log(response.data.err)
                 }
             })
         }

@@ -28,7 +28,7 @@ function BlogPage_Prod_Bid(props) {
                 setDesigner(response.data.user)
                 getPosts(response.data.user.id)
             }else{
-                alert('데이터 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }, [])
@@ -43,7 +43,7 @@ function BlogPage_Prod_Bid(props) {
                 setPosts(response.data.posts)
                 setSkip(Skip+Limit)
             }else{
-                alert('실패')
+                console.log(response.data.err)
             }
         })
     }
