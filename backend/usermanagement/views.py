@@ -37,6 +37,7 @@ from .text import message, changeMessage
 from backend.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT
 from backend.settings.base import EMAIL
 from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 from smtplib import SMTPException
 import jwt, json
 import os
@@ -117,9 +118,15 @@ def emailVerification(current_site, user, email):
 
     mail_title = "이메일 인증을 완료해주세요"
     mail_to = email
-    mailData = EmailMessage(mail_title,message_data,'dearborn0819@gmail.com',[mail_to])
+    senMessage = Mail(
+        from_email='dearborn0819@gmail.com',
+        to_emails=mail_to,
+        subject=mail_title,
+        html_content=message_data
+    )
+
     sg = SendGridAPIClient(EMAIL['SENDGRID_API_KEY'])
-    sg.send(mailData)
+    sg.send(senMessage)
     #     return True
     # except SMTPException as smtpE:
     #     return smtpE.strerror
@@ -148,9 +155,15 @@ def passwordChangeEmail(current_site, user, email):
 
     mail_title = "비밀번호 변경 메일입니다"
     mail_to = email
-    mailData = EmailMessage(mail_title,message_data,'dearborn0819@gmail.com',[mail_to])
+    senMessage = Mail(
+        from_email='dearborn0819@gmail.com',
+        to_emails=mail_to,
+        subject=mail_title,
+        html_content=message_data
+    )
+
     sg = SendGridAPIClient(EMAIL['SENDGRID_API_KEY'])
-    sg.send(mailData)
+    sg.send(senMessage)
     #     return True
     # except SMTPException as smtpE:
     #     return smtpE.strerror
