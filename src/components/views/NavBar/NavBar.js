@@ -67,7 +67,7 @@ function NavBar(props) {
                         <div className="logged-out pull-right">로그인하세요<a href="/login"><div className="navbar-button">로그인</div></a></div>
                         </>) :
                         (<>
-                        <div className="logged-out pull-right"><div className="navbar-button"><a onClick={logoutHandler}>로그아웃</a></div></div>
+                        <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
                         {user.userData && user.userData.job ===1 &&<div className="register pull-right">
                             <a href="/upload"><div className="navbar-button">업로드</div></a>
                         </div>}
