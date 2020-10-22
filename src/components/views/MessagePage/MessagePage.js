@@ -23,6 +23,8 @@ function MessagePage(props) {
         .then(response => {
             if(response.data.success){
                 setMessages(response.data.messages)
+            }else{
+                console.log(response.data.err)
             }
         })
     }, [])

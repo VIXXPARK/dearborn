@@ -30,7 +30,7 @@ function BlogPage_Cons_Bid(props) {
                 setDesigner(response.data.user)
                 getPosts(response.data.user.id)
             }else{
-                alert('데이터 가져오기 실패')
+                console.log(response.data.err)
             }
         })
         window.addEventListener('scroll', handleScroll)
@@ -71,6 +71,8 @@ function BlogPage_Cons_Bid(props) {
                 }
                 
                 setSkip(Skip + Limit)
+            }else{
+                console.log(response.data.err)
             }
         })
     }

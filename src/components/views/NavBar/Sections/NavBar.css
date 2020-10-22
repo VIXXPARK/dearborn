@@ -2,10 +2,9 @@
 
 #header {
     height: 66px;
-    min-width: 570px;
     z-index : 40;
     top: 0px;
-    border-bottom: 0.01px solid gray;
+    border-bottom: 0.01px solid powderblue;
     background-color: white;
 }
 @media(min-width:900px){
@@ -59,19 +58,35 @@
     width:100px;
     height:40px;
     background-color: powderblue;
-    color: blue;
     border-radius: 30px;
     font-size: 20px;
     font-style: bold;
     text-align: center;
     padding-top: 5px;
-    opacity: 80%;
 }
 
 .nav-bar-profile{
     margin-top: 8px;
     font-size: 25px;
-    padding: 5px;
-    border-radius: 15px;
-    background-color: #809edf;
+    padding: 2px;
+}
+
+@media(max-width:899px){
+    .row-log{
+        display: none;
+    }
+}
+
+@media(min-width:900px){
+    .drawer{
+        display: none;
+    }
+}
+
+@media(max-width:899px){
+    .drawer{
+        display: block;
+        margin:17px;
+        float:right;
+    }
 }

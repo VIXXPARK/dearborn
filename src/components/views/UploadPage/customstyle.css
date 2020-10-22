@@ -1,4 +1,8 @@
-.upload-container .ant-upload-picture-card-wrapper:nth-child(1) {
+.upload-left-container .upload-container .ant-upload-picture-card-wrapper:nth-child(1) {
     margin-right:50px;
-    width:104px;
+    width:300px;
+}
+
+.upload-left-container .upload-block {
+    padding-top: 180px;
 }

@@ -28,7 +28,7 @@ function UserInfoMainPage(props) {
                 alert('삭제되었습니다.')
                 props.history.push('/')
             }else{
-                alert('삭제 실패')
+                console.log(response.data.err)
             }
         })
     }

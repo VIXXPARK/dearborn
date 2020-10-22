@@ -50,7 +50,7 @@ function AssessArea(props) {
                     trend : Trend,
                 })
             }else{
-                alert('실패')
+                console.log(response.data.err)
             }
         })
     }

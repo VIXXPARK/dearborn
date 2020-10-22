@@ -51,7 +51,7 @@ function RepoListPage(props) {
                     setPosts(response.data.repos)
                 }
             }else{
-                alert('데이터 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }

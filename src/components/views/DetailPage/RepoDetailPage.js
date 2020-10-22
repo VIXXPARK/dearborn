@@ -30,7 +30,7 @@ function RepoDetailPage(props) {
                 setRepo(response.data.detailPost)
                 setWriter(response.data.user)
             }else{
-                alert('데이터 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }, [])
@@ -81,7 +81,7 @@ function RepoDetailPage(props) {
                     if(response.data.success){
                         alert('성공')
                     }else{
-                        alert('실패')
+                        console.log(response.data.err)
                     }
                 })
             }
@@ -99,7 +99,7 @@ function RepoDetailPage(props) {
                 alert('삭제 성공')
                 props.history.push('/')
             }else{
-                alert('실패')
+                console.log(response.data.err)
             }
         })
     }

@@ -39,7 +39,7 @@ function BlogPage_Cons_Event(props) {
                 setDesigner(response.data.user)
                 getPosts(response.data.user.id)
             }else{
-                alert('데이터 가져오기 실패')
+                console.log(response.data.err)
             }
         })
         window.addEventListener('scroll', handleScroll)
@@ -77,7 +77,7 @@ function BlogPage_Cons_Event(props) {
                 }
                 setSkip(Skip+Limit)
             }else{
-                alert('대표작품 가져오기 실패')
+                console.log(response.data.err)
             }
         })
     }

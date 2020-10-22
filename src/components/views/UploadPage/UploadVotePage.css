@@ -48,9 +48,6 @@
     padding:0px;
 }
 
-.upload-container .ant-upload-picture-card-wrapper:nth-child(1){
-    margin-right:300px;
-}
 
 
 .ant-upload-picture-card-wrapper{
@@ -68,7 +65,7 @@
 .upload-block-prev{
     display: inline-block;
     width:300px;
-    height:600px;
+    height:400px;
     margin-left:20px;
     margin-right: 20px;
     margin-top: 100px;
@@ -81,6 +78,7 @@
     margin: 40px auto;
     border-radius: 20px;
 }
+
 
 .upload-desc-textarea{
     width:475px;
