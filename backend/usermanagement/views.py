@@ -22,7 +22,7 @@ from django.views import View
 from django.contrib.auth import logout, authenticate
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import EmailMessage
 from django.core.exceptions import ValidationError
 from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -36,6 +36,7 @@ from .token import account_activation_token
 from .text import message, changeMessage
 from backend.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT
 from backend.settings.base import EMAIL
+from sendgrid import SendGridAPIClient
 from smtplib import SMTPException
 import jwt, json
 import os
@@ -116,7 +117,9 @@ def emailVerification(current_site, user, email):
 
     mail_title = "이메일 인증을 완료해주세요"
     mail_to = email
-    send_mail(mail_title,message_data,'dearborn0819@gmail.com', recipient_list=[mail_to],fail_silently=False)
+    mailData = EmailMessage(mail_title,message_data,'dearborn0819@gmail.com',[mail_to])
+    sg = SendGridAPIClient(EMAIL['SENDGRID_API_KEY'])
+    sg.send(mailData)
     #     return True
     # except SMTPException as smtpE:
     #     return smtpE.strerror
@@ -145,7 +148,9 @@ def passwordChangeEmail(current_site, user, email):
 
     mail_title = "비밀번호 변경 메일입니다"
     mail_to = email
-    send_mail(mail_title,message_data,'dearborn0819@gmail.com',recipient_list=[mail_to],fail_silently=False)
+    mailData = EmailMessage(mail_title,message_data,'dearborn0819@gmail.com',[mail_to])
+    sg = SendGridAPIClient(EMAIL['SENDGRID_API_KEY'])
+    sg.send(mailData)
     #     return True
     # except SMTPException as smtpE:
     #     return smtpE.strerror

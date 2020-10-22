@@ -22,6 +22,7 @@ REDIRECT_PAGE = os.environ.get("REDIRECT_PAGE")
 REDIRECT_PAGE_FAILED = os.environ.get("REDIRECT_PAGE_FAILED")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -30,6 +31,7 @@ DATABASES = {
 
 EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
 EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
+EMAIL['SENDGRID_API_KEY'] = SENDGRID_API_KEY
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
