@@ -148,6 +148,7 @@ function LandingPage(props) {
                     당신의 패션 디자인을 팔아보세요.<br/>
                     아마추어 디자이너들을 환영합니다!
                 </div>
+                <div className="main-banner-background"></div>
                 <div className="rank">
                     <p style={{width:'100%',fontSize:'30px', textAlign:'center'}}>지난 주 랭킹</p>
                     <RankBox />
