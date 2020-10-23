@@ -105,11 +105,11 @@ function BlogPage_Prod_Works(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
+                    <Avatar style={{float:'left'}} size={200} src={/*`http://localhost:8000${Designer.profileImage}`*/"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
-                        <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
+                        <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"} / {Designer.major}</p>
                     </div>
                 </div>
                 <div className="blog-intro">

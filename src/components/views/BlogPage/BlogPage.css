@@ -24,6 +24,7 @@
 .blog-header-content{
     display: inline-block;
     margin-top: 20px;
+    margin-left:30px;
 }
 #blog-header-p1{
     font-size: 25px;

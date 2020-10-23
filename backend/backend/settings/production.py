@@ -11,14 +11,14 @@ ALLOWED_HOSTS = ['*']
 MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
-EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PSSSWORD = os.environ.get("EMAIL_HOST_PSSSWORD")
+EMAIL_HOST_USER = os.environ.get("SENDGRID_USERNAME")
+EMAIL_HOST_PSSSWORD = os.environ.get("SENDGRID_PASSWORD")
 EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 REDIRECT_PAGE = os.environ.get("REDIRECT_PAGE")
 REDIRECT_PAGE_FAILED = os.environ.get("REDIRECT_PAGE_FAILED")
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 

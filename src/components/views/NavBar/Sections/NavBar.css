@@ -16,7 +16,7 @@
         font-size: 20px;
         margin-left:20px;
         margin-right:20px;
-        opacity: 80%;
+
         float:left;
 }
 }
@@ -39,7 +39,7 @@
 }
 
 .logged-out, .register {
-    margin-right: 2rem;
+    margin-right: 20px;
     margin-top: 14px;
 }
 
@@ -63,13 +63,13 @@
     font-style: bold;
     text-align: center;
     padding-top: 5px;
-    opacity: 80%;
 }
 
 .nav-bar-profile{
     margin-top: 8px;
     font-size: 25px;
     padding: 2px;
+    cursor: pointer;
 }
 
 @media(max-width:899px){
