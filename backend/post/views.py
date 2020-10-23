@@ -512,13 +512,13 @@ class PostView(ListAPIView):
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('updated_dt'))
             postData = []
             for post in data:
-                user = User.object.filter(id=post.user.id)
+                iphone = User.object.filter(id=post.user.id)
                 try:
                     thumb = post.thumbnail.url
                 except:
                     thumb=None,
                 try:
-                    x:user[0].profileImage.url
+                    x=iphone.profileImage.url
                 except:
                     x=None,
                 postDic = {
@@ -528,7 +528,7 @@ class PostView(ListAPIView):
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
                     'thumbnail' : thumb,
-                    'writer' : user[0].nickname,
+                    'writer' : iphone.nickname,
                     'profileImage' : x,
                 }
                 postData.append(postDic)
