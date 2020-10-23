@@ -502,25 +502,29 @@ class PostView(ListAPIView):
         try:
             if(filterSerializer.validated_data['sort']==0):
                 if filterSerializer.validated_data['ook']==0:
-                    print(1)
                     data = self.paginate_queryset(Post.objects.filter(is_repo=False).order_by('-updated_dt'))
                 else :
-                    print(2)
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
-                    print(3)
                     data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('updated_dt'))
                 else :
-                    print(4)
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('updated_dt'))
             postData = []
             for post in data:
-                user = User.object.filter(id=post.user.id)
+                person = User.object.filter(id=post.user.id)
                 try:
                     thumb = post.thumbnail.url
                 except:
                     thumb=None,
+                try:
+                    profile=person[0].profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person[0].nickname
+                except:
+                    nick=None
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
@@ -528,8 +532,8 @@ class PostView(ListAPIView):
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
                     'thumbnail' : thumb,
-                    'writer' : user[0].nickname,
-                    'profileImage' : user[0].profileImage.url,
+                    'writer' : nick,
+                    'profileImage' : profile,
                 }
                 postData.append(postDic)
            
@@ -569,11 +573,19 @@ class ReposView(ListAPIView):
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=True).order_by('updated_dt'))
             postData = []
             for post in data:
-                user = User.object.filter(id=post.user.id)
+                person = User.object.filter(id=post.user.id)
                 try:
                     thumb = post.thumbnail.url
                 except:
                     thumb=None,
+                try:
+                    profile=person[0].profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person[0].nickname
+                except:
+                    nick=None
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
@@ -581,8 +593,8 @@ class ReposView(ListAPIView):
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
                     'thumbnail' : thumb,
-                    'writer' : user[0].nickname,
-                    'profileImage' : user[0].profileImage.url,
+                    'writer' : nick,
+                    'profileImage' : profile,
                 }
                 postData.append(postDic)
            
