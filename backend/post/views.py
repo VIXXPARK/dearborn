@@ -518,9 +518,13 @@ class PostView(ListAPIView):
                 except:
                     thumb=None,
                 try:
-                    x=iphone.profileImage.url
+                    x=iphone[0].profileImage.url
                 except:
                     x=None,
+                try:
+                    y = iphone[0].nickname
+                except:
+                    y=None
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
@@ -528,7 +532,7 @@ class PostView(ListAPIView):
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
                     'thumbnail' : thumb,
-                    'writer' : iphone.nickname,
+                    'writer' : y,
                     'profileImage' : x,
                 }
                 postData.append(postDic)
