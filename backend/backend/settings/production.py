@@ -28,8 +28,8 @@ DATABASES = {
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
-EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_HOST_USER = os.environ.get("SENDGRID_USERNAME")
 EMAIL_HOST_PSSSWORD = os.environ.get("SENDGRID_PASSWORD")
@@ -58,4 +58,3 @@ db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
 django_heroku.settings(locals())
-# heroku!!
