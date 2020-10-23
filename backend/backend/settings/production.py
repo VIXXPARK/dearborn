@@ -15,6 +15,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
     }
 }
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
@@ -42,9 +45,5 @@ STATIC_URL = 'https://%s/%s/' %(AWS_S3_CUSTOM_DOMAIN,AWS_LOCATION)
 
 STATICFILES_STORAGE = 'backend.storage.S3StaticStorage'
 DEFAULT_FILE_STORAGE = 'backend.storage.S3MediaStorage'
-
-
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 
 django_heroku.settings(locals())
