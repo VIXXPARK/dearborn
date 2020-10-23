@@ -11,15 +11,18 @@
 .filter-btn{
     position: relative;
     display: inline-block;
-    width:100px;
-    height:40px;
-    font-size: 20px;
+    width:80px;
+    height:30px;
+    font-size: 15px;
+    font-weight: bold;
     border-radius: 30px;
-    line-height: 35px;
+    line-height: 27px;
     cursor: pointer;
     margin: 10px;
     text-align: center;
-    border: 1px solid black;
+    color: white;
+    background-color: powderblue;
+    border: 1px solid powderblue;
 }
 
 
