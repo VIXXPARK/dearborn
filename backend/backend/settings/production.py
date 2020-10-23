@@ -18,15 +18,15 @@ DATABASES = {
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-REDIRECT_PAGE = 'http://dearborn.herokuapp.com'
-REDIRECT_PAGE_FAILED = 'http://dearborn.herokuapp.com/failed'
-DEFAULT_FROM_EMAIL = "dearborn0819@gmail.com"
+REDIRECT_PAGE = os.getenv('REDIRECT_PAGE')
+REDIRECT_PAGE_FAILED = os.getenv('REDIRECT_PAGE_FAILED')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
 EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
