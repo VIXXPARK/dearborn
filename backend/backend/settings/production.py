@@ -20,15 +20,15 @@ DATABASES['default'].update(db_from_env)
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_HOST_USER = os.environ.get("SENDGRID_USERNAME")
-EMAIL_HOST_PSSSWORD = os.environ.get("SENDGRID_PASSWORD")
-REDIRECT_PAGE = os.environ.get("REDIRECT_PAGE")
-REDIRECT_PAGE_FAILED = os.environ.get("REDIRECT_PAGE_FAILED")
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_HOST_USER = "apikey"
+EMAIL_HOST_PASSWORD = "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"
+REDIRECT_PAGE = 'http://localhost:3000'
+REDIRECT_PAGE_FAILED = 'http://localhost:3000/checkEmail/failed'
+DEFAULT_FROM_EMAIL = "dearborn0819@gmail.com"
 
 EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
 EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
