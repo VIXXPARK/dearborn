@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'background_task',
+    'storages',
 
     'usermanagement.apps.UsermanagementConfig',
     'post.apps.PostConfig',
