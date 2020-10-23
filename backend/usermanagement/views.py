@@ -119,9 +119,9 @@ def emailVerification(current_site, user, email):
 
     sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
     sendEmail.send()
-    #     return True
+    return True
     # except SMTPException as smtpE:
-    #     return smtpE.strerror
+    #     raise smtpE
 
 
 @api_view(["POST"])
