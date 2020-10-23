@@ -11,16 +11,6 @@ ALLOWED_HOSTS = ['*']
 MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dearborn',
-        'USER': 'jinminsu200703',
-        'PASSWORD': 'H0@6340@8740$801',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
     }
