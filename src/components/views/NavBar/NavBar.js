@@ -154,7 +154,7 @@ function NavBar(props) {
                 <div>
                     <div className="header-title"><a href="/"><img style={{marginTop:'11px'}} className="main-logo" src={Dearborn}/></a></div>
                     <a className="header-a" href="/contest">Contest</a>
-                    <a className="header-a" href="/membership">Storage</a>
+                    <a className="header-a" href="/repo">Storage</a>
                     <div className="row-log">
                         {user.userData && !user.userData.isAuth ?
                         (<>

@@ -16,6 +16,7 @@
     .repo-left-container {
         width:90%;
         margin:0 auto;
+        margin-bottom: 100px;
     }
 }
 @media (min-width:1401px){
@@ -26,7 +27,7 @@
 }
 @media (max-width:1400px){
     .repo-right-container {
-        display:none;
+        display:block;
     }
 }
 

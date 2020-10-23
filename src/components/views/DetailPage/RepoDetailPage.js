@@ -22,6 +22,7 @@ function RepoDetailPage(props) {
     const [Repo, setRepo] = useState("")
     const [AssessValue, setAssessValue] = useState([])
     const postId = props.match.params.postId
+    console.log(Repo)
     useEffect(() => {
         axios.post('/api/post/getPostDetail', {id : postId})
         .then(response => {
@@ -166,5 +167,4 @@ function RepoDetailPage(props) {
         </div>
     );
 }
-
 export default RepoDetailPage;
