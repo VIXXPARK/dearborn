@@ -3,7 +3,8 @@ import django_heroku
 import os
 from .base import *
 from .base import EMAIL
-
+from storage import S3MediaStorage
+from storage import S3StaticStorage
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -40,8 +41,8 @@ DATABASES = {
 EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
 EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
 
-STATICFILES_STORAGE = 'backend.storage.S3StaticStorage'
-DEFAULT_FILE_STORAGE = 'backend.storage.S3MediaStorage'
+STATICFILES_STORAGE = 'S3StaticStorage'
+DEFAULT_FILE_STORAGE = 'S3MediaStorage'
 
 
 db_from_env = dj_database_url.config(conn_max_age=500)
