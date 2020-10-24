@@ -7,6 +7,7 @@ import moment from 'moment'
 import Meta from 'antd/lib/card/Meta';
 import UploadOutlined from '@ant-design/icons'
 import { render } from 'react-dom';
+import {convertToS3EP} from '../../utils/String'
 
 const {Title} = Typography
 
@@ -99,7 +100,7 @@ function BlogPage_Cons_Event(props) {
                     </div>
                     <div className="contest-item-img">
                         <a href={`/contest/${contest.id}`}>
-                            <img  src={`http://localhost:8000${contest.image}`}/>
+                            <img  src={convertToS3EP(contest.image)}/>
                         </a>
                         <div className="go-manage" onClick={()=>props.history.push(`/contest/manage/${contest.id}`)}>
                             공모전 관리
@@ -174,11 +175,11 @@ function BlogPage_Cons_Event(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
+                    <Avatar style={{float:'left'}} size={200} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
-                        <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
+                        <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}/{Designer.major}</p>
                     </div>
                 </div>
                 <div className="blog-intro">

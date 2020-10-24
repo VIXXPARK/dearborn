@@ -129,7 +129,7 @@ function RepoDetailPage(props) {
                         </div>}
                         <Title>TITLE12312{/*Repo.title*/}</Title>
                         <div className="repo-profile">
-                            <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={convertToS3EP(Writer.profileImage)}/>
+                            <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                             <div className="repo-profile-header">
                                 <a href={`/${Writer.nickname}`}>{Writer.nickname}</a>
                             </div>
