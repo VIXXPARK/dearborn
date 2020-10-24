@@ -117,7 +117,7 @@ def emailVerification(current_site, user, email):
     mail_title = "이메일 인증을 완료해주세요"
     mail_to = email
 
-    sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
+    sendEmail = EmailMessage(mail_title, message_data, to=[mail_to], from_email='dearborn0819@gmail.com')
     sendEmail.send()
     return True
     # except SMTPException as smtpE:
@@ -149,7 +149,7 @@ def passwordChangeEmail(current_site, user, email):
     mail_title = "비밀번호 변경 메일입니다"
     mail_to = email
     
-    sendEmail = EmailMessage(mail_title, message_data, to=[mail_to])
+    sendEmail = EmailMessage(mail_title, message_data, to=[mail_to], from_email='dearborn0819@gmail.com')
     sendEmail.send()
     #     return True
     # except SMTPException as smtpE:
