@@ -507,7 +507,7 @@ class PostView(ListAPIView):
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(is_repo=False).order_by('updated_dt'))
                 else :
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('updated_dt'))
             postData = []
