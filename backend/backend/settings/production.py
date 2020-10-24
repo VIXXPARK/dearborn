@@ -34,14 +34,14 @@ STATIC_URL = 'https://%s/%s/' %(AWS_S3_CUSTOM_DOMAIN,AWS_LOCATION)
 STATICFILES_STORAGE = 'backend.storage.S3StaticStorage'
 DEFAULT_FILE_STORAGE = 'backend.storage.S3MediaStorage'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "dearborn0819@gmail.com"
-EMAIL_HOST_PASSWORD = "jinminsu0819!@"
-EMAIL_PORT = 587
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', '')
+EMAIL_HOST = EMAIL_HOST = os.environ.get('MAILGUN_SMTP_SERVER', '')
+EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', '')
+EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', '')
+EMAIL_PORT = EMAIL_PORT = os.environ.get('MAILGUN_SMTP_PORT', '')
 EMAIL_USE_TLS = True
-REDIRECT_PAGE = "http://localhost:3000"
-REDIRECT_PAGE_FAILED = "http://localhost:3000/checkEmail/failed"
+REDIRECT_PAGE = os.environ.get('REDIRECT_PAGE', '')
+REDIRECT_PAGE_FAILED = os.environ.get('REDIRECT_PAGE_FAILED', '')
 
 EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
 EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
