@@ -31,11 +31,6 @@ class BidViewSet(ModelViewSet):
         except APIException as e:
             return Response({'success':False, 'err' : e.detail})
 
-        
-
-'''
-expire 수정 필요
-'''
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
@@ -52,7 +47,7 @@ def GetBid(request):
         job = user.job
 
         if job == 1:
-            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,sell=1, is_repo=0), request)
+            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,sell=1, is_repo=False), request)
             sellPost = []
             for item in postData:
                 if item.sell == 1:
