@@ -15,11 +15,21 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
     }
 }
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "dearborn0819@gmail.com"
+EMAIL_HOST_PASSWORD = "jinminsu0819!@"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+REDIRECT_PAGE = os.getenv("REDIRECT_PAGE")
+REDIRECT_PAGE_FAILED = os.getenv("REDIRECT_PAGE_FIALED")
+
+EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
+EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
@@ -34,17 +44,8 @@ STATIC_URL = 'https://%s/%s/' %(AWS_S3_CUSTOM_DOMAIN,AWS_LOCATION)
 STATICFILES_STORAGE = 'backend.storage.S3StaticStorage'
 DEFAULT_FILE_STORAGE = 'backend.storage.S3MediaStorage'
 
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', '')
-EMAIL_HOST = EMAIL_HOST = os.environ.get('MAILGUN_SMTP_SERVER', '')
-EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', '')
-EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', '')
-EMAIL_PORT = EMAIL_PORT = os.environ.get('MAILGUN_SMTP_PORT', '')
-EMAIL_USE_TLS = True
-REDIRECT_PAGE = os.environ.get('REDIRECT_PAGE', '')
-REDIRECT_PAGE_FAILED = os.environ.get('REDIRECT_PAGE_FAILED', '')
 
-EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
-EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
-
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 django_heroku.settings(locals())
