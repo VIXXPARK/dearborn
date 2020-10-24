@@ -4,8 +4,6 @@ import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-ISDEPLOY = False
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
