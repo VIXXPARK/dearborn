@@ -26,6 +26,7 @@ STATICFILES_STORAGE = 'backend.storage.S3StaticStorage'
 DEFAULT_FILE_STORAGE = 'backend.storage.S3MediaStorage'
 
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+DEFAULT_FROM_EMAIL = 'dearborn0819@gmail.com'
 REDIRECT_PAGE = os.getenv("REDIRECT_PAGE")
 REDIRECT_PAGE_FAILED = os.getenv("REDIRECT_PAGE_FIALED")
 
