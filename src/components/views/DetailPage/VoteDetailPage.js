@@ -4,6 +4,7 @@ import DetailModal from '../../utils/DetailModal'
 import axios from 'axios'
 import { Input, Modal} from 'antd';
 import {config} from '../../utils/Token'
+import {convertToS3EP} from '../../utils/String'
 
 
 const {confirm} = Modal;
@@ -15,7 +16,6 @@ function VoteDetailPage(props) {
     const [OnModal, setOnModal] = useState(false)
 
     const params = new URLSearchParams(props.location.search)
-
     useEffect(() => {
         if(props.user.userData && !props.user.userData.isAuth)
             props.history.push('/login')
@@ -45,7 +45,6 @@ function VoteDetailPage(props) {
         }
     }, [params.get('postId')])
     
-
     const showBiddingForm = () => {
         var Bid
         
@@ -91,13 +90,15 @@ function VoteDetailPage(props) {
             }
         })
     }
-
+    
     return (
         OnModal && params.get('designer') && (
         <DetailModal
             onClick={()=>{
                 setOnModal(false)
                 props.history.go(-1)
+                setDetailPost('')
+                setWriter('')
             }}
         >
             <div className="profile-content">
@@ -119,13 +120,13 @@ function VoteDetailPage(props) {
                 <div className="profile-header">
                     {Writer.nickname}
                 </div>
-                <img style={{width:'200px', height:'200px', borderRadius:'100px', marginBottom:'30px'}} src={`http://localhost:8000${Writer.profileImage}`}/>
+                <img style={{width:'200px', height:'200px', borderRadius:'100px', marginBottom:'30px'}} src={/*Writer && Writer.profileImage ? convertToS3EP(Writer.profileImage) : */"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
             </div>
             <div style={{color:'black'}}>
                 <div className="detail-content">
                     {DetailPost.images && DetailPost.images.map((image, i) => (
                         <div>
-                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%'}} />
+                            <img key={i} src={convertToS3EP(image)} style={{width:'100%'}} />
                         </div>
                     ))}
                 </div>

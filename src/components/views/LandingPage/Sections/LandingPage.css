@@ -33,9 +33,9 @@
 }
 
 .container-vote-section {
-    margin-left: 5%;
+    margin-left: 3%;
     display: inline-block;
-    width:90%;
+    width:95%;
 }
 .item-vote-container{
     margin: 0 auto;
@@ -49,28 +49,32 @@
     .item-vote-wrap{
         position: relative;
         display: inline-block;
-        margin:1rem;
-        width:80vw;
-        height:calc(80vw * 4 / 3);
+        margin:1vw;
+        width:43vw;
+        height:calc(43vw * 4 / 3);
     }
 }
 @media (min-width:701px){
     .item-vote-wrap{
         position: relative;
         display: inline-block;
-        margin:1rem;
-        width:30vw;
-        height:calc(30vw * 4 / 3);
+        margin:1vw;
+        width:27vw;
+        height:calc(27vw * 4 / 3);
     }
 }
 @media (min-width:1201px){
     .item-vote-wrap{
         position: relative;
         display: inline-block;
-        margin:1rem;
-        width:17vw;
-        height:calc(17vw * 4 / 3);
+        margin:1vw;
+        width:16vw;
+        height:calc(16vw * 4 / 3);
     }
+}
+
+.item-vote-wrap{
+    transition:all 0.2s
 }
 
 

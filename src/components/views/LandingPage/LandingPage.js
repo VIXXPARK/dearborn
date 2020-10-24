@@ -6,6 +6,7 @@ import './Sections/LandingPage.css'
 import { Card, Radio} from 'antd';
 import {Link} from 'react-router-dom'
 import FilterBox from '../ListPage/Sections/FilterBox'
+import {convertToS3EP} from '../../utils/String'
 
 
 import {ArrowRightOutlined} from '@ant-design/icons'
@@ -14,8 +15,6 @@ const {Meta} = Card
 
 function LandingPage(props) {
 
-
-    const [VotePosts, setVotePosts] = useState([])
     const [Voted, setVoted] = useState([])
     const [OpenSort, setOpenSort] = useState(false)
     const [OpenFilter, setOpenFilter] = useState(false)
@@ -27,7 +26,6 @@ function LandingPage(props) {
     const [Sort, setSort] = useState(0)
     const [IsBottom, setIsBottom] = useState(false)
 
-    console.log(VotePosts)
     useEffect(() => {
         const variables = {
             ook : 0,
@@ -125,12 +123,10 @@ function LandingPage(props) {
         getPosts(variables)
         setIsBottom(false)
     }
-
     const renderVoteItems = (post) => {
-        console.log(post)
         return (
             <div className="item-vote-wrap">
-                <img className="item-vote-img" src={`http://localhost:8000${post.thumbnail}`} alt/>
+                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-show">
                     <div id="go-detail" >
                         <Link to = {{pathname:'/', search:`designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}><div id="go-detail-icon"><ArrowRightOutlined /></div></Link>
@@ -187,7 +183,7 @@ function LandingPage(props) {
                         </div>
                     </div>
                     <div className="container-vote-section">
-                        {VotePosts.map((post) => (
+                        {Posts.map((post) => (
                             renderVoteItems(post)
                         ))}
                     </div>

@@ -512,19 +512,19 @@ class PostView(ListAPIView):
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('updated_dt'))
             postData = []
             for post in data:
-                iphone = User.object.filter(id=post.user.id)
+                person = User.object.filter(id=post.user.id)
                 try:
                     thumb = post.thumbnail.url
                 except:
                     thumb=None,
                 try:
-                    x=iphone[0].profileImage.url
+                    profile=person[0].profileImage.url
                 except:
-                    x=None,
+                    profile=None,
                 try:
-                    y = iphone[0].nickname
+                    nick = person[0].nickname
                 except:
-                    y=None
+                    nick=None
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
@@ -532,8 +532,8 @@ class PostView(ListAPIView):
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
                     'thumbnail' : thumb,
-                    'writer' : y,
-                    'profileImage' : x,
+                    'writer' : nick,
+                    'profileImage' : profile,
                 }
                 postData.append(postDic)
            
@@ -573,11 +573,19 @@ class ReposView(ListAPIView):
                     data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=True).order_by('updated_dt'))
             postData = []
             for post in data:
-                user = User.object.filter(id=post.user.id)
+                person = User.object.filter(id=post.user.id)
                 try:
                     thumb = post.thumbnail.url
                 except:
                     thumb=None,
+                try:
+                    profile=person[0].profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person[0].nickname
+                except:
+                    nick=None
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
@@ -585,8 +593,8 @@ class ReposView(ListAPIView):
                     'updated_dt' : post.updated_dt,
                     'userId' : post.user.id,
                     'thumbnail' : thumb,
-                    'writer' : user[0].nickname,
-                    'profileImage' : user[0].profileImage.url,
+                    'writer' : nick,
+                    'profileImage' : profile,
                 }
                 postData.append(postDic)
            

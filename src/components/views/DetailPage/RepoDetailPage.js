@@ -11,6 +11,7 @@ import AssessShow from './Sections/AssessShow';
 import {ContainerOutlined} from '@ant-design/icons'
 import {getCookieValue} from '../../utils/Cookie'
 import {config} from '../../utils/Token'
+import {convertToS3EP} from '../../utils/String'
 
 
 const {Title} = Typography
@@ -22,6 +23,7 @@ function RepoDetailPage(props) {
     const [Repo, setRepo] = useState("")
     const [AssessValue, setAssessValue] = useState([])
     const postId = props.match.params.postId
+    console.log(Repo)
     useEffect(() => {
         axios.post('/api/post/getPostDetail', {id : postId})
         .then(response => {
@@ -110,7 +112,7 @@ function RepoDetailPage(props) {
                 <div className="repo-content">
                     {Repo.images && Repo.images.map((image, i) => (
                         <div className="repo-content-img">
-                            <img key={i} src={`http://localhost:8000${image}`} style={{width:'100%', height:'100%'}} />
+                            <img key={i} src={convertToS3EP(image)} style={{width:'100%', height:'100%'}} />
                         </div>
                     ))}
                     <br/><br/>
@@ -127,7 +129,7 @@ function RepoDetailPage(props) {
                         </div>}
                         <Title>TITLE12312{/*Repo.title*/}</Title>
                         <div className="repo-profile">
-                            <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={`http://localhost:8000${Writer.profileImage}`}/>
+                            <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={convertToS3EP(Writer.profileImage)}/>
                             <div className="repo-profile-header">
                                 <a href={`/${Writer.nickname}`}>{Writer.nickname}</a>
                             </div>
@@ -166,5 +168,4 @@ function RepoDetailPage(props) {
         </div>
     );
 }
-
 export default RepoDetailPage;
