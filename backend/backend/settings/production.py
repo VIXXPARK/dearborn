@@ -26,8 +26,8 @@ STATICFILES_STORAGE = 'backend.storage.S3StaticStorage'
 DEFAULT_FILE_STORAGE = 'backend.storage.S3MediaStorage'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "dearborn0819@gmail.com"
 EMAIL_HOST_PASSWORD = "jinminsu0819!@"
