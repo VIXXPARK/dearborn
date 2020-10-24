@@ -6,6 +6,7 @@ import './Sections/LandingPage.css'
 import { Card, Radio} from 'antd';
 import {Link} from 'react-router-dom'
 import FilterBox from '../ListPage/Sections/FilterBox'
+import {convertToS3EP} from '../../utils/String'
 
 
 import {ArrowRightOutlined} from '@ant-design/icons'
@@ -125,7 +126,7 @@ function LandingPage(props) {
     const renderVoteItems = (post) => {
         return (
             <div className="item-vote-wrap">
-                <img className="item-vote-img" src={post.thumbnail.substring(0, 27)+post.thumbnail.substring(42, post.thumbnail.length)} alt/>
+                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-show">
                     <div id="go-detail" >
                         <Link to = {{pathname:'/', search:`designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}><div id="go-detail-icon"><ArrowRightOutlined /></div></Link>
