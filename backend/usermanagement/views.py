@@ -173,11 +173,16 @@ def changeEmailRequest(request):
 class UserView(APIView):
     def get(self, request, format=None):
         user = request.user
+        try:
+            profile = user.profileImage.url
+        except:
+            profile = None
         content = {
             '_id': user.id,
             'email': user.email,
             'nickname': user.nickname,
             'job' : user.job,
+            'profileImage' : profile,
             'isAuth': True,
         }
         return Response(content)
