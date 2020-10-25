@@ -84,9 +84,14 @@ function BlogPage_Cons_Bid(props) {
                 <div className="works-wrapper">
                     <div className="bid-wrap">
                         <img className="bid-thumb" src={convertToS3EP(post.thumbnail)}/>
-                        <div className="bid-wrap-show">
+                        {props.user.userData && props.user.userData._id === post.bid.bidder ? 
+                        <div className="bid-wrap-show" style={{backgroundColor:'greenyellow'}}>
+                        </div>
+                        :
+                        <div className="bid-wrap-show" style={{backgroundColor:'tomato'}}>
                             <img className="bid-icon" src={BidFailIcon}/>
                         </div>
+                        }
                     </div>
                     <div className="blog-bid-content">
                         <p>입찰 최고가 :{post.bid.price}</p>
@@ -106,7 +111,7 @@ function BlogPage_Cons_Bid(props) {
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
-                        <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}/{Designer.major}</p>
+                        <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}</p>
                     </div>
                 </div>
                 <div className="blog-intro">

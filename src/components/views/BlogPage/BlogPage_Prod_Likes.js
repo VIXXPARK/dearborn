@@ -92,7 +92,7 @@ function BlogPage_Prod_Likes(props) {
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
-                        <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}/{Designer.major}</p>
+                        <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}</p>
                     </div>
                 </div>
                 <div className="blog-intro">
