@@ -31,7 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
     nickname = serializers.CharField()
     job = serializers.IntegerField()
     major = serializers.CharField()
-    profileImage = serializers.ImageField()
+    profileImage = serializers.ImageField(required=False)
     content = serializers.CharField()
     
     def create(self, validated_data):
@@ -42,7 +42,10 @@ class UserSerializer(serializers.ModelSerializer):
         nickname = validated_data['nickname']
         job = validated_data['job']
         major = validated_data['major']
-        profileImage = validated_data['profileImage']
+        try:
+            profileImage = validated_data['profileImage']
+        except:
+            profileImage = None
         content = validated_data['content']
         
         try:
