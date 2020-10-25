@@ -8,6 +8,7 @@ import {getCookieValue} from '../../utils/Cookie'
 import styles from './customstyle.css'
 import moment from 'moment'
 import './UploadVotePage.css'
+import {convertToS3EP} from '../../utils/String'
 
 
 const {TreeNode} = TreeSelect
@@ -29,6 +30,7 @@ function UploadModifyPage(props) {
     const [Content, setContent] = useState("")
     const [BidPrice, setBidPrice] = useState(0)
     const [SellPrice, setSellPrice] = useState(0)
+    const [GotData, setGotData] = useState(false)
     
 
     useEffect(() => {
@@ -38,7 +40,7 @@ function UploadModifyPage(props) {
                 console.log(response.data)
                 if(response.data.user.id !== window.localStorage.getItem('userId'))
                     props.history.push('/')
-                setThumbnailUrl(response.data.detailPost.thumbnail)
+                setThumbnailUrl(convertToS3EP(response.data.detailPost.thumbnail[0]))
                 setPreviews(response.data.detailPost.images)
                 setTitle(response.data.detailPost.title)
                 setContent(response.data.detailPost.content)
@@ -47,6 +49,7 @@ function UploadModifyPage(props) {
                 setScope(response.data.detailPost.scope)
                 setBidPrice(response.data.detailPost.bidPrice)
                 setSellPrice(response.data.detailPost.sellPrice)
+                setGotData(true)
             }else {
                 alert("포스트 정보 가져오기 실패")
             }
@@ -165,11 +168,12 @@ function UploadModifyPage(props) {
     )
     //other
 
-
+    console.log(Title)
     return (
         <div className="upload-container">
             <div className="upload-left-container">
                 <Upload
+                    disabled
                     listType="picture-card"
                     onPreview={false}
                     onRemove={handleThumbRemove}
@@ -178,42 +182,32 @@ function UploadModifyPage(props) {
                 >
                     {ThumbnailUrl ? <img src={ThumbnailUrl} style={{width:'300px', height:'400px', backgroundColor:'white'}}/> : uploadThumbButton}
                 </Upload>
-                {FileList && FileList.map((file, i)=>(
+                {Previews && Previews.map((image, i)=>(
                     <div key={i} className="upload-block-prev">
-                        <img style={{width:'300px',height:'400px', backgroundColor:'white'}} src={file.preview}/>
+                        <img style={{width:'300px',height:'400px', backgroundColor:'white'}} src={convertToS3EP(image)}/>
                     </div>
                 ))}
-                <Upload
-                    listType="picture-card"
-                    fileList={FileList}
-                    onRemove={handleRemove}
-                    onChange={handleChange}
-                    showUploadList={false}
-                >
-                    {FileList.length >= 8 ? null : uploadButton}
-                </Upload>
             </div>
             <div className="upload-right-container">
-                <Form 
+                {GotData &&
+                <Form
                     initialValues={{
-                        ['title'] : Title,
-                        ['description'] : Content,
-                        ['sell'] : Sell,
-                        ['scope']: Scope,
+                        title : Title,
+                        description : Content,
+                        sell : Sell,
+                        scope: Scope,
                     }}
                     onFinish={onFinish}
                 >
                     <div className="upload-left-block-container">
                         <Form.Item
-                            
                             name="title"
-                            rules={[{required:true, message:'제목을 써주시기 바랍니다'}]}    
+                            rules={[{required:true, message:'제목을 써주시기 바랍니다'}]}
+                            initialValue={Title}
                         >
                             <Input
-
                                 className="upload-title-input"
                                 style={{width:'350px', fontSize:'25px'}}
-                                placeholder="제  목"
                             />
                         </Form.Item>
                         <Form.Item
@@ -223,7 +217,6 @@ function UploadModifyPage(props) {
                             <Input.TextArea
                                 className="upload-desc-textarea"
                                 rows={5}
-                                placeholder="제  목"
                             />
                         </Form.Item>
                         <div className="upload-left-bottom-container">
@@ -316,7 +309,7 @@ function UploadModifyPage(props) {
                             </Form.Item>
                         </div>
                     </div>
-                </Form>
+                </Form>}
             </div>
         </div>
     );

@@ -7,6 +7,7 @@ import Meta from 'antd/lib/card/Meta';
 
 import BidSuccessIcon from '../../assets/BidSuccessIcon.png'
 import BidFailIcon from '../../assets/BidFailIcon.png'
+import {convertToS3EP} from '../../utils/String'
 
 const {Title} = Typography
 
@@ -32,7 +33,7 @@ function BlogPage_Prod_Bid(props) {
             }
         })
     }, [])
-
+    console.log(Posts)
     const getPosts = (id) => {
         const variables = {
             uid : id
@@ -49,11 +50,10 @@ function BlogPage_Prod_Bid(props) {
     }
 
     const renderPost = (post) => {
-        console.log(post)
         return (
             <div className="works-wrapper">
                 <div className="bid-wrap">
-                    <img className="bid-thumb" src={`http://localhost:8000${post.thumbnail}`}/>
+                    <img className="bid-thumb" src={convertToS3EP(post.thumbnail)}/>
                 </div>
                 <div className="blog-bid-content">
                     <p>{post.title}</p>
@@ -68,11 +68,11 @@ function BlogPage_Prod_Bid(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
+                    <Avatar style={{float:'left'}} size={200} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
-                        <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
+                        <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}/{Designer.major}</p>
                     </div>
                 </div>
                 <div className="blog-intro">

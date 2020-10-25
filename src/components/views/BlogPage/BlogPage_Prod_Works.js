@@ -4,6 +4,7 @@ import { Button, Typography, Card, Avatar, Modal } from 'antd';
 import {config} from '../../utils/Token'
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
+import {convertToS3EP} from '../../utils/String'
 
 const {Title} = Typography
 const {confirm} = Modal
@@ -41,7 +42,7 @@ function BlogPage_Prod_Works(props) {
             setIsBottom(false)
         }
     }, [IsBottom])
-
+    console.log(Repos)
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
             && document.documentElement.scrollTop)
@@ -90,7 +91,7 @@ function BlogPage_Prod_Works(props) {
         return (
             <div className="works-wrapper">
                 <a href={`/${designer}/${repo.id}`}>
-                <div className="works-thumb"><img style={{width:'100%', height:'100%'}} src={`http://localhost:8000${repo.thumbnail}`}/></div>
+                <div className="works-thumb"><img style={{width:'100%', height:'100%'}} src={convertToS3EP(repo.thumbnail)}/></div>
                 </a>
                 <div className="works-content">
                     <p>{repo.title}</p>
@@ -105,7 +106,7 @@ function BlogPage_Prod_Works(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={/*`http://localhost:8000${Designer.profileImage}`*/"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                    <Avatar style={{float:'left'}} size={200} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>

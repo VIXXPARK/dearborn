@@ -5,6 +5,7 @@ import { Button, Typography, Card, Avatar } from 'antd';
 import {getCookieValue} from '../../utils/Cookie'
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
+import {convertToS3EP} from '../../utils/String'
 
 const {Title} = Typography
 
@@ -46,11 +47,11 @@ function BlogPage_Prod_About(props) {
         <div className="blog-container">
             <div className="blog-right-container">
                 <div className="blog-header">
-                    <Avatar style={{display:'inline-block'}} size={200} src={`http://localhost:8000${Designer.profileImage}`}/>
+                    <Avatar style={{display:'inline-block'}} size={200} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
-                        <p id="blog-header-p2">{Designer.job}/{Designer.major}</p>
+                        <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}/{Designer.major}</p>
                     </div>
                 </div>
                 <div className="blog-intro">
@@ -69,7 +70,7 @@ function BlogPage_Prod_About(props) {
                                 User 님의 대표작품
                             </div>
                             <div className="prod-about-content">
-                                {About && <a href={`/${designer}/${About.id}`}><img src={`http://localhost:8000${About.thumbnail}`}/></a>}
+                                {About && <a href={`/${designer}/${About.id}`}><img src={convertToS3EP(About.thumbnail)}/></a>}
                             </div>
                         </div>
                     </div>

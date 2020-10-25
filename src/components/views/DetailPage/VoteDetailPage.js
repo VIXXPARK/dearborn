@@ -120,7 +120,7 @@ function VoteDetailPage(props) {
                 <div className="profile-header">
                     {Writer.nickname}
                 </div>
-                <img style={{width:'200px', height:'200px', borderRadius:'100px', marginBottom:'30px'}} src={/*Writer && Writer.profileImage ? convertToS3EP(Writer.profileImage) : */"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                <img style={{width:'200px', height:'200px', borderRadius:'100px', marginBottom:'30px'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
             </div>
             <div style={{color:'black'}}>
                 <div className="detail-content">
