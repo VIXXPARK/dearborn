@@ -27,7 +27,7 @@ class dislikeSerializer(serializers.ModelSerializer):
       fields = '__all__'
 
 class UserCheckSerializer(serializers.Serializer):
-   nickname = serializers.CharField()
+      nickname = serializers.CharField()
 
 class PostImageSerializer(serializers.ModelSerializer):
    class Meta:
@@ -69,7 +69,7 @@ class LikeViewSerializer(serializers.ModelSerializer):
 
 
 class PostIdSerializer(serializers.Serializer):
-   id = serializers.IntegerField()
+   id = serializers.UUIDField()
 
 class UserIdSerializer(serializers.Serializer):
    id = serializers.CharField()

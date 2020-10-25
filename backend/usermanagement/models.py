@@ -54,7 +54,7 @@ class User(AbstractUser):
     major = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     content = models.TextField(max_length=1000)
-    rankData = models.IntegerField(null=True)
+    rankData = models.IntegerField(null=True,default=1)
     now_updating = models.BooleanField(default=False)
     username = None
     USERNAME_FIELD = 'email'
