@@ -39,7 +39,7 @@ def delete_file(sender,instance,*args,**kwargs):
       _delete_file(instance.thumbnail.path)
 
 def postImageUpload_to(instance,filename):
-   return 'images/{0}/{1}/{2}'.format(instance.user,instance.post,filename)
+   return 'images/{0}/{1}'.format(instance.post,filename)
      
 class PostImage(models.Model):
    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
