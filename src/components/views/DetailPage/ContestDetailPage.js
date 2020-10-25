@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {Button, Input, Typography, Upload} from 'antd'
 import axios from 'axios';
 import {UploadOutlined} from '@ant-design/icons'
+import {convertToS3EP} from '../../utils/String'
 
 const {Title} = Typography
 
@@ -86,7 +87,7 @@ function ContestDetailPage(props) {
                         <div style={{borderBottom:'1px solid black'}}>
                             <Title>{Contest.title}</Title>
                         </div>
-                        <img src={`http://localhost:8000${Contest.image}`} style={{width:'100%'}} />
+                        <img src={convertToS3EP(Contest.image)} style={{width:'100%'}} />
                         <p style={{marginTop:'50px', textAlign:'left'}}>{Contest.description}</p>
                     </div>
                     <br/><br/>

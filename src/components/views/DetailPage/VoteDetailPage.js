@@ -112,7 +112,7 @@ function VoteDetailPage(props) {
                 <div className="vote-btn">
                     투표하기
                 </div>
-                {props.user.userData && props.user.userData.job === 1 && 
+                {props.user.userData && props.user.userData.job === 2 && 
                     <div className="vote-btn" onClick={showBiddingForm}>
                         입찰하기
                     </div>

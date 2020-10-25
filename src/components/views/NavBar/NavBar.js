@@ -200,13 +200,13 @@ function NavBar(props) {
                                 <a style={{fontSize:'20px'}} href="/repo">Storage</a>
                             </div>
                             <div style={{marginTop:'50px',textAlign:'center'}}>
-                                <a style={{fontSize:'20px', color:'black'}} href="/">마이 블로그</a>
+                                <a style={{fontSize:'20px', color:'black'}} href={`/${user.userData.nickname}`}>마이 블로그</a>
                             </div>
                             <div style={{marginTop:'20px',textAlign:'center'}}>
-                                <a style={{fontSize:'20px', color:'black'}} href="/repo">쪽지 확인</a>
+                                <a style={{fontSize:'20px', color:'black'}} onClick={showMessageBox}>쪽지 확인</a>
                             </div>
                             <div style={{marginTop:'20px',textAlign:'center', marginBottom:'20px'}}>
-                                <a style={{fontSize:'20px', color:'black'}} href="/repo">개인정보 수정</a>
+                                <a style={{fontSize:'20px', color:'black'}} href="/modify">개인정보 수정</a>
                             </div>
                             <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
                             {user.userData && user.userData.job ===1 &&<div className="register pull-right">

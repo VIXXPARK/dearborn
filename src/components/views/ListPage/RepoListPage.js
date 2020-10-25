@@ -5,6 +5,7 @@ import './ListPage.css'
 import Meta from 'antd/lib/card/Meta';
 import FilterBox from './Sections/FilterBox';
 import axios from 'axios'
+import {convertToS3EP} from '../../utils/String'
 
 const {Title} = Typography
 
@@ -115,15 +116,14 @@ function RepoListPage(props) {
     }
 
     const renderRepoItems = (post)=>{
-        
         return  (
         <Card
             className="item"
             hoverable={false}
-            cover={<a href={`/${post.writer}/${post.id}`}><img src={`http://localhost:8000${post.thumbnail}`} alt/></a>}
+            cover={<a href={`/${post.writer}/${post.id}`}><img src={convertToS3EP(post.thumbnail)} alt/></a>}
         >
             <Meta
-                avatar={<Avatar src={`http://localhost:8000${post.profileImage}`}/>}
+                avatar={<Avatar size={30} src={post && post.profileImage[0] ? convertToS3EP(post.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>}
                 title={post.title}
                 description={<a href={`/${post.writer}`}>{post.writer}</a>}
             />
