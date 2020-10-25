@@ -27,7 +27,7 @@ class dislikeSerializer(serializers.ModelSerializer):
       fields = '__all__'
 
 class UserCheckSerializer(serializers.Serializer):
-   nickname = serializers.CharField()
+      nickname = serializers.CharField()
 
 class PostImageSerializer(serializers.ModelSerializer):
    class Meta:
