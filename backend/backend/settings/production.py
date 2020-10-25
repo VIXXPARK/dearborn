@@ -10,7 +10,26 @@ DEBUG = True
 
 MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+    }
+}
+
 SECRET_KEY = os.getenv("SECRET_KEY")
+
+EMAIL_BACKEND = get_secret("EMAIL_BACKEND")
+EMAIL_USE_SSL = get_secret("EMAIL_USE_SSL")
+EMAIL_PORT = get_secret("EMAIL_PORT")
+EMAIL_HOST = get_secret("EMAIL_HOST")
+EMAIL_HOST_USER = get_secret("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = get_secret("EMAIL_HOST_PASSWORD")
+REDIRECT_PAGE = get_secret("REDIRECT_PAGE")
+REDIRECT_PAGE_FAILED = get_secret("REDIRECT_PAGE_FAILED")
+DEFAULT_FROM_EMAIL = get_secret("DEFAULT_FROM_EMAIL")
+
+EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
+EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
@@ -25,20 +44,6 @@ STATIC_URL = 'https://%s/%s/' %(AWS_S3_CUSTOM_DOMAIN,AWS_LOCATION)
 STATICFILES_STORAGE = 'backend.storage.S3StaticStorage'
 DEFAULT_FILE_STORAGE = 'backend.storage.S3MediaStorage'
 
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
-DEFAULT_FROM_EMAIL = 'dearborn0819@gmail.com'
-SERVER_EMAIL = 'dearborn0819@gmail.com'
-REDIRECT_PAGE = os.getenv("REDIRECT_PAGE")
-REDIRECT_PAGE_FAILED = os.getenv("REDIRECT_PAGE_FIALED")
-
-EMAIL['REDIRECT_PAGE'] = REDIRECT_PAGE
-EMAIL['REDIRECT_PAGE_FAILED'] = REDIRECT_PAGE_FAILED
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-    }
-}
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
