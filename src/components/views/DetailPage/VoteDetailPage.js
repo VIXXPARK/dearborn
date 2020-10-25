@@ -127,6 +127,7 @@ function VoteDetailPage(props) {
                 props.history.go(-1)
                 setDetailPost('')
                 setWriter('')
+                setVoted(false)
             }}
         >
             <div className="profile-content">
