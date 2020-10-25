@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Input, Modal} from 'antd';
 import {config} from '../../utils/Token'
 import {convertToS3EP} from '../../utils/String'
+import {FormOutlined} from '@ant-design/icons'
 
 
 const {confirm} = Modal;
@@ -14,6 +15,8 @@ function VoteDetailPage(props) {
     const [DetailPost, setDetailPost] = useState('')
     const [Writer, setWriter] = useState('')
     const [OnModal, setOnModal] = useState(false)
+    const [Voted, setVoted] = useState(false)
+    const [VoteLength, setVoteLength] = useState(0)
 
     const params = new URLSearchParams(props.location.search)
     useEffect(() => {
@@ -28,6 +31,18 @@ function VoteDetailPage(props) {
                 console.log(response.data.err)
             }
         })
+        if(window.localStorage.getItem('userId')){
+            axios.post('/api/vote/myVote', {user : window.localStorage.getItem('userId')})
+            .then(response => {
+                if(response.data.success){
+                    console.log(response.data)
+                    if(response.data.posts.indexOf(params.get('postId')) !== -1)
+                        setVoted(true)
+                    setVoteLength(response.data.posts.length)
+                }else{
+                    console.log(response.data.err)
+                }
+            })}
         axios.post('/api/post/getPostDetail', {id : params.get('postId')})
         .then(response => {
             if(response.data.success){
@@ -90,6 +105,19 @@ function VoteDetailPage(props) {
             }
         })
     }
+
+    const OnVoteClick = () => {
+        if(VoteLength === 3)
+            return alert('이미 3번의 투표지를 사용했습니다.')
+        axios.post('/api/vote/upVote', {user: props.user.userData._id, post: DetailPost.id})
+        .then(response => {
+            if(response.data.success){
+                setVoted(true)
+            }else{
+                console.log(response.data.err)
+            }
+        })
+    }
     
     return (
         OnModal && params.get('designer') && (
@@ -102,27 +130,31 @@ function VoteDetailPage(props) {
             }}
         >
             <div className="profile-content">
+                {props.user.userData && props.user.userData.job === 2 && 
+                    <div className="vote-btn" onClick={showBiddingForm}>
+                        입찰하기
+                    </div>
+                }
+                <div className="profile-icon" onClick={()=>props.history.push(`/${Writer.nickname}`)}>
+                    <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                </div>
+                <div className="profile-header">
+                    {Writer.nickname}
+                </div>
+                <div className="profile-icon" onClick={OnVoteClick}>
+                    <FormOutlined/>
+                </div>
+                <div className="profile-header">
+                    {Voted ? "투표함" : "투표하기"}
+                </div>
+            </div>
+            <div style={{color:'black'}}>
                 <div className="detail-header">
                     {DetailPost.title}
                 </div>
                 <div className="detail-span">
                     {DetailPost.updatedAt}
                 </div>
-                {DetailPost.content}
-                <div className="vote-btn">
-                    투표하기
-                </div>
-                {props.user.userData && props.user.userData.job === 2 && 
-                    <div className="vote-btn" onClick={showBiddingForm}>
-                        입찰하기
-                    </div>
-                }
-                <div className="profile-header">
-                    {Writer.nickname}
-                </div>
-                <img style={{width:'200px', height:'200px', borderRadius:'100px', marginBottom:'30px'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
-            </div>
-            <div style={{color:'black'}}>
                 <div className="detail-content">
                     {DetailPost.images && DetailPost.images.map((image, i) => (
                         <div>
@@ -130,6 +162,7 @@ function VoteDetailPage(props) {
                         </div>
                     ))}
                 </div>
+                {DetailPost.content}
             </div>
         </DetailModal>
         )
