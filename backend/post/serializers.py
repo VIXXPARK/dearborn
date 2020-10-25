@@ -69,7 +69,7 @@ class LikeViewSerializer(serializers.ModelSerializer):
 
 
 class PostIdSerializer(serializers.Serializer):
-   id = serializers.IntegerField()
+   id = serializers.UUIDField()
 
 class UserIdSerializer(serializers.Serializer):
    id = serializers.CharField()

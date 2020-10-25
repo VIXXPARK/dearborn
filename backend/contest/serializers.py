@@ -32,7 +32,7 @@ class ContestPostSerializer(serializers.ModelSerializer):
     
 
 class getContestIdSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.UUIDField()
 
 class getUserSerializer(serializers.Serializer):
     user = serializers.CharField()
