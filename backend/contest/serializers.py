@@ -20,7 +20,7 @@ class ContestPostSerializer(serializers.ModelSerializer):
     images = ContestPostImageSerializer(many=True,read_only=True)
     class Meta:
         model = ContestPost
-        fields= ('id','contest','user','description','expire_dt','thumbnail','images',)
+        fields= ('id','contest','user','thumbnail','images',)
     
     def create(self,validated_data):
         images_data = self.context['request'].FILES

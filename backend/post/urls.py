@@ -12,7 +12,7 @@ post_detail = PostViewSet.as_view(
 
 urlpatterns = [
     path('post/uploadPost',post_list,name="post_list"),
-    path('post/<int:pk>',post_detail,name="post_detail"),#수정 삭제
+    path('post/<uuid:pk>',post_detail,name="post_detail"),#수정 삭제
     path('post/getVotes/',PostView.as_view()),
     path('post/getRepos/',ReposView.as_view()),
     path('post/getPostDetail',PostDetail.as_view()),
