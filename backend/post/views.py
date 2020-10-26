@@ -339,12 +339,16 @@ class PostViewSet(ModelViewSet):
     
     def destroy(self,request,*args,**kwargs):
         try:
-            instance = self.get_object()
-            self.perform_destroy(instance)
-        except:
-            pass
-        instance.delete()
-        return Response({"success":True},HTTP_204_NO_CONTENT)
+            response = super().destroy(request, *args, **kwargs)
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
+        #similarity = Similarity(response.data.postId)
+        context = {
+            # 'similarity' : similarity,
+            'success' : True,
+        }
+        instance = response.data
+        return Response(context,HTTP_204_NO_CONTENT)
         
 
 class getProfileView(ListAPIView):
