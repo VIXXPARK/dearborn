@@ -97,7 +97,7 @@ function RepoDetailPage(props) {
     const onDeleteClick = () => {
         axios.delete(`/api/post/${postId}`)
         .then(response => {
-            if(response.status === 204){
+            if(response.data.success){
                 alert('삭제 성공')
                 props.history.push('/')
             }else{

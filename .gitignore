@@ -13,7 +13,6 @@ backend/**/__pychache__
 backend/staticfiles/**
 # backend/backend/my_settings.py
 backend/media
-backend/post/feature.py
 backend/backend/settings/local.py
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 

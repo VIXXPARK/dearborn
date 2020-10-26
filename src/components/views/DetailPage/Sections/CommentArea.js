@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {Input, Avatar, Button} from 'antd';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 import './CommentArea.css'
 import { convertToS3EP } from '../../../utils/String';
@@ -10,6 +11,8 @@ function CommentArea(props) {
 
     const [CommentValue, setCommentValue] = useState("")
     const [Comments, setComments] = useState([])
+
+    const user = useSelector(state => state.user)
 
     useEffect(() => {
         axios.post('/api/comment/getComment', {postId : props.postId})
@@ -79,7 +82,7 @@ function CommentArea(props) {
         return (
             <div className="comment-form">
                 <div className="comment-nickname">
-                    <Avatar src={convertToS3EP(props.user.userData.profileImage)}/>
+                    <Avatar src={user.userData && convertToS3EP(user.userData.profileImage)}/>
                     {comment.nickname}
                 </div>
                 <p className="comment-content">{comment.contents}</p>

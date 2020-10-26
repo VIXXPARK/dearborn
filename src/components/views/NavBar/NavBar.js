@@ -38,6 +38,7 @@ function NavBar(props) {
     const renderMessage = (message) => {
 
         const OpenMessageForm = () => {
+            setMessageBox(false)
             var HireMessage
             confirm({
                 width:800,
@@ -52,7 +53,7 @@ function NavBar(props) {
                 onOk(){
                     const variables = {
                         message : HireMessage,
-                        userFrom : props.user.userData._id,
+                        userFrom : user.userData._id,
                         userTo : message.fromId,
                     }
                     const config = {
@@ -68,6 +69,7 @@ function NavBar(props) {
                             alert('실패')
                         }
                     })
+                    setMessageBox(true)
                 }
             })
         }
