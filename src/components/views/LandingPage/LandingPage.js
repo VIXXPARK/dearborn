@@ -32,17 +32,6 @@ function LandingPage(props) {
             sort : 0,
         }
         getPosts(variables)
-        if(window.localStorage.getItem('userId')){
-        axios.post('/api/vote/myVote', {user : window.localStorage.getItem('userId')})
-        .then(response => {
-            if(response.data.success){
-                console.log(response.data)
-                let variable = response.data.posts
-                setVoted(variable)
-            }else{
-                console.log(response.data.err)
-            }
-        })}
         window.addEventListener('scroll', handleScroll)
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])

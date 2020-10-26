@@ -97,7 +97,7 @@
     bottom:0px;
     background-color: gray;
     border-radius: 20px;
-    opacity: 80%;
+    opacity: 0.8;
 }
 
 #go-detail{
@@ -135,7 +135,7 @@
     width: 100%;
     height: 100%;
     background: #000;
-    opacity: .5;
+    opacity: 0.5;
     filter: alpha(opacity=50);
 }
 
@@ -173,43 +173,33 @@
     margin-left: 5%;
 }
 @media (max-width:700px){
-    .item{
-        display: inline-block;
+    .item img{
         
-        margin:1rem;
-        width:80vw;
-        height:calc(80vw * 4 / 3);
-    }
-    .item img {
-        width:80vw;
-        height:calc(80vw * 4 / 3);
+        width:39vw;
+        height:calc(39vw * 4 / 3);
     }
 }
 @media (min-width:701px){
-    .item{
-        display: inline-block;
+    .item img{
         
-        margin:1rem;
-        width:30vw;
-        height:calc(30vw * 4 / 3);
-    }
-    .item img {
-        width:30vw;
-        height:calc(30vw * 4 / 3);
+        width:23vw;
+        height:calc(23vw * 4 / 3);
     }
 }
 @media (min-width:1201px){
-    .item{
-        display: inline-block;
+    .item img{
         
-        margin:1rem;
-        width:17vw;
-        height:calc(17vw * 4 / 3);
+        width:13vw;
+        height:calc(13vw * 4 / 3);
     }
-    .item img {
-        width:17vw;
-        height:calc(17vw * 4 / 3);
-    }
+}
+
+.item {
+    display: inline-block;
+}
+
+.ant-card-bordered .ant-card-cover{
+    margin : 1vw;
 }
 
 .ant-card-cover img{

@@ -3,6 +3,7 @@ import {Input, Avatar, Button} from 'antd';
 import axios from 'axios';
 
 import './CommentArea.css'
+import { convertToS3EP } from '../../../utils/String';
 
 const {TextArea} = Input
 function CommentArea(props) {
@@ -78,7 +79,7 @@ function CommentArea(props) {
         return (
             <div className="comment-form">
                 <div className="comment-nickname">
-                    <Avatar src={`http://localhost:8000${comment.profileImage}`}/>
+                    <Avatar src={convertToS3EP(props.user.userData.profileImage)}/>
                     {comment.nickname}
                 </div>
                 <p className="comment-content">{comment.contents}</p>
