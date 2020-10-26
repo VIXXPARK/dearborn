@@ -82,9 +82,9 @@ def voteExpired():
             except APIException as e:
                 raise e
 
-    users = User.objects.all()
-    for user in users:
-        user.now_updating = False
+        users = User.objects.all()
+        for user in users:
+            user.now_updating = False
 
 class upVoteView(ListAPIView):
     permission_classes=(permissions.AllowAny,)
