@@ -324,6 +324,28 @@ class PostViewSet(ModelViewSet):
         instance = response.data
         return Response(context,HTTP_201_CREATED)
 
+    def partial_update(self,request,*args,**kwargs):
+        try:
+            response = super().create(request, *args, **kwargs)
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
+        #similarity = Similarity(response.data.postId)
+        context = {
+            # 'similarity' : similarity,
+            'success' : True,
+        }
+        instance = response.data
+        return Response(context,HTTP_200_OK)
+    
+    def destroy(self,request,*args,**kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except:
+            pass 
+        return Response({"success":True},HTTP_204_NO_CONTENT)
+        
+
 class getProfileView(ListAPIView):
     queryset = Post.objects.all()
     permission_classes = (permissions.AllowAny,)
