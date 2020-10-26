@@ -748,4 +748,7 @@ class postDeleteView(APIView):
 
         postdata = Post.objects.get(id=data.validated_data['id']).delete()
         postImagedata = PostImage.objects.filter(post=data.validated_data['id']).delete()
-        return Response({'success':True},status=HTTP_204_NO_CONTENT)
+        content={
+            'success':True,
+        }
+        return Response(content,status=HTTP_204_NO_CONTENT)
