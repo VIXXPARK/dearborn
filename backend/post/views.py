@@ -326,7 +326,7 @@ class PostViewSet(ModelViewSet):
 
     def partial_update(self,request,*args,**kwargs):
         try:
-            response = super().create(request, *args, **kwargs)
+            response = super().partial_update(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
         #similarity = Similarity(response.data.postId)
