@@ -29,7 +29,7 @@ class ContestPost(models.Model):
     description = models.TextField(default=None)
     updated_dt = models.DateTimeField(auto_now_add=True)
     expire_dt = models.DateTimeField()
-    thumbnail = models.ImageField(upload_to="contestPost/")
+    thumbnail = models.ImageField(upload_to=contestPostUpload_to)
 
 def contestPostImageUpload_to(instance,filename):
    return 'contestImages/{0}/{1}'.format(instance.id,filename)
@@ -38,7 +38,7 @@ def contestPostImageUpload_to(instance,filename):
 class ContestPostImage(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     contestPost = models.ForeignKey(ContestPost,on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="contestImages/")
+    image = models.ImageField(upload_to=contestPostImageUpload_to)
     
 
 
