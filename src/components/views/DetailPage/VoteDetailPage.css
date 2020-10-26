@@ -3,7 +3,6 @@
         position: fixed;
         right : 5%;
         top : 50px;
-        background-color: white;
         width:300px;
         font-size: 1rem;
         color:black;
@@ -18,10 +17,20 @@
     }
 }
 
+.profile-icon{
+    width:55px;
+    height:55px;
+    line-height:51px;
+     border-radius:100px;
+     margin:0 auto;
+     cursor:pointer;
+    background-color:white;
+}
+
 .profile-header {
-    font-size: 30px;
-    margin:20px;
-    border-top: 1px solid gray;
+    font-size: 20px;
+    margin:5px;
+    color: white;
 
 }
 
@@ -45,8 +54,8 @@
 .detail-header {
     text-align: center;
     font-size: 50px;
-    padding: 1rem;
-    margin: 20px auto;
+    padding: 10px;
+    margin: 0px auto;
     border-bottom: black dashed 1px;
 }
 
