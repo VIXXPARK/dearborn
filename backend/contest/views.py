@@ -28,7 +28,6 @@ class ContestViewSet(ModelViewSet):
         
 
 class ContestPostViewSet(ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
     queryset = ContestPost.objects.all()
     serializer_class = ContestPostSerializer
     parser_classes = (MultiPartParser,FormParser)
