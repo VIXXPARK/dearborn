@@ -342,7 +342,8 @@ class PostViewSet(ModelViewSet):
             instance = self.get_object()
             self.perform_destroy(instance)
         except:
-            pass 
+            pass
+        instance.delete()
         return Response({"success":True},HTTP_204_NO_CONTENT)
         
 
