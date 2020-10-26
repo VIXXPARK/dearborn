@@ -214,6 +214,10 @@ class disLikeView(ListAPIView):
         }
         return Response(context,status=HTTP_200_OK)
 
+
+
+    
+
     
 class likeDownView(DestroyAPIView):
     queryset = like.objects.all()
@@ -310,7 +314,6 @@ class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     parser_classes = (MultiPartParser,FormParser)
-    
     def create(self, request, *args, **kwargs):
         
         try:
@@ -337,14 +340,7 @@ class PostViewSet(ModelViewSet):
         }
         instance = response.data
         return Response(context,HTTP_200_OK)
-    
-    def destroy(self,request,*args,**kwargs):
-        try:
-            instance = self.get_object()
-            self.perform_destroy(instance)
-        except Http404:
-            pass
-        return Response({'success':True},status=HTTP_204_NO_CONTENT)
+
         
 
 class getProfileView(ListAPIView):
@@ -741,3 +737,15 @@ class getMyWork(APIView):
             'about':about,
         }
         return Response(content,status=HTTP_200_OK)
+
+class postDeleteView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self,request):
+        data = PostIdSerializer(data=request.data)
+        if not data.is_valid():
+            return Response({'success':False,'err':data.error_messages},status=HTTP_400_BAD_REQUEST)
+
+        postdata = Post.objects.get(id=data.validated_data['id']).delete()
+        postImagedata = PostImage.objects.filter(post=data.validated_data['id']).delete()
+        return Response({'success':True},status=HTTP_204_NO_CONTENT)
