@@ -26,9 +26,7 @@ class ContestPost(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     contest = models.ForeignKey(Contest,on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    description = models.TextField(default=None)
     updated_dt = models.DateTimeField(auto_now_add=True)
-    expire_dt = models.DateTimeField()
     thumbnail = models.ImageField(upload_to=contestPostUpload_to)
 
 def contestPostImageUpload_to(instance,filename):
