@@ -35,11 +35,10 @@ class ContestPostViewSet(ModelViewSet):
     def create(self,request,*args,**kwargs):
         try:
             response = super().create(request, *args, **kwargs)
-            instance = response.data
-            return Response({'success': True})
         except APIException as e:
             return Response({'success': False, 'err':e.detail}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+        instance = response.data
+        return Response({'success': True})
 
 class getHostView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
