@@ -93,3 +93,4 @@ s3transfer==0.3.3
 django-storages==1.10.1
 sendgrid-python==0.1.1
 django-ses==1.0.3
+django-cleanup==5.1.0
