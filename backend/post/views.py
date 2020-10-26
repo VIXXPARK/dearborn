@@ -31,6 +31,7 @@ from bid.models import BidInfo
 from messanger.models import Message
 from messanger.serializers import SaveMessageSerializer
 # from .feature import Similarity,GetFeatureVector,SaveFeatureVector
+from django.http import Http404
 
 @background()
 def voteExpired():
@@ -339,16 +340,11 @@ class PostViewSet(ModelViewSet):
     
     def destroy(self,request,*args,**kwargs):
         try:
-            response = super().destroy(request, *args, **kwargs)
-        except APIException as e:
-            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        #similarity = Similarity(response.data.postId)
-        context = {
-            # 'similarity' : similarity,
-            'success' : True,
-        }
-        instance = response.data
-        return Response(context,HTTP_204_NO_CONTENT)
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response({'success':True},status=HTTP_204_NO_CONTENT)
         
 
 class getProfileView(ListAPIView):
