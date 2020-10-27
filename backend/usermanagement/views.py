@@ -242,11 +242,7 @@ def changeProfile(request):
     user[0].profileImage = profileImage
     user[0].job = job
     user[0].content = content
-    
-    result = emailVerification(current_site, user, email)
-    if not result:
-        return Response({'success':False,'err' : result}, status=HTTP_500_INTERNAL_SERVER_ERROR)
-        
+    user[0].save()
     return Response({'success': True}, status = HTTP_201_CREATED)
 
 @api_view(["get"])
