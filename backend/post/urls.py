@@ -33,4 +33,4 @@ urlpatterns = [
     path('info/getAbout',getMyWork.as_view()),
     path('post/delete',postDeleteView.as_view()),
 ]
-# voteExpired(repeat=100000,repeat_until=None)
+voteExpired(repeat=100000,repeat_until=None)
