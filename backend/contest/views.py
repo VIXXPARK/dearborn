@@ -24,6 +24,33 @@ class ContestViewSet(ModelViewSet):
         except APIException as e:
             return Response({'success':True, 'err':e.detail}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def partial_update(self,request,*args,**kwargs):
+        try:
+            response = super().partial_update(request, *args, **kwargs)
+        except APIException as e:
+            return Response({"success":False,'err':e.detail},status=status.HTTP_404_NOT_FOUND)
+        context = {
+            'success' : True,
+        }
+        instance = response.data
+        return Response(context,status.HTTP_200_OK)
+        
+class contestDeleteView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self,request):
+        data = getContestIdSerializer(data=request.data)
+        if not data.is_valid():
+            return Response({'success':False,'err':data.error_messages},status=status.HTTP_400_BAD_REQUEST)
+        
+        Contest.objects.get(id=data.validated_data['id']).delete()
+        content={
+            'succes':True
+        }
+        return Response(content,status=status.HTTP_200_OK)
+
+
+
         
 class getHostView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
