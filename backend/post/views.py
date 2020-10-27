@@ -234,7 +234,7 @@ class likeDownView(DestroyAPIView):
         try:
             instance = self.get_object(request.data['post'],request.data['user'])
             instance.delete()
-            return Response({"success":True},status=HTTP_200_OK)
+            return Response({"success":True},status=HTTP_204_NO_CONTENT)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
 
@@ -722,7 +722,6 @@ class getMyWork(APIView):
 
         
         work = myWork.objects.get(user=username.validated_data['user'])
-        print(work.post)
         postdata = Post.objects.get(id=work.post.id)
         try:
             thumbnail=postdata.thumbnail.url
