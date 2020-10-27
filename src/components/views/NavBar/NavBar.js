@@ -155,8 +155,8 @@ function NavBar(props) {
             <div className="container">
                 <div>
                     <div className="header-title"><a href="/"><img style={{marginTop:'11px'}} className="main-logo" src={Dearborn}/></a></div>
-                    <a className="header-a" href="/contest">Contest</a>
-                    <a className="header-a" href="/repo">Storage</a>
+                    <a className="header-a" id={props.location.pathname === '/contest' ? "header-clicked" : null} href="/contest">Contest</a>
+                    <a className="header-a" id={props.location.pathname === '/repo' ? "header-clicked" : null} href="/repo">Storage</a>
                     <div className="row-log">
                         {user.userData && !user.userData.isAuth ?
                         (<>
