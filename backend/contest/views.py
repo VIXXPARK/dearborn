@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework.views import APIView
-from .serializers import ContestSerializer,ContestPostSerializer,getContestIdSerializer,sortSerializer,getUserSerializer
-from .models import Contest,ContestPost,ContestPostImage
+from .serializers import ContestSerializer,getContestIdSerializer,sortSerializer,getUserSerializer
+from .models import Contest
 from usermanagement.models import User
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
@@ -25,21 +25,6 @@ class ContestViewSet(ModelViewSet):
             return Response({'success':True, 'err':e.detail}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         
-        
-
-class ContestPostViewSet(ModelViewSet):
-    queryset = ContestPost.objects.all()
-    serializer_class = ContestPostSerializer
-    parser_classes = (MultiPartParser,FormParser)
-
-    def create(self,request,*args,**kwargs):
-        try:
-            response = super().create(request, *args, **kwargs)
-        except APIException as e:
-            return Response({'success': False, 'err':e.detail}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        instance = response.data
-        return Response({'success': True})
-
 class getHostView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -135,55 +120,6 @@ class infoContest(ListAPIView):
         }
         return Response(content,status=status.HTTP_200_OK)
 
-
-class contestPostListView(ListAPIView):
-    permission_classes = (permissions.AllowAny,)
-    pagination_class = LimitOffsetPagination
-
-    def post(self,request):
-        contestdata =getContestIdSerializer(data=request.data)
-        if not contestdata.is_valid():
-            return Response({'success':False,'err':contestdata.error_messages},status=status.HTTP_400_BAD_REQUEST)
-        contestPostdata = self.paginate_queryset(ContestPost.objects.filter(contest=contestdata.validated_data['id']).order_by('-updated_dt'))
-        postJson = []
-        for x in contestPostdata:
-            try:
-                ximage = x.thumbnail.url
-            except:
-                ximage=None,
-            context={
-                'id':x.id,
-                'thumbnail':ximage
-            }
-            postJson.append(context)
-        content={
-            'success':True,
-            'posts':postJson
-        }
-        return Response(content,status=status.HTTP_200_OK)
-
-class contestPostDetail(APIView):
-        permission_classes=(permissions.AllowAny,)
-        
-        def post(self,request):
-            itemdata = getContestIdSerializer(data=request.data)
-            if not itemdata.is_valid():
-                return Response({'success':False,'err':itemdata.error_messages},status=status.HTTP_400_BAD_REQUEST)
-            contestItemData = ContestPost.objects.get(id=itemdata.validated_data['id'])
-            contestImageData = ContestPostImage.objects.filter(contestPost=contestItemData.id)
-            images = []
-            for x in contestImageData:
-                try:
-                    image = x.image.url
-                    images.append(image)
-                except:
-                    pass
-            content={
-                'success':True,
-                'id':contestItemData.id,
-                'images':images
-            }
-            return Response(content,status=status.HTTP_200_OK)
 
 class ContestDetail(APIView):
 

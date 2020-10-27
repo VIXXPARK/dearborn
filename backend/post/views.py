@@ -31,6 +31,7 @@ from bid.models import BidInfo
 from messanger.models import Message
 from messanger.serializers import SaveMessageSerializer
 # from .feature import Similarity,GetFeatureVector,SaveFeatureVector
+from django.http import Http404
 
 @background()
 def voteExpired():
@@ -213,6 +214,10 @@ class disLikeView(ListAPIView):
         }
         return Response(context,status=HTTP_200_OK)
 
+
+
+    
+
     
 class likeDownView(DestroyAPIView):
     queryset = like.objects.all()
@@ -229,7 +234,7 @@ class likeDownView(DestroyAPIView):
         try:
             instance = self.get_object(request.data['post'],request.data['user'])
             instance.delete()
-            return Response({"success":True},status=HTTP_200_OK)
+            return Response({"success":True},status=HTTP_204_NO_CONTENT)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
 
@@ -309,7 +314,6 @@ class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     parser_classes = (MultiPartParser,FormParser)
-    
     def create(self, request, *args, **kwargs):
         
         try:
@@ -336,19 +340,7 @@ class PostViewSet(ModelViewSet):
         }
         instance = response.data
         return Response(context,HTTP_200_OK)
-    
-    def destroy(self,request,*args,**kwargs):
-        try:
-            response = super().destroy(request, *args, **kwargs)
-        except APIException as e:
-            return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        #similarity = Similarity(response.data.postId)
-        context = {
-            # 'similarity' : similarity,
-            'success' : True,
-        }
-        instance = response.data
-        return Response(context,HTTP_204_NO_CONTENT)
+
         
 
 class getProfileView(ListAPIView):
@@ -730,7 +722,6 @@ class getMyWork(APIView):
 
         
         work = myWork.objects.get(user=username.validated_data['user'])
-        print(work.post)
         postdata = Post.objects.get(id=work.post.id)
         try:
             thumbnail=postdata.thumbnail.url
@@ -743,5 +734,20 @@ class getMyWork(APIView):
         content={
             'success':True,
             'about':about,
+        }
+        return Response(content,status=HTTP_200_OK)
+
+class postDeleteView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self,request):
+        data = PostIdSerializer(data=request.data)
+        if not data.is_valid():
+            return Response({'success':False,'err':data.error_messages},status=HTTP_400_BAD_REQUEST)
+
+        Post.objects.get(id=data.validated_data['id']).delete()
+        PostImage.objects.filter(post=data.validated_data['id']).delete()
+        content={
+            'success':True,
         }
         return Response(content,status=HTTP_200_OK)
