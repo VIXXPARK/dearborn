@@ -35,7 +35,6 @@ function LandingPage(props) {
         window.addEventListener('scroll', handleScroll)
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
-
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
             && document.documentElement.scrollTop)
@@ -117,6 +116,9 @@ function LandingPage(props) {
             <div className="item-vote-wrap">
                 <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-show">
+                    <div className="item-vote-title">
+                        {post.title}
+                    </div>
                     <div id="go-detail" >
                         <Link to = {{pathname:'/', search:`designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}><div id="go-detail-icon"><ArrowRightOutlined /></div></Link>
                     </div>
