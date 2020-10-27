@@ -34,9 +34,8 @@ class Post(models.Model):
       return self.view
 
 @receiver(models.signals.post_delete, sender=Post)
-def delete_file(sender,instance,*args,**kwargs):
-   if instance.thumbnail:
-      _delete_file(instance.thumbnail.path)
+def remove_file_from_s3(sender,instance,*args,**kwargs):
+   instance.thumbnail.delete(save=False)
 
 def postImageUpload_to(instance,filename):
    return 'images/{0}/{1}'.format(instance.post,filename)
@@ -49,9 +48,8 @@ class PostImage(models.Model):
       return self.image
 
 @receiver(models.signals.post_delete, sender=PostImage)
-def delete_file(sender,instance,*args,**kwargs):
-   if instance.image:
-      _delete_file(instance.image.path)
+def remove_file_from_s3_image(sender,instance,*args,**kwargs):
+   instance.image.delete(save=False)
 
 class like(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
