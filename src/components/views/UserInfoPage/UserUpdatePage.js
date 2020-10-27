@@ -64,7 +64,7 @@ function UserUpdatePage(props) {
         const config = {
             header : {'Content-Type' : 'multipart/form-data'}
         }
-        axios.post('/api/user/modify', formData, config)
+        axios.post('/api/user/changeProfile', formData, config)
         .then(response => {
             if(response.data.success){
                 props.history.push('/modify')

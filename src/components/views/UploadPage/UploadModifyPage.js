@@ -82,34 +82,24 @@ function UploadModifyPage(props) {
         reader.addEventListener('load', () => callback(reader.result))
         reader.readAsDataURL(img)
     }
+
     const onFinish = (values) => {
-        if(!ThumbnailFile)
-            return alert('썸네일을 선택해주세요')
-        if(!FileList)
-            return alert('디자인을 선택해주세요')
         if(!Category)
             return alert('카테고리를 선택해주세요')
-        console.log(values)
-        console.log(ThumbnailFile)
-        console.log(FileList)
-        console.log(Category)
-        const restDay = parseInt(moment().endOf('week').fromNow()[3])+1
+        
         let formData = new FormData()
         const config = {
             header : {'Content-Type' : 'multipart/form-data'}
         }
-        FileList.forEach(file => formData.append('images', file.originFileObj))
+        console.log(values)
         formData.append('title', values.title)
         formData.append('content', values.description)
-        formData.append('thumbnail', ThumbnailFile)
         formData.append('category', Category)
         formData.append('sell', values.sell)
         formData.append('scope', values.scope)
         formData.append('bidPrice', values.bidPrice ? parseInt(values.bidPrice) : -1)
         formData.append('sellPrice', values.sellPrice ? parseInt(values.sellPrice) : -1)
-        formData.append('expire_dt', moment.utc(moment().format('YYYY-MM-DD') + "T23:59:59Z").add(restDay, 'd').format())
-        formData.append('user', window.localStorage.getItem('userId'))
-        axios.post('/api/post/uploadPost', formData, config)
+        axios.patch(`/api/post/${postId}`, formData, config)
             .then(response => {
                 if(response.data.success)
                 {
@@ -203,7 +193,6 @@ function UploadModifyPage(props) {
                         <Form.Item
                             name="title"
                             rules={[{required:true, message:'제목을 써주시기 바랍니다'}]}
-                            initialValue={Title}
                         >
                             <Input
                                 className="upload-title-input"

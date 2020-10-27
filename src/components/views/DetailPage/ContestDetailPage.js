@@ -69,6 +69,8 @@ function ContestDetailPage(props) {
         const formData = new FormData()
         EventImgs.forEach(file => formData.append('images', file))
         formData.append('thumbnail', EventThumbnailImg)
+        formData.append('user', props.user.userData._id)
+
         axios.post('/api/contest/post/uploadContest', formData)
         .then(response => {
             if(response.data.success){
