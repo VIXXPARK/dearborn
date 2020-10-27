@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/', include('bid.urls')),
     path('api/',include('messanger.urls')),
     path('api/',include('contest.urls')),
+    path('api/',include('assess.urls')),
     re_path('^(?:.*)/?$', TemplateView.as_view(template_name='index.html'), name='index'),
     re_path('^service-worker.js$',
         TemplateView.as_view(template_name='service-worker.js',

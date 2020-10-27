@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import saveValueSerializer,getValueSerializer
-from .serializers import designSerializer,colorSerializer,individualitySerializer,practicalitySerializer
 from .serializers import trendSerializer
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -18,7 +17,7 @@ import json
 from .models import Assess
 
 class saveAssess(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes =(permissions.AllowAny,)
     def post(self,request):
         assessed = saveValueSerializer(data=request.data)
         if not assessed.is_valid():
@@ -28,6 +27,7 @@ class saveAssess(APIView):
             'success':True
         }
         return Response(context,status=HTTP_200_OK)
+
 
 class getAssess(APIView):
     permission_classes = (permissions.AllowAny,)
