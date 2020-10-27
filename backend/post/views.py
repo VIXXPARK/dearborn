@@ -745,9 +745,9 @@ class postDeleteView(APIView):
         if not data.is_valid():
             return Response({'success':False,'err':data.error_messages},status=HTTP_400_BAD_REQUEST)
 
-        postdata = Post.objects.get(id=data.validated_data['id']).delete()
-        postImagedata = PostImage.objects.filter(post=data.validated_data['id']).delete()
+        Post.objects.get(id=data.validated_data['id']).delete()
+        PostImage.objects.filter(post=data.validated_data['id']).delete()
         content={
             'success':True,
         }
-        return Response(content,status=HTTP_204_NO_CONTENT)
+        return Response(content,status=HTTP_200_OK)
