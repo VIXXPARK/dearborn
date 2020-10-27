@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Input, Modal} from 'antd';
 import {config} from '../../utils/Token'
 import {convertToS3EP} from '../../utils/String'
-import {FormOutlined} from '@ant-design/icons'
+import {FormOutlined, DollarOutlined, DeleteOutlined} from '@ant-design/icons'
 
 
 const {confirm} = Modal;
@@ -93,6 +93,7 @@ function VoteDetailPage(props) {
                                         alert('성공')
                                     }else{
                                         alert('실패')
+                                        console.log(response.data.err)
                                     }
                                 })
                                 Modal.destroyAll()
@@ -102,6 +103,20 @@ function VoteDetailPage(props) {
             },
             onCancel(){
 
+            }
+        })
+    }
+
+    const OnDeleteClick = () => {
+        axios.post('/api/post/delete', {id : DetailPost.id})
+        .then(response => {
+            if(response.status ===200){
+                console.log(response.data)
+                alert('삭제 성공')
+                props.history.push('/')
+            }else{
+                alert('실패')
+                console.log(response)
             }
         })
     }
@@ -131,11 +146,6 @@ function VoteDetailPage(props) {
             }}
         >
             <div className="profile-content">
-                {props.user.userData && props.user.userData.job === 2 && 
-                    <div className="vote-btn" onClick={showBiddingForm}>
-                        입찰하기
-                    </div>
-                }
                 <div className="profile-icon" onClick={()=>props.history.push(`/${Writer.nickname}`)}>
                     <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                 </div>
@@ -148,14 +158,28 @@ function VoteDetailPage(props) {
                 <div className="profile-header">
                     {Voted ? "투표함" : "투표하기"}
                 </div>
+                {props.user.userData && props.user.userData.job === 2 && 
+                <>
+                    <div className="profile-icon" onClick={showBiddingForm}>
+                        <DollarOutlined/>
+                    </div>
+                    <div className="profile-header">
+                        입찰하기
+                    </div>
+                </>
+                }
+                {props.user.userData && Writer && props.user.userData._id === Writer.id && 
+                <>
+                    <div className="profile-icon" onClick={OnDeleteClick}>
+                        <DeleteOutlined/>
+                    </div>
+                    <div className="profile-header">
+                        삭제하기
+                    </div>
+                </>
+                }
             </div>
             <div style={{color:'black'}}>
-                <div className="detail-header">
-                    {DetailPost.title}
-                </div>
-                <div className="detail-span">
-                    {DetailPost.updatedAt}
-                </div>
                 <div className="detail-content">
                     {DetailPost.images && DetailPost.images.map((image, i) => (
                         <div>

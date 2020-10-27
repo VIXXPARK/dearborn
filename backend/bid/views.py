@@ -47,7 +47,7 @@ def GetBid(request):
         job = user.job
 
         if job == 1:
-            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,sell=1, is_repo=False), request)
+            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,scope=1, is_repo=False), request)
             sellPost = []
             for item in postData:
                 if item.sell == 1:

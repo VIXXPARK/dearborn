@@ -134,7 +134,6 @@ function RepoListPage(props) {
 
     return (
         <div className="list-container">
-            <Title style={{fontSize:'60px'}}>Repository</Title>
             <div className="filter-container">
                 <div className="filter-btn">
                     <div style={{width:'100%', height:'100%'}} onClick={OpenFilterClick}>필터</div>
