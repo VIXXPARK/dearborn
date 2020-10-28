@@ -5,9 +5,6 @@ from django.dispatch import receiver
 from backend import settings
 import uuid
 
-@receiver(models.signals.post_delete, sender=Contest)
-def remove_file_from_s3(sender,instance,*args,**kwargs):
-    instance.profileImage.delete(save=False)
 
 def profileUploadTo(instance,filename):
     return 'profileImage/{0}/{1}'.format(instance.id,filename)
@@ -84,3 +81,7 @@ class User(AbstractUser):
     
     class Meta:
         ordering = ['nickname']
+
+@receiver(models.signals.post_delete, sender=User)
+def remove_file_from_s3(sender,instance,*args,**kwargs):
+    instance.profileImage.delete(save=False)
