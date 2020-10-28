@@ -385,7 +385,6 @@ class getProfileView(ListAPIView):
             'nickname' : userdata.nickname,
             'profileImage' : profileImage,
             'job':userdata.job,
-            'major':userdata.major,
             'work':work,
             'view':view,
             'like':liked
