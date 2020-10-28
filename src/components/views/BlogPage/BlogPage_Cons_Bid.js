@@ -123,7 +123,7 @@ function BlogPage_Cons_Bid(props) {
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">진행 중</button>
                     <a href={`/${designer}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
                     <a href={`/${designer}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
-                    {props.user.userData && props.user.userData.nickname == designer ? <div className="blog-tabs-content">
+                    {props.user.userData && props.user.userData.nickname === designer ? <div className="blog-tabs-content">
                         {Posts && Posts.map(post => renderPost(post))}
                     </div> :
                     <div className="blog-tabs-content"><p>본인이 아니므로 볼 수 없습니다.</p></div>

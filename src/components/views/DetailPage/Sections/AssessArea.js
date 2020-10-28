@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {Rate, Button} from 'antd'
 import Axios from 'axios';
+import {getCookieValue} from '../../../utils/Cookie'
 
 function AssessArea(props) {
 
@@ -36,8 +37,14 @@ function AssessArea(props) {
             practicality : Practicality,
             trend : Trend,
         }
+
+        const config = {
+            headers:{
+                Authorization: `Token ${getCookieValue('w_auth')}`,
+            }
+        }
         console.log(DatasToSubmit)
-        Axios.post('/api/assess/saveValue', DatasToSubmit)
+        Axios.post('/api/assess/saveValue', DatasToSubmit, config)
         .then(response => {
             if(response.data.success)
             {

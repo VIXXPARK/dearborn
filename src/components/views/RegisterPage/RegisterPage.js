@@ -18,7 +18,6 @@ function RegisterPage(props) {
     const {control, register, handleSubmit} = useForm();
 
     const [Job, setJob] = useState(1)
-    const [Major, setMajor] = useState([1])
     const [ProfileImage, setProfileImage] = useState("")
     const [Preview, setPreview] = useState("")
 
@@ -41,18 +40,14 @@ function RegisterPage(props) {
 
         const onSubmit = data =>{
             let formData = new FormData()
-            let tempMajor = Major.join(':')
-            data.major = tempMajor
             formData.append('profileImage', ProfileImage)
             formData.append('content', data.content)
-            formData.append('major', tempMajor)
             formData.append('email', data.email)
             formData.append('password', data.password)
             formData.append('job', Job)
             formData.append('nickname', data.nickname)
             console.log(ProfileImage)
             console.log( data.content)
-            console.log(tempMajor)
             console.log(data.email)
             console.log( data.password)
             console.log( Job)
@@ -79,16 +74,6 @@ function RegisterPage(props) {
             
         }
 
-        const clickMajor = (value) => {
-            console.log(value)
-            if(value[value.length-1]===1)
-                setMajor([1])
-            else if(value[value.length-2]===1)
-                setMajor([value[value.length-1]])
-            else
-                setMajor(value)
-        }
-
         const OnChangeJob = (e)=> {
             setJob(e)
         }
@@ -106,7 +91,6 @@ function RegisterPage(props) {
                     }
                     name="email"
                     control={control}
-                    
                 />
                 <Controller
                     as={
@@ -149,19 +133,6 @@ function RegisterPage(props) {
                     <Option value={1}>일반 유저(디자이너)</Option>
                     <Option value={2}>클라이언트</Option>
                 </Select>
-                {Job == 1 && (<><br/><br/>
-                <label>자신 있는 분야 : </label><br/><br/>
-                <Checkbox.Group
-                    onChange={clickMajor}
-                    value={Major}
-                >
-                    <Checkbox value={1}>없음</Checkbox>
-                    <Checkbox value={2}>상의</Checkbox>
-                    <Checkbox value={3}>하의</Checkbox>
-                    <Checkbox value={4}>모자</Checkbox>
-                    <Checkbox value={5}>신발</Checkbox>
-                    <Checkbox value={6}>악세서리</Checkbox>
-                </Checkbox.Group></>)}
                 <br/><br />당신의 프로필을 업로드하세요!<br/><br/>
                 <Upload
                     name='file'

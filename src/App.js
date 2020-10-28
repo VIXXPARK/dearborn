@@ -53,7 +53,7 @@ function App(props) {
           <Route exact path='/upload/modify/:postId' component={Auth(UploadModifyPage, true)}/>
           <Route exact path='/checkEmail' component={Auth(CheckEmailPage, null)}/>
           <Route exact path='/checkEmail/failed' component={Auth(CheckEmailFailPage, null)}/>
-          <Route exact path='/modify' component={Auth(UserInfoMainPage, true)}/>
+          <Route exact path='/modify' component={Auth(UserInfoMainPage, false)}/>
           <Route exact path='/modify/settings' component={Auth(UserUpdatePage, true)}/>
           <Route exact path='/repo' component={Auth(RepoListPage, null)}/>
           <Route exact path='/contest' component={Auth(ContestListPage, null)}/>

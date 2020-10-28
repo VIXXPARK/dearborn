@@ -6,3 +6,7 @@
 .upload-left-container .upload-block {
     padding-top: 180px;
 }
+
+.ant-upload {
+    margin-left:0px;
+}
