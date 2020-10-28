@@ -8,18 +8,3 @@ class saveValueSerializer(serializers.ModelSerializer):
 
 class getValueSerializer(serializers.Serializer):
     post = serializers.CharField()
-
-class designSerializer(serializers.Serializer):
-    design = serializers.FloatField()
-
-class individualitySerializer(serializers.Serializer):
-    individuality = serializers.FloatField()
-
-class practicalitySerializer(serializers.Serializer):
-    practicality = serializers.FloatField()
-
-class trendSerializer(serializers.Serializer):
-    trend = serializers.FloatField()
-
-class colorSerializer(serializers.Serializer):
-    color = serializers.FloatField()
