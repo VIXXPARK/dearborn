@@ -1,8 +1,14 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models, IntegrityError
+from django.dispatch import receiver
 from backend import settings
 import uuid
+
+
+def profileUploadTo(instance,filename):
+    return 'profileImage/{0}/{1}'.format(instance.id,filename)
+
 
 class MyUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -12,7 +18,7 @@ class MyUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = User()
         user.set_email(email)
-        user.set_extra(job = extra_fields['job'], major = extra_fields['major'], nickname = extra_fields['nickname'], is_staff = extra_fields['is_staff'], is_superuser = extra_fields['is_superuser'])
+        user.set_extra(job = extra_fields['job'], nickname = extra_fields['nickname'], is_staff = extra_fields['is_staff'], is_superuser = extra_fields['is_superuser'])
         user.is_active = extra_fields['is_activate']
         user.content = extra_fields['content']
         user.profileImage = extra_fields['profileImage']
@@ -35,7 +41,6 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('profileImage',None)
         extra_fields.setdefault('content', "hello")
         extra_fields.setdefault('job', 1)
-        extra_fields.setdefault('major', "1")
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff = True')
         if extra_fields.get('is_superuser') is not True:
@@ -49,16 +54,15 @@ class User(AbstractUser):
         
     id = models.CharField(editable=False, max_length=36, db_index=True, unique=True, default=make_uuid, primary_key=True)
     nickname = models.CharField(max_length=50, unique=True)
-    profileImage = models.ImageField(blank=True, upload_to="profileImage/",null=True, default=None)
+    profileImage = models.ImageField(blank=True, upload_to=profileUploadTo,null=True, default=None)
     job = models.IntegerField()
-    major = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     content = models.TextField(max_length=1000)
     rankData = models.IntegerField(null=True,default=1)
     now_updating = models.BooleanField(default=False)
     username = None
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nickname',]
+    REQUIRED_FIELDS = ['nickname']
     objects = MyUserManager
     object = MyUserManager()
 
@@ -71,9 +75,12 @@ class User(AbstractUser):
     def set_extra(self, **extra_fields):
         self.is_staff = extra_fields['is_staff']
         self.is_superuser = extra_fields['is_superuser']
-        self.major = extra_fields['major']
         self.job = extra_fields['job']
         self.nickname = extra_fields['nickname']
     
     class Meta:
         ordering = ['nickname']
+
+@receiver(models.signals.post_delete, sender=User)
+def remove_file_from_s3(sender,instance,*args,**kwargs):
+    instance.profileImage.delete(save=False)

@@ -1,6 +1,6 @@
 from .views import PostViewSet, getProfileView ,upViewSet,getDisLikeView,ReposView
 from .views import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
-from .views import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork,getMyWork, voteExpired,postDeleteView
+from .views import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork,getMyWork,postDeleteView, voteExpired
 from django.urls import path,include
 from usermanagement.models import User
 from rest_framework.routers import DefaultRouter
@@ -33,4 +33,7 @@ urlpatterns = [
     path('info/getAbout',getMyWork.as_view()),
     path('post/delete',postDeleteView.as_view()),
 ]
-voteExpired(repeat=100000,repeat_until=None)
+try:
+    voteExpired(repeat=100000,repeat_until=None)
+except:
+    pass

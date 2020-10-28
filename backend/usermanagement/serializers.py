@@ -7,8 +7,6 @@ class DeleteUserSerializer(serializers.Serializer):
     uid = serializers.CharField()
 
 class ChangeProfileSerializer(serializers.Serializer):
-    job = serializers.CharField()
-    major = serializers.CharField()
     profileImage = serializers.ImageField()
     content = serializers.CharField()
     uid = serializers.CharField()
@@ -30,7 +28,6 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(min_length=8, write_only=True)
     nickname = serializers.CharField()
     job = serializers.IntegerField()
-    major = serializers.CharField()
     profileImage = serializers.ImageField(required=False)
     content = serializers.CharField()
     
@@ -41,7 +38,6 @@ class UserSerializer(serializers.ModelSerializer):
         password = validated_data['password']
         nickname = validated_data['nickname']
         job = validated_data['job']
-        major = validated_data['major']
         try:
             profileImage = validated_data['profileImage']
         except:
@@ -49,11 +45,11 @@ class UserSerializer(serializers.ModelSerializer):
         content = validated_data['content']
         
         try:
-            new_user = myManager.create_user(email, password, nickname = nickname, job = job, major = major,profileImage=profileImage, content=content)
+            new_user = myManager.create_user(email, password, nickname = nickname, job = job, profileImage=profileImage, content=content)
             return new_user
         except:
             raise IntegrityError
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'nickname', 'job', 'major','profileImage','content']
+        fields = ['email', 'password', 'nickname', 'job','profileImage','content']
