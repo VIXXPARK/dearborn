@@ -2,13 +2,13 @@
 *.pyc
 /venv
 /backend/secrets.json
-# backend/contest/migrations
-# backend/comment/migrations
-# backend/assess/migrations
-# backend/bid/migrations
-# backend/post/migrations
-# backend/messanger/migrations
-# backend/usermanagement/migrations
+backend/contest/migrations
+backend/comment/migrations
+backend/assess/migrations
+backend/bid/migrations
+backend/post/migrations
+backend/messanger/migrations
+backend/usermanagement/migrations
 backend/**/__pychache__
 backend/staticfiles/**
 backend/media
