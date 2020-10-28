@@ -39,3 +39,5 @@ class ExpiringTokenAuthentication(TokenAuthentication):
             raise AuthenticationFailed("The token is expired")
 
         return (token.user, token)
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
