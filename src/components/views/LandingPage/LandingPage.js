@@ -10,6 +10,7 @@ import {convertToS3EP} from '../../utils/String'
 
 
 import {ArrowRightOutlined} from '@ant-design/icons'
+import PostRankBox from './Sections/PostRankBox';
 
 const {Meta} = Card
 
@@ -130,16 +131,19 @@ function LandingPage(props) {
     return (
         <>
         <div style={{width:'95%', margin:'3rem auto'}}>
+            <div className="post-rank">
+                <PostRankBox/>
+            </div>
             <div className="main-banner-container">
                 <div className="main-banner-text">
                     당신의 패션 디자인을 팔아보세요.<br/>
                     아마추어 디자이너들을 환영합니다!
                 </div>
-                <div className="main-banner-background"></div>
-                <div className="rank">
-                    <p style={{width:'100%',fontSize:'30px', textAlign:'center'}}>지난 주 랭킹</p>
-                    <RankBox />
-                </div>
+            </div>
+            
+            <div className="rank">
+                <p style={{width:'100%',fontSize:'20px', textAlign:'center', marginBottom:'0px'}}>TOP 3</p>
+                <RankBox />
             </div>
             <div className="vote">
                 <div style={{margin: '0 auto'}}> 

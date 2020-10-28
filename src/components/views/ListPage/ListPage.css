@@ -15,14 +15,13 @@
     height:30px;
     font-size: 15px;
     font-weight: bold;
-    border-radius: 30px;
-    line-height: 27px;
+    border-radius: 10px;
+    line-height: 31px;
     cursor: pointer;
-    margin: 10px;
+    margin-left: 20px;
     text-align: center;
     color: white;
-    background-color: powderblue;
-    border: 1px solid powderblue;
+    background-color:  #49c5b6;
 }
 
 
