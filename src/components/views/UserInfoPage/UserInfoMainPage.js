@@ -33,17 +33,23 @@ function UserInfoMainPage(props) {
         })
     }
     return (
-        <div>
-            <a href="/modify/settings"><Button>회원정보 수정</Button></a>
-            <a onClick={DeleteUserHandler}><Button danger>회원 탈퇴</Button></a>
-            <Modal
-                title="경고"
-                visible={ModalVisible}
-                onOk={handleOK}
-                onCancel={handleCancel}
-            >
-                정말로 삭제하시겠습니까?
-            </Modal>
+        <div className="auth" style={{marginTop:'200px'}}>
+            <div className="auth-wrapper" style={{paddingTop:'20px'}}>
+                <p style={{fontSize:'40px', fontWeight:'bold'}}><a href="/">DEarborn</a></p>
+                <div style={{borderRadius:'20px', border:'1px solid black'}}>
+                    <div style={{margin:'40px auto'}}><a href="/modify/settings"><Button>회원정보 수정</Button></a></div>
+                    <div style={{margin:'40px auto'}}><a href="/modify/changePW"><Button>비밀번호 변경</Button></a><br/></div>
+                    <div style={{margin:'40px auto'}}><a onClick={DeleteUserHandler}><Button danger>회원 탈퇴</Button></a></div>
+                </div>
+                <Modal
+                    title="경고"
+                    visible={ModalVisible}
+                    onOk={handleOK}
+                    onCancel={handleCancel}
+                >
+                    정말로 삭제하시겠습니까?
+                </Modal>
+            </div>
         </div>
     );
 }

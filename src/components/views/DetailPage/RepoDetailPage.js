@@ -128,7 +128,7 @@ function RepoDetailPage(props) {
                             <button className="repo-detail-btn" onClick={onModifyClick}>수정</button>
                             <button className="repo-detail-btn" onClick={onDeleteClick}>삭제</button>
                         </div>}
-                        <Title>TITLE12312{/*Repo.title*/}</Title>
+                        <Title>{Repo.title}</Title>
                         <div className="repo-profile">
                             <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                             <div className="repo-profile-header">
