@@ -38,8 +38,8 @@ def voteExpired():
     posts = Post.objects.filter(is_repo=False)
     for post in posts:
 
-        KST = timezone('Asia/Seoul')
-        now = datetime.now(tz=KST)
+        UTC = timezone('UTC')
+        now = datetime.now(tz=UTC)
         expired_dt = post.expire_dt
 
         if expired_dt <= now:

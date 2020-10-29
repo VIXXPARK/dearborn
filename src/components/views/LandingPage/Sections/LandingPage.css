@@ -1,6 +1,12 @@
-
-.vote {
-    margin-top: 80px;
+@media(min-width:900px){
+    .vote {
+        margin-top: 30px;
+    }
+}
+@media(max-width:899px){
+    .vote {
+        margin-top: 100px;
+    }
 }
 .loadmore-list {
     min-height: 200px;
@@ -208,6 +214,16 @@
     display: inline-block;
 }
 
+.item-vote-obv{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
+    border-radius: 20px;
+    background:rgba(0,0,0, 0.05);
+}
+
 .ant-card-bordered .ant-card-cover{
     margin : 1vw;
 }
@@ -219,8 +235,7 @@
     .main-banner-container {
         display: inline-block;
         width:100%;
-        height:250px;
-        margin-top: 30px;
+        height:150px;
     }
 }
 @media(min-width:900px){
@@ -251,7 +266,7 @@
     .main-banner-text{
         width:100%;
         line-height: 70px;
-        margin:0 auto;
+        margin:90px auto;
         font-size: 30px;
         font-weight: bold;
         color: black;
@@ -263,6 +278,7 @@
     .main-banner-text{
         width:100%;
         line-height: 70px;
+        margin-top:50px;
         font-size: 27px;
         font-weight: bold;
         color: black;
@@ -274,6 +290,7 @@
     display: block;
     width: 100%;
     text-align: center;
+    margin-top: 70px;
 }
 
 .rank-container{
@@ -307,16 +324,12 @@
     line-height: 40px;
 }
 
-#rank-move{
-    transition: transform 1s;
-    transform : translate(calc(-300px * 0), 0)
-}
 
 @media(min-width:900px){
     .post-rank{
         float:right;
         width: 50%;
-        height:400px;
+        height:280px;
         text-align: center;
     }
 }
@@ -324,16 +337,15 @@
     .post-rank{
         display:block;
         width: 100%;
-        height:400px;
-        margin-top: 60px;
+        height:280px;
         text-align: center;
     }
 }
 
 .post-rank-container{
     display: block;
-    width:550px;
-    height:400px;
+    width:360px;
+    height:280px;
     overflow-y: hidden;
     overflow-x: hidden;
     white-space:nowrap;
@@ -343,7 +355,20 @@
 
 .post-rank-item{
     display: inline-block;
-    width:550px;
-    height:400px;
+    width:360px;
+    height:280px;
 }
-
+@media(max-width:899px){
+    .main-banner-background{
+        width:100%;
+        height:650px;
+        background-color: #F9F8FD;
+    }
+}
+@media(min-width:900px){
+    .main-banner-background{
+        width:100%;
+        height:450px;
+        background-color: #F9F8FD;
+    }
+}
