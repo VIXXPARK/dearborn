@@ -82,7 +82,6 @@ def voteExpired():
                 post.save()
             except APIException as e:
                 raise e
-
         users = User.objects.all()
         for user in users:
             user.now_updating = False
