@@ -24,8 +24,6 @@ django-compat==1.0.15
 django-cors-headers==3.4.0
 django-filter==2.3.0
 django-heroku==0.3.1
-django-jet-opt==1.0.8
-django-mysql==3.8.1
 django-rest-auth==0.9.5
 django-storages==1.10.1
 django-templated-mail==1.1.1
