@@ -16,7 +16,7 @@ import json
 from .models import Assess
 
 class saveAssess(APIView):
-    permission_classes =(permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
         assessed = saveValueSerializer(data=request.data)
         if not assessed.is_valid():
@@ -29,7 +29,7 @@ class saveAssess(APIView):
 
 
 class getAssess(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
         design=0
         color=0

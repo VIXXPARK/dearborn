@@ -1,17 +1,21 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework.views import APIView
+
 from .serializers import ContestSerializer,getContestIdSerializer,sortSerializer,getUserSerializer
+
 from .models import Contest
 from usermanagement.models import User
+
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework.pagination import LimitOffsetPagination
+
 class ContestViewSet(ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Contest.objects.all()
     serializer_class = ContestSerializer
     parser_classes = (MultiPartParser,FormParser)
@@ -36,7 +40,7 @@ class ContestViewSet(ModelViewSet):
         return Response(context,status.HTTP_200_OK)
         
 class contestDeleteView(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self,request):
         data = getContestIdSerializer(data=request.data)
