@@ -55,6 +55,7 @@ from background_task import background
 from datetime import datetime, timedelta
 from pytz import timezone
 # from .feature import Similarity,GetFeatureVector,SaveFeatureVector
+<<<<<<< HEAD
 
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
@@ -62,6 +63,87 @@ class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     parser_classes = (MultiPartParser,FormParser)
     def create(self, request, *args, **kwargs):
+=======
+from django.http import Http404
+
+@background()
+def voteExpired():
+    posts = Post.objects.filter(is_repo=False)
+    for post in posts:
+
+        UTC = timezone('UTC')
+        now = datetime.now(tz=UTC)
+        expired_dt = post.expire_dt
+
+        if expired_dt <= now:
+
+            votes = vote.objects.count(post = post.id)
+            try:
+                postUser = User.object.get(id = post.user.id)
+            except APIException as e:
+                raise e                
+            
+            try:
+                user = User.object.get(nickname='admin', is_superuser=True)    
+            except APIException as e:
+                raise e      
+            
+            if not postUser.now_updating:
+                postUser.now_updating = True
+                postUser.rankData = 0
+            postUser.rankData += votes
+            
+            bid = BidInfo.objects.filter(post=post).order_by('-price')
+            try:
+                price = bid[0].price
+                message = price + "가격으로 판매됐읍니다\n Vote -> Repo로 넘어갑니다."
+            except:
+                message = "판매로 넘어갑니다\n Vote -> Repo로 넘어갑니다."
+            data = {
+                'userFrom' : user.id,
+                'userTo' : post.user.id,
+                'message' : message,
+            }
+            messageSerializer = SaveMessageSerializer(data = data)
+            if not messageSerializer.is_valid():
+                raise messageSerializer.errors
+
+            try:
+                messageSerializer.create(messageSerializer.validated_data)
+                postUser.save()
+                post.is_repo = True
+                post.save()
+            except APIException as e:
+                raise e
+        users = User.objects.all()
+        for user in users:
+            user.now_updating = False
+
+class upVoteView(ListAPIView):
+    permission_classes=(permissions.AllowAny,)
+    def post(self,request):
+        voted =getVoteSerializer(data=request.data)
+        if not voted.is_valid():
+            return Response({'success':False,'err':voted.error_messages},status=HTTP_400_BAD_REQUEST)
+        voted.save()
+        return Response({'success':True},status=HTTP_200_OK) 
+
+class myVoteView(APIView):
+    permission_classes=(permissions.AllowAny,)
+    def post(self,request):
+        posts = getUserSerializer(data=request.data)
+        if not posts.is_valid():
+            return Response({'success':False,'err':posts.error_messages},status=HTTP_400_BAD_REQUEST)
+        postdata = vote.objects.filter(user=posts.validated_data['user'])
+        postID = []
+        for postcontent in postdata:
+            postID.append(postcontent.post.id)
+        context={
+            'success':True,
+            'posts':postID,
+        }
+        return Response(context,status=HTTP_200_OK)
+>>>>>>> f92e4b81859464bb975267387d587588bee8b911
         
         try:
             response = super().create(request, *args, **kwargs)

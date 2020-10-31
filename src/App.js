@@ -37,6 +37,7 @@ import ContestDetailPage from './components/views/DetailPage/ContestDetailPage'
 import ContestManagePage from './components/views/DetailPage/ContestManagePage'
 import MessagePage from './components/views/MessagePage/MessagePage'
 import FindFeaturePage from './components/views/FindFeaturePage/FindFeaturePage'
+import UserChangePasswordPage from './components/views/UserInfoPage/UserChangePasswordPage'
 
 function App(props) {
   return (
@@ -45,6 +46,7 @@ function App(props) {
     <Router>
       <Route path={ new RegExp("^(?!.*(/register|/login|/checkEmail|/changePassword|/modify)).*$") } component={NavBar}/>
       <div style={{minHeight:'calc(100vh - 66px)'}}>
+        <div>
         <Switch>
           <Route exact path='/' component={Auth(LandingPage, null)}/>
           <Route exact path='/login' component={Auth(LoginPage, false)}/>
@@ -55,6 +57,7 @@ function App(props) {
           <Route exact path='/checkEmail/failed' component={Auth(CheckEmailFailPage, null)}/>
           <Route exact path='/modify' component={Auth(UserInfoMainPage, false)}/>
           <Route exact path='/modify/settings' component={Auth(UserUpdatePage, true)}/>
+          <Route exact path='/modify/changePW' component={Auth(UserChangePasswordPage, null)}/>
           <Route exact path='/repo' component={Auth(RepoListPage, null)}/>
           <Route exact path='/contest' component={Auth(ContestListPage, null)}/>
           <Route exact path='/contest/manage/:contestId' component={Auth(ContestManagePage, null)}/>
@@ -75,6 +78,7 @@ function App(props) {
           <Route exact path='/changePassword/1' component={Auth(ChangePasswordPage, null)}/>
           <Route exact path='/changePassword/2/:uid/:token' component={Auth(ChangePasswordPage2, null)}/>
         </Switch>
+        </div>
       </div>
       <Route path="/" component={Auth(VoteDetailPage, null)}/>
       <Route path="^/(?!.*(/login|/register|/checkEmail|/changePassword|/modify)).*$" component={Footer}/>

@@ -4,9 +4,14 @@
     height: 66px;
     z-index : 40;
     top: 0px;
-    border-bottom: 0.01px solid powderblue;
+
     background-color: white;
 }
+
+#header a {
+    color : black;
+}
+
 @media(min-width:900px){
     .header-a{
         text-align: center;
@@ -14,8 +19,8 @@
         line-height: 35px;
         margin-top:14px;
         font-size: 20px;
-        margin-left:20px;
-        margin-right:20px;
+        margin-left:40px;
+        margin-right:40px;
 
         float:left;
 }
@@ -61,13 +66,15 @@
     display: inline-block;
     width:100px;
     height:40px;
-    background-color: powderblue;
-    border-radius: 30px;
+    background-color: #49c5b6;
+    border-radius: 10px;
     font-size: 20px;
     font-style: bold;
     text-align: center;
     padding-top: 5px;
+    color : white;
 }
+
 
 .nav-bar-profile{
     margin-top: 8px;

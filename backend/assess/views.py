@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from rest_framework.views import APIView
+from rest_framework.views import APIView, View
 from .serializers import saveValueSerializer,getValueSerializer
 from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework import authentication
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.status import(
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,

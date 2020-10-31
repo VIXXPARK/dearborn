@@ -27,7 +27,6 @@ from django.core.exceptions import ValidationError
 from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
-
 from .serializers import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
 from .serializers import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
 from .authentication import token_expire_handler, expires_in
@@ -229,7 +228,6 @@ def changeProfile(request):
     if not profileSerializer.is_valid():
         return Response(profileSerializer.errors, status = HTTP_400_BAD_REQUEST)
     job = profileSerializer.validated_data['job']
-    major = profileSerializer.validated_data['major']
     profileImage = profileSerializer.validated_data['profileImage']
     content = profileSerializer.validated_data['content']
     uid = profileSerializer.validated_data['uid']
@@ -238,7 +236,6 @@ def changeProfile(request):
     image = user[0].profileImage
     os.remove(os.path.join(settings.MEDIA_ROOT, + image.storage + image.path))
 
-    user[0].major = major
     user[0].profileImage = profileImage
     user[0].job = job
     user[0].content = content

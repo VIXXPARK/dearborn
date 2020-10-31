@@ -154,19 +154,19 @@ function NavBar(props) {
         <header id="header">
             <div className="container">
                 <div>
-                    <div className="header-title"><a href="/"><img style={{marginTop:'11px'}} className="main-logo" src={Dearborn}/></a></div>
+                    <div className="header-title"><a href="/"><img style={{marginTop:'11px',marginLeft:'50px', marginRight:'50px', height:'40px'}} className="main-logo" src={Dearborn}/></a></div>
                     <a className="header-a" id={props.location.pathname === '/contest' ? "header-clicked" : null} href="/contest">Contest</a>
                     <a className="header-a" id={props.location.pathname === '/repo' ? "header-clicked" : null} href="/repo">Storage</a>
                     <div className="row-log">
                         {user.userData && !user.userData.isAuth ?
                         (<>
                         <div className="register pull-right"><a href="/register"><div className="navbar-button">회원가입</div></a></div>
-                        <div className="logged-out pull-right">로그인하세요<a href="/login"><div className="navbar-button">로그인</div></a></div>
+                        <div className="logged-out pull-right" style={{marginRight:'5px'}}>로그인하세요<a href="/login"><div className="navbar-button">로그인</div></a></div>
                         </>) :
                         (<>
-                        <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
-                        {user.userData && user.userData.job ===1 &&<div className="register pull-right">
-                            <a href="/upload"><div className="navbar-button">업로드</div></a>
+                        <div className="logged-out pull-right" style={{marginRight:'50px'}}><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
+                        {user.userData && user.userData.job ===1 &&<div className="register pull-right" style={{marginRight:'5px'}}>
+                            <a href="/upload"><div className="navbar-button" >업로드</div></a>
                         </div>}
                         <div className="nav-bar-profile pull-right">
                             <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
