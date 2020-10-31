@@ -19,14 +19,7 @@ class Contest(models.Model):
     contest_expire = models.DateTimeField()
     image = models.ImageField(upload_to=contestUpload_to)
     banner = models.ImageField(upload_to=bannerUpload_to,null=True)
-<<<<<<< HEAD
-=======
 
-@receiver(models.signals.post_delete, sender=Contest)
-def remove_file_from_s3(sender,instance,*args,**kwargs):
-   instance.image.delete(save=False)
-   instance.banner.delete(save=False)
->>>>>>> f92e4b81859464bb975267387d587588bee8b911
     
 @receiver(models.signals.post_delete, sender=Contest)
 def remove_file_from_s3(sender,instance,*args,**kwargs):
