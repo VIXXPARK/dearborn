@@ -32,4 +32,4 @@ urlpatterns = [
         TemplateView.as_view(template_name='service-worker.js',
                              content_type='application/javascript'), name='service-worker_js'),
 ]
-#please
+#please!!
