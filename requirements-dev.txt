@@ -95,3 +95,6 @@ sendgrid-python==0.1.1
 django-ses==1.0.3
 django-cleanup==5.1.0
 -e git://github.com/VIXXPARK/django-jet.git@dev#egg=django-jet
+-e git://github.com/areski/django-nvd3.git@develop#egg=django_nvd3
+-e git://github.com/VIXXPARK/django-admin-tools-stats.git@develop#egg=django-admin-tools-stats
+
