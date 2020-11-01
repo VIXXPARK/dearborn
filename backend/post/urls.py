@@ -13,6 +13,7 @@ post_detail = PostViewSet.as_view(
 urlpatterns = [
     path('post/uploadPost',post_list,name="post_list"),
     path('post/<uuid:pk>',post_detail,name="post_detail"),#수정 삭제
+    path('post/delete',postDeleteView.as_view()),
     path('post/getVotes/',PostView.as_view()),
     path('post/getRepos/',ReposView.as_view()),
     path('post/getPostDetail',PostDetail.as_view()),
@@ -31,7 +32,7 @@ urlpatterns = [
     path('vote/upVote',upVoteView.as_view()),
     path('info/setMyWork',mySetWork.as_view()),
     path('info/getAbout',getMyWork.as_view()),
-    path('post/delete',postDeleteView.as_view()),
+    
 ]
 try:
     voteExpired(repeat=100000,repeat_until=None)
