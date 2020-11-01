@@ -4,7 +4,7 @@
     text-align: center;
     margin:0 auto;
 }
-@media (min-width:1401px){
+@media (min-width:1001px){
     .repo-left-container {
 
         width:60%;
@@ -12,27 +12,52 @@
         float:left;
     }
 }
-@media (max-width:1400px){
+@media (max-width:1000px){
     .repo-left-container {
         width:90%;
         margin:0 auto;
         margin-bottom: 100px;
     }
 }
-@media (min-width:1401px){
+@media (min-width:1001px){
     .repo-right-container {
-        width:40%;
+        width:30%;
         float:left;
+        margin-left: 5%;
     }
+    .repo-assess-icon{
+        display: none;
+    }
+    #repo-icon-show{
+        display: none;
+    }
+    
 }
-@media (max-width:1400px){
-    .repo-right-container {
-        display:block;
+@media (max-width:1000px){
+
+    .repo-right-icon{
+        display: none;
+    }
+    .repo-assess-icon {
+        position:fixed;
+        right:0;
+        bottom: 150px;
+        width:70px;
+        height:30px;
+        background-color: #49c5b6;
+        border-bottom-left-radius: 20px;
+        border: 1px solid #e5e5e5;
+        cursor: pointer;
+    }
+    #repo-assess-show {
+        display: none;
     }
 }
 
+
 .repo-content-img{
     width:90%;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -53,9 +78,9 @@
     margin-bottom: 0px;
 }
 .repo-span {
-    width:400px;
+    width:100%;
     font-size:15px;
-    text-align: center;
+    text-align: right;
     word-break: keep-all;
     word-wrap:break-word;
 }
@@ -67,12 +92,12 @@
 
 .repo-assess {
     width:450px;
-    margin:50px auto;
+    margin:0 auto;
 }
 
 .repo-assess-area {
     width:400px;
-    margin: 50px auto;
+    margin: 0 auto;
 }
 
 .repo-profile{
@@ -93,8 +118,15 @@
     border-radius: 20px;
     cursor: pointer;
 }
-.repo-title-btn-wrapper{
-    text-align: right;
+@media (min-width:1001px){
+    .repo-title-btn-wrapper{
+        display: none;
+    }
+}
+@media (max-width:1000px){
+    .repo-title-btn-wrapper{
+        text-align: right;
+    }
 }
 
 .repo-detail-btn{

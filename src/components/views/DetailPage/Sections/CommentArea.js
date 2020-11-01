@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import './CommentArea.css'
 import { convertToS3EP } from '../../../utils/String';
+import {getCookieValue} from '../../../utils/Cookie'
 
 const {TextArea} = Input
 function CommentArea(props) {
@@ -15,7 +16,12 @@ function CommentArea(props) {
     const user = useSelector(state => state.user)
 
     useEffect(() => {
-        axios.post('/api/comment/getComment', {postId : props.postId})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/comment/getComment', {postId : props.postId}, config)
         .then(response => {
             if(response.data.success){
                 console.log(response.data.comments)
@@ -39,7 +45,12 @@ function CommentArea(props) {
             post : props.postId
         }
         console.log(data)
-        axios.post('/api/comment/upComment', data)
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/comment/upComment', data, config)
         .then(response => {
             if(response.data.success){
                 console.log(Comments)
@@ -67,7 +78,12 @@ function CommentArea(props) {
             
         }
         const DeleteComment = () => {
-            axios.post('/api/comment/delComment', {commentId : comment.id})
+            const config = {
+                headers : {
+                    Authorization: `Token ${getCookieValue('w_auth')}`
+                }
+            }
+            axios.post('/api/comment/delComment', {commentId : comment.id}, config)
             .then(response => {
                 console.log(response.data)
                 if(response.data.success){
@@ -102,9 +118,9 @@ function CommentArea(props) {
             </div>
             {/*{props.userId &&*/}
             <form style={{display:'flex'}} onSubmit={onSubmit}>
-                <Avatar src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'}/>
+                <Avatar style={{marginRight:'10px'}} size={35} src={user.userData && user.userData.profileImage ? convertToS3EP(user.userData.profileImage) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                 <TextArea
-                    style={{width:'100%', borderRadius:'5px'}}
+                    style={{width:'100%', borderRadius:'5px', marginBottom:'1rem'}}
                     onChange={handleChange}
                     value={CommentValue}
                     placeholder="write comments"

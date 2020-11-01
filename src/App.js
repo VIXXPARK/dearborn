@@ -35,7 +35,6 @@ import UserUpdatePage from './components/views/UserInfoPage/UserUpdatePage'
 import ContestListPage from './components/views/ListPage/ContestListPage'
 import ContestDetailPage from './components/views/DetailPage/ContestDetailPage'
 import ContestManagePage from './components/views/DetailPage/ContestManagePage'
-import MessagePage from './components/views/MessagePage/MessagePage'
 import FindFeaturePage from './components/views/FindFeaturePage/FindFeaturePage'
 import UserChangePasswordPage from './components/views/UserInfoPage/UserChangePasswordPage'
 
@@ -45,7 +44,7 @@ function App(props) {
     
     <Router>
       <Route path={ new RegExp("^(?!.*(/register|/login|/checkEmail|/changePassword|/modify)).*$") } component={NavBar}/>
-      <div style={{minHeight:'calc(100vh - 66px)'}}>
+      <div style={{height:'calc(100vh - 66px)'}}>
         <div>
         <Switch>
           <Route exact path='/' component={Auth(LandingPage, null)}/>
@@ -62,7 +61,6 @@ function App(props) {
           <Route exact path='/contest' component={Auth(ContestListPage, null)}/>
           <Route exact path='/contest/manage/:contestId' component={Auth(ContestManagePage, null)}/>
           <Route exact path='/contest/:contestId' component={Auth(ContestDetailPage, true)}/>
-          <Route exact path='/message' component={Auth(MessagePage, true)}/>
           <Route exact path='/feature' component={Auth(FindFeaturePage, null)}/>
 
           <Route exact path='/:designer' component={Auth(BlogPage_Prod_About, null)}/>

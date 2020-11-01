@@ -1,11 +1,15 @@
 .list-container{
-    width:90%;
-    margin:50px auto;
+    width:100%;
+    margin:0 auto;
     text-align: center;
 }
 
 .filter-container{
     text-align: end;
+}
+
+.list-wrapper .ant-card-bordered {
+    border : none;
 }
 
 .filter-btn{
@@ -19,6 +23,9 @@
     line-height: 31px;
     cursor: pointer;
     margin-left: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-right: 20px;
     text-align: center;
     color: white;
     background-color:  #49c5b6;
@@ -39,43 +46,9 @@
 
 
 .list-wrapper {
-    width:98%;
-    margin: 0 auto;
+    width:90%;
+    margin:0 auto;
     text-align: left;
-}
-
-@media (max-width:729px){
-    .list-item{
-        display: inline-block;
-        width:43vw;
-        height:calc(43vw * 4 / 3);
-        margin: 10px;
-    }
-}
-
-@media (max-width:700px){
-    .list-item{
-        display: inline-block;
-        width:40vw;
-        height:calc(40vw * 4 / 3);
-        margin: 1vw;
-    }
-}
-@media (min-width:701px){
-    .list-item{
-        display: inline-block;
-        width:27vw;
-        height:calc(27vw * 4 / 3);
-        margin: 1vw;
-    }
-}
-@media (min-width:1201px){
-    .list-item{
-        display: inline-block;
-        width:16vw;
-        height:calc(16vw * 4 / 3);
-        margin: 1vw;
-    }
 }
 
 
@@ -84,25 +57,15 @@
     border-radius: 20px;
 }
 
-@media (min-width : 1550px){
     
-    .event-list-item {
-        width:40%;
-        min-width: 600px;
-        margin : 2%;
-        float:left;
-    }
+.event-list-item {
+    width:300px;
+    height:400px;
+    margin : 1vw;
+    display: inline-block;
+    background-color: white;
 }
 
-@media (max-width : 1549px){
-    
-    .event-list-item {
-        width:90%;
-        min-width: 600px;
-        margin : 2%;
-        float:left;
-    }
-}
 
 
 .vote-item{
@@ -118,28 +81,14 @@
 
 
 .event-item-img{
-    width:200px;
-    height:300px; 
-    float:left;
-}
-
-.event-item{
-    display: inline-block;
+    width:300px;
+    height:200px; 
 }
 
 .event-item-content{
-    background-color: wheat;
-    height:300px;
+    height:200px;
     text-align: left;
     border-radius: 25px;
-}
-
-.event-item-content h1 {
-    line-height: 170px;
-}
-
-.event-item-content h1, h2 {
-    padding-left: 250px;
 }
 
 .ant-avatar img {

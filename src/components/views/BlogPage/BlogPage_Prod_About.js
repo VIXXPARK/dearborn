@@ -17,7 +17,12 @@ function BlogPage_Prod_About(props) {
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/info/getProfile', {nickname:designer})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/info/getProfile', {nickname:designer}, config)
         .then(response => {
             console.log(response)
             if(response.data.success){
@@ -32,7 +37,12 @@ function BlogPage_Prod_About(props) {
     }, [])
 
     const getAbout = (id) => {
-        axios.post('/api/info/getAbout', {user:id})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/info/getAbout', {user:id}, config)
         .then(response => {
             console.log(response)
             if(response.data.success){
@@ -47,22 +57,22 @@ function BlogPage_Prod_About(props) {
         <div className="blog-container">
             <div className="blog-right-container">
                 <div className="blog-header">
-                    <Avatar style={{display:'inline-block'}} size={200} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                    <div style={{width:'200px', height:'200px',float:'left'}}>
+                        <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                    </div>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}</p>
+                        <p>Works : {Designer.work}개</p>
+                        <p>Likes : {Designer.like}개</p>
+                        <p>Views : {Designer.view}개</p>
                     </div>
                 </div>
-                <div className="blog-intro">
-                    <h1>Works : {Designer.work}개</h1>
-                    <h1>Likes : {Designer.like}개</h1>
-                    <h1>Views : {Designer.view}개</h1>
-                </div>
                 <div className="blog-section">
-                    <button className="blog-tabs-btn" id="blog-tabs-clicked">about</button>
-                    <a href={`/${designer}/works`}><button className="blog-tabs-btn">works</button></a>
-                    <a href={`/${designer}/likes`}><button className="blog-tabs-btn">likes</button></a>
+                    <button className="blog-tabs-btn" id="blog-tabs-clicked">대표작</button>
+                    <a href={`/${designer}/works`}><button className="blog-tabs-btn">작품</button></a>
+                    <a href={`/${designer}/likes`}><button className="blog-tabs-btn">좋아요</button></a>
                     <a href={`/${designer}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
                     <div className="blog-tabs-content">
                         <div className="prod-about">

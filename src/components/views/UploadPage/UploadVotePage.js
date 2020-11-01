@@ -65,7 +65,10 @@ function UploadVotePage(props) {
         const restDay = parseInt(moment().endOf('week').fromNow()[3])+1
         let formData = new FormData()
         const config = {
-            header : {'Content-Type' : 'multipart/form-data'}
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`,
+                'Content-Type' : 'multipart/form-data'
+            }
         }
         FileList.forEach(file => formData.append('images', file.originFileObj))
         formData.append('title', values.title)

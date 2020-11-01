@@ -1,39 +1,46 @@
-.like-dislike-span {
-    
+@media(min-width:1001px){
+    .like-dislike-span1 {
+        display: none;
+    }
 }
 
-.like-dislike-span button {
+
+.like-dislike-span1 button {
     width:150px;
     height:50px;
     margin: 1rem;
-
+    outline: none;
     border-radius: 5px;
 }
 
 .like-button {
-    border : 1px solid greenyellow;
-    border-color: greenyellow;
+    border : 1px solid  rgb(204, 204, 204);
+    background-color: white;
 }
 
 .like-button:hover {
-    background-color: greenyellow;
+    border-color: #49c5b6;
+    color:#49c5b6;
 }
 
 .dislike-button {
    
-    border : 1px solid tomato;
-    border-color: tomato;
+    border : 1px solid  rgb(204, 204, 204);
+    background-color: white;
  
 }
 
 .dislike-button:hover {
-    background-color: red;
+    border-color: red;
+    color: red;
 }
 
 #liked-checked {
-    background-color: greenyellow;
+    border-color: #49c5b6;
+    color:#49c5b6;
 }
 
 #disliked-checked {
-    background-color: red;
+    border-color: red;
+    color: red;
 }

@@ -8,6 +8,7 @@ import Meta from 'antd/lib/card/Meta';
 import UploadOutlined from '@ant-design/icons'
 import { render } from 'react-dom';
 import {convertToS3EP} from '../../utils/String'
+import {getCookieValue} from '../../utils/Cookie'
 
 const {Title} = Typography
 
@@ -32,7 +33,12 @@ function BlogPage_Cons_Event(props) {
     const designer = props.match.params.designer
 
     useEffect(() => {
-        axios.post('/api/info/getProfile', {nickname:designer})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/info/getProfile', {nickname:designer}, config)
         .then(response => {
             if(response.data.success){
                 if(response.data.user.job === 1)
@@ -66,9 +72,15 @@ function BlogPage_Cons_Event(props) {
     }
 
     const getPosts = (id) => {
-        axios.post(`/api/info/getContests/?limit=${Limit}&offset=${Skip}`, {user : id})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post(`/api/info/getContests/?limit=${Limit}&offset=${Skip}`, {user : id}, config)
         .then(response => {
             if(response.data.success){
+                console.log(response)
                 if(response.data.contests.length < Limit)
                     setLoadMore(false)
                 if(Skip !==0){
@@ -140,6 +152,9 @@ function BlogPage_Cons_Event(props) {
     }
 
     const onEventDescChange = (e) =>{
+        if(e.key === "Enter"){
+            setEventDesc(`{e.currentTarget.value}\n`)
+        }
         setEventDesc(e.currentTarget.value)
     }
     const OnHoldEvent= () =>{
@@ -151,8 +166,12 @@ function BlogPage_Cons_Event(props) {
         formData.append('banner', Banner)
         formData.append('image', EventImg)
         formData.append('contest_expire', moment.utc(moment().format('YYYY-MM-DD') + "T11:59:59Z").add(RestDay, 'd').format())
-
-        axios.post('/api/contest/uploadContest', formData)
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/contest/uploadContest', formData, config)
         .then(response => {
             if(response.data.success){
                 alert('성공')
@@ -175,21 +194,21 @@ function BlogPage_Cons_Event(props) {
             <div className="blog-right-container">
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
-                    <Avatar style={{float:'left'}} size={200} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                    <div style={{width:'200px', height:'200px',float:'left'}}>
+                        <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                    </div>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}</p>
+                        <p>Works : {Designer.work}개</p>
+                        <p>Likes : {Designer.like}개</p>
+                        <p>Views : {Designer.view}개</p>
                     </div>
-                </div>
-                <div className="blog-intro">
-                    <h1>Works : {Designer.work}개</h1>
-                    <h1>Likes : {Designer.like}개</h1>
-                    <h1>Views : {Designer.view}개</h1>
                 </div>
                 <div className="blog-section">
                     <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
-                    <a href={`/${designer}/cons/likes`}><button className="blog-tabs-btn">likes</button></a>
+                    <a href={`/${designer}/cons/likes`}><button className="blog-tabs-btn">좋아요</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">이벤트</button>
                     <div className="blog-tabs-content">
                         {Contests && Contests.map(contest => renderContest(contest))}
@@ -208,7 +227,7 @@ function BlogPage_Cons_Event(props) {
                         <Input value={EventTitle} onChange={onEventTitleChange}/>
                         <br/><br/><br/>
                         <label style={{fontSize:'25px'}}>설명</label>
-                        <Input.TextArea rows={10} value={EventDesc} onChange={onEventDescChange}/>
+                        <Input.TextArea rows={10} value={EventDesc} onChange={onEventDescChange} onPressEnter={onEventDescChange}/>
                         <br/><br/><br/>
                         <label style={{fontSize:'23px'}}>배너</label>
                         <br/>
