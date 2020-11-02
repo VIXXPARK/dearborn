@@ -41,7 +41,7 @@
 
     margin-left: 3%;
     display: inline-block;
-    width:95%;
+    width:100%;
 }
 .item-vote-container{
     margin: 0 auto;
@@ -205,8 +205,8 @@
 @media (min-width:1201px){
     .item img{
         
-        width:12vw;
-        height:calc(12vw * 4 / 3);
+        width:13vw;
+        height:calc(13vw * 4 / 3);
     }
 }
 

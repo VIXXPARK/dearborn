@@ -23,6 +23,7 @@ function UploadVotePage(props) {
     const [ThumbLoading, setThumbLoading] = useState(false)
     const [Category, setCategory] = useState(undefined)
     const [Sell, setSell] = useState(undefined)
+    const [Scope, setScope] = useState(undefined)
     //other
 
     const OnCategoryClick = (value) =>{
@@ -31,6 +32,10 @@ function UploadVotePage(props) {
 
     const OnSellChange = (e) => {
         setSell(e.target.value)
+    }
+
+    const onScopeChange = (e) => {
+        setScope(e.target.value)
     }
 
     //upload
@@ -92,7 +97,6 @@ function UploadVotePage(props) {
                     console.log(response.data.err)
                 }
         })
-
     }
     
     const handleRemove = (file) =>{
@@ -183,7 +187,6 @@ function UploadVotePage(props) {
                             rules={[{required:true, message:'제목을 써주시기 바랍니다'}]}    
                         >
                             <Input
-
                                 className="upload-title-input"
                                 style={{width:'350px', fontSize:'25px'}}
                                 placeholder="제  목"
@@ -233,7 +236,18 @@ function UploadVotePage(props) {
                                     <TreeNode value={17} title="하이힐"/>
                                 </TreeNode>
                             </TreeSelect><br/><br/>
-                            <label style={{fontSize:'30px'}}>판매 여부</label>
+                            <label style={{fontSize:'30px'}}>공개 범위</label>
+                            <Form.Item
+                                style={{marginTop:'40px'}}
+                                name="scope"
+                                rules={[{required:true, message:'공개 범위를 결정해주세요'}]}
+                            >
+                                <Radio.Group style={{width:'500px', height:'50px'}} onChange={onScopeChange}>
+                                    <Radio.Button className="scope-radio-button" value={1}>Public</Radio.Button>
+                                    <Radio.Button className="scope-radio-button" value={2}>Private</Radio.Button>
+                                </Radio.Group>
+                            </Form.Item>
+                            {Scope ===1 && <><label style={{fontSize:'30px'}}>판매 여부</label>
                             <Form.Item
                                 style={{marginTop:'40px'}}
                                 name="sell"
@@ -243,8 +257,8 @@ function UploadVotePage(props) {
                                     <Radio.Button className="scope-radio-button" value={1}>수락</Radio.Button>
                                     <Radio.Button className="scope-radio-button" value={2}>거절</Radio.Button>
                                 </Radio.Group>
-                            </Form.Item>
-                            {Sell && Sell === 1 && (
+                            </Form.Item></>}
+                            { Sell && Sell === 1 && (
                                 <>
                                 <Form.Item
                                     label="입찰최저가"
@@ -271,17 +285,6 @@ function UploadVotePage(props) {
                                 </>
                             )
                             }
-                            <label style={{fontSize:'30px'}}>공개 범위</label>
-                            <Form.Item
-                                style={{marginTop:'40px'}}
-                                name="scope"
-                                rules={[{required:true, message:'공개 범위를 결정해주세요'}]} 
-                            >
-                                <Radio.Group style={{width:'500px', height:'50px'}} >
-                                    <Radio.Button className="scope-radio-button" value={1}>Public</Radio.Button>
-                                    <Radio.Button className="scope-radio-button" value={2}>Private</Radio.Button>
-                                </Radio.Group>
-                            </Form.Item>
                             <Form.Item>
                                 <Button className="submit-btn" type="primary" htmlType="submit" block>
                                     제출

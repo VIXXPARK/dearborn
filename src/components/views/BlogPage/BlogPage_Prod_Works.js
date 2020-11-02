@@ -99,6 +99,8 @@ function BlogPage_Prod_Works(props) {
                     .then(response => {
                         if(!response.data.success)
                             alert('실패')
+                        else
+                            alert('대표작품 지정 완료')
                     })
                 },
 

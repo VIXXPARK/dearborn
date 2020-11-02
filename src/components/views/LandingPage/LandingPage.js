@@ -8,6 +8,7 @@ import {Link} from 'react-router-dom'
 import FilterBox from '../ListPage/Sections/FilterBox'
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
+import {Loader} from '../../utils/Loader'
 
 
 import {ArrowRightOutlined} from '@ant-design/icons'
@@ -27,13 +28,16 @@ function LandingPage(props) {
     const [Ook, setOok] = useState(0); //One of kind
     const [Sort, setSort] = useState(0)
     const [IsBottom, setIsBottom] = useState(false)
+    const [Loading, setLoading] = useState(true)
 
     useEffect(() => {
         const variables = {
             ook : 0,
             sort : 0,
         }
+        setLoading(true)
         getPosts(variables)
+        setSkip(Skip+Limit)
         window.addEventListener('scroll', handleScroll)
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
@@ -51,26 +55,21 @@ function LandingPage(props) {
         const scrollHeight= (document.documentElement 
             && document.documentElement.scrollHeight)
             || document.body.scrollHeight;
-        if(scrollTop + window.innerHeight >= scrollHeight){
+        if(scrollTop + window.innerHeight >= scrollHeight -1){
             setIsBottom(true)
         }
     }
 
     const getPosts = (variables) => {
-        console.log(variables)
-        const config = {
-            headers : {
-                Authorization: `Token ${getCookieValue('w_auth')}`
-            }
-        }
-        axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables, config)
+        console.log(1)
+        axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
         .then(response => {
+            setLoading(true)
             if(response.data.success){
                 console.log(response)
                 if(response.data.votes.length < Limit)
                     setLoadMore(false)
                 if(Skip !==0){
-                    console.log(1)
                     setPosts([...Posts, ...response.data.votes])
                 }else{
                     setPosts(response.data.votes)
@@ -78,7 +77,11 @@ function LandingPage(props) {
             }else{
                 console.log(response.data.err)
             }
+        }).finally(()=>{
+            setLoading(false)
+            console.log(2)
         })
+
     }
 
     const OpenFilterClick = () => {
@@ -96,6 +99,7 @@ function LandingPage(props) {
             ook : ook,
             sort : Sort,
         }
+        setLoading(true)
         getPosts(variables)
         setSkip(0)
     }
@@ -112,6 +116,7 @@ function LandingPage(props) {
             ook : Ook,
             sort : e.target.value,
         }
+        setLoading(true)
         getPosts(variables)
         setSkip(0)
     }
@@ -122,9 +127,12 @@ function LandingPage(props) {
             sort : Sort
         }
         setSkip(Skip+Limit)
+        setLoading(true)
         getPosts(variables)
         setIsBottom(false)
     }
+
+    console.log(Loading)
     const renderVoteItems = (post) => {
         return (
             <div className="item-vote-wrap">
@@ -164,7 +172,7 @@ function LandingPage(props) {
                     </div>
                 </div>
             </div>
-            <div className="vote" style={{width:'95%', margin:'0 auto', backgroundColor:'white'}}>
+            <div className="vote" style={{width:'100%', margin:'0 auto', backgroundColor:'white'}}>
                 <div style={{margin: '0 auto'}}> 
                     <div style={{textAlign:'left',}}>
                         <span style={{textAlign:'left', fontSize:'20px', fontWeight:'bold', color:'black'}}>이번 주 포스팅</span>
@@ -204,6 +212,7 @@ function LandingPage(props) {
                 </div>
             </div>
         </div>
+        {Loading && Loader("spin", "black")}
         </>
     );
 }
