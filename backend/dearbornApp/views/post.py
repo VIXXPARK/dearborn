@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
-<<<<<<< HEAD:backend/dearbornApp/views/post.py
-from rest_framework.viewsets import ModelViewSet
-from dearbornApp.serializers.post import PostSerializer,PostImageSerializer,UserCheckSerializer, PostIdSerializer
-from dearbornApp.serializers.post import likeSerializer,dislikeSerializer,getLikeSerializer,getUserPostSerializer,myWorkSerializer
-from dearbornApp.serializers.post import getUserSerializer,getVoteSerializer,UserIdSerializer,likeUserSerializer,PostFilterSerializer
-from dearbornApp.models.post import Post,PostImage,like,disLike,vote,myWork
-from dearbornApp.models.user import User
-from rest_framework import filters
-=======
-from .serializers import(
+from dearbornApp.serializers.post import(
     PostSerializer,
     PostImageSerializer,
     UserCheckSerializer, 
@@ -23,23 +14,18 @@ from .serializers import(
     UserIdSerializer,
     PostFilterSerializer
     )
-from messanger.serializers import SaveMessageSerializer
+from dearbornApp.serializers.messanger import SaveMessageSerializer
 
-from .models import(
+from dearbornApp.models.post import(
     Post,
     PostImage,
     like,
     disLike,
     vote,
     myWork
-) 
-from usermanagement.models import User
-from bid.models import BidInfo
-from messanger.models import Message
-
+)
 
 from rest_framework.views import APIView
->>>>>>> master:backend/post/views.py
 from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 
@@ -59,22 +45,15 @@ from rest_framework.status import(
     HTTP_500_INTERNAL_SERVER_ERROR
 )
 import json
-<<<<<<< HEAD:backend/dearbornApp/views/post.py
 from rest_framework.views import APIView
 from rest_framework.pagination import LimitOffsetPagination
 from background_task import background
 from datetime import datetime, timedelta
 from pytz import timezone
 from dearbornApp.models.bid import BidInfo
+from dearbornApp.models.user import User
 from dearbornApp.models.messanger import Message
-from dearbornApp.serializers.messanger import SaveMessageSerializer
-=======
 
-from .pagination import PostPageNumberPagination
-from background_task import background
-from datetime import datetime, timedelta
-from pytz import timezone
->>>>>>> master:backend/post/views.py
 # from .feature import Similarity,GetFeatureVector,SaveFeatureVector
 
 class PostViewSet(ModelViewSet):
@@ -127,7 +106,7 @@ class postDeleteView(APIView):
 class PostView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.AllowAny,)
-    pagination_class = PostPageNumberPagination
+    pagination_class = LimitOffsetPagination
 
     def post(self,request):
         filterSerializer = PostFilterSerializer(data=request.data)
@@ -187,7 +166,8 @@ class PostView(ListAPIView):
 class ReposView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    pagination_class = PostPageNumberPagination
+    pagination_class = LimitOffsetPagination
+
     def post(self,request):
         filterSerializer = PostFilterSerializer(data=request.data)
         if not filterSerializer.is_valid():
@@ -245,9 +225,9 @@ class ReposView(ListAPIView):
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PostDetail(APIView):
-
     permission_classes = (permissions.IsAuthenticated,)
     parser_classes = (MultiPartParser,FormParser,JSONParser)
+
     def post(self,request):
         postID = PostIdSerializer(data=request.data)
         if not postID.is_valid():
@@ -359,13 +339,8 @@ class getProfileView(ListAPIView):
 
 class getWorkView(ListAPIView):
     queryset = Post.objects.all()
-<<<<<<< HEAD:backend/dearbornApp/views/post.py
-    permission_classes = (permissions.AllowAny,)
-    pagination_class = LimitOffsetPagination
-=======
     permission_classes = (permissions.IsAuthenticated,)
-    pagination_class = PostPageNumberPagination
->>>>>>> master:backend/post/views.py
+    pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
         queryset = PostImage.objects.raw('select * from post_postimage group by post_id')
@@ -421,13 +396,8 @@ class getWorkView(ListAPIView):
 
 class getWorkLikeView(ListAPIView):
     queryset = Post.objects.all()
-<<<<<<< HEAD:backend/dearbornApp/views/post.py
-    permission_classes = (permissions.AllowAny,)
-    pagination_class = LimitOffsetPagination
-=======
     permission_classes = (permissions.IsAuthenticated,)
-    pagination_class = PostPageNumberPagination
->>>>>>> master:backend/post/views.py
+    pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
         queryset = PostImage.objects.raw('select * from post_postimage group by post_id')
@@ -480,17 +450,9 @@ class upViewSet(ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = PostIdSerializer
 
-<<<<<<< HEAD:backend/dearbornApp/views/post.py
-       
-class PostView(ListAPIView):
-    serializer_class = PostSerializer
-    permission_classes = (permissions.AllowAny,)
-    pagination_class = LimitOffsetPagination
-=======
     def get_queryset(self):
         queryset = Post.objects.all()
         return queryset
->>>>>>> master:backend/post/views.py
 
     def post(self,request):
         view = PostIdSerializer(data=request.data)
@@ -516,17 +478,10 @@ class likeView(ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = likeSerializer
 
-<<<<<<< HEAD:backend/dearbornApp/views/post.py
-class ReposView(ListAPIView):
-    serializer_class = PostSerializer
-    permission_classes = (permissions.AllowAny,)
-    pagination_class = LimitOffsetPagination
-=======
     def get_queryset(self):
         queryset = like.objects.all()
         return queryset
     
->>>>>>> master:backend/post/views.py
     def post(self,request):
         like = likeSerializer(data=request.data)
         if not like.is_valid():

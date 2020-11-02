@@ -22,8 +22,6 @@ INSTALLED_APPS = [
     'background_task',
     'storages',
     
-    
-
     'dearbornApp.apps.DearbornappConfig',
 
 ]
@@ -61,7 +59,7 @@ TEMPLATES = [
 
 
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = 'dearbornConfig.wsgi.application'
 
 AUTH_USER_MODEL = 'dearbornApp.User'
 
@@ -107,7 +105,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 STATICFILES_DIRS = (
