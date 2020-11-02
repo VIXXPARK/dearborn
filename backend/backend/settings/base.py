@@ -4,9 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 INSTALLED_APPS = [
-    # 'jet',
-    'admin_tools_stats',
-    'django_nvd3',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -65,6 +63,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 AUTH_USER_MODEL = 'usermanagement.User'
@@ -114,10 +114,6 @@ STATIC_URL = '/staticfiles/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 
-STATICFILES_DIRS = (
-    os.path.join(REACT_DIR,'build','static'),
-)
-
 
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
@@ -128,23 +124,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL = {}
 
-
-ADMIN_CHARTS_NVD3_JS_PATH = '../bow/nvd3/build/nv.d3.js'
-ADMIN_CHARTS_NVD3_CSS_PATH = '../bow/nvd3/build/nv.d3.css'
-ADMIN_CHARTS_D3_JS_PATH = '../bow/d3/d3.js'
-
-BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
-
-
-BOWER_INSTALLED_APPS = (
-    'd3#3.3.13',
-    'nvd3#1.7.1',
-)
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    'djangobower.finders.BowerFinder',
-)
 
