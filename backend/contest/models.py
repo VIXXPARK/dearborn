@@ -20,10 +20,9 @@ class Contest(models.Model):
     image = models.ImageField(upload_to=contestUpload_to)
     banner = models.ImageField(upload_to=bannerUpload_to,null=True)
 
+    
 @receiver(models.signals.post_delete, sender=Contest)
 def remove_file_from_s3(sender,instance,*args,**kwargs):
    instance.image.delete(save=False)
    instance.banner.delete(save=False)
-    
-
 

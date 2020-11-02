@@ -23,6 +23,7 @@ from rest_framework.status import(
 class BidViewSet(ModelViewSet):
     queryset = BidInfo.objects.all()
     serializer_class = MakeBidSerializer
+    permission_classes = (permissions.IsAuthenticated,)
     def create(self, request, *args, **kwargs):
         try:
             response = super().create(request, *args, **kwargs)
@@ -33,7 +34,7 @@ class BidViewSet(ModelViewSet):
 
 
 @api_view(['POST'])
-@permission_classes((AllowAny, ))
+@permission_classes((permissions.IsAuthenticated, ))
 def GetBid(request):
         my_serializer = GetBidSerializer(data = request.data)
         paginator = LimitOffsetPagination()
