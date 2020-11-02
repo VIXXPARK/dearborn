@@ -20,7 +20,7 @@ from background_task import background
 class MessageViewSet(ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = SaveMessageSerializer
-
+    permission_classes = (permissions.IsAuthenticated,)
     def create(self, request, *args, **kwargs):
         try:
             response = super().create(request, *args, **kwargs)

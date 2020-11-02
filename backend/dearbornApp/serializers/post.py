@@ -49,32 +49,16 @@ class PostSerializer(serializers.ModelSerializer):
       for image_data in images_data.getlist('images'):
          PostImage.objects.create(post=post, image=image_data)  
       return post
-   
-   # def update(self,instance,validated_data):
-   #    images = self.context['request'].FILES
-   #    for image_data in images.getlist('images'):
-   #       PostImage.objects.create(post=post, image=image_data)
-   #    return super().update(instance, validated_data)
      
 
 class PostFilterSerializer(serializers.Serializer):
    ook = serializers.IntegerField()
    sort = serializers.IntegerField()
    
-
-class LikeViewSerializer(serializers.ModelSerializer):
-   class Meta:
-      model=like
-      fields = '__all__',
-
-
 class PostIdSerializer(serializers.Serializer):
    id = serializers.UUIDField()
 
 class UserIdSerializer(serializers.Serializer):
-   id = serializers.CharField()
-
-class likeUserSerializer(serializers.Serializer):
    id = serializers.CharField()
 
 class myWorkSerializer(serializers.ModelSerializer):
