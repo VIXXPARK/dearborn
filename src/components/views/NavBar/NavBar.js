@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './Sections/NavBar.css'
 import { useSelector } from 'react-redux';
@@ -7,8 +7,8 @@ import {useDispatch} from 'react-redux'
 import {USER_SERVER} from '../../Config'
 
 import {logoutUser} from '../../../_actions/user_action'
-import { Avatar, Button, Drawer, Dropdown, Menu, Modal, Typography, Input } from 'antd';
-import {MenuOutlined} from '@ant-design/icons'
+import { Avatar, Button, Drawer, Dropdown, Menu, Modal, Typography, Input, Form } from 'antd';
+import {MenuOutlined, MailOutlined} from '@ant-design/icons'
 import Dearborn from '../../assets/Dearborn.png'
 import {getCookieValue} from '../../utils/Cookie'
 const {confirm} = Modal
@@ -19,102 +19,25 @@ function NavBar(props) {
     const dispatch = useDispatch()
 
     const user = useSelector(state => state.user)
-
+    const [MessageVisible, setMessageVisible] = useState(false)
     const [Visible, setVisible] = useState(false)
-    const [MessageBox, setMessageBox] = useState(false)
-    const [Messages, setMessages] = useState([])
+    const [MessageBox, setMessageBox] = useState(-1)
+    const [Messages, setMessages] = useState([{
+        fromNickname : 'pazbear1',
+        message : 'gdgdgdgdgdggd',
+        date:'2020.01.01'   
+    },{
+        fromNickname : 'pazbear2',
+        message : 'gdgdgdgdgdggd',
+        date:'2020.01.01'   
+    },{
+        fromNickname : 'pazbear3',
+        message : 'gdgdgdgdgdggd',
+        date:'2020.01.01'   
+    },])
 
-    const logoutHandler = () =>{
-        dispatch(logoutUser()).then(response =>{
-            if(response.payload.success){
-                props.history.push('/login')
-                window.localStorage.setItem('userId', "")
-            }else{
-                console.log(response.payload.err)
-            }
-        })
-    }
-
-    const renderMessage = (message) => {
-
-        const OpenMessageForm = () => {
-            setMessageBox(false)
-            var HireMessage
-            confirm({
-                width:800,
-                icon:null,
-                content: 
-                <div className="bid-container">
-                    <div className="hire-title">{message.fromNickname} 에게 답장</div>
-                    <div className="hire-content">메시지<br/><Input.TextArea style={{fontSize:'20px'}} rows={5}  onChange={(e)=>{HireMessage = e.currentTarget.value}}/></div>
-                </div>,
-                okText: "메시지 전송",
-                cancelText: "취소",
-                onOk(){
-                    const variables = {
-                        message : HireMessage,
-                        userFrom : user.userData._id,
-                        userTo : message.fromId,
-                    }
-                    const config = {
-                        headers : {
-                            Authorization: `Token ${getCookieValue('w_auth')}`
-                        }
-                    }
-                    axios.post('/api/message/saveMessage', variables, config)
-                    .then(response => {
-                        if(response.data.success){
-                            alert('성공')
-                        }else{
-                            alert('실패')
-                        }
-                    })
-                    setMessageBox(true)
-                }
-            })
-        }
-
-        return (
-            <tr>
-                <td>{message.fromNickname}</td><td>{message.message}</td><td>{message.date}</td><td><Button style={{width:'55px', textAlign:'center'}} onClick={OpenMessageForm}>답장</Button></td>
-            </tr>
-        )
-    }
-
-    const renderMessageBox = () =>{
-        return (
-        <>
-        <div className="message-modal-background" onClick={closeMessageBox}/>
-        <div className="message-container">
-            <Title>쪽지 확인</Title>
-            <p style={{textAlign:'right'}}>메시지는 30개까지 저장됩니다.</p>
-            <div className="message-form">
-                <table className="message-table">
-                    <thead className="message-thead">
-                        <tr>
-                            <th>보낸 사람</th><th>내용</th><th>받은 일시</th><th></th>
-                        </tr>
-                    </thead>
-                    <tbody className="message-tbody">
-                        {Messages && Messages.map(message => renderMessage(message))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        </>
-        )
-    }
-
-    const showDrawer = () => {
-        setVisible(true)
-    }
-
-    const onClose = () => {
-        setVisible(false)
-    }
-
-    const showMessageBox = () => {
-        const config = {
+    useEffect(() => {
+        /*const config = {
             headers : {
                 Authorization: `Token ${getCookieValue('w_auth')}`
             }
@@ -126,13 +49,95 @@ function NavBar(props) {
             }else{
                 console.log(response.data.err)
             }
+        })*/
+    }, [])
+    const logoutHandler = () =>{
+        dispatch(logoutUser()).then(response =>{
+            if(response.payload.success){
+                props.history.push('/login')
+                window.localStorage.setItem('userId', "")
+            }else{
+                console.log(response.payload.err)
+            }
         })
-        setMessageBox(true)
+    }
+
+    const sendMessage = ()=>{
 
     }
 
-    const closeMessageBox = () => {
-        setMessageBox(false)
+    const showMessage = ()=>{
+
+    }
+
+    const showDrawer = () => {
+        setVisible(true)
+    }
+
+    const onClose = () => {
+        setVisible(false)
+    }
+
+    const renderMessageBox = (message, i) => {
+
+        const onFinish = (value) =>{
+            console.log(value)
+            /*
+            const variables = {
+                message : value.message,
+                userFrom : user.userData._id,
+                userTo : message.fromId,
+            }
+            const config = {
+                headers : {
+                    Authorization: `Token ${getCookieValue('w_auth')}`
+                }
+            }
+            axios.post('/api/message/saveMessage', variables, config)
+            .then(response => {
+                if(response.data.success){
+                    alert('성공')
+                }else{
+                    alert('실패')
+                }
+            })*/
+            setMessageBox(-1)
+        }
+        const showMessage = () =>{
+            if(MessageBox === -1){
+                setMessageBox(i)
+            }
+            else{
+                setMessageBox(-1)
+            }
+        }
+        return (<div>
+            <div className="message-head-content" onClick={showMessage}>
+                {message.fromNickname}님이 보낸 메시지(!)
+            </div>
+            {i === MessageBox && <div className="message-content-show"><div className="message-content-span">
+                {message.date}
+            </div>
+            <div className="message-content-content">
+                {message.message}
+            </div>
+            <Form
+                onFinish={onFinish}
+            >
+                <Form.Item
+                    style={{display:'inline-block'}}
+                    name="message"
+                >
+                    <Input.TextArea style={{width:'300px', display:'inline-block'}}/>
+                </Form.Item>
+                <Form.Item
+                    style={{display:'inline-block'}}
+                >
+                    
+                    <Button style={{width:'50px'}} onClick={sendMessage} htmlType="submit">답장</Button>
+                </Form.Item>
+            </Form></div>}
+            </div>)
     }
 
     const menu = (
@@ -141,13 +146,31 @@ function NavBar(props) {
                 {user.userData && user.userData.nickname ? user.userData.job === 1 ? <a href={`/${user.userData.nickname}`}>마이 블로그</a> : <a href={`/${user.userData.nickname}/cons`}>마이 블로그</a>: null}
             </Menu.Item>
             <Menu.Item>
-                <a onClick={showMessageBox}>쪽지 확인</a>
-            </Menu.Item>
-            <Menu.Item>
                 <a href='/modify'>개인정보 수정</a>
             </Menu.Item>
         </Menu>
     )
+
+    const message = (
+        <div className="message-container">
+            <div style={{height:'50px',fontSize:'15px',lineHeight:'40px', borderBottom : '1px solid #e5e5e5'}}>
+                받은 메일(messages.length(!))
+            </div>
+            <div className="message-head-wrapper">
+                <div className="message-head" style={{borderBottom:'1px solid #e5e5e5'}}>
+                    이름
+                </div>
+                <div className="message-head2" style={{borderBottom:'1px solid #e5e5e5'}}>
+                    내용
+                </div>
+            </div>
+            {Messages && Messages.map((message, i) =>renderMessageBox(message, i))}
+        </div>
+    )
+
+    const handleVisible = (flag) => {
+        setMessageVisible(flag)
+    }
 
     return (
         <>
@@ -169,6 +192,10 @@ function NavBar(props) {
                             <a href="/upload"><div className="navbar-button" >업로드</div></a>
                         </div>}
                         <div className="nav-bar-profile pull-right">
+                            <Dropdown overlay={message} placement="bottomRight" arrow trigger={["click"]} 
+                            onVisibleChange={handleVisible} visible={MessageVisible} overlayStyle={{border:'1px solid #e5e5e5', borderRadius:'20px'}}>
+                                <MailOutlined style={{marginRight:'20px', fontSize:'30px', verticalAlign: 'middle',}}/>
+                            </Dropdown>
                             <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
                                 <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} size="middle" gap={4}>
                                     {user.userData && user.userData.nickname ? user.userData.nickname[0] : null}
@@ -204,9 +231,6 @@ function NavBar(props) {
                             <div style={{marginTop:'50px',textAlign:'center'}}>
                                 <a style={{fontSize:'20px', color:'black'}} href={`/${user.userData.nickname}`}>마이 블로그</a>
                             </div>
-                            <div style={{marginTop:'20px',textAlign:'center'}}>
-                                <a style={{fontSize:'20px', color:'black'}} onClick={showMessageBox}>쪽지 확인</a>
-                            </div>
                             <div style={{marginTop:'20px',textAlign:'center', marginBottom:'20px'}}>
                                 <a style={{fontSize:'20px', color:'black'}} href="/modify">개인정보 수정</a>
                             </div>
@@ -241,7 +265,6 @@ function NavBar(props) {
                 </div>
             </div>
         </header>
-        {MessageBox && renderMessageBox()}
         </>
     );
 }

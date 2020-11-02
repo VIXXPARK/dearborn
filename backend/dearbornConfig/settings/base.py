@@ -8,8 +8,6 @@ REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.p
 
 INSTALLED_APPS = [
     'jet',
-    'admin_tools_stats',
-    'django_nvd3',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -23,7 +21,6 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'background_task',
     'storages',
-    'djangobower',
     
     
 
@@ -62,7 +59,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'dearbornConfig.wsgi.application'
+
+
+WSGI_APPLICATION = 'backend.wsgi.application'
 
 AUTH_USER_MODEL = 'dearbornApp.User'
 
@@ -106,7 +105,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
@@ -125,23 +124,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL = {}
 
-
-ADMIN_CHARTS_NVD3_JS_PATH = '../bow/nvd3/build/nv.d3.js'
-ADMIN_CHARTS_NVD3_CSS_PATH = '../bow/nvd3/build/nv.d3.css'
-ADMIN_CHARTS_D3_JS_PATH = '../bow/d3/d3.js'
-
-BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
-
-
-BOWER_INSTALLED_APPS = (
-    'd3#3.3.13',
-    'nvd3#1.7.1',
-)
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    'djangobower.finders.BowerFinder',
-)
 

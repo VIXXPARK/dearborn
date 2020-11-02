@@ -8,7 +8,7 @@ import AssessArea from './Sections/AssessArea';
 
 import './RepoDetailPage.css'
 import AssessShow from './Sections/AssessShow';
-import {ContainerOutlined} from '@ant-design/icons'
+import {EditOutlined, DeleteOutlined, FileTextOutlined, DollarOutlined} from '@ant-design/icons'
 import {getCookieValue} from '../../utils/Cookie'
 import {config} from '../../utils/Token'
 import {convertToS3EP} from '../../utils/String'
@@ -22,10 +22,16 @@ function RepoDetailPage(props) {
     const [Writer, setWriter] = useState("")
     const [Repo, setRepo] = useState("")
     const [AssessValue, setAssessValue] = useState([])
+    const [AssessWindow, setAssessWindow] = useState(false)
     const postId = props.match.params.postId
     console.log(Repo)
     useEffect(() => {
-        axios.post('/api/post/getPostDetail', {id : postId})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/post/getPostDetail', {id : postId}, config)
         .then(response => {
             if(response.data.success){
                 console.log(response.data)
@@ -107,65 +113,94 @@ function RepoDetailPage(props) {
         })
     }
 
+    const AssessWindowOpen = () => {
+        setAssessWindow(true)
+    }
+
+    const AssessWindowClose = ()=>{
+        setAssessWindow(false)
+    }
+
     return (
+        <div style={{width:'100vw', height:'100%', backgroundColor:'#F9F8FD'}}>
         <div className="repo-container">
             <div className="repo-left-container">
                 <div className="repo-content">
+                    {props.user.userData && props.user.userData._id === Writer.id &&
+                        <div className="repo-title-btn-wrapper">
+                            <button className="repo-detail-btn" onClick={onModifyClick}>수정</button>
+                            <button className="repo-detail-btn" onClick={onDeleteClick}>삭제</button>
+                        </div>}
                     {Repo.images && Repo.images.map((image, i) => (
                         <div className="repo-content-img">
                             <img key={i} src={convertToS3EP(image)} style={{width:'100%', height:'100%'}} />
                         </div>
                     ))}
+                    <div className="repo-content-detail">
+                        {Repo.content}
+                    </div>
+                    <br/><br/>
+                    <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
                     <br/><br/>
                     <CommentArea postId={postId}/>
                 </div>
             </div>
             <div className="repo-right-container">
-                <div className="repo-right-detail">
-                    <div className="repo-title">
-                        {props.user.userData && props.user.userData._id === Writer.id &&
-                        <div className="repo-title-btn-wrapper">
-                            <button className="repo-detail-btn" onClick={onModifyClick}>수정</button>
-                            <button className="repo-detail-btn" onClick={onDeleteClick}>삭제</button>
-                        </div>}
-                        <Title>{Repo.title}</Title>
-                        <div className="repo-profile">
-                            <img style={{width:'30px', height:'30px',borderRadius:'50px', display:'inline-block'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
-                            <div className="repo-profile-header">
-                                <a href={`/${Writer.nickname}`}>{Writer.nickname}</a>
-                            </div>
-                        </div>
+                <div className="repo-right-icon">
+                    <div className="profile-icon" onClick={()=>props.history.push(`/${Writer.nickname}`)}>
+                        <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     </div>
-                    <div className="repo-span">
-                        {Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""}
+                    <div className="profile-header" style={{color:'black'}}>
+                        {Writer.nickname}
                     </div>
-                    <div className="repo-content-detail">
-                        {Repo.content}
+                        <LikeDislike icon postId={postId} userId={localStorage.getItem('userId')}/>
+                    {props.user.userData && props.user.userData._id === Writer.id && <>
+                    <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={onModifyClick}>
+                        <EditOutlined />
                     </div>
-                    <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
-                    <br/>
+                    <div className="profile-header" style={{color:'black'}}>
+                        수정
+                    </div>
+                    <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={onDeleteClick}>
+                        <DeleteOutlined />
+                    </div>
+                    <div className="profile-header" style={{color:'black'}}>
+                        삭제
+                    </div></>}
                     {props.user.userData && props.user.userData.job === 2 &&
                     <>
-                    <label>원하는 가격 : {10000}원</label>
-                    <div className="repo-right-button" onClick={showPurchaseForm}>
+                    <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={showPurchaseForm}>
+                        <DollarOutlined />
+                    </div>
+                    <div className="profile-header" style={{color:'black'}}>
                         판매
                     </div>
-                    <div className="repo-right-button" onClick={showHireForm}>
+                    <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={showHireForm}>
+                        <FileTextOutlined />
+                    </div>
+                    <div className="profile-header" style={{color:'black'}}>
                         채용
                     </div>
                     </>
                     }
                 </div>
-                <div className="repo-assess">
-                    <AssessShow assessValue={AssessValue} postId={postId}/>
+                <div className="repo-assess-wrapper" id={AssessWindow ? null : "repo-assess-show"}>
+                    <div style={{textAlign:'right', marginTop:'20px',marginRight:'20px', fontSize:'30px', cursor:'pointer'}} onClick={AssessWindowClose}>X</div>
+                    <div className="repo-assess">
+                        <AssessShow assessValue={AssessValue} postId={postId}/>
+                    </div>
+                    <div className="repo-assess-area">
+                        <AssessArea postId={postId} userId={localStorage.getItem('userId')}
+                            updateAssessValue={updateAssess}/>
+                    </div>
                 </div>
-                <div className="repo-assess-area">
-                    <AssessArea postId={postId} userId={localStorage.getItem('userId')}
-                        updateAssessValue={updateAssess}/>
+                <div className="repo-assess-icon" id={AssessWindow ? null:"repo-icon-show"} onClick={AssessWindowOpen}>
+                    평 가
                 </div>
                 <br/>
             </div>
             
+        </div>
         </div>
     );
 }

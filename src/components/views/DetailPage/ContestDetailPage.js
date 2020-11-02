@@ -3,6 +3,7 @@ import {Button, Input, Typography, Upload} from 'antd'
 import axios from 'axios';
 import {UploadOutlined} from '@ant-design/icons'
 import {convertToS3EP} from '../../utils/String'
+import {getCookieValue} from '../../utils/Cookie'
 
 const {Title} = Typography
 
@@ -19,8 +20,14 @@ function ContestDetailPage(props) {
     const contestId = props.match.params.contestId
 
     useEffect(() => {
-        axios.post('/api/contest/getContest', {id: contestId})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/contest/getContest', {id: contestId}, config)
         .then(response => {
+            console.log(response)
             if(response.data.success){
                 setContest(response.data.contest)
                 setHost(response.data.host)
@@ -90,7 +97,7 @@ function ContestDetailPage(props) {
                             <Title>{Contest.title}</Title>
                         </div>
                         <img src={convertToS3EP(Contest.image)} style={{width:'100%'}} />
-                        <p style={{marginTop:'50px', textAlign:'left'}}>{Contest.description}</p>
+                        <p style={{marginTop:'50px', textAlign:'left'}}><pre>{Contest.description}</pre></p>
                     </div>
                     <br/><br/>
                 </div>
@@ -112,9 +119,6 @@ function ContestDetailPage(props) {
                         블로그 가기
                     </div></a>
                     <br/>
-                </div>
-                <div className="event-bid-button" onClick={OpenUploadForm}>
-                    공모전 참여하기
                 </div>
             </div>
             <div id={OpenModal ? "open-modal" : "close-modal"}>

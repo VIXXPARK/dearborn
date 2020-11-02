@@ -5,6 +5,7 @@ import './ListPage.css'
 import Meta from 'antd/lib/card/Meta';
 import axios from 'axios'
 import {convertToS3EP} from '../../utils/String'
+import {getCookieValue} from '../../utils/Cookie'
 
 const {Title} = Typography
 
@@ -21,7 +22,12 @@ function EventListPage(props) {
     }, [])
     
     const getPosts = (variables) => {
-        axios.post(`/api/contest/getContests/?limit=${Limit}&offset=${Skip}`, variables)
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post(`/api/contest/getContests/?limit=${Limit}&offset=${Skip}`, variables,config)
         .then(response => {
             console.log(3)
             if(response.data.success){
@@ -59,7 +65,7 @@ function EventListPage(props) {
         <div className="event-list-item">
             <a href={`/contest/${contest.id}`}>
                 <div className="event-item">
-                    <img className="event-item-img" src={convertToS3EP(contest.image)} alt/>
+                    <div className="event-item-img"><img style={{width:'100%', height:'100%'}} src={convertToS3EP(contest.image)} alt/></div>
                     <div className="event-item-content">
                         <h1>{contest.title}</h1>
                         <h2>{contest.description}</h2>
@@ -70,6 +76,7 @@ function EventListPage(props) {
     )
 
     return (
+        <div style={{width:'100vw', height:'100vh', backgroundColor:'#F9F8FD'}}>
         <div className="list-container">
             <Title style={{fontSize:'60px'}}>Contest</Title>
             <div className="filter-container">
@@ -88,6 +95,7 @@ function EventListPage(props) {
             <div className="list-wrapper">
                 {Contests && Contests.map(contest => renderContest(contest))}
             </div>
+        </div>
         </div>
     );
 }

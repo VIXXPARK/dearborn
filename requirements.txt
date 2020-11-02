@@ -89,5 +89,3 @@ wincertstore==0.2
 wrapt==1.12.1
 zipp==3.1.0
 -e git://github.com/VIXXPARK/django-jet.git@dev#egg=django-jet
--e git://github.com/areski/django-nvd3.git@develop#egg=django_nvd3
--e git://github.com/VIXXPARK/django-admin-charts.git@develop#egg=django-admin-tools-stats

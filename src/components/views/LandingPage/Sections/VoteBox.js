@@ -19,7 +19,12 @@ function VoteBox(props) {
             user : window.localStorage.getItem('userId'),
             post : props.post.id
         }
-        axios.post('/api/vote/upVote', variables)
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/vote/upVote', variables, config)
         .then(response =>{
             if(response.data.success){
                 alert('투표되었습니다')

@@ -23,7 +23,6 @@
 }
 .blog-header-content{
     display: inline-block;
-    margin-top: 20px;
     margin-left:30px;
 }
 #blog-header-p1{
@@ -31,16 +30,12 @@
 }
 #blog-header-p2{
     font-size: 15px;
+    font-weight: bold;
 }
-.blog-intro {
-    display: inline-block;
-    text-align: center;
-    width:300px;
-    margin-left: calc(100% - 720px);
-    background-color: lightsteelblue;
-}
+
 .blog-section{
-    margin-top: 5%;
+    margin-top: 10px;
+    background-color: white;
 }
 
 .blog-section a{
@@ -51,17 +46,16 @@
 .blog-tabs-btn{
     width:120px;
     height:70px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
     margin-right: 1px;
-    border-bottom: 0px;
     cursor: pointer;
     background-color: white;
+    border: none;
+    outline-style: none;
 }
 
 #blog-tabs-clicked {
-    box-shadow: 3px 3px;
-    transform: translate(-2px, -2px);
+    font-size: 25px;
+    color: #49c5b6;
 }
 
 .blog-tabs-content{

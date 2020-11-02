@@ -18,8 +18,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.views.generic import TemplateView
 urlpatterns = [
-    path('admin_tools_stats/',include('admin_tools_stats.urls')),
-    # path('jet/',include('jet.urls','jet')),
+    path('jet/',include('jet.urls','jet')),
     path('admin/', admin.site.urls),
     path('api/', include('dearbornApp.urls.user')),
     path('api/', include('dearbornApp.urls.post')),

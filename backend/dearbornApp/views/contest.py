@@ -113,14 +113,14 @@ class getContest(ListAPIView):
         postJson = []
         for x in contestVal:
             try:
-                conimage=x.image.url
+                conimage=x.banner.url
             except:
                 conimage=None,
             context={
                 'id':x.id,
                 'title':x.title,
                 'description':x.description,
-                'image':conimage
+                'banner':conimage
             }
             postJson.append(context)
         content={
