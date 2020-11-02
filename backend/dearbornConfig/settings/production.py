@@ -41,8 +41,8 @@ AWS_DEFAULT_ACL = None
 AWS_LOCATION='static'
 STATIC_URL = 'https://%s/%s/' %(AWS_S3_CUSTOM_DOMAIN,AWS_LOCATION)
 
-STATICFILES_STORAGE = 'backend.storage.S3StaticStorage'
-DEFAULT_FILE_STORAGE = 'backend.storage.S3MediaStorage'
+STATICFILES_STORAGE = 'dearbornConfig.storage.S3StaticStorage'
+DEFAULT_FILE_STORAGE = 'dearbornConfig.storage.S3MediaStorage'
 
 
 db_from_env = dj_database_url.config(conn_max_age=500)
