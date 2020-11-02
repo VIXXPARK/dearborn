@@ -10,6 +10,9 @@
         width:60%;
 
         float:left;
+        background-color: white;
+        padding: 30px;
+        border-radius: 20px;
     }
 }
 @media (max-width:1000px){
@@ -17,6 +20,8 @@
         width:90%;
         margin:0 auto;
         margin-bottom: 100px;
+        background-color: white;
+        border-radius: 20px;
     }
 }
 @media (min-width:1001px){
@@ -93,6 +98,11 @@
 .repo-assess {
     width:450px;
     margin:0 auto;
+}
+
+.repo-assess-wrapper{
+    background-color: white;
+    border-radius: 20px;
 }
 
 .repo-assess-area {

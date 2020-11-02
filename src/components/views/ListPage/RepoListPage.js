@@ -7,6 +7,7 @@ import FilterBox from './Sections/FilterBox';
 import axios from 'axios'
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
+import { Loader } from '../../utils/Loader';
 
 const {Title} = Typography
 
@@ -21,14 +22,16 @@ function RepoListPage(props) {
     const [Limit, setLimit] = useState(12)
     const [Ook, setOok] = useState(0); //One of kind
     const [Sort, setSort] = useState(0)
+    const [Loading, setLoading] = useState(true)
 
     useEffect(() => {
         const variables = {
             ook:0,
             sort :0,
         }
-
+        setLoading(true)
         getPosts(variables)
+        setSkip(Skip+Limit)
         window.addEventListener('scroll', handleScroll)
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
@@ -61,6 +64,8 @@ function RepoListPage(props) {
             }else{
                 console.log(response.data.err)
             }
+        }).finally(()=>{
+            setLoading(false)
         })
     }
 
@@ -71,7 +76,7 @@ function RepoListPage(props) {
         const scrollHeight= (document.documentElement 
             && document.documentElement.scrollHeight)
             || document.body.scrollHeight;
-        if(scrollTop + window.innerHeight >= scrollHeight){
+        if(scrollTop + window.innerHeight >= scrollHeight - 1){
             setIsBottom(true)
         }
     }
@@ -82,6 +87,7 @@ function RepoListPage(props) {
             sort : Sort
         }
         setSkip(Skip+Limit)
+        setLoading(true)
         getPosts(variables)
         setIsBottom(false)
     }
@@ -101,7 +107,7 @@ function RepoListPage(props) {
             ook : ook,
             sort : Sort,
         }
-
+        setLoading(true)
         getPosts(variables)
         setSkip(0)
     }
@@ -118,6 +124,7 @@ function RepoListPage(props) {
             ook : Ook,
             sort : e.target.value,
         }
+        setLoading(true)
         getPosts(variables)
         setSkip(0)
     }
@@ -140,7 +147,7 @@ function RepoListPage(props) {
     }
 
     return (
-        <div style={{width:'100vw', height:'100vh', backgroundColor:'#F9F8FD'}}>
+        <div style={{width:'100vw', height:'100vh', backgroundColor:'white'}}>
         <div className="list-container">
             <div className="filter-container">
                 <div className="filter-btn">
@@ -168,6 +175,7 @@ function RepoListPage(props) {
                 {Posts && Posts.map( (post) => renderRepoItems(post))}
             </div>
         </div>
+        {Loading && Loader("spin", "black")}
         </div>
     );
 }

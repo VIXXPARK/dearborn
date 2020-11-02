@@ -71,6 +71,10 @@ function UploadModifyPage(props) {
         setSell(e.target.value)
     }
 
+    const onScopeChange = (e)=>{
+        setScope(e.target.value)
+    }
+
     //upload
 
 
@@ -104,7 +108,7 @@ function UploadModifyPage(props) {
         formData.append('title', values.title)
         formData.append('content', values.description)
         formData.append('category', Category)
-        formData.append('sell', values.sell)
+        formData.append('sell', values.sell ? parseInt(values.sell) : 2)
         formData.append('scope', values.scope)
         formData.append('bidPrice', values.bidPrice ? parseInt(values.bidPrice) : -1)
         formData.append('sellPrice', values.sellPrice ? parseInt(values.sellPrice) : -1)
@@ -251,6 +255,19 @@ function UploadModifyPage(props) {
                                     <TreeNode value={17} title="하이힐"/>
                                 </TreeNode>
                             </TreeSelect><br/><br/>
+                            
+                            <label style={{fontSize:'30px'}}>공개 범위</label>
+                            <Form.Item
+                                style={{marginTop:'40px'}}
+                                name="scope"
+                                rules={[{required:true, message:'공개 범위를 결정해주세요'}]} 
+                            >
+                                <Radio.Group style={{width:'500px', height:'50px'}} onChange={onScopeChange}>
+                                    <Radio.Button className="scope-radio-button" value={1}>Public</Radio.Button>
+                                    <Radio.Button className="scope-radio-button" value={2}>Private</Radio.Button>
+                                </Radio.Group>
+                            </Form.Item>
+                            {Scope === 1 && <>
                             <label style={{fontSize:'30px'}}>판매 여부</label>
                             <Form.Item
                                 style={{marginTop:'40px'}}
@@ -261,7 +278,7 @@ function UploadModifyPage(props) {
                                     <Radio.Button className="scope-radio-button" value={1}>수락</Radio.Button>
                                     <Radio.Button className="scope-radio-button" value={2}>거절</Radio.Button>
                                 </Radio.Group>
-                            </Form.Item>
+                            </Form.Item></>}
                             {Sell && Sell === 1 && (
                                 <>
                                 <Form.Item
@@ -289,17 +306,6 @@ function UploadModifyPage(props) {
                                 </>
                             )
                             }
-                            <label style={{fontSize:'30px'}}>공개 범위</label>
-                            <Form.Item
-                                style={{marginTop:'40px'}}
-                                name="scope"
-                                rules={[{required:true, message:'공개 범위를 결정해주세요'}]} 
-                            >
-                                <Radio.Group style={{width:'500px', height:'50px'}} >
-                                    <Radio.Button className="scope-radio-button" value={1}>Public</Radio.Button>
-                                    <Radio.Button className="scope-radio-button" value={2}>Private</Radio.Button>
-                                </Radio.Group>
-                            </Form.Item>
                             <Form.Item>
                                 <Button className="submit-btn" type="primary" htmlType="submit" block>
                                     제출
