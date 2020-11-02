@@ -6,7 +6,7 @@ import { Input, Modal} from 'antd';
 import {config} from '../../utils/Token'
 import {convertToS3EP} from '../../utils/String'
 import {FormOutlined, DollarOutlined, DeleteOutlined} from '@ant-design/icons'
-
+import {getCookieValue} from '../../utils/Cookie'
 
 const {confirm} = Modal;
 
@@ -25,14 +25,20 @@ function VoteDetailPage(props) {
         if((params.get('designer') ||params.get('postId')) == null)
             return
         document.body.style.cssText = 'overflow-y : hidden;'
-        axios.post('/api/post/upView', {id : params.get('postId')})
+        
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/post/upView', {id : params.get('postId')}, config)
         .then(response => {
             if(!response.data.success){
                 console.log(response.data.err)
             }
         })
         if(window.localStorage.getItem('userId')){
-            axios.post('/api/vote/myVote', {user : window.localStorage.getItem('userId')})
+            axios.post('/api/vote/myVote', {user : window.localStorage.getItem('userId')}, config)
             .then(response => {
                 if(response.data.success){
                     console.log(response.data)
@@ -43,7 +49,8 @@ function VoteDetailPage(props) {
                     console.log(response.data.err)
                 }
             })}
-        axios.post('/api/post/getPostDetail', {id : params.get('postId')})
+            
+        axios.post('/api/post/getPostDetail', {id : params.get('postId')}, config)
         .then(response => {
             if(response.data.success){
                 
@@ -87,8 +94,14 @@ function VoteDetailPage(props) {
                                     post : DetailPost.id,
                                     price : Bid,
                                 }
+                                const config = {
+                                    headers : {
+                                        Authorization: `Token ${getCookieValue('w_auth')}`
+                                    }
+                                }
                                 axios.post('/api/bid/setBid', variables, config)
                                 .then(response => {
+                                    console.log(response)
                                     if(response.data.success){
                                         alert('성공')
                                     }else{
@@ -108,7 +121,12 @@ function VoteDetailPage(props) {
     }
 
     const OnDeleteClick = () => {
-        axios.post('/api/post/delete', {id : DetailPost.id})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+            }
+        axios.post('/api/post/delete', {id : DetailPost.id}, config)
         .then(response => {
             if(response.status ===200){
                 console.log(response.data)
@@ -124,7 +142,13 @@ function VoteDetailPage(props) {
     const OnVoteClick = () => {
         if(VoteLength === 3)
             return alert('이미 3번의 투표지를 사용했습니다.')
-        axios.post('/api/vote/upVote', {user: props.user.userData._id, post: DetailPost.id})
+        
+        const config = {
+        headers : {
+            Authorization: `Token ${getCookieValue('w_auth')}`
+        }
+        }
+        axios.post('/api/vote/upVote', {user: props.user.userData._id, post: DetailPost.id}, config)
         .then(response => {
             if(response.data.success){
                 setVoted(true)

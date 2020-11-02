@@ -7,6 +7,7 @@ import { Card, Radio} from 'antd';
 import {Link} from 'react-router-dom'
 import FilterBox from '../ListPage/Sections/FilterBox'
 import {convertToS3EP} from '../../utils/String'
+import {getCookieValue} from '../../utils/Cookie'
 
 
 import {ArrowRightOutlined} from '@ant-design/icons'
@@ -22,7 +23,7 @@ function LandingPage(props) {
     const [LoadMore, setLoadMore] = useState(true)
     const [Posts, setPosts] = useState([])
     const [Skip, setSkip] = useState(0)
-    const [Limit, setLimit] = useState(8)
+    const [Limit, setLimit] = useState(12)
     const [Ook, setOok] = useState(0); //One of kind
     const [Sort, setSort] = useState(0)
     const [IsBottom, setIsBottom] = useState(false)
@@ -57,7 +58,12 @@ function LandingPage(props) {
 
     const getPosts = (variables) => {
         console.log(variables)
-        axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables, config)
         .then(response => {
             if(response.data.success){
                 console.log(response)
@@ -158,7 +164,7 @@ function LandingPage(props) {
                     </div>
                 </div>
             </div>
-            <div className="vote" style={{width:'95%', margin:'0 auto'}}>
+            <div className="vote" style={{width:'95%', margin:'0 auto', backgroundColor:'white'}}>
                 <div style={{margin: '0 auto'}}> 
                     <div style={{textAlign:'left',}}>
                         <span style={{textAlign:'left', fontSize:'20px', fontWeight:'bold', color:'black'}}>이번 주 포스팅</span>

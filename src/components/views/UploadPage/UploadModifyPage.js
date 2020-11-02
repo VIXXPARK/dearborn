@@ -34,7 +34,13 @@ function UploadModifyPage(props) {
     
 
     useEffect(() => {
-        axios.post('/api/post/getPostDetail', {id : postId})
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+    
+        axios.post('/api/post/getPostDetail', {id : postId}, config)
         .then(response => {
             if(response.data.success){
                 console.log(response.data)
@@ -89,8 +95,11 @@ function UploadModifyPage(props) {
         
         let formData = new FormData()
         const config = {
-            header : {'Content-Type' : 'multipart/form-data'}
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
         }
+    
         console.log(values)
         formData.append('title', values.title)
         formData.append('content', values.description)
@@ -170,7 +179,7 @@ function UploadModifyPage(props) {
                     onChange={handleThumbChange}
                     showUploadList={false}
                 >
-                    {ThumbnailUrl ? <img src={ThumbnailUrl} style={{width:'300px', height:'400px', backgroundColor:'white'}}/> : uploadThumbButton}
+                    {ThumbnailUrl ? <div style={{width:'300px', height:'400px', backgroundColor:'white'}}><img src={ThumbnailUrl} style={{width:'100%', height:'100%'}}/><div style={{position:'relative', backgroundColor:'gray', height:'50px', top:-400, left:0,color:'white', opacity:'50%', fontSize:'20px', lineHeight:'50px'}}>썸 네 일</div></div> : uploadThumbButton}
                 </Upload>
                 {Previews && Previews.map((image, i)=>(
                     <div key={i} className="upload-block-prev">

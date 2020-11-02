@@ -6,6 +6,7 @@ import Meta from 'antd/lib/card/Meta';
 import FilterBox from './Sections/FilterBox';
 import axios from 'axios'
 import {convertToS3EP} from '../../utils/String'
+import {getCookieValue} from '../../utils/Cookie'
 
 const {Title} = Typography
 
@@ -17,7 +18,7 @@ function RepoListPage(props) {
     const [LoadMore, setLoadMore] = useState(true)
     const [IsBottom, setIsBottom] = useState(false)
     const [Skip, setSkip] = useState(0)
-    const [Limit, setLimit] = useState(8)
+    const [Limit, setLimit] = useState(12)
     const [Ook, setOok] = useState(0); //One of kind
     const [Sort, setSort] = useState(0)
 
@@ -39,8 +40,14 @@ function RepoListPage(props) {
     }, [IsBottom])
 
     const getPosts = (variables) => {
-        axios.post(`/api/post/getRepos/?limit=${Limit}&offset=${Skip}`, variables)
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post(`/api/post/getRepos/?limit=${Limit}&offset=${Skip}`, variables, config)
         .then(response => {
+            console.log(response)
             if(response.data.success){
                 console.log(response.data.repos)
                 if(response.data.repos < Limit ){
@@ -133,6 +140,7 @@ function RepoListPage(props) {
     }
 
     return (
+        <div style={{width:'100vw', height:'100vh', backgroundColor:'#F9F8FD'}}>
         <div className="list-container">
             <div className="filter-container">
                 <div className="filter-btn">
@@ -159,6 +167,7 @@ function RepoListPage(props) {
             <div className="list-wrapper">
                 {Posts && Posts.map( (post) => renderRepoItems(post))}
             </div>
+        </div>
         </div>
     );
 }

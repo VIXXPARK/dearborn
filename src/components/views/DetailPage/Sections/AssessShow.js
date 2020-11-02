@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts'
 import axios from 'axios'
 import { Button } from 'antd';
+import {getCookieValue} from '../../../utils/Cookie'
 
 function AssessShow(props) {
 
@@ -9,10 +10,16 @@ function AssessShow(props) {
 
     useEffect(() => {
         if(props.postId){
-        axios.post('/api/assess/getValue', {post : props.postId})
+            const config = {
+                headers : {
+                    Authorization: `Token ${getCookieValue('w_auth')}`
+                }
+            }
+        axios.post('/api/assess/getValue', {post : props.postId}, config)
         .then(response => {
+            console.log(response)
             if(response.data.success){
-                console.log(response.data)
+                
                 setChartSeries([{
                     data : 
                     [

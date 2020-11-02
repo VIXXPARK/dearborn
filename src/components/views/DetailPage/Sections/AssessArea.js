@@ -44,6 +44,7 @@ function AssessArea(props) {
             }
         }
         console.log(DatasToSubmit)
+        
         Axios.post('/api/assess/saveValue', DatasToSubmit, config)
         .then(response => {
             if(response.data.success)
@@ -64,18 +65,18 @@ function AssessArea(props) {
 
     return (
         <div>
-            <label>디자인이 맘에 드나요?</label>
-            <Rate style={{background:'black'}} allowHalf defaultValue={3} onChange={ChangeRate1}/><br/>
-            <label>색상이 맘에 드나요?</label>
-            <Rate style={{background:'red'}} allowHalf defaultValue={3} onChange={ChangeRate2}/><br/>
-            <label>개성있어 보이나요?</label>
-            <Rate style={{background:'tomato'}} allowHalf defaultValue={3} onChange={ChangeRate3}/><br/>
-            <label>실용성 있어 보이나요?</label>
-            <Rate style={{background:'powderblue'}} allowHalf defaultValue={3} onChange={ChangeRate4}/><br/>
-            <label>최신 트렌드에 적합한가요?</label>
-            <Rate style={{background:'gray'}} allowHalf defaultValue={3} onChange={ChangeRate5}/><br/>
+            <label>디자인</label>
+            <Rate allowHalf defaultValue={3} onChange={ChangeRate1}/><br/>
+            <label>색상</label>
+            <Rate allowHalf defaultValue={3} onChange={ChangeRate2}/><br/>
+            <label>개성</label>
+            <Rate allowHalf defaultValue={3} onChange={ChangeRate3}/><br/>
+            <label>실용성</label>
+            <Rate allowHalf defaultValue={3} onChange={ChangeRate4}/><br/>
+            <label>트렌드</label>
+            <Rate allowHalf defaultValue={3} onChange={ChangeRate5}/><br/>
             <br/>
-            <Button onClick={SubmitRate}>
+            <Button style={{marginBottom:'20px'}} onClick={SubmitRate}>
                 제출
             </Button>
             <br/>
