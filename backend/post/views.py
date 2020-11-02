@@ -105,7 +105,7 @@ class postDeleteView(APIView):
 
 class PostView(ListAPIView):
     serializer_class = PostSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     pagination_class = PostPageNumberPagination
 
     def post(self,request):
@@ -154,7 +154,6 @@ class PostView(ListAPIView):
             context = {
                 'success':True,
                 'votes':postData,
-               
             }
             return Response(context,status=HTTP_200_OK)
         except APIException as e:
