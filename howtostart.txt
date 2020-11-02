@@ -1,4 +1,4 @@
 py manage.py runserver --settings=dearbornConfig.settings.local
 py manage.py migrate --settings=dearbornConfig.settings.local
-py manage.py makemigrations --settings=dearbornConfig.settings.local
+py manage.py makemigrations dearbornApp --settings=dearbornConfig.settings.local
 py manage.py createsuperuser --settings=dearbornConfig.settings.local
