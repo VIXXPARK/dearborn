@@ -18,7 +18,6 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'background_task',
     'storages',
-    'djangobower',
     
     
 
