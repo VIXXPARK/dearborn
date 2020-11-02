@@ -113,6 +113,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 
+STATICFILES_DIRS = (
+    os.path.join(REACT_DIR,'build','static'),
+)
+
 
 
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
