@@ -8,6 +8,27 @@ from annoy import AnnoyIndex
 from scipy import spatial
 from dearbornConfig.settings.base import BASE_DIR, Is_Local
 
+def get_objects_in_folder(path):
+    from dearbornConfig.settings.production import AWS_S3_CUSTOM_DOMAIN
+    ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
+    SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    bucket = os.getenv('AWS_STORAGE_BUCKE')
+    region_name = os.getenv('AWS_S3_REGION_NAME')
+
+    session = boto3.session.Session()
+    client = session.client('s3', region_name=region_name,
+                                  endpoint_url=AWS_S3_CUSTOM_DOMAIN,
+                                  aws_access_key_id=ACCESS_KEY,
+                                  aws_secret_access_key=SECRET_ACCESS_KEY,
+    )
+    objects = client.list_objects_v2(
+        bucket=bucket,
+        EncodingType='url',
+        MaxKeys=1000,
+        Prefix='media/thumb',
+    )
+    return objects
+
 def upload_file_to_bucket(file_name, s3_file):
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
@@ -46,8 +67,17 @@ def download_all_files():
 def featureUpload_to(postId,filename):
    return 'feature_vector/{0}/{1}'.format(postId ,filename)
 
-def LoadImage(image_urls):
+def ChangeImage(images):
+    image_array = []
+    for image in images:
+        image = tf.image.decode_image(image)
+        image = tf.image.resize(image, [224, 224])
+        image = tf.image.convert_image_dtype(image, tf.float32)
+        image_array.append(image)
+    return image_array
 
+
+def LoadImage(image_urls):
     image_array = []
     for path in image_urls:
         image = tf.io.read_file(path)
@@ -66,16 +96,32 @@ def CheckDir(path):
 
 def GetImageArray(postId):#이부분 수정
     posts = Post.objects.filter(id = postId)
-    image_urls = []
-    image_file_name = []
-    image_id = []
-    for post in  posts:
-        url = post.thumbnail.url
-        image_urls.append(url)
-        image_id.append(Post.id)
-        file_name = os.path.basename(url).split('.')[0]
-        image_file_name.append(file_name)
-    image_array = LoadImage(image_urls)
+    if Is_Local:
+        image_urls = []
+        image_file_name = []
+        image_id = []
+        for post in  posts:
+            url = post.thumbnail.url
+            image_urls.append(url)
+            image_id.append(Post.id)
+            file_name = os.path.basename(url).split('.')[0]
+            image_file_name.append(file_name)
+        image_array = LoadImage(image_urls)
+    else:
+        image_file_name = []
+        image_id = []
+        images = []
+        for post in  posts:
+            url = post.thumbnail.url
+            image_id.append(Post.id)
+            file_name = os.path.basename(url).split('.')[0]
+            dir = url.split('/')
+            objects = get_objects_in_folder(os.path.join('media',dir[0],dir[1],dir[2]))
+            images.append(objects)
+            print('-----------check---------')
+            print(objects)
+            image_file_name.append(file_name)
+        image_array = ChangeImage(images)
     return image_array, image_file_name, image_id
 
 def GetFeatureVector(image_array):
