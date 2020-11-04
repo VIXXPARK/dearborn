@@ -32,7 +32,7 @@ class MessageViewSet(ModelViewSet):
        
     
     #use "python manage.py process_tasks"
-    @background(schedule=5)
+    @background(schedule=1209600)
     def AutoDelete(messageID):
         message = Message.objects.filter(id=messageID)
         message[0].delete()
