@@ -66,7 +66,6 @@ def CheckDir(path):
 
 def GetImageArray(postId):
     posts = Post.objects.filter(id = postId)
-    postCount = Post.objects.count(id = postId)
     image_urls = []
     image_file_name = []
     image_id = []
@@ -77,7 +76,7 @@ def GetImageArray(postId):
         file_name = os.path.basename(url).split('.')[0]
         image_file_name.append(file_name)
     image_array = LoadImage(image_urls)
-    return image_array, image_file_name, image_id, postCount
+    return image_array, image_file_name, image_id
 
 def GetFeatureVector(image_array):
     hub_path = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
@@ -105,13 +104,16 @@ def Similarity(postId):
     n_nearest_neighbors = 1
     trees = 10000
 
-    image_array, image_file_name, image_id, n_nearest_neighbors = GetImageArray(postId)
+    image_array, image_file_name, image_id = GetImageArray(postId)
     vectors = GetFeatureVector(image_array)
     
     if not Is_Local:
         feature_vectors = download_all_files()
     else: 
         feature_vectors = glob.glob('feature_vectors/*.npz')
+    
+    n_nearest_neighbors = feature_vectors.count()
+
     annoy = AnnoyIndex(dims,'angular')
     for index, v in feature_vectors:
         annoy.add_item(index, v)
