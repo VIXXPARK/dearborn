@@ -65,8 +65,8 @@ def CheckDir(path):
         print(e.strerror)
 
 def GetImageArray(postId):
-    posts = Post.objects.filter(post = postId)
-    postCount = Post.objects.count(post = postId)
+    posts = Post.objects.filter(id = postId)
+    postCount = Post.objects.count(id = postId)
     image_urls = []
     image_file_name = []
     image_id = []
