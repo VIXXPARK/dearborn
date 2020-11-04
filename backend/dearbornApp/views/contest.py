@@ -114,7 +114,9 @@ class getContest(ListAPIView):
                 'id':x.id,
                 'title':x.title,
                 'description':x.description,
-                'banner':conimage
+                'banner':conimage,
+                'updated_dt':x.updated_dt,
+                'expired_dt':x.contest_expire
             }
             postJson.append(context)
         content={
@@ -142,7 +144,9 @@ class infoContest(ListAPIView):
                 'id':x.id,
                 'title':x.title,
                 'description':x.description,
-                'banner':ximage
+                'banner':ximage,
+                'updated_dt':x.updated_dt,
+                'expired_dt':x.contest_expire
             }
             postJson.append(context)
         content={
