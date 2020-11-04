@@ -40,17 +40,17 @@
   <tr>
   <td align="center">
   <sub>
-    가
+    백엔드 및 서버
   </sub>
   </td>
   <td align="center">
   <sub>
-    나
+    백엔드 및 텐서플로
   </sub>
   </td>
   <td align="center">
   <sub>
-    다
+    프론트엔드
   </sub>
   </td>
   </tr>
@@ -62,16 +62,16 @@
     <tr>
   <td align="center">
     <
-    <a href="">one</a></sub>
+    <a href="">조장</a></sub>
   </td>
   <td align="center">
     <sub>
-    <a href="">two</a>
+    <a href="">조원</a>
     </sub>
   </td>
   <td align="center">
     <sub>
-    <a href="">three</a></sub>
+    <a href="">조원</a></sub>
   </td>
   </tr>
 </table>
@@ -87,7 +87,7 @@
 
 > 
 
-<p align='middle'><a href='' align='middle'><img src='' /></a></p>
+<p align='middle'><a href='' align='middle'><img src='./img/dev.png' /></a></p>
 
 ### Backend
 
