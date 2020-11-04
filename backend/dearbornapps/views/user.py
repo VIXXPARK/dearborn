@@ -185,7 +185,7 @@ class UserView(APIView):
             'isAuth': True,
             'success' : True
         }
-        return Response(content ,HTTP_200_OK)
+        return Response({'success' : True}, content, status = HTTP_200_OK)
 
 class GetUserView(APIView):
     def get(serlf, request, format=None):
@@ -199,7 +199,7 @@ class GetUserView(APIView):
             'prifileImage' : profile,
             'success' : True,
         }
-        return Response(content,HTTP_200_OK)
+        return Response({'success' : True}, content, status = HTTP_200_OK)
 
 @permission_classes((AllowAny, ))
 class Activate(View):
