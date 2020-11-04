@@ -109,7 +109,7 @@ function UploadModifyPage(props) {
         formData.append('content', values.description)
         formData.append('category', Category)
         formData.append('sell', values.sell ? parseInt(values.sell) : 2)
-        formData.append('scope', values.scope)
+        formData.append('scope', values.scope ? parseInt(values.scope): 2)
         formData.append('bidPrice', values.bidPrice ? parseInt(values.bidPrice) : -1)
         formData.append('sellPrice', values.sellPrice ? parseInt(values.sellPrice) : -1)
         axios.patch(`/api/post/${postId}`, formData, config)
