@@ -106,9 +106,12 @@
 
 ### :minidisc:사이트 
 
-<p align='middle'><a href='' align='middle'><img src='./img/site1.png' /></a></p> 
+<p align='middle'><a href='' align='middle'><img src='./img/site1.png' /></a></p>
+</br> 
 <p align='middle'><a href='' align='middle'><img src='./img/site2.png' /></a></p> 
+</br>
 <p align='middle'><a href='' align='middle'><img src='./img/site3.png' /></a></p> 
+</br>
 
 
 ### 📌프로젝트 목표
