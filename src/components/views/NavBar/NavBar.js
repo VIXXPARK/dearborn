@@ -122,6 +122,7 @@ function NavBar(props) {
                 {message.message}
             </div>
             <Form
+                style={{borderBottom:'1px solid #e5e5e5'}}
                 onFinish={onFinish}
             >
                 <Form.Item
@@ -155,14 +156,6 @@ function NavBar(props) {
         <div className="message-container">
             <div style={{height:'50px',fontSize:'15px',lineHeight:'40px', borderBottom : '1px solid #e5e5e5'}}>
                 받은 메일(messages.length(!))
-            </div>
-            <div className="message-head-wrapper">
-                <div className="message-head" style={{borderBottom:'1px solid #e5e5e5'}}>
-                    이름
-                </div>
-                <div className="message-head2" style={{borderBottom:'1px solid #e5e5e5'}}>
-                    내용
-                </div>
             </div>
             {Messages && Messages.map((message, i) =>renderMessageBox(message, i))}
         </div>
@@ -198,7 +191,7 @@ function NavBar(props) {
                             </Dropdown>
                             <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
                                 <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} size="middle" gap={4}>
-                                    {user.userData && user.userData.nickname ? user.userData.nickname[0] : null}
+                                    {user.userData && user.userData.profileImage ? user.userData.nickname[0] : null}
                                 </Avatar>
                             </Dropdown>
                         </div>
