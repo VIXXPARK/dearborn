@@ -53,7 +53,7 @@ from pytz import timezone
 from dearbornApp.models.bid import BidInfo
 from dearbornApp.models.user import User
 from dearbornApp.models.messanger import Message
-from .feature import Similarity,GetFeatureVector,SaveFeatureVector
+from dearbornApp.feature.feature import Similarity,GetFeatureVector,SaveFeatureVector
 
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
