@@ -60,7 +60,6 @@
   </tr>
     <tr>
   <td align="center">
-    <
     <a href="">조장</a></sub>
   </td>
   <td align="center">
@@ -103,6 +102,7 @@
   - <a href="./backend/dearbornConfig/settings">local</a></br>
   - <a href="./backend/dearbornConfig/settings">production</a></br>
 
+---
 
 ### :minidisc:사이트 
 
@@ -113,7 +113,7 @@
 <p align='middle'><a href='' align='middle'><img src='./img/site3.png' /></a></p> 
 </br>
 
-
+---
 ### 📌프로젝트 목표
 
 #### 💻🤳 
