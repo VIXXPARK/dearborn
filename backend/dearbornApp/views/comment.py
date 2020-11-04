@@ -27,9 +27,13 @@ class MakeCommentView(APIView):
         try:
             comment = commentSerializer.create(commentSerializer.validated_data)
             user = comment.user
+            try:
+                profile = user.profileImage.url
+            except:
+                profile = None
             userDict = {
                 'nickname' : user.nickname,
-                'profileImage' : user.profileImage.url,
+                'profileImage' : profile,
             }
         except APIException as e:
             return Response({'success':False, 'err' : e.detail},HTTP_400_BAD_REQUEST)
@@ -52,7 +56,11 @@ class GetCommentView(APIView):
         commentData = []
         for query in commentQuery:
             user = query.user
-            profileImage = user.profileImage.url
+            try:
+                profileImage = user.profileImage.url
+            except:
+                profileImage = None
+            
             data = {
                 'id' : query.id,
                 'contents':query.contents,

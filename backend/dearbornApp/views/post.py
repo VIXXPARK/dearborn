@@ -282,6 +282,8 @@ class PostDetail(APIView):
             'sell':postdata.sell,
             'category':postdata.category,
             'scope':postdata.scope,
+            'sellPrice':postdata.sellPrice,
+            'bidPrice':postdata.bidPrice,
         }
 
         context = {
