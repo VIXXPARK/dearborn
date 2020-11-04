@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class DearbornappConfig(AppConfig):
-    name = 'dearbornapp'
+    name = 'dearbornapps'
