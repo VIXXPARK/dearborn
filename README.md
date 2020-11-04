@@ -1,7 +1,7 @@
 <p align='middle'>
 
 
-<h1 align='middle'><a href='https://dearborn.herokuapp.com'>https://dearborn.herokuapp.com</a></h1>
+<h1 align='middle'><a href='https://dearborn.herokuapp.com'>Dearborn</a></h1>
 <p align='middle'>
 패션디자이너를 위한 <u>🙆‍♂️🙅‍♀️웹 기반 중개 플랫폼</u>이에요.<br>
  전공자 뿐만 아니라 비전공자도 할 수 있어요.<br>
@@ -12,14 +12,24 @@
 
 ## 목차
 
-1. [팀원 소개](#팀원-소개)
-2. [프로젝트 소개](#프로젝트-소개)  
-   2-1. [사용기술](#-사용-기술)  
-   2-2. [백엔드 파일구성](#-Backend)  
-   2-3. [배포 구조](#-배포-구조)  
-   2-4. [게임 진행 흐름도](#-게임-진행-흐름도)  
-   2-5. [프로젝트 목표](#프로젝트-목표)
-3. [실행 방법](#실행-방법)
+- [목차](#목차)
+- [👨‍👨‍👧팀원 소개](#팀원-소개)
+  - [report](#report)
+- [프로젝트 소개](#프로젝트-소개)
+  - [:wrench:사용 기술](#wrench사용-기술)
+  - [:file_folder:Backend](#file_folderbackend)
+    - [:iphone:App](#iphoneapp)
+    - [:package:Config](#packageconfig)
+  - [:minidisc:사이트](#minidisc사이트)
+  - [📌프로젝트 목표](#프로젝트-목표)
+    - [💻🤳](#)
+    - [♻ two](#-two)
+    - [💪 three](#-three)
+    - [🌈 four](#-four)
+- [👨‍💻실행 방법](#실행-방법)
+  - [설치](#설치)
+  - [실행](#실행)
+- [api키](#api키)
 
 ---
 
@@ -29,17 +39,17 @@
   <tr>
   <td align="center">
   <sub>
-    가
+    백엔드 및 서버
   </sub>
   </td>
   <td align="center">
   <sub>
-    나
+    백엔드 및 텐서플로
   </sub>
   </td>
   <td align="center">
   <sub>
-    다
+    프론트엔드
   </sub>
   </td>
   </tr>
@@ -50,17 +60,16 @@
   </tr>
     <tr>
   <td align="center">
-    <
-    <a href="">one</a></sub>
+    <a href="">조장</a></sub>
   </td>
   <td align="center">
     <sub>
-    <a href="">two</a>
+    <a href="">조원</a>
     </sub>
   </td>
   <td align="center">
     <sub>
-    <a href="">three</a></sub>
+    <a href="">조원</a></sub>
   </td>
   </tr>
 </table>
@@ -72,30 +81,42 @@
 
 ## 프로젝트 소개
 
-### 📽 프로젝트 시연 및 소개 영상
+### :wrench:사용 기술
 
-> 링크를 누르면 소개 영상 페이지로 이동합니다
-
-<p align='middle'><a href='' align='middle'><img src='' /></a></p>
-
-### ⚙ 사용 기술
-
-<p align='middle'><a href=''><img src='' /></a></p>
-
-### 🔃 배포 구조
-
-<p align='middle'><a href=''><img src='' /></a></p>
-
-### 🔄 게임 진행 흐름도
-
->   
 > 
 
-<p align='middle'><a href=''><img src='' /></a></p>
+<p align='middle'><a href='' align='middle'><img src='./img/dev.png' /></a></p>
 
+### :file_folder:Backend
+
+#### :iphone:App
+- <a href="./backend/dearbornApp">dearbornApp</a></br>
+  - <a href="./backend/dearbornApp/models">models</a></br>
+  - <a href="./backend/dearbornApp/serializers">serializers</a></br>
+  - <a href="./backend/dearbornApp/urls">urls</a></br>
+  - <a href="./backend/dearbornApp/views">views</a></br>
+
+#### :package:Config
+- <a href="./backend/dearbornConfig">dearbornConfig</a></br>
+  - <a href="./backend/dearbornConfig/settings">base</a></br>
+  - <a href="./backend/dearbornConfig/settings">local</a></br>
+  - <a href="./backend/dearbornConfig/settings">production</a></br>
+
+---
+
+### :minidisc:사이트 
+
+<p align='middle'><a href='' align='middle'><img src='./img/site1.png' /></a></p>
+</br> 
+<p align='middle'><a href='' align='middle'><img src='./img/site2.png' /></a></p> 
+</br>
+<p align='middle'><a href='' align='middle'><img src='./img/site3.png' /></a></p> 
+</br>
+
+---
 ### 📌프로젝트 목표
 
-#### 💻🤳 one
+#### 💻🤳 
 
 - 
 - 
@@ -125,16 +146,16 @@
 ### 설치
 
 ```shell
-a
+pip install -r requirements.txt
 ```
 
 ### 실행
 
 ```shell
-b
+py manage.py runserver --settings=dearbornConfig.settings.local
 ```
 
 ---
 
-## ee
+## api키
 
