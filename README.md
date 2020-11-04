@@ -16,12 +16,12 @@
 - [👨‍👨‍👧팀원 소개](#팀원-소개)
   - [report](#report)
 - [프로젝트 소개](#프로젝트-소개)
-  - [사용 기술](#사용-기술)
-  - [Backend](#backend)
-    - [App](#app)
+  - [:wrench:사용 기술](#wrench사용-기술)
+  - [:file_folder:Backend](#file_folderbackend)
+    - [:iphone:App](#iphoneapp)
     - [Config](#config)
   - [배포 구조](#배포-구조)
-  - [사이트](#사이트)
+  - [:minidisc:사이트](#minidisc사이트)
   - [📌프로젝트 목표](#프로젝트-목표)
     - [💻🤳 one](#-one)
     - [♻ two](#-two)
@@ -83,39 +83,39 @@
 
 ## 프로젝트 소개
 
-### 사용 기술
+### :wrench:사용 기술
 
 > 
 
 <p align='middle'><a href='' align='middle'><img src='./img/dev.png' /></a></p>
 
-### Backend
+### :file_folder:Backend
 
-#### App
+#### :iphone:App
 - <a href="./backend/dearbornApp">dearbornApp</a></br>
   - <a href="./backend/dearbornApp/models">models</a></br>
-  - <a href="./backend/dearbornApp/serializers">-serializers</a></br>
-  - <a href="./backend/dearbornApp/urls">-urls</a></br>
-  - <a href="./backend/dearbornApp/views">-views</a></br>
+  - <a href="./backend/dearbornApp/serializers">serializers</a></br>
+  - <a href="./backend/dearbornApp/urls">urls</a></br>
+  - <a href="./backend/dearbornApp/views">views</a></br>
 
 #### Config
 - <a href="./backend/dearbornConfig">dearbornConfig</a></br>
-  - <a href="./backend/dearbornConfig/settings">-base</a></br>
-  - <a href="./backend/dearbornConfig/settings">-local</a></br>
-  - <a href="./backend/dearbornConfig/settings">-production</a></br>
+  - <a href="./backend/dearbornConfig/settings">base</a></br>
+  - <a href="./backend/dearbornConfig/settings">local</a></br>
+  - <a href="./backend/dearbornConfig/settings">production</a></br>
 
 
 
 ### 배포 구조
 
-<p align='middle'><a href=''><img src='' /></a></p>
 
-### 사이트 
+
+### :minidisc:사이트 
 
 >   
 > 
 
-<p align='middle'><a href=''><img src='' /></a></p>
+
 
 ### 📌프로젝트 목표
 
