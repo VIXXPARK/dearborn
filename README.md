@@ -12,16 +12,25 @@
 
 ## 목차
 
-1. [팀원 소개](#팀원-소개)
-2. [프로젝트 소개](#프로젝트-소개)  
-   2-1. [사용기술](#-사용-기술)  
-   2-2. [백엔드 파일구성](#-Backend)
-      - [app](#dearbornApp)
-      - [project](#dearbornConfig)
-   2-3. [배포 구조](#-배포-구조)  
-   2-4. [게임 진행 흐름도](#-게임-진행-흐름도)  
-   2-5. [프로젝트 목표](#프로젝트-목표)
-3. [실행 방법](#실행-방법)
+- [목차](#목차)
+- [👨‍👨‍👧팀원 소개](#팀원-소개)
+  - [report](#report)
+- [프로젝트 소개](#프로젝트-소개)
+  - [사용 기술](#사용-기술)
+  - [Backend](#backend)
+    - [App](#app)
+    - [Config](#config)
+  - [배포 구조](#배포-구조)
+  - [사이트](#사이트)
+  - [📌프로젝트 목표](#프로젝트-목표)
+    - [💻🤳 one](#-one)
+    - [♻ two](#-two)
+    - [💪 three](#-three)
+    - [🌈 four](#-four)
+- [👨‍💻실행 방법](#실행-방법)
+  - [설치](#설치)
+  - [실행](#실행)
+- [api키](#api키)
 
 ---
 
@@ -84,11 +93,16 @@
 
 <p align='middle'><a href=''><img src='' /></a></p>
 
-### 🔃 배포 구조
+#### App
+
+#### Config
+
+
+### 배포 구조
 
 <p align='middle'><a href=''><img src='' /></a></p>
 
-### 🔄 게임 진행 흐름도
+### 사이트 
 
 >   
 > 
@@ -127,16 +141,16 @@
 ### 설치
 
 ```shell
-a
+pip install -r requirements.txt
 ```
 
 ### 실행
 
 ```shell
-b
+py manage.py runserver --settings=dearbornConfig.settings.local
 ```
 
 ---
 
-## ee
+## api키
 
