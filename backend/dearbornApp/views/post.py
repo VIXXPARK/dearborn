@@ -716,6 +716,10 @@ class getMyWork(APIView):
 @background()
 def voteExpired():
     posts = Post.objects.filter(is_repo=False)
+    users = User.objects.all()
+    for user in users:
+        user.now_updating = False
+        
     for post in posts:
 
         KST = timezone('Asia/Seoul')
@@ -762,10 +766,6 @@ def voteExpired():
                 post.save()
             except APIException as e:
                 raise e
-
-        users = User.objects.all()
-        for user in users:
-            user.now_updating = False
 
 
 
