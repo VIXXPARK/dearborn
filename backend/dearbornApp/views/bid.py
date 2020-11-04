@@ -85,6 +85,7 @@ def GetBid(request):
                 postData = {
                     'thumbnail' : post.thumbnail.url,
                     'postid' : post.id,
+                    'designer':post.user.id,
                     'title' : post.title,
                     'bid' : bid,
                 }

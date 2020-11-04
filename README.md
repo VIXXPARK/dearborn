@@ -1,8 +1,7 @@
 <p align='middle'>
-<!-- <a href='http://pickyforky.xyz'><img src='./docs/logogif.gif' /></a></p> -->
-<!-- <p align='middle'><img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/connect-foundation/2019-07">  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/connect-foundation/2019-07"> <a href="https://github.com/connect-foundation/2019-07/wiki"/><img alt="Document" src="https://img.shields.io/badge/document-yes-important"></a> <img alt="npm" src="https://img.shields.io/npm/v/yarn?label=yarn"> <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/connect-foundation/2019-07?color=blueviolet"> <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/connect-foundation/2019-07"> <img alt="GitHub" src="https://img.shields.io/github/license/connect-foundation/2019-07"></p> -->
 
-<h1 align='middle'><a href='https://dearborn.herokuapp.com'>🏠https://dearborn.herokuapp.com</a></h1>
+
+<h1 align='middle'><a href='https://dearborn.herokuapp.com'>https://dearborn.herokuapp.com</a></h1>
 <p align='middle'>
 패션디자이너를 위한 <u>🙆‍♂️🙅‍♀️웹 기반 중개 플랫폼</u>이에요.<br>
  전공자 뿐만 아니라 비전공자도 할 수 있어요.<br>
@@ -45,13 +44,13 @@
   </td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/VIXXPARK"><img src="" width="100px;" alt="VIXXPARK"/><br /><sub><b>박수한</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/HJinS"><img src="" width="100px;" alt="HJinS"/><br /><sub><b>조민관</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/Pazbear"><img src="" width="100px;" alt="Pazbear"/><br /><sub><b>허진수</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/VIXXPARK"><br /><sub><b>박수한</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/HJinS"><br /><sub><b>허진수</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/Pazbear"><br /><sub><b>조민관</b></sub></a><br /></td>
   </tr>
     <tr>
   <td align="center">
-    <sub>
+    <
     <a href="">one</a></sub>
   </td>
   <td align="center">
