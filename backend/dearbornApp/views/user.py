@@ -94,7 +94,7 @@ def signup(request):
     try :
         user = signup_serializer.create(signup_serializer.validated_data)
     except APIException as e:
-        return Response({'success' : False, 'err' : e.detail}, HTTP_400_BAD_REQUEST)
+        return Response({'success' : False, 'err' : e.detail}, status = HTTP_400_BAD_REQUEST)
 
 
     current_site = get_current_site(request)

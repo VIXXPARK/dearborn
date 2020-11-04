@@ -53,8 +53,7 @@ from pytz import timezone
 from dearbornApp.models.bid import BidInfo
 from dearbornApp.models.user import User
 from dearbornApp.models.messanger import Message
-
-# from .feature import Similarity,GetFeatureVector,SaveFeatureVector
+from .feature import Similarity,GetFeatureVector,SaveFeatureVector
 
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
@@ -67,9 +66,9 @@ class PostViewSet(ModelViewSet):
             response = super().create(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        #similarity = Similarity(response.data.postId)
+        similarity = Similarity(response.data.postId)
         context = {
-            # 'similarity' : similarity,
+            'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
@@ -80,9 +79,9 @@ class PostViewSet(ModelViewSet):
             response = super().partial_update(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        #similarity = Similarity(response.data.postId)
+        similarity = Similarity(response.data.postId)
         context = {
-            # 'similarity' : similarity,
+            'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
