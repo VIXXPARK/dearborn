@@ -91,10 +91,9 @@ def GetFeatureVector(image_array):
 
 def SaveFeatureVector(featureVector, image_file_name, postId):
     for index, v in featureVector:
-        
         if not Is_Local:
-            upload_file_to_bucket(v,'{0}/{1}'.format(postId,image_file_name[index]+".npz")
-        else:
+            upload_file_to_bucket(v,'{0}/{1}'.format(postId,image_file_name[index]+".npz"))
+        else :
             out_dir = os.path.join(BASE_DIR,'feature_vectors')
             CheckDir(out_dir)
             out_path = os.path.join(BASE_DIR,featureUpload_to(postId, image_file_name[index]) + ".npz")
