@@ -184,7 +184,7 @@ class UserView(APIView):
             'profileImage' : profile,
             'isAuth': True,
         }
-        return Response({'success' : True, 'content' : content}, status=HTTP_200_OK)
+        return Response(content, status=HTTP_200_OK)
 
 class GetUserView(APIView):
     def get(serlf, request, format=None):
