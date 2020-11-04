@@ -718,7 +718,7 @@ class getMyWork(APIView):
 @background()
 def voteExpired():
     posts = Post.objects.filter(is_repo=False)
-    users = User.objects.all()
+    users = User.object.all()
     for user in users:
         user.now_updating = False
         
