@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from dearbornApp.models.bid import BidInfo
+from dearbornapp.models.bid import BidInfo
 
 class MakeBidSerializer(serializers.ModelSerializer):
 

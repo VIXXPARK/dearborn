@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from dearbornApp.models.assess import Assess
+from dearbornapp.models.assess import Assess
 
 class saveValueSerializer(serializers.ModelSerializer):
     class Meta:

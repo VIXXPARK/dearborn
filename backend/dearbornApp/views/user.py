@@ -27,10 +27,10 @@ from django.core.exceptions import ValidationError
 from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
-from dearbornApp.serializers.user import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
-from dearbornApp.serializers.user import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
+from dearbornapp.serializers.user import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
+from dearbornapp.serializers.user import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
 from auth.authentication import token_expire_handler, expires_in
-from dearbornApp.models.user import User
+from dearbornapp.models.user import User
 from auth.token import account_activation_token
 from auth.text import message, changeMessage
 from dearbornConfig.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT

@@ -1,4 +1,4 @@
-from dearbornApp.models.post import Post, PostImage
+from dearbornapp.models.post import Post, PostImage
 import tensorflow_hub as hub
 import tensorflow as tf
 import numpy as np
@@ -64,7 +64,7 @@ def CheckDir(path):
     except OSError as e:
         print(e.strerror)
 
-def GetImageArray(postId):
+def GetImageArray(postId):#이부분 수정
     posts = Post.objects.filter(id = postId)
     image_urls = []
     image_file_name = []

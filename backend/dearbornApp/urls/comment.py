@@ -1,4 +1,4 @@
-from dearbornApp.views.comment import MakeCommentView,GetCommentView,DeleteCommentView,UpdataCommentView
+from dearbornapp.views.comment import MakeCommentView,GetCommentView,DeleteCommentView,UpdataCommentView
 from django.urls import path, include
 
 urlpatterns = [
