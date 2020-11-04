@@ -106,7 +106,7 @@
 
 ### :minidisc:사이트 
 
-<p align='middle'><a href='' align='middle'><img src='./img/dev.png' /></a></p> 
+<p align='middle'><a href='' align='middle'><img src='./img/site1.png' /></a></p> 
 
 
 
