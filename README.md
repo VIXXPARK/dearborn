@@ -1,7 +1,7 @@
 <p align='middle'>
 
 
-<h1 align='middle'><a href='https://dearborn.herokuapp.com'>https://dearborn.herokuapp.com</a></h1>
+<h1 align='middle'><a href='https://dearborn.herokuapp.com'>Dearborn</a></h1>
 <p align='middle'>
 패션디자이너를 위한 <u>🙆‍♂️🙅‍♀️웹 기반 중개 플랫폼</u>이에요.<br>
  전공자 뿐만 아니라 비전공자도 할 수 있어요.<br>
@@ -19,11 +19,10 @@
   - [:wrench:사용 기술](#wrench사용-기술)
   - [:file_folder:Backend](#file_folderbackend)
     - [:iphone:App](#iphoneapp)
-    - [Config](#config)
-  - [배포 구조](#배포-구조)
+    - [:package:Config](#packageconfig)
   - [:minidisc:사이트](#minidisc사이트)
   - [📌프로젝트 목표](#프로젝트-목표)
-    - [💻🤳 one](#-one)
+    - [💻🤳](#)
     - [♻ two](#-two)
     - [💪 three](#-three)
     - [🌈 four](#-four)
@@ -98,28 +97,22 @@
   - <a href="./backend/dearbornApp/urls">urls</a></br>
   - <a href="./backend/dearbornApp/views">views</a></br>
 
-#### Config
+#### :package:Config
 - <a href="./backend/dearbornConfig">dearbornConfig</a></br>
   - <a href="./backend/dearbornConfig/settings">base</a></br>
   - <a href="./backend/dearbornConfig/settings">local</a></br>
   - <a href="./backend/dearbornConfig/settings">production</a></br>
 
 
-
-### 배포 구조
-
-
-
 ### :minidisc:사이트 
 
->   
-> 
+<p align='middle'><a href='' align='middle'><img src='./img/dev.png' /></a></p> 
 
 
 
 ### 📌프로젝트 목표
 
-#### 💻🤳 one
+#### 💻🤳 
 
 - 
 - 
