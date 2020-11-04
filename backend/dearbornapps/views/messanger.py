@@ -1,5 +1,5 @@
-from dearbornapp.serializers.messanger import SaveMessageSerializer
-from dearbornapp.models.messanger import Message
+from dearbornapps.serializers.messanger import SaveMessageSerializer
+from dearbornapps.models.messanger import Message
 from datetime import timedelta
 
 from rest_framework import permissions

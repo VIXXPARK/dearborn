@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView, View
-from dearbornapp.serializers.assess import saveValueSerializer,getValueSerializer
+from dearbornapps.serializers.assess import saveValueSerializer,getValueSerializer
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import authentication
@@ -15,7 +15,7 @@ from rest_framework.status import(
     HTTP_500_INTERNAL_SERVER_ERROR
 )
 import json
-from dearbornapp.models.assess import Assess
+from dearbornapps.models.assess import Assess
 
 class saveAssess(APIView):
     permission_classes = (permissions.IsAuthenticated,)

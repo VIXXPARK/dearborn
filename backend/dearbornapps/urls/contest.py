@@ -1,4 +1,4 @@
-from dearbornapp.views.contest import ContestViewSet,getHostView,getContest,infoContest,contestDeleteView
+from dearbornapps.views.contest import ContestViewSet,getHostView,getContest,infoContest,contestDeleteView
 from django.urls import path,include
 contest_list = ContestViewSet.as_view({"get":"list","post":"create"})
 contest_detail = ContestViewSet.as_view(

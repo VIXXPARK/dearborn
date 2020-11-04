@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     'background_task',
     'storages',
     
-    'dearbornapp.apps.DearbornappConfig',
+    'dearbornapps.apps.DearbornappConfig',
 
 ]
 
@@ -62,7 +62,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dearbornConfig.wsgi.application'
 
-AUTH_USER_MODEL = 'dearbornapp.User'
+AUTH_USER_MODEL = 'dearbornapps.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

@@ -1,4 +1,4 @@
-from dearbornapp.models.post import Post, PostImage
+from dearbornapps.models.post import Post, PostImage
 import tensorflow_hub as hub
 import tensorflow as tf
 import numpy as np

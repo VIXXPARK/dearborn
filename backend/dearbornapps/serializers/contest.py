@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from dearbornapp.models.contest import Contest
+from dearbornapps.models.contest import Contest
 
 
 

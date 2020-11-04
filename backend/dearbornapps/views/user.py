@@ -27,10 +27,10 @@ from django.core.exceptions import ValidationError
 from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
-from dearbornapp.serializers.user import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
-from dearbornapp.serializers.user import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
+from dearbornapps.serializers.user import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
+from dearbornapps.serializers.user import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
 from auth.authentication import token_expire_handler, expires_in
-from dearbornapp.models.user import User
+from dearbornapps.models.user import User
 from auth.token import account_activation_token
 from auth.text import message, changeMessage
 from dearbornConfig.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT
@@ -184,7 +184,7 @@ class UserView(APIView):
             'profileImage' : profile,
             'isAuth': True,
         }
-        return Response({'success' : True, content},HTTP_200_OK)
+        return Response({'success' : True},content ,HTTP_200_OK)
 
 class GetUserView(APIView):
     def get(serlf, request, format=None):
@@ -197,7 +197,7 @@ class GetUserView(APIView):
             'content' : user.content,
             'prifileImage' : profile,
         }
-        return Response({'success' : True, content},HTTP_200_OK)
+        return Response({'success' : True},content,HTTP_200_OK)
 
 @permission_classes((AllowAny, ))
 class Activate(View):

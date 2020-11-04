@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.db import IntegrityError
-from dearbornapp.models.user import User
+from dearbornapps.models.user import User
 
 class DeleteUserSerializer(serializers.Serializer):
     uid = serializers.CharField()

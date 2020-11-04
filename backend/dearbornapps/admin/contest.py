@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dearbornapp.models.contest import Contest
+from dearbornapps.models.contest import Contest
 
 admin.register(Contest)
 

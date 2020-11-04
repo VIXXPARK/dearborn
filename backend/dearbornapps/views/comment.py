@@ -14,9 +14,9 @@ from rest_framework.status import(
     HTTP_500_INTERNAL_SERVER_ERROR
 )
 
-from dearbornapp.models.comment import Comment
-from dearbornapp.serializers.comment import CommentSerializer, GetCommentSerializer, DeleteCommentSerializer, UpdateCommentSerializer
-from dearbornapp.models.user import User
+from dearbornapps.models.comment import Comment
+from dearbornapps.serializers.comment import CommentSerializer, GetCommentSerializer, DeleteCommentSerializer, UpdateCommentSerializer
+from dearbornapps.models.user import User
 
 class MakeCommentView(APIView):
     permission_classes = (permissions.IsAuthenticated,)

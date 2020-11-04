@@ -1,4 +1,4 @@
-from dearbornapp.views.messanger import MessageViewSet
+from dearbornapps.views.messanger import MessageViewSet
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()

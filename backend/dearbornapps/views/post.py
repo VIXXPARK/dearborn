@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from dearbornapp.serializers.post import(
+from dearbornapps.serializers.post import(
     PostSerializer,
     PostImageSerializer,
     UserCheckSerializer, 
@@ -14,9 +14,9 @@ from dearbornapp.serializers.post import(
     UserIdSerializer,
     PostFilterSerializer
     )
-from dearbornapp.serializers.messanger import SaveMessageSerializer
+from dearbornapps.serializers.messanger import SaveMessageSerializer
 
-from dearbornapp.models.post import(
+from dearbornapps.models.post import(
     Post,
     PostImage,
     like,
@@ -50,10 +50,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from background_task import background
 from datetime import datetime, timedelta
 from pytz import timezone
-from dearbornapp.models.bid import BidInfo
-from dearbornapp.models.user import User
-from dearbornapp.models.messanger import Message
-from dearbornapp.feature.feature import Similarity,GetFeatureVector,SaveFeatureVector, GetImageArray
+from dearbornapps.models.bid import BidInfo
+from dearbornapps.models.user import User
+from dearbornapps.models.messanger import Message
+from dearbornapps.feature.feature import Similarity,GetFeatureVector,SaveFeatureVector, GetImageArray
 
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

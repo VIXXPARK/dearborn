@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from dearbornapp.models.post import Post,PostImage,like,disLike,vote,myWork
+from dearbornapps.models.post import Post,PostImage,like,disLike,vote,myWork
 
 class getVoteSerializer(serializers.ModelSerializer):
    class Meta:

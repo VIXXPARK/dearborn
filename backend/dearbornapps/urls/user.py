@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path,include
-from dearbornapp.views import user
+from dearbornapps.views import user
 urlpatterns = [
     path('user/login', user.signin),
     path('user/register', user.signup),

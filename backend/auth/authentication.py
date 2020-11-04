@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth import get_user_model
-from dearbornapp.models.user import User
+from dearbornapps.models.user import User
 
 def expires_in(token):
     time_elapsed = timezone.now() - token.created

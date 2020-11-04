@@ -1,6 +1,6 @@
-from dearbornapp.views.post import PostViewSet, getProfileView ,upViewSet,getDisLikeView,ReposView
-from dearbornapp.views.post import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
-from dearbornapp.views.post import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork,getMyWork,postDeleteView, voteExpired
+from dearbornapps.views.post import PostViewSet, getProfileView ,upViewSet,getDisLikeView,ReposView
+from dearbornapps.views.post import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
+from dearbornapps.views.post import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork,getMyWork,postDeleteView, voteExpired
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
