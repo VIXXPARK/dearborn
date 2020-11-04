@@ -19,7 +19,19 @@
   - [사용 기술](#사용-기술)
   - [Backend](#backend)
     - [App](#app)
+      - [admin](#admin)
+      - [feature](#feature)
+      - [models](#models)
+      - [serializers](#serializers)
+      - [urls](#urls)
+      - [views](#views)
     - [Config](#config)
+      - [settings](#settings)
+        - [base](#base)
+        - [local](#local)
+        - [production](#production)
+      - [Configurls](#configurls)
+      - [storage](#storage)
   - [배포 구조](#배포-구조)
   - [사이트](#사이트)
   - [📌프로젝트 목표](#프로젝트-목표)
@@ -91,11 +103,21 @@
 
 ### Backend
 
-<p align='middle'><a href=''><img src='' /></a></p>
-
 #### App
+##### admin
+##### feature
+##### models
+##### serializers
+##### urls
+##### views
 
 #### Config
+##### settings
+###### base
+###### local
+###### production
+##### Configurls
+##### storage
 
 
 ### 배포 구조
