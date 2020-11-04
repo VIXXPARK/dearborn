@@ -92,17 +92,17 @@
 ### Backend
 
 #### App
-<a href="./backend/dearbornApp">dearbornApp</a></br>
-<a href="./backend/dearbornApp/models">-models</a></br>
-<a href="./backend/dearbornApp/serializers">-serializers</a></br>
-<a href="./backend/dearbornApp/urls">-urls</a></br>
-<a href="./backend/dearbornApp/views">-views</a></br>
+- <a href="./backend/dearbornApp">dearbornApp</a></br>
+  - <a href="./backend/dearbornApp/models">models</a></br>
+  - <a href="./backend/dearbornApp/serializers">-serializers</a></br>
+  - <a href="./backend/dearbornApp/urls">-urls</a></br>
+  - <a href="./backend/dearbornApp/views">-views</a></br>
 
 #### Config
-<a href="./backend/dearbornConfig">dearbornConfig</a></br>
-<a href="./backend/dearbornConfig/settings">-base</a></br>
-<a href="./backend/dearbornConfig/settings">-local</a></br>
-<a href="./backend/dearbornConfig/settings">-production</a></br>
+- <a href="./backend/dearbornConfig">dearbornConfig</a></br>
+  - <a href="./backend/dearbornConfig/settings">-base</a></br>
+  - <a href="./backend/dearbornConfig/settings">-local</a></br>
+  - <a href="./backend/dearbornConfig/settings">-production</a></br>
 
 
 
