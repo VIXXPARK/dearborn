@@ -19,19 +19,7 @@
   - [사용 기술](#사용-기술)
   - [Backend](#backend)
     - [App](#app)
-      - [admin](#admin)
-      - [feature](#feature)
-      - [models](#models)
-      - [serializers](#serializers)
-      - [urls](#urls)
-      - [views](#views)
     - [Config](#config)
-      - [settings](#settings)
-        - [base](#base)
-        - [local](#local)
-        - [production](#production)
-      - [Configurls](#configurls)
-      - [storage](#storage)
   - [배포 구조](#배포-구조)
   - [사이트](#사이트)
   - [📌프로젝트 목표](#프로젝트-목표)
@@ -104,20 +92,18 @@
 ### Backend
 
 #### App
-##### admin
-##### feature
-##### models
-##### serializers
-##### urls
-##### views
+<a href="./backend/dearbornApp">dearbornApp</a></br>
+<a href="./backend/dearbornApp/models">-models</a></br>
+<a href="./backend/dearbornApp/serializers">-serializers</a></br>
+<a href="./backend/dearbornApp/urls">-urls</a></br>
+<a href="./backend/dearbornApp/views">-views</a></br>
 
 #### Config
-##### settings
-###### base
-###### local
-###### production
-##### Configurls
-##### storage
+<a href="./backend/dearbornConfig">dearbornConfig</a></br>
+<a href="./backend/dearbornConfig/settings">-base</a></br>
+<a href="./backend/dearbornConfig/settings">-local</a></br>
+<a href="./backend/dearbornConfig/settings">-production</a></br>
+
 
 
 ### 배포 구조
