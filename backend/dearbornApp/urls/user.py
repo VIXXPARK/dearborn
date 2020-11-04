@@ -12,4 +12,5 @@ urlpatterns = [
     path('user/sendChangeEmail', user.changeEmailRequest),
     path('user/changeProfile', user.changeProfile),
     path('user/delete', user.deleteUser),
+    path('user/getUser',user.GetUserView.as_view()),
 ]

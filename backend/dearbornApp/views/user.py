@@ -184,7 +184,20 @@ class UserView(APIView):
             'profileImage' : profile,
             'isAuth': True,
         }
-        return Response(content)
+        return Response({'success' : True, content},HTTP_200_OK)
+
+class GetUserView(APIView):
+    def get(serlf, request, format=None):
+        user = request.user
+        try:
+            profile = user.profileImage.url
+        except:
+            profile = None
+        content = {
+            'content' : user.content,
+            'prifileImage' : profile,
+        }
+        return Response({'success' : True, content},HTTP_200_OK)
 
 @permission_classes((AllowAny, ))
 class Activate(View):
