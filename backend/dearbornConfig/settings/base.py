@@ -5,8 +5,6 @@ import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-Is_Local = True
-
 INSTALLED_APPS = [
     'jet',
     'django.contrib.admin',
@@ -23,7 +21,7 @@ INSTALLED_APPS = [
     'background_task',
     'storages',
     
-    'dearbornapp.apps.DearbornappConfig',
+    'dearbornapps.apps.DearbornappConfig',
 
 ]
 
@@ -62,7 +60,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dearbornConfig.wsgi.application'
 
-AUTH_USER_MODEL = 'dearbornapp.User'
+AUTH_USER_MODEL = 'dearbornapps.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
