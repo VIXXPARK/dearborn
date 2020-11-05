@@ -85,7 +85,7 @@ class S3Images(object):
 def download_all_files():
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    bucket = os.getenv('AWS_STORAGE_BUCKE')
+    bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
     region_name = os.getenv('AWS_S3_REGION_NAME')
     s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
     obj = s3Images.from_s3_non_image(bucket,'feature_vectors/')
@@ -148,7 +148,7 @@ def GetImageArray(postId):
         images = []
         ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
         SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-        bucket = os.getenv('AWS_STORAGE_BUCKE')
+        bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
         region_name = os.getenv('AWS_S3_REGION_NAME')
         s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
         
@@ -178,11 +178,11 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
         if not Is_Local[0]:
             ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
             SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-            bucket = os.getenv('AWS_STORAGE_BUCKE')
+            bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
             region_name = os.getenv('AWS_S3_REGION_NAME')
             s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
             s3Images.to_s3(v,bucket,featureUpload_to(postId, image_file_name[index])+".npz")
-        else :
+        else :``
             out_dir = os.path.join(BASE_DIR,'feature_vectors')
             CheckDir(out_dir)
             out_path = os.path.join(BASE_DIR,featureUpload_to(postId, image_file_name[index]) + ".npz")
