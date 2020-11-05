@@ -22,7 +22,7 @@ def get_objects_in_folder(path):
                                   aws_secret_access_key=SECRET_ACCESS_KEY,
     )
     objects = client.list_objects_v2(
-        bucket=bucket,
+        Bucket=bucket,
         EncodingType='url',
         MaxKeys=1000,
         Prefix=path,
@@ -55,7 +55,7 @@ def download_all_files():
                                   aws_secret_access_key=SECRET_ACCESS_KEY,
     )
     objects = client.list_objects_v2(
-        bucket=bucket,
+        Bucket=bucket,
         EncodingType='url',
         MaxKeys=1000,
         Prefix='feature_vectors',
