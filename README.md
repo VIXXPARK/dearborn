@@ -102,6 +102,8 @@
 
 #### :package:Config
 - <a href="./backend/dearbornConfig">dearbornConfig</a></br>
+  기본적인 세팅에 관한 폴더로 settings,default urls,storage로 구성되었다.</br>
+  settings폴더는 dev모드와 production모드로 나눴으며 dev모드에 관한 세팅은 gitignore한 상태다. </br>
   - <a href="./backend/dearbornConfig/settings">base</a></br>
   - <a href="./backend/dearbornConfig/settings">local</a></br>
   - <a href="./backend/dearbornConfig/settings">production</a></br>
