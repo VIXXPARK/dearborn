@@ -18,7 +18,6 @@ def get_objects_in_folder(path):
 
     session = boto3.session.Session()
     client = session.client('s3', region_name=region_name,
-                                  endpoint_url=AWS_S3_CUSTOM_DOMAIN,
                                   aws_access_key_id=ACCESS_KEY,
                                   aws_secret_access_key=SECRET_ACCESS_KEY,
     )
@@ -26,7 +25,7 @@ def get_objects_in_folder(path):
         bucket=bucket,
         EncodingType='url',
         MaxKeys=1000,
-        Prefix='media/thumb',
+        Prefix=path,
     )
     return objects
 
@@ -52,7 +51,6 @@ def download_all_files():
 
     session = boto3.session.Session()
     client = session.client('s3', region_name=region_name,
-                                  endpoint_url=AWS_S3_CUSTOM_DOMAIN,
                                   aws_access_key_id=ACCESS_KEY,
                                   aws_secret_access_key=SECRET_ACCESS_KEY,
     )
