@@ -94,7 +94,7 @@
 #### :iphone:App
 - <a href="./backend/dearbornApp">dearbornApp</a></br>
   사이트 기능들을 담당하고 있으며 모델,시리얼라이저,url,views 기능 별로 폴더를 구분하였다.</br>
-  앱들의 기능들은 평가(assess),거래(bid),댓글(comment),공모전(contest),:envelope:메신저,포스트(post),:bust_in_silhouette:커스텀한 유저(user)로 되어있다.</br>
+  앱들의 기능들은 :heavy_check_mark:평가(assess),:heavy_dollar_sign:거래(bid),댓글(comment),:fireworks:공모전(contest),:envelope:메신저,:scroll:포스트(post),:bust_in_silhouette:커스텀한 유저(user)로 되어있다.</br>
   - <a href="./backend/dearbornApp/models">models</a></br>
   - <a href="./backend/dearbornApp/serializers">serializers</a></br>
   - <a href="./backend/dearbornApp/urls">urls</a></br>
