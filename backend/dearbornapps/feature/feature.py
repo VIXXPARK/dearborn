@@ -7,60 +7,90 @@ import boto3, os
 from annoy import AnnoyIndex
 from scipy import spatial
 from dearbornConfig.settings.base import BASE_DIR, Is_Local
+from io import BytesIO
+from PIL import Image
 
 
-def get_objects_in_folder(path):
-    from dearbornConfig.settings.production import AWS_S3_CUSTOM_DOMAIN
-    ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
-    SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
-    region_name = os.getenv('AWS_S3_REGION_NAME')
 
-    session = boto3.session.Session()
-    client = session.client('s3', region_name=region_name,
-                                  aws_access_key_id=ACCESS_KEY,
-                                  aws_secret_access_key=SECRET_ACCESS_KEY,
-    )
-    objects = client.list_objects_v2(
-        Bucket=bucket,
-        EncodingType='url',
-        MaxKeys=1000,
-        Prefix=path,
-    )
-    return objects
+class S3ImagesInvalidExtension(Exception):
+    pass
 
-def upload_file_to_bucket(file_name, s3_file):
-    ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
-    SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
-    s3 = boto3.client('s3', aws_access_key=ACCESS_KEY, aws_secret_access_key=SECRET_ACCESS_KEY)
-    try:
-        s3.upload_file(file_name, bucket, s3_file)
-        return True
-    except FileNotFoundError:
-        return False
-    except:
-        return False
+class S3ImagesUploadFailed(Exception):
+    pass
+
+class S3Images(object):
+    
+    """Useage:
+    
+        images = S3Images(aws_access_key_id='fjrn4uun-my-access-key-589gnmrn90', 
+                          aws_secret_access_key='4f4nvu5tvnd-my-secret-access-key-rjfjnubu34un4tu4', 
+                          region_name='eu-west-1')
+        im = images.from_s3('my-example-bucket-9933668', 'pythonlogo.png')
+        im
+        images.to_s3(im, 'my-example-bucket-9933668', 'pythonlogo2.png')
+    """
+    
+    def __init__(self, aws_access_key_id, aws_secret_access_key, region_name):
+        self.s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, 
+                                     aws_secret_access_key=aws_secret_access_key, 
+                                     region_name=region_name)
+        
+
+    def from_s3_non_image(self, bucket, key):
+        file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
+        return file_byte_string
+    
+    def from_s3(self, bucket, key):
+        file_byte_string = self.s3.get_objects(Bucket=bucket, Key=key)['Body'].read()
+        return Image.open(BytesIO(file_byte_string))
+
+    def to_s3_image(self, img, bucket, key):
+        buffer = BytesIO()
+        img.save(buffer, self.__get_safe_ext(key))
+        buffer.seek(0)
+        sent_data = self.s3.put_object(Bucket=bucket, Key=key, Body=buffer)
+        if sent_data['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise S3ImagesUploadFailed('Failed to upload image {} to bucket {}'.format(key, bucket))
+        
+    def to_s3(self, obj, bucket, key):
+        buffer = BytesIO()
+        obj.save(buffer)
+        buffer.seek(0)
+        sent_data = self.s3.put_object(Bucket=bucket, Key=key, Body=buffer)
+        if sent_data['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise S3ImagesUploadFailed('Failed to upload image {} to bucket {}'.format(key, bucket))
+
+    def __get_safe_ext(self, key):
+        ext = os.path.splitext(key)[-1].strip('.').upper()
+        if ext in ['JPG', 'JPEG']:
+            return 'JPEG' 
+        elif ext in ['PNG']:
+            return 'PNG' 
+        else:
+            raise S3ImagesInvalidExtension('Extension is invalid') 
+
+# def upload_file_to_bucket(file_name, s3_file):
+#     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
+#     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+#     bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
+#     s3 = boto3.client('s3', aws_access_key=ACCESS_KEY, aws_secret_access_key=SECRET_ACCESS_KEY)
+#     try:
+#         s3.upload_file(file_name, bucket, s3_file)
+#         return True
+#     except FileNotFoundError:
+#         return False
+#     except:
+#         return False
 
 def download_all_files():
-    from dearbornConfig.settings.production import AWS_S3_CUSTOM_DOMAIN
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     bucket = os.getenv('AWS_STORAGE_BUCKE')
     region_name = os.getenv('AWS_S3_REGION_NAME')
-
-    session = boto3.session.Session()
-    client = session.client('s3', region_name=region_name,
-                                  aws_access_key_id=ACCESS_KEY,
-                                  aws_secret_access_key=SECRET_ACCESS_KEY,
-    )
-    objects = client.list_objects_v2(
-        Bucket=bucket,
-        EncodingType='url',
-        MaxKeys=1000,
-        Prefix='feature_vectors',
-    )
-    return objects
+    s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
+    obj = s3Images.from_s3_non_image(bucket,'feature_vectors/')
+    
+    return obj
         
 
 def featureUpload_to(postId,filename):
@@ -96,7 +126,7 @@ def CheckDir(path):
     except OSError as e:
         print(e.strerror)
 
-def GetImageArray(postId):#이부분 수정
+def GetImageArray(postId):
     posts = Post.objects.filter(id = postId)
     print("---------------------\n",Is_Local)
     if Is_Local[0]:
@@ -116,15 +146,19 @@ def GetImageArray(postId):#이부분 수정
         image_file_name = []
         image_id = []
         images = []
+        ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
+        SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+        bucket = os.getenv('AWS_STORAGE_BUCKE')
+        region_name = os.getenv('AWS_S3_REGION_NAME')
+        s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
+        
         for post in  posts:
             url = post.thumbnail.url
             image_id.append(Post.id)
             file_name = os.path.basename(url).split('.')[0]
             dir = url.split('/')
-            objects = get_objects_in_folder(os.path.join('media',dir[0],dir[1],dir[2]))
-            images.append(objects)
-            print('-----------check---------')
-            print(objects)
+            image = s3Images.from_s3(bucket,os.path.join('media',dir[0],dir[1],dir[2]))
+            images.append(image)
             image_file_name.append(file_name)
         image_array = ChangeImage(images)
     return image_array, image_file_name, image_id
@@ -142,7 +176,12 @@ def GetFeatureVector(image_array):
 def SaveFeatureVector(featureVector, image_file_name, postId):
     for index, v in featureVector:
         if not Is_Local[0]:
-            upload_file_to_bucket(v,'{0}/{1}'.format(postId,image_file_name[index]+".npz"))
+            ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
+            SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+            bucket = os.getenv('AWS_STORAGE_BUCKE')
+            region_name = os.getenv('AWS_S3_REGION_NAME')
+            s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
+            s3Images.to_s3(v,bucket,featureUpload_to(postId, image_file_name[index])+".npz")
         else :
             out_dir = os.path.join(BASE_DIR,'feature_vectors')
             CheckDir(out_dir)
