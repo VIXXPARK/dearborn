@@ -152,7 +152,10 @@ def GetImageArray(postId):
             image_id.append(Post.id)
             file_name = os.path.basename(url).split('.')[0]
             dir = url.split('/')
-            image = s3Images.from_s3("dearbornstorage",os.path.join('media',dir[0],dir[1],dir[2]))
+            path = os.path.join('media',dir[0],dir[1],dir[2])
+            print("-----------check-------------")
+            print(path)
+            image = s3Images.from_s3("dearbornstorage",path)
             images.append(image)
             image_file_name.append(file_name)
         image_array = ChangeImage(images)
