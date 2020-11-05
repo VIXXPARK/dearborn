@@ -6,7 +6,7 @@ import glob, os.path, json
 import boto3, os
 from annoy import AnnoyIndex
 from scipy import spatial
-from dearbornConfig.settings.base import BASE_DIR, Is_Local
+# from dearbornConfig.settings.base import BASE_DIR, Is_Local
 
 def get_objects_in_folder(path):
     from dearbornConfig.settings.production import AWS_S3_CUSTOM_DOMAIN
