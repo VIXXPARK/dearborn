@@ -68,6 +68,9 @@ def featureUpload_to(postId,filename):
 
 def ChangeImage(images):
     image_array = []
+    print("------------------------------")
+    print(images)
+    print("------------------------------")
     for image in images:
         image = tf.image.decode_image(image)
         image = tf.image.resize(image, [224, 224])
