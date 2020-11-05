@@ -17,15 +17,16 @@
   - [report](#report)
 - [프로젝트 소개](#프로젝트-소개)
   - [:wrench:사용 기술](#wrench사용-기술)
+  - [Frontend](#frontend)
   - [:file_folder:Backend](#file_folderbackend)
     - [:iphone:App](#iphoneapp)
     - [:package:Config](#packageconfig)
   - [:minidisc:사이트](#minidisc사이트)
   - [📌프로젝트 목표](#프로젝트-목표)
-    - [💻🤳](#)
-    - [♻ two](#-two)
-    - [💪 three](#-three)
-    - [🌈 four](#-four)
+    - [💻🤳 django-rest-framework와 ReactJS를 통한 웹사이트 구현](#-django-rest-framework와-reactjs를-통한-웹사이트-구현)
+    - [♻ 서버연결](#-서버연결)
+    - [💪 오픈소스 사용해보기](#-오픈소스-사용해보기)
+    - [🌈 화이팅!!](#-화이팅)
 - [👨‍💻실행 방법](#실행-방법)
   - [설치](#설치)
   - [실행](#실행)
@@ -87,6 +88,11 @@
 
 <p align='middle'><a href='' align='middle'><img src='./img/dev.png' /></a></p>
 
+
+### Frontend
+
+<p align='middle'><a href='' align='middle'><img src='./img/frontend.png' /></a></p>
+
 ### :file_folder:Backend
 <strong>Backend Architecture</strong></br>
 <p align='middle'><a href='' align='middle'><img src='./img/backend structure.png' /></a></p>
@@ -122,21 +128,21 @@
 ---
 ### 📌프로젝트 목표
 
-#### 💻🤳 
+#### 💻🤳 django-rest-framework와 ReactJS를 통한 웹사이트 구현
 
 - 
 - 
 
-#### ♻ two
+#### ♻ 서버연결 
 
 - 
 - 
 
-#### 💪 three
+#### 💪 오픈소스 사용해보기
 
 - 
 
-#### 🌈 four
+#### 🌈 화이팅!!
 
 - 
 - 
