@@ -13,7 +13,7 @@ def get_objects_in_folder(path):
     from dearbornConfig.settings.production import AWS_S3_CUSTOM_DOMAIN
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    bucket = os.getenv('AWS_STORAGE_BUCKE')
+    bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
     region_name = os.getenv('AWS_S3_REGION_NAME')
 
     session = boto3.session.Session()
@@ -32,7 +32,7 @@ def get_objects_in_folder(path):
 def upload_file_to_bucket(file_name, s3_file):
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    bucket = os.getenv('AWS_STORAGE_BUCKE')
+    bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
     s3 = boto3.client('s3', aws_access_key=ACCESS_KEY, aws_secret_access_key=SECRET_ACCESS_KEY)
     try:
         s3.upload_file(file_name, bucket, s3_file)
