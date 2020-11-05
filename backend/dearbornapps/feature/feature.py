@@ -85,10 +85,9 @@ class S3Images(object):
 def download_all_files():
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
     region_name = os.getenv('AWS_S3_REGION_NAME')
     s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
-    obj = s3Images.from_s3_non_image(bucket,'feature_vectors/')
+    obj = s3Images.from_s3_non_image("dearbornstorage",'feature_vectors/')
     
     return obj
         
@@ -128,9 +127,7 @@ def CheckDir(path):
 
 def GetImageArray(postId):
     posts = Post.objects.filter(id = postId)
-    print("---------------------\n",Is_Local)
     if Is_Local[0]:
-        print("Is Local = ",Is_Local[0])
         image_urls = []
         image_file_name = []
         image_id = []
@@ -142,13 +139,11 @@ def GetImageArray(postId):
             image_file_name.append(file_name)
         image_array = LoadImage(image_urls)
     else:
-        print("Is Local = ",Is_Local[0])
         image_file_name = []
         image_id = []
         images = []
         ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
         SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-        bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
         region_name = os.getenv('AWS_S3_REGION_NAME')
         s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
         
@@ -157,7 +152,7 @@ def GetImageArray(postId):
             image_id.append(Post.id)
             file_name = os.path.basename(url).split('.')[0]
             dir = url.split('/')
-            image = s3Images.from_s3(bucket,os.path.join('media',dir[0],dir[1],dir[2]))
+            image = s3Images.from_s3("dearbornstorage",os.path.join('media',dir[0],dir[1],dir[2]))
             images.append(image)
             image_file_name.append(file_name)
         image_array = ChangeImage(images)
@@ -178,11 +173,10 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
         if not Is_Local[0]:
             ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
             SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-            bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
             region_name = os.getenv('AWS_S3_REGION_NAME')
             s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
-            s3Images.to_s3(v,bucket,featureUpload_to(postId, image_file_name[index])+".npz")
-        else :``
+            s3Images.to_s3(v,"dearbornstorage",featureUpload_to(postId, image_file_name[index])+".npz")
+        else :
             out_dir = os.path.join(BASE_DIR,'feature_vectors')
             CheckDir(out_dir)
             out_path = os.path.join(BASE_DIR,featureUpload_to(postId, image_file_name[index]) + ".npz")
