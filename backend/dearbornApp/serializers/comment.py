@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from dearbornApp.models.comment import Comment
-from dearbornApp.models.user import User
-from dearbornApp.models.post import Post
+from dearbornapp.models.comment import Comment
+from dearbornapp.models.user import User
+from dearbornapp.models.post import Post
 from django.db import IntegrityError
 
 class CommentSerializer(serializers.ModelSerializer):

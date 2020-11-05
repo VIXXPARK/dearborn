@@ -2,10 +2,10 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView,DestroyAPIView
 from rest_framework.views import APIView
 
-from dearbornApp.serializers.contest import ContestSerializer,getContestIdSerializer,sortSerializer,getUserSerializer
+from dearbornapp.serializers.contest import ContestSerializer,getContestIdSerializer,sortSerializer,getUserSerializer
 
-from dearbornApp.models.contest import Contest
-from dearbornApp.models.user import User
+from dearbornapp.models.contest import Contest
+from dearbornapp.models.user import User
 
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser,FormParser,JSONParser

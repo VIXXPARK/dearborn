@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from dearbornApp.models.messanger import Message
+from dearbornapp.models.messanger import Message
 
 class SaveMessageSerializer(serializers.ModelSerializer):
     class Meta:

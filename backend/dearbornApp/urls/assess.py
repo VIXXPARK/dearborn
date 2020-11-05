@@ -1,5 +1,5 @@
 from django.urls import path,include
-from dearbornApp.views.assess import saveAssess,getAssess
+from dearbornapp.views.assess import saveAssess,getAssess
 
 urlpatterns = [
     path('assess/saveValue',saveAssess.as_view()),

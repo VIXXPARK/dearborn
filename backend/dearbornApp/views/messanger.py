@@ -1,5 +1,5 @@
-from dearbornApp.serializers.messanger import SaveMessageSerializer
-from dearbornApp.models.messanger import Message
+from dearbornapp.serializers.messanger import SaveMessageSerializer
+from dearbornapp.models.messanger import Message
 from datetime import timedelta
 
 from rest_framework import permissions
@@ -32,7 +32,7 @@ class MessageViewSet(ModelViewSet):
        
     
     #use "python manage.py process_tasks"
-    @background(schedule=5)
+    @background(schedule=1209600)
     def AutoDelete(messageID):
         message = Message.objects.filter(id=messageID)
         message[0].delete()

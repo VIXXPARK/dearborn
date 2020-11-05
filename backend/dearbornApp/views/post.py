@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from dearbornApp.serializers.post import(
+from dearbornapp.serializers.post import(
     PostSerializer,
     PostImageSerializer,
     UserCheckSerializer, 
@@ -14,9 +14,9 @@ from dearbornApp.serializers.post import(
     UserIdSerializer,
     PostFilterSerializer
     )
-from dearbornApp.serializers.messanger import SaveMessageSerializer
+from dearbornapp.serializers.messanger import SaveMessageSerializer
 
-from dearbornApp.models.post import(
+from dearbornapp.models.post import(
     Post,
     PostImage,
     like,
@@ -50,11 +50,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from background_task import background
 from datetime import datetime, timedelta
 from pytz import timezone
-from dearbornApp.models.bid import BidInfo
-from dearbornApp.models.user import User
-from dearbornApp.models.messanger import Message
-
-# from .feature import Similarity,GetFeatureVector,SaveFeatureVector
+from dearbornapp.models.bid import BidInfo
+from dearbornapp.models.user import User
+from dearbornapp.models.messanger import Message
+from dearbornapp.feature.feature import Similarity,GetFeatureVector,SaveFeatureVector, GetImageArray
 
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
@@ -67,9 +66,13 @@ class PostViewSet(ModelViewSet):
             response = super().create(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        #similarity = Similarity(response.data.postId)
+        postId = response.data['id']
+        image_array, image_file_name, image_id = GetImageArray(postId)
+        vectors = GetFeatureVector(image_array)
+        SaveFeatureVector(vectors,image_file_name,postId)
+        similarity = Similarity(response.data.postId)
         context = {
-            # 'similarity' : similarity,
+            'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
@@ -80,9 +83,13 @@ class PostViewSet(ModelViewSet):
             response = super().partial_update(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        #similarity = Similarity(response.data.postId)
+        postId = response.data['id']
+        image_array, image_file_name, image_id = GetImageArray(postId)
+        vectors = GetFeatureVector(image_array)
+        SaveFeatureVector(vectors,image_file_name,postId)
+        similarity = Similarity(response.data.postId)
         context = {
-            # 'similarity' : similarity,
+            'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
@@ -275,6 +282,8 @@ class PostDetail(APIView):
             'sell':postdata.sell,
             'category':postdata.category,
             'scope':postdata.scope,
+            'sellPrice':postdata.sellPrice,
+            'bidPrice':postdata.bidPrice,
         }
 
         context = {
@@ -709,6 +718,10 @@ class getMyWork(APIView):
 @background()
 def voteExpired():
     posts = Post.objects.filter(is_repo=False)
+    users = User.objects.all()
+    for user in users:
+        user.now_updating = False
+        
     for post in posts:
 
         KST = timezone('Asia/Seoul')
@@ -755,10 +768,6 @@ def voteExpired():
                 post.save()
             except APIException as e:
                 raise e
-
-        users = User.objects.all()
-        for user in users:
-            user.now_updating = False
 
 
 

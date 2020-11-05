@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dearbornApp.models.comment import Comment
+from dearbornapp.models.comment import Comment
 
 admin.site.register(Comment)
 

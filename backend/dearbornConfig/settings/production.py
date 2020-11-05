@@ -8,6 +8,8 @@ ALLOWED_HOSTS = ['*']
 
 DEBUG = True
 
+Is_Local = False
+
 MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 DATABASES = {

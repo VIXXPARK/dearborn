@@ -27,10 +27,10 @@ from django.core.exceptions import ValidationError
 from django.db.models import F
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
-from dearbornApp.serializers.user import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
-from dearbornApp.serializers.user import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
+from dearbornapp.serializers.user import UserSerializer, UserSigninSerializer, EmailVerificationSerializer
+from dearbornapp.serializers.user import DeleteUserSerializer, ChangeProfileSerializer, ChangePasswordSeriallizer
 from auth.authentication import token_expire_handler, expires_in
-from dearbornApp.models.user import User
+from dearbornapp.models.user import User
 from auth.token import account_activation_token
 from auth.text import message, changeMessage
 from dearbornConfig.settings.base import TOKEN_EXPIRED_AFTER_SECONDS, MEDIA_ROOT
@@ -94,7 +94,7 @@ def signup(request):
     try :
         user = signup_serializer.create(signup_serializer.validated_data)
     except APIException as e:
-        return Response({'success' : False, 'err' : e.detail}, HTTP_400_BAD_REQUEST)
+        return Response({'success' : False, 'err' : e.detail}, status = HTTP_400_BAD_REQUEST)
 
 
     current_site = get_current_site(request)
@@ -184,7 +184,20 @@ class UserView(APIView):
             'profileImage' : profile,
             'isAuth': True,
         }
-        return Response(content)
+        return Response({'success' : True, content},HTTP_200_OK)
+
+class GetUserView(APIView):
+    def get(serlf, request, format=None):
+        user = request.user
+        try:
+            profile = user.profileImage.url
+        except:
+            profile = None
+        content = {
+            'content' : user.content,
+            'prifileImage' : profile,
+        }
+        return Response({'success' : True, content},HTTP_200_OK)
 
 @permission_classes((AllowAny, ))
 class Activate(View):
