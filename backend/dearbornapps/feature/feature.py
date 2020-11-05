@@ -8,6 +8,7 @@ from annoy import AnnoyIndex
 from scipy import spatial
 from dearbornConfig.settings.base import BASE_DIR, Is_Local
 
+
 def get_objects_in_folder(path):
     from dearbornConfig.settings.production import AWS_S3_CUSTOM_DOMAIN
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
@@ -96,7 +97,9 @@ def CheckDir(path):
 
 def GetImageArray(postId):#이부분 수정
     posts = Post.objects.filter(id = postId)
-    if Is_Local:
+    print("---------------------\n",Is_Local)
+    if Is_Local[0]:
+        print("Is Local = ",Is_Local[0])
         image_urls = []
         image_file_name = []
         image_id = []
@@ -108,6 +111,7 @@ def GetImageArray(postId):#이부분 수정
             image_file_name.append(file_name)
         image_array = LoadImage(image_urls)
     else:
+        print("Is Local = ",Is_Local[0])
         image_file_name = []
         image_id = []
         images = []
@@ -136,7 +140,7 @@ def GetFeatureVector(image_array):
 
 def SaveFeatureVector(featureVector, image_file_name, postId):
     for index, v in featureVector:
-        if not Is_Local:
+        if not Is_Local[0]:
             upload_file_to_bucket(v,'{0}/{1}'.format(postId,image_file_name[index]+".npz"))
         else :
             out_dir = os.path.join(BASE_DIR,'feature_vectors')
@@ -153,7 +157,7 @@ def Similarity(postId):
     image_array, image_file_name, image_id = GetImageArray(postId)
     vectors = GetFeatureVector(image_array)
     
-    if not Is_Local:
+    if not Is_Local[0]:
         feature_vectors = download_all_files()
     else: 
         feature_vectors = glob.glob('feature_vectors/*.npz')

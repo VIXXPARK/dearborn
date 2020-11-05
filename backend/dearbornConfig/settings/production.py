@@ -2,13 +2,13 @@ import dj_database_url
 import django_heroku
 import os
 from .base import *
-from .base import EMAIL
+from .base import EMAIL, Is_Local
 
 ALLOWED_HOSTS = ['*']
 
 DEBUG = True
 
-Is_Local = False
+Is_Local.append(False)
 
 MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 

@@ -5,6 +5,8 @@ import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REACT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+Is_Local = []
+
 INSTALLED_APPS = [
     'jet',
     'django.contrib.admin',
