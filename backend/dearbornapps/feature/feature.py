@@ -54,10 +54,7 @@ class S3Images(object):
             raise S3ImagesUploadFailed('Failed to upload image {} to bucket {}'.format(key, bucket))
         
     def to_s3(self, obj, bucket, key):
-        buffer = BytesIO()
-        obj.save(buffer)
-        buffer.seek(0)
-        sent_data = self.s3.put_object(Bucket=bucket, Key=key, Body=buffer)
+        sent_data = self.s3.put_object(Bucket=bucket, Key=key, Body=jobj)
         if sent_data['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise S3ImagesUploadFailed('Failed to upload image {} to bucket {}'.format(key, bucket))
 
