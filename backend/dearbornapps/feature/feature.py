@@ -101,6 +101,10 @@ def ChangeImage(images):
         image = tf.image.decode_image(image)
         image = tf.image.resize(image, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
+        try:
+            print(image.shape())
+        except:
+            print(image)
         image_array.append(image)
     return image_array
 
@@ -114,6 +118,7 @@ def LoadImage(image_urls):
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
     return image_array
+
 
 def CheckDir(path):
     try:
