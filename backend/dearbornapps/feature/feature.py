@@ -173,7 +173,7 @@ def GetFeatureVector(image_array):
     featureVector = []
     for array in image_array:
         result = MyModule(array)
-        result_set = np.squeeze(result)x
+        result_set = np.squeeze(result)
         featureVector.append(result_set)
     return featureVector
 
