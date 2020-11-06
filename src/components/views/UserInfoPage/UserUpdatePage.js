@@ -4,6 +4,7 @@ import '../LoginPage/LoginPage.css'
 import axios from 'axios'
 import {SmileOutlined, UserOutlined} from '@ant-design/icons';
 import {convertToS3EP} from '../../utils/String'
+import {getCookieValue} from '../../utils/Cookie'
 
 import TextArea from 'antd/lib/input/TextArea';
 
@@ -16,7 +17,12 @@ function UserUpdatePage(props) {
     const [Preview, setPreview] = useState("")
     const [Content, setContent] = useState("")
     useEffect(() => {
-        axios.get('/api/user/getUser')
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.get('/api/user/getUser', config)
         .then(response => {
             if(response.data.success){
                 console.log(response.data)

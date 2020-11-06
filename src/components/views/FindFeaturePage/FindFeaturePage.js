@@ -1,6 +1,9 @@
 import { Menu } from 'antd';
 import React, { useState } from 'react';
-import {LoadingOutlined, RightSquareOutlined} from '@ant-design/icons'
+import {LoadingOutlined, RightSquareOutlined, CheckOutlined} from '@ant-design/icons'
+import axios from 'axios'
+import {getCookieValue} from '../../utils/Cookie'
+import {Loader} from '../../utils/Loader'
 
 import './FindFeaturePage.css'
 const {SubMenu} = Menu
@@ -10,17 +13,92 @@ function FindFeaturePage(props) {
     const [Modal, setModal] = useState(false)
     const [Preview, setPreview] = useState(undefined)
     const [Loading, setLoading] = useState(false)
+    const [Category, setCategory] = useState(undefined)
+    const [PostsBefore, setPostsBefore] = useState([])
+    const [SelectedPB, setSelectedPB] = useState([])
+    const [PostsAfter, setPostsAfter] = useState([])
+    const [SelectedPA, setSelectedPA] = useState([])
+
     const handleCategoryClick = (e) => {
-        console.log(e)
+        setCategory(e)
     }
 
-    const OnNextClick = () =>{
+    const OnNextStepClick = () => {
         setLoading(true)
-        setTimeout(function(){
-            setCurrentStep(CurrentStep+1)
-            setLoading(false)
-        }, 2000);
+        switch (CurrentStep) {
+            case 1:
+                OnFirstStepClick()
+                break;
+            case 2:
+                OnSecondStepClick()
+                break;
+            case 3:
+                OnThirdStepClick()
+                break;
+            default:
+                break;
+        }
+        setCurrentStep(CurrentStep+1)
     }
+
+    const OnFirstStepClick = () =>{
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/feature/getCategory', {category : Category}, config)
+        .then(response => {
+            if(response.data.success){
+                setPostsBefore(response.data.posts)
+            }else{
+                alert('데이터 가져오기 실패')
+            }
+        }).finally(()=>{
+            setLoading(false)
+        })
+    }
+
+    console.log(PostsBefore)
+
+    const OnSecondStepClick = () => {
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/feature/selectFilter', {postList : SelectedPB}, config)
+        .then(response => {
+            if(response.data.success){
+                setPostsAfter(response.data.postList)
+            }else{
+                alert('데이터2 가져오기 실패')
+            }
+        }).finally(()=>{
+            setLoading(false)
+        })
+    }
+
+    const OnThirdStepClick = () => {
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/feature/saveType', {userId : props.user.userData._id ,postList : SelectedPA }, config)
+        .then(response => {
+            if(response.data.success){
+                alert('저장 성공')
+            }else{
+                alert('실패')
+            }
+        }).finally(() => {
+            setLoading(false)
+        })
+    }
+
+
+
 
     const OnModalClose = () => {
         setModal(false)
@@ -29,9 +107,90 @@ function FindFeaturePage(props) {
     const OnModalOpen = () => {
         setModal(true)
         setPreview(1)
-        console.log(1)
     }
+
+    const renderPB = (post) => {
+
+        const OnPBSelected = () =>{
+            setSelectedPB([...SelectedPB, 1])
+        }
+        const OnPBSelectedCancel = () => {
+            setSelectedPB(SelectedPB.filter(id => id !== 1))
+        }
+
+        return (
+            <>
+            <div className="post-list-show-item">
+                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                <div className="post-list-show-wrap">
+                    <div>
+                        <div className="post-list-show-btn" onClick={OnModalOpen}>
+                            미리보기
+                        </div>
+                        {SelectedPB.indexOf(1)=== -1 ? <div className="post-list-show-btn" onClick={OnPBSelected}>
+                            선택
+                        </div> : <div className="post-list-show-btn" onClick={OnPBSelectedCancel}>
+                            선택 취소
+                        </div>}
+                    </div>
+                </div>
+                {SelectedPB.indexOf(1)!== -1 && <div className="post-list-show-selected">
+                    <CheckOutlined style={{fontSize:'30px',fontWeight:'bold', color:'green'}}/>
+                </div>}
+            </div>
+            </>
+        )
+    }
+
+    const renderPA = (post) => {
+
+        const OnPASelected = () =>{
+            setSelectedPA([...SelectedPA, 1])
+        }
+        const OnPASelectedCancel = () => {
+            setSelectedPA(SelectedPA.filter(id => id !== 1))
+        }
+
+        return (
+            <>
+            <div className="post-list-show-item">
+                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                <div className="post-list-show-wrap">
+                    <div>
+                        <div className="post-list-show-btn" onClick={OnModalOpen}>
+                            미리보기
+                        </div>
+                        {SelectedPA.indexOf(1)=== -1 ? <div className="post-list-show-btn" onClick={OnPASelected}>
+                            선택
+                        </div> : <div className="post-list-show-btn" onClick={OnPASelectedCancel}>
+                            선택 취소
+                        </div>}
+                    </div>
+                </div>
+                {SelectedPA.indexOf(1)!== -1 && <div className="post-list-show-selected">
+                    <CheckOutlined style={{fontSize:'30px',fontWeight:'bold', color:'green'}}/>
+                </div>}
+            </div>
+            </>
+        )
+    }
+
+    const renderResult = () => {
+        return <div className="feature-result-item">
+            <div className="feature-result-item-thumb">
+                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+            </div>
+            <div className="feature-result-item-title">
+                타이틀
+            </div>
+            <div className="feature-result-item-btn">
+                <RightSquareOutlined/>
+            </div>
+        </div>
+    }
+
     return (
+        <>
         <div className="feature-container">
             <div className="feature-wrapper">
                 <div className="feature-step1" id={CurrentStep === 1 ? "step-on" : "step-off"}>
@@ -40,7 +199,8 @@ function FindFeaturePage(props) {
                     </div>
                     <Menu
                         onClick={handleCategoryClick}
-                        style={{border:"1px solid black",width:400, height:'300px',overflowX:'hidden', overflowY:'scroll'}}
+                        style={{width:'400',height:'300px',overflowX:'hidden',overflowY:'scroll'}}
+                        className="feture-category-container"
                         defaultOpenKeys={['clothes','accessory','shoes']}
                         mode="inline"
                     >
@@ -93,7 +253,7 @@ function FindFeaturePage(props) {
                         </SubMenu>
                     </Menu>
                     <div className="next-btn-wrapper">
-                        <button className="next-btn" onClick={OnNextClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
+                        <button className="next-btn" onClick={OnNextStepClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
                     </div>
                 </div>
                 <div className="feature-step2" id={CurrentStep === 2 ? "step-on" : "step-off"}>
@@ -102,46 +262,18 @@ function FindFeaturePage(props) {
                     </div>
                     <div className="post-list-show-container">
                         <div className="post-list-show-wrapper">
-                            <div className="post-list-show-item" onClick={OnModalOpen}>
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
+                            {renderPB()}
+                            {renderPB()}
+                            {renderPB()}
+                            {renderPB()}
+                            {renderPB()}
+                            {renderPB()}
+                            {renderPB()}
+                            {renderPB()}
                         </div>
                     </div>
                     <div className="next-btn-wrapper">
-                        <button className="next-btn" onClick={OnNextClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
+                        <button className="next-btn" onClick={OnNextStepClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
                     </div>
                 </div>
                 <div className="feature-step3" id={CurrentStep === 3 ? "step-on" : "step-off"}>
@@ -150,46 +282,18 @@ function FindFeaturePage(props) {
                     </div>
                     <div className="post-list-show-container">
                         <div className="post-list-show-wrapper">
-                            <div className="post-list-show-item" onClick={OnModalOpen}>
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="post-list-show-item">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
+                            {renderPA()}
+                            {renderPA()}
+                            {renderPA()}
+                            {renderPA()}
+                            {renderPA()}
+                            {renderPA()}
+                            {renderPA()}
+                            {renderPA()}
                         </div>
                     </div>
                     <div className="next-btn-wrapper">
-                        <button className="next-btn" onClick={OnNextClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
+                        <button className="next-btn" onClick={OnNextStepClick}>{!Loading ? "다음 STEP" : <LoadingOutlined />}</button>
                     </div>
                 </div>
                 <div className="feature-step4" id={CurrentStep === 4 ? "step-on" : "step-off"}>
@@ -197,50 +301,9 @@ function FindFeaturePage(props) {
                         <h1>STEP 4: 카테고리 설정</h1>
                     </div>
                     <div className="feature-result-container">
-                        <div className="feature-result-item">
-                            <div className="feature-result-item-thumb">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="feature-result-item-title">
-                                타이틀
-                            </div>
-                            <div className="feature-result-item-btn">
-                                <RightSquareOutlined/>
-                            </div>
-                        </div>
-                        <div className="feature-result-item">
-                            <div className="feature-result-item-thumb">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="feature-result-item-title">
-                                타이틀
-                            </div>
-                            <div className="feature-result-item-btn">
-                                <RightSquareOutlined/>
-                            </div>
-                        </div>
-                        <div className="feature-result-item">
-                            <div className="feature-result-item-thumb">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="feature-result-item-title">
-                                타이틀
-                            </div>
-                            <div className="feature-result-item-btn">
-                                <RightSquareOutlined/>
-                            </div>
-                        </div>
-                        <div className="feature-result-item">
-                            <div className="feature-result-item-thumb">
-                                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
-                            </div>
-                            <div className="feature-result-item-title">
-                                타이틀
-                            </div>
-                            <div className="feature-result-item-btn">
-                                <RightSquareOutlined/>
-                            </div>
-                        </div>
+                        {SelectedPA && SelectedPA.map(post=>(
+                            renderResult(post)
+                        ))}
                     </div>
                 </div>
             </div>
@@ -252,6 +315,8 @@ function FindFeaturePage(props) {
                 </div>
             </div>
         </div>
+        {Loading && Loader("spin", "black")}
+        </>
     );
 }
 

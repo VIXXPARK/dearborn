@@ -24,7 +24,7 @@ function VoteDetailPage(props) {
             props.history.push('/login')
         if((params.get('designer') ||params.get('postId')) == null)
             return
-        document.body.style.cssText = 'overflow-y : hidden;'
+        document.body.style.cssText = 'overflow-y : hidden; font-family:font1;'
         
         const config = {
             headers : {
@@ -63,7 +63,7 @@ function VoteDetailPage(props) {
             }
         })
         return ()=>{
-            document.body.style.cssText = 'overflow-y : scroll;'
+            document.body.style.cssText = 'overflow-y : scroll;font-family:font1;'
         }
     }, [params.get('postId')])
     

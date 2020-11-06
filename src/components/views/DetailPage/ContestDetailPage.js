@@ -91,34 +91,22 @@ function ContestDetailPage(props) {
         <div className="repo-container">
             <div className="repo-left-container">
                 <div className="repo-content">
-                    <div style={{border:'1px solid black', borderRadius:'20px'}}>
-                        <br/><br/>
-                        <div style={{borderBottom:'1px solid black'}}>
-                            <Title>{Contest.title}</Title>
-                        </div>
-                        <img src={convertToS3EP(Contest.image)} style={{width:'100%'}} />
-                        <p style={{marginTop:'50px', textAlign:'left'}}><pre>{Contest.description}</pre></p>
+                    <div style={{borderRadius:'20px'}}>
+                        <img src={convertToS3EP(Contest.image)} style={{width:'100%', borderRadius:'20px'}} />
                     </div>
-                    <br/><br/>
                 </div>
             </div>
             <div className="repo-right-container">
-                <div className="repo-right-detail">
-                    <div className="repo-title">
-                        <Title>개최자 정보</Title>
+                <div className="repo-right-icon">
+                    <div className="profile-icon" onClick={()=>props.history.push(`/${Host.nickname}`)}>
+                        <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Host && Host.profileImage ? convertToS3EP(Host.profileImage) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     </div>
-                    <div className="repo-span">
+                    <div className="profile-header" style={{color:'black'}}>
                         {Host.nickname}
-                        {/*Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""*/}
                     </div>
-                    <div className="repo-span">
-                        {Host.content}
-                        {/*Repo ? Repo.updatedAt.slice(0,10) +" " + Repo.updatedAt.slice(11,19): ""*/}
+                    <div style={{textAlign:'left'}}>
+                        {Contest.description}
                     </div>
-                    <a href={`/${Host.nickname}/cons`}><div className="event-right-button">
-                        블로그 가기
-                    </div></a>
-                    <br/>
                 </div>
             </div>
             <div id={OpenModal ? "open-modal" : "close-modal"}>

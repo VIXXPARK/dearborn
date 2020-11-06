@@ -8,6 +8,7 @@ import axios from 'axios'
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import { Loader } from '../../utils/Loader';
+import {ArrowRightOutlined} from '@ant-design/icons'
 
 const {Title} = Typography
 
@@ -35,6 +36,22 @@ function RepoListPage(props) {
         window.addEventListener('scroll', handleScroll)
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
+
+    useEffect(() => {
+        setTimeout(() => {
+            let images = document.querySelectorAll('.item-vote-wrap')
+            let imgStack = [0,0,0,0,0]
+            let colWidth = 256;
+            for(let i=0; i<images.length; i++){
+                let minIndex = imgStack.indexOf(Math.min.apply(0, imgStack))
+                let x = colWidth * minIndex
+                let y = imgStack[minIndex]
+                imgStack[minIndex] += (images[i].children[0].height + 15)
+                console.log(images)
+                images[i].style.transform = `translateX(${x}px) translateY(${y}px)`
+            }
+        }, 100);
+    }, [document.querySelectorAll('.item-vote-wrap')])
 
     useEffect(() => {
         if(IsBottom && LoadMore){
@@ -68,6 +85,7 @@ function RepoListPage(props) {
             setLoading(false)
         })
     }
+
 
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
@@ -130,18 +148,18 @@ function RepoListPage(props) {
     }
 
     const renderRepoItems = (post)=>{
-        return  (
-        <Card
-            className="item"
-            hoverable={false}
-            cover={<a href={`/${post.writer}/${post.id}`}><img src={convertToS3EP(post.thumbnail)} alt/></a>}
-        >
-            <Meta
-                avatar={<Avatar size={30} src={post && post.profileImage[0] ? convertToS3EP(post.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>}
-                title={post.title}
-                description={<a href={`/${post.writer}`}>{post.writer}</a>}
-            />
-        </Card>
+        return (
+            <div className="item-vote-wrap">
+                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
+                <div className="item-vote-obv"></div>
+                <a href={`/${post.writer}/${post.id}`}>
+                <div className="item-vote-show">
+                    <div className="item-vote-title">
+                        {post.title}
+                    </div>
+                </div>
+                </a>
+            </div>
         )
         
     }

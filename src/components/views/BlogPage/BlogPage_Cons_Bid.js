@@ -5,10 +5,10 @@ import { Button, Typography, Card, Avatar } from 'antd';
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 
-import BidFailIcon from '../../assets/BidFailIcon.png'
 import UserInfoMainPage from '../UserInfoPage/UserInfoMainPage';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
+import { Link } from 'react-router-dom';
 
 const {Title} = Typography
 
@@ -88,6 +88,7 @@ function BlogPage_Cons_Bid(props) {
             }
         })
     }
+    console.log(Posts)
 
     const renderPost = (post) => {
         return (
@@ -96,17 +97,22 @@ function BlogPage_Cons_Bid(props) {
                     <div className="bid-wrap">
                         <img className="bid-thumb" src={convertToS3EP(post.thumbnail)}/>
                         {props.user.userData && props.user.userData._id === post.bid.bidder ? 
-                        <div className="bid-wrap-show" style={{backgroundColor:'greenyellow'}}>
+                        <div className="bid-wrap-show" style={{backgroundColor:'rgb(81, 159, 229)'}}>
                         </div>
                         :
                         <div className="bid-wrap-show" style={{backgroundColor:'tomato'}}>
-                            <img className="bid-icon" src={BidFailIcon}/>
                         </div>
                         }
                     </div>
                     <div className="blog-bid-content">
                         <p>입찰 최고가 :{post.bid.price}</p>
-                        {post.bid.bidder === props.user.userData._id ?<button disabled>최고가로 입찰 중</button> : <button>재입찰</button>}
+                        {post.bid.bidder === props.user.userData._id ?
+                        <button disabled>최고가로 입찰 중</button> 
+                        : 
+                        <Link to = {{pathname:'/', search:`designer=${post ? post.designer : null}&postId=${post ? post.postid : null}`}}>
+                            <button>재입찰</button>
+                        </Link>
+                        }
                     </div>
                 </div>
             </div>

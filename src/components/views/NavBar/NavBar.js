@@ -11,6 +11,7 @@ import { Avatar, Button, Drawer, Dropdown, Menu, Modal, Typography, Input, Form 
 import {MenuOutlined, MailOutlined} from '@ant-design/icons'
 import Dearborn from '../../assets/Dearborn.png'
 import {getCookieValue} from '../../utils/Cookie'
+import {convertToS3EP} from '../../utils/String'
 const {confirm} = Modal
 const {Title} = Typography
 
@@ -168,9 +169,9 @@ function NavBar(props) {
     return (
         <>
         <header id="header">
-            <div className="container">
+            <div className="container" style={{maxWidth:'1400px', margin:'0 auto'}}>
                 <div>
-                    <div className="header-title"><a href="/"><img style={{marginTop:'11px',marginLeft:'50px', marginRight:'50px', height:'40px'}} className="main-logo" src={Dearborn}/></a></div>
+                    <div className="header-title"><a href="/"><img style={{marginTop:'11px', marginRight:'50px', height:'40px'}} className="main-logo" src={Dearborn}/></a></div>
                     <a className="header-a" id={props.location.pathname === '/contest' ? "header-clicked" : null} href="/contest">Contest</a>
                     <a className="header-a" id={props.location.pathname === '/repo' ? "header-clicked" : null} href="/repo">Storage</a>
                     <div className="row-log">
@@ -190,8 +191,8 @@ function NavBar(props) {
                                 <MailOutlined style={{marginRight:'20px', fontSize:'30px', verticalAlign: 'middle',}}/>
                             </Dropdown>
                             <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
-                                <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} size="middle" gap={4}>
-                                    {user.userData && user.userData.profileImage ? user.userData.nickname[0] : null}
+                                <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} src={user.userData && user.userData.profileImage && convertToS3EP(user.userData.profileImage)} size="middle" gap={4}>
+                                    {user.userData && !user.userData.profileImage && user.userData.nickname ? user.userData.nickname[0] : null}
                                 </Avatar>
                             </Dropdown>
                         </div>

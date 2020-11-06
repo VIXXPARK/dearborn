@@ -106,19 +106,17 @@ function BlogPage_Cons_Event(props) {
     const renderContest = (contest) => {
         return (
             <div className="prod-works">
+                <a href={`/contest/${contest.id}`}>
                 <div className="contest-item-wrapper">
+                    <div className="contest-item-img">
+                        <img style={{width:'100%', height:'100%'}} src={convertToS3EP(contest.banner)}/>
+                    </div>
                     <div className="contest-item-title">
                         <p>{contest.title}</p>
-                    </div>
-                    <div className="contest-item-img">
-                        <a href={`/contest/${contest.id}`}>
-                            <img  src={convertToS3EP(contest.image)}/>
-                        </a>
-                        <div className="go-manage" onClick={()=>props.history.push(`/contest/manage/${contest.id}`)}>
-                            공모전 관리
-                        </div>
+                        <p style={{fontWeight:'normal', textAlign:'right', fontSize:'15px'}}>{contest.updated_dt.substring(0, 10)} - {contest.expired_dt.substring(0, 10)}</p>
                     </div>
                 </div>
+                </a>
             </div>
             )
     }
@@ -210,11 +208,11 @@ function BlogPage_Cons_Event(props) {
                     <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
                     <a href={`/${designer}/cons/likes`}><button className="blog-tabs-btn">좋아요</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">이벤트</button>
+                    {props.user.userData && props.user.userData.nickname === designer && <button style={{float:'right'}} className="blog-tabs-btn"  id="blog-tabs-clicked2" onClick={OnOpenEvent}>
+                            이벤트 개최
+                        </button>}
                     <div className="blog-tabs-content">
                         {Contests && Contests.map(contest => renderContest(contest))}
-                        {props.user.userData && props.user.userData.nickname === designer && <div className="event-open-btn" onClick={OnOpenEvent}>
-                            이벤트 개최
-                        </div>}
                     </div>
                 </div>
             </div>
