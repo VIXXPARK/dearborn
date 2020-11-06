@@ -20,16 +20,15 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('jet/',include('jet.urls','jet')),
     path('admin/', admin.site.urls),
-    path('api/', include('dearbornApp.urls.user')),
-    path('api/', include('dearbornApp.urls.post')),
-    path('api/', include('dearbornApp.urls.comment')),
-    path('api/', include('dearbornApp.urls.bid')),
-    path('api/', include('dearbornApp.urls.messanger')),
-    path('api/', include('dearbornApp.urls.contest')),
-    path('api/', include('dearbornApp.urls.assess')),
+    path('api/', include('dearbornapps.urls.user')),
+    path('api/', include('dearbornapps.urls.post')),
+    path('api/', include('dearbornapps.urls.comment')),
+    path('api/', include('dearbornapps.urls.bid')),
+    path('api/', include('dearbornapps.urls.messanger')),
+    path('api/', include('dearbornapps.urls.contest')),
+    path('api/', include('dearbornapps.urls.assess')),
     re_path('^(?:.*)/?$', TemplateView.as_view(template_name='index.html'), name='index'),
     re_path('^service-worker.js$',
         TemplateView.as_view(template_name='service-worker.js',
                              content_type='application/javascript'), name='service-worker_js'),
 ]
-#please
