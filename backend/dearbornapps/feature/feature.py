@@ -102,6 +102,8 @@ def ChangeImage(images):
         image = tf.image.resize(img, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
+        print("---------check---------")
+        print(image)
     return image_array
 
 
