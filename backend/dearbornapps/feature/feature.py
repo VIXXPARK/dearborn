@@ -165,7 +165,7 @@ def GetImageArray(postId):
 def GetFeatureVector(image_array):
     hub_path = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
     MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False, output_shape=1280)
-    MyModule.build()
+    MyModule.build(input_shape = [224,224,3])
     featureVector = []
     for array in image_array:
         result = MyModule(array)
