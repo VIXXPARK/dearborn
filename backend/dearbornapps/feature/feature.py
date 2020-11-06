@@ -99,10 +99,10 @@ def ChangeImage(images):
     image_array = []
     for image in images:
         image = tf.image.decode_image(image)
-        image = tf.image.resize(image, [224, 224])
+        image = tf.image.resize(image, [224, 224,3])
         image = tf.image.convert_image_dtype(image, tf.float32)
         try:
-            print(image.shape())
+            print(type(image))
         except:
             print(image)
         image_array.append(image)
