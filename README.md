@@ -26,7 +26,6 @@
     - [💻🤳 django-rest-framework와 ReactJS를 통한 웹사이트 구현](#-django-rest-framework와-reactjs를-통한-웹사이트-구현)
     - [♻ 서버연결](#-서버연결)
     - [💪 오픈소스 사용해보기](#-오픈소스-사용해보기)
-    - [🌈 화이팅!!](#-화이팅)
 - [👨‍💻실행 방법](#실행-방법)
   - [설치](#설치)
   - [실행](#실행)
@@ -130,25 +129,19 @@
 
 #### 💻🤳 django-rest-framework와 ReactJS를 통한 웹사이트 구현
 
-- 
-- 
+- django-rest-framework 
+- ReactJs
 
 #### ♻ 서버연결 
 
-- 
-- 
+- heroku 연결
+- aws s3 연결
 
 #### 💪 오픈소스 사용해보기
 
 - django-jet의 유저 positiveIntegerField를 CharField로 바꾸기 위해서 포크하여 수정하여 사용했다
-- :rocket:<a href="https://github.com/VIXXPARK/django-jet">django-jet</br>
-
-
-#### 🌈 화이팅!!
-
-- 
-- 
-- 
+> :rocket:<a href="https://github.com/VIXXPARK/django-jet">django-jet</br>
+- tensorflow 사용
 
 ---
 
