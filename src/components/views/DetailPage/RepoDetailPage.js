@@ -12,6 +12,8 @@ import {EditOutlined, DeleteOutlined, FileTextOutlined, DollarOutlined} from '@a
 import {getCookieValue} from '../../utils/Cookie'
 import {config} from '../../utils/Token'
 import {convertToS3EP} from '../../utils/String'
+import PostRankBox from '../LandingPage/Sections/PostRankBox';
+import { PayPalButton } from 'react-paypal-button-v2';
 
 
 const {Title} = Typography
@@ -55,8 +57,13 @@ function RepoDetailPage(props) {
             content: 
             <div className="bid-container">
                 정말로 구매하시겠습니까?
+                <PayPalButton
+                    amount={0}
+                    currency={'USD'}
+                    onSuccess={()=>console.log("구매")}
+                />
             </div>,
-            okText: "구매",
+            okText: "확인",
             cancelText: "취소",
             onOk(){
                 console.log("구매")
@@ -71,7 +78,6 @@ function RepoDetailPage(props) {
             icon:null,
             content: 
             <div className="bid-container">
-                <div className="hire-title">시간당 $$$ won을 희망하고 있습니다.</div>
                 <div className="hire-content">메시지<br/><Input.TextArea style={{fontSize:'20px'}} rows={5}  onChange={(e)=>{HireMessage = e.currentTarget.value}}/></div>
             </div>,
             okText: "메시지 전송",
@@ -140,7 +146,7 @@ function RepoDetailPage(props) {
                         {Repo.content}
                     </div>
                     <br/><br/>
-                    <LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>
+                    {Writer && props.user.userData && Writer.id !== props.user.userData._id &&<LikeDislike postId={postId} userId={localStorage.getItem('userId')}/>}
                     <br/><br/>
                     <CommentArea postId={postId}/>
                 </div>
@@ -153,7 +159,8 @@ function RepoDetailPage(props) {
                     <div className="profile-header" style={{color:'black'}}>
                         {Writer.nickname}
                     </div>
-                        <LikeDislike icon postId={postId} userId={localStorage.getItem('userId')}/>
+                    
+                    {Writer && props.user.userData && Writer.id !== props.user.userData._id && <LikeDislike icon postId={postId} userId={localStorage.getItem('userId')}/>}
                     {props.user.userData && props.user.userData._id === Writer.id && <>
                     <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={onModifyClick}>
                         <EditOutlined />
@@ -167,20 +174,25 @@ function RepoDetailPage(props) {
                     <div className="profile-header" style={{color:'black'}}>
                         삭제
                     </div></>}
-                    {props.user.userData && props.user.userData.job === 2 &&
+                    {props.user.userData && props.user.userData.job === 2 && 
+                    <>
+                    {Repo && Repo.sell === 1 &&
                     <>
                     <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={showPurchaseForm}>
                         <DollarOutlined />
                     </div>
                     <div className="profile-header" style={{color:'black'}}>
-                        판매
+                        {`판매 ( ${Repo.sellPrice}원)`}
                     </div>
+                    </>}
+                    <>
                     <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={showHireForm}>
                         <FileTextOutlined />
                     </div>
                     <div className="profile-header" style={{color:'black'}}>
                         채용
                     </div>
+                    </>
                     </>
                     }
                 </div>

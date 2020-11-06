@@ -13,7 +13,7 @@
     .modal-container {
         position: fixed;
         top: 30px;
-        left:5%;
+        left:20%;
         right:30%;
         background-color: white;
         color: #FFF;
@@ -27,7 +27,7 @@
     .modal-container {
         position: fixed;
         top: 30px;
-        width:95%;
+        width:60%;
         left:2.5%;
         background-color: white;
         color: #FFF;

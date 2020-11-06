@@ -42,6 +42,8 @@ function EventListPage(props) {
         })
     }
 
+    console.log(Contests)
+
     const OpenSortClick = () => {
         setOpenSort(!OpenSort)
     }
@@ -65,7 +67,7 @@ function EventListPage(props) {
         <div className="event-list-item">
             <a href={`/contest/${contest.id}`}>
                 <div className="event-item">
-                    <div className="event-item-img"><img style={{width:'100%', height:'100%'}} src={convertToS3EP(contest.image)} alt/></div>
+                    <div className="event-item-img"><img style={{width:'100%', height:'100%'}} src={convertToS3EP(contest.banner)} alt/></div>
                     <div className="event-item-content">
                         <h1>{contest.title}</h1>
                         <h2>{contest.description}</h2>
@@ -78,7 +80,6 @@ function EventListPage(props) {
     return (
         <div style={{width:'100vw', height:'100vh', backgroundColor:'#F9F8FD'}}>
         <div className="list-container">
-            <Title style={{fontSize:'60px'}}>Contest</Title>
             <div className="filter-container">
                 <div className="filter-btn">
                     <div style={{width:'100%', height:'100%'}} onClick={OpenSortClick}>정렬</div>

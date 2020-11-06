@@ -3,7 +3,7 @@ import ReactLoading from 'react-loading'
 
 export const Loader = (type, color) => {
     return (
-        <div class="contentWrap">
+        <div className="contentWrap">
             <div style={{
                 position:'fixed',
                 backgroundColor:"rgba(0,0,0,0.1)",

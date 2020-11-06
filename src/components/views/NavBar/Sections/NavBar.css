@@ -40,7 +40,7 @@
 .main-logo{
     width: 150px;
     float :left;
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 
@@ -50,7 +50,7 @@
 }
 
 .logged-out, .register {
-    margin-right: 20px;
+    margin-right: 10px;
     margin-top: 14px;
 }
 
@@ -208,3 +208,4 @@
     animation-name: showMessage;
     animation-duration: 2s;
 }
+

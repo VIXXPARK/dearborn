@@ -12,6 +12,10 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+@font-face{
+  font-family: 'font1';
+  src:url(./components/assets/font1.ttf) format('truetype')
+}
 
 .App-header {
   background-color: #282c34;
