@@ -151,6 +151,9 @@ def GetImageArray(postId):
             url = post.thumbnail.url
             image_id.append(Post.id)
             file_name = os.path.basename(url).split('.')[0]
+            print("-----------check-------------")
+            print("+url - ",url)
+            print("-url - ",post.thumbnail)
             dir = url.split('/')
             reversed(dir)
             path = os.path.join('media',dir[2],dir[1],dir[0])
