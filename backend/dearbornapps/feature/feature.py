@@ -42,7 +42,8 @@ class S3Images(object):
     
     def from_s3(self, bucket, key):
         file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
-        return Image.open(BytesIO(file_byte_string))
+        print(file_byte_string)
+        return BytesIO(file_byte_string)
 
     def to_s3_image(self, img, bucket, key):
         buffer = BytesIO()
@@ -164,6 +165,7 @@ def GetImageArray(postId):
             print("-----------check-------------")
             print(path)
             image = s3Images.from_s3("dearbornstorage",path)
+            print(image)
             images.append(image)
             image_file_name.append(file_name)
         image_array = ChangeImage(images)
