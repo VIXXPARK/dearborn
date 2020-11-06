@@ -148,15 +148,13 @@ def GetImageArray(postId):
         s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
         
         for post in  posts:
-            url = post.thumbnail.url
+            url = post.thumbnail
             image_id.append(Post.id)
             file_name = os.path.basename(url).split('.')[0]
             print("-----------check-------------")
             print("+url - ",url)
             print("-url - ",post.thumbnail)
-            dir = url.split('/')
-            reversed(dir)
-            path = os.path.join('media',dir[2],dir[1],dir[0])
+            path = os.path.join('media',url)
             print("-----------check-------------")
             print(path)
             image = s3Images.from_s3("dearbornstorage",path)

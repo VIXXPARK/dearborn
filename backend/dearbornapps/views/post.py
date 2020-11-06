@@ -136,9 +136,6 @@ class PostView(ListAPIView):
                 person = User.object.filter(id=post.user.id)
                 try:
                     thumb = post.thumbnail.url
-                    print("--------check-----------")
-                    print("thumb.url = ",thumb)
-                    print("thumb = ",post.thumbnail)
                 except:
                     thumb=None,
                 try:
