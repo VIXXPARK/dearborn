@@ -93,8 +93,8 @@ def download_all_files():
     return obj
         
 
-def featureUpload_to(postId,filename):
-   return 'feature_vector/{0}/{1}'.format(postId ,filename)
+def featureUpload_to(postId):
+   return 'feature_vectors/{0}'.format(postId)
 
 def ChangeImage(images):
     image_array = []
@@ -111,7 +111,7 @@ def LoadImage(image_urls):
     image_array = []
     for path in image_urls:
         image = tf.io.read_file(path)
-        image = tf.image.decode_image(image)
+        image = tf.image.decode_image(image, channels=3)
         image = tf.image.resize(image, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
@@ -133,11 +133,15 @@ def GetImageArray(postId):
         image_id = []
         for post in  posts:
             url = post.thumbnail.url
-            image_urls.append(url)
+            dirs = url.split('/')
+            path = os.path.join(BASE_DIR)
+            for dir in dirs:
+                path = os.path.join(path, dir)
+            image_urls.append(path)
             image_id.append(Post.id)
-            file_name = os.path.basename(url).split('.')[0]
+            file_name = os.path.basename(path).split('.')[0]
             image_file_name.append(file_name)
-        image_array = LoadImage(image_urls)
+        image_array_resized = LoadImage(image_urls)
     else:
         image_file_name = []
         image_id = []
@@ -164,28 +168,40 @@ def GetImageArray(postId):
 
 def GetFeatureVector(image_array):
     hub_path = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
-    MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False, output_shape=1280)
-    MyModule.build(input_shape = [224,224,3])
+    
+    MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False)
+    
     featureVector = []
-    for array in image_array:
-        result = MyModule(array)
-        result_set = np.squeeze(result)
+    result = MyModule(image_array)
+    for res in result:
+        result_set = np.squeeze(res)
         featureVector.append(result_set)
+    
     return featureVector
 
 def SaveFeatureVector(featureVector, image_file_name, postId):
-    for index, v in featureVector:
-        if not Is_Local[0]:
+    if Is_Local[0]:
+        for index, v in enumerate(featureVector):
+            dirs = featureUpload_to(postId).split('/')
+            out_path = os.path.join(BASE_DIR)
+            for dir in dirs:
+                out_path = os.path.join(out_path, dir)
+            CheckDir(out_path)
+            out_path = os.path.join(out_path,image_file_name[index] + ".npz")
+            np.savetxt(out_path, v, delimiter=',')
+    else :
+        for index, v in enumerate(featureVector):
             ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
             SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
             region_name = os.getenv('AWS_S3_REGION_NAME')
             s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
-            s3Images.to_s3(v,"dearbornstorage",featureUpload_to(postId, image_file_name[index])+".npz")
-        else :
-            out_dir = os.path.join(BASE_DIR,'feature_vectors')
-            CheckDir(out_dir)
-            out_path = os.path.join(BASE_DIR,featureUpload_to(postId, image_file_name[index]) + ".npz")
-            np.savetxt(out_path, v, delimiter=',')
+            dirs = featureUpload_to(postId).split('/')
+            out_path = ""
+            for dir in dirs:
+                out_path = os.path.join(out_path, dir)
+            out_path = os.path.join(out_path,image_file_name[index] + ".npz")
+            print(out_path)
+            s3Images.to_s3(v,"dearbornstorage",out_path)
 
 def Similarity(postId):
 
@@ -199,17 +215,17 @@ def Similarity(postId):
     if not Is_Local[0]:
         feature_vectors = download_all_files()
     else: 
-        feature_vectors = glob.glob('feature_vectors/*.npz')
+        feature_vectors = glob.glob('feature_vectors/*/*.npz')
     
-    n_nearest_neighbors = feature_vectors.count()
+    n_nearest_neighbors = len(feature_vectors)
 
     annoy = AnnoyIndex(dims,'angular')
-    for index, v in feature_vectors:
+    for index, v in enumerate(feature_vectors):
         annoy.add_item(index, v)
     annoy.build(trees)
     similarities = []
-    for index, v in vectors:
-        nearest_neighbors = t.get_nns_by_vector(v, n_nearest_neighbors)
+    for index, v in enumerate(vectors):
+        nearest_neighbors = annoy.get_nns_by_vector(v, n_nearest_neighbors)
         for neighbor in nearest_neighbors:
             similarity = 1 - spatial.distance.cosine(v, tested[neighbor])
             rounded_similarity = int((similarity * 10000)) / 10000.0
