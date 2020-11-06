@@ -31,7 +31,7 @@ function PostRankBox(props) {
         }
     }])
     
-    useEffect(() => {
+    /*useEffect(() => {
         const rankSlider = setInterval(() => {
             if(RankIndex===2){
                 setRankIndex(0)
@@ -40,30 +40,27 @@ function PostRankBox(props) {
             }
         }, 6000);
         return () => clearInterval(rankSlider)
-    }, [RankIndex])
+    }, [RankIndex])*/
     
     return (
         <div className="post-rank-container">
             {RankPosts && RankPosts.map((post, i) => (
-                <>
-                <div style={{transition:'transform 1s', transform:`translate(calc(-360px * ${RankIndex}), 0)`}} className="post-rank-item">
-                    <div style={{width:'210px', height:'280px', display:'inline-block'}}>
-                        <img style={{width:'100%', height:'100%', borderRadius:'20px'}} src={post.thumbnail}/>
-                    </div>
-                    <div style={{width:'150px', height:'280px', display:'inline-block', verticalAlign:'top',}}>
-                        <div style={{margin:'0 auto', marginTop:'35px'}}>
-                            <h1 style={{fontSize:'30px'}}>{i+1}위</h1>
-                            <p style={{fontSize:'15px', marginTop:'50px'}}>{post.title}</p>
-                            <div style={{marginTop:'70px'}}>
-                                <Avatar style={{marginLeft:'10px',float:'left'}} size={30} src={post.designer && post.designer.profileImage ? post.designer.profileImage : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
-                                <p style={{fontSize:'20px', lineHeight:'30px'}}>{post.designer && post.designer.nickname ? post.designer.nickname : "디자이너"}</p>
+                <div style={{transition:'transform 1s', transform:`translate(calc(-100% * ${RankIndex}), 0)`}} className="post-rank-item">
+                    <div style={{width:'50%',height:'100%', display:'inline-block', backgroundColor:'white',verticalAlign:'top', wordBreak:'break-all'}}>
+                        <div style={{width:'100%', marginTop:'35%'}}>
+                            <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'2rem'}}>{post.title+" 아이우에오아이우"}</p>
+                            <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'1rem'}}>{post.title+" 아이우에오아이우"}</p>
+                        </div>
+                        <div>
+                            <div style={{width:'90%',maxWidth:'400px',height:'70px',marginTop:'10%', borderRadius:'30px',fontSize:'1.5rem', backgroundColor:'#f85272', display:'inline-block', lineHeight:'80px'}}>
+                                블로그 보러 가기
                             </div>
                         </div>
-                        
                     </div>
-                    <div className="item-vote-obv"></div>
+                    <div style={{width:'50%',height:'100%', display:'inline-block', backgroundColor:'gray', overflow:'hidden', wordBreak:'break-all'}}>
+                        <img style={{width:'100%'}} src={post1}/>
+                    </div>
                 </div>
-                </>
             ))
                 
             }
