@@ -156,7 +156,7 @@ def GetImageArray(postId):
             image_array = np.array(image)
             images.append(image_array)
             image_file_name.append(file_name)
-        image_array_resized = ChangeImage(image_array)
+        image_array_resized = ChangeImage(images)
     return image_array_resized, image_file_name, image_id
 
 def GetFeatureVector(image_array):
