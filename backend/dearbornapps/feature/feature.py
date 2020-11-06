@@ -133,6 +133,8 @@ def GetImageArray(postId):
         image_id = []
         for post in  posts:
             url = post.thumbnail.url
+            print(url)
+            print(post.thumbnail)
             image_urls.append(url)
             image_id.append(Post.id)
             file_name = os.path.basename(url).split('.')[0]
@@ -148,12 +150,12 @@ def GetImageArray(postId):
         s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
         
         for post in  posts:
-            url = post.thumbnail.upload_to
+            url = post.thumbnail.url
             image_id.append(Post.id)
             file_name = os.path.basename(post.thumbnail.url).split('.')[0]
             print("-----------check-------------")
             print("-url - ",post.thumbnail)
-            print("upload_to",post.thumbnail.upload_to)
+            print("+url - ",post.thumbnail.url)
             dir = url.split('/')
             print(dir)
             dir = dir[-4:]
