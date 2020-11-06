@@ -42,8 +42,7 @@ class S3Images(object):
     
     def from_s3(self, bucket, key):
         file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
-        print(file_byte_string)
-        return BytesIO(file_byte_string)
+        return file_byte_string
 
     def to_s3_image(self, img, bucket, key):
         buffer = BytesIO()
@@ -98,9 +97,6 @@ def featureUpload_to(postId,filename):
 
 def ChangeImage(images):
     image_array = []
-    print("------------------------------")
-    print(images)
-    print("------------------------------")
     for image in images:
         image = tf.image.decode_image(image)
         image = tf.image.resize(image, [224, 224])
