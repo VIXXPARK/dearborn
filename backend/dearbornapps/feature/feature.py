@@ -98,6 +98,7 @@ def featureUpload_to(postId,filename):
 def ChangeImage(images):
     image_array = []
     for img in images:
+        print(img.shape)
         image = tf.image.resize(img, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
@@ -152,8 +153,8 @@ def GetImageArray(postId):
             dir = dir[-4:]
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
             image = s3Images.from_s3("dearbornstorage",path)
-            print(image.size)
             image_array = np.array(image)
+            print(image_array.shape)
             images.append(image_array)
             image_file_name.append(file_name)
         image_array_resized = ChangeImage(images)
@@ -164,6 +165,7 @@ def GetFeatureVector(image_array):
     MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False)
     featureVector = []
     for array in image_array:
+        print(image_array.shape)
         result = MyModule(array)
         result_set = np.squeeze(result)
         featureVector.append(result_set)
