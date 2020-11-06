@@ -42,7 +42,7 @@ class S3Images(object):
     
     def from_s3(self, bucket, key):
         file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
-        return file_byte_string
+        return  Image.open(BytesIO(file_byte_string))
 
     def to_s3_image(self, img, bucket, key):
         buffer = BytesIO()
@@ -97,14 +97,9 @@ def featureUpload_to(postId,filename):
 
 def ChangeImage(images):
     image_array = []
-    for image in images:
-        image = tf.image.decode_image(image)
-        image = tf.image.resize(image, [224, 224,3])
+    for img in images:
+        image = tf.image.resize(img, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
-        try:
-            print(type(image))
-        except:
-            print(image)
         image_array.append(image)
     return image_array
 
@@ -135,8 +130,6 @@ def GetImageArray(postId):
         image_id = []
         for post in  posts:
             url = post.thumbnail.url
-            print(url)
-            print(post.thumbnail)
             image_urls.append(url)
             image_id.append(Post.id)
             file_name = os.path.basename(url).split('.')[0]
@@ -155,22 +148,16 @@ def GetImageArray(postId):
             url = post.thumbnail.url
             image_id.append(Post.id)
             file_name = os.path.basename(post.thumbnail.url).split('.')[0]
-            print("-----------check-------------")
-            print("-url - ",post.thumbnail)
-            print("+url - ",post.thumbnail.url)
             dir = url.split('/')
-            print(dir)
             dir = dir[-4:]
-            print(dir)
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
-            print("-----------check-------------")
-            print(path)
             image = s3Images.from_s3("dearbornstorage",path)
-            print(image)
-            images.append(image)
+            print(image.size)
+            image_array = np.array(image)
+            images.append(image_array)
             image_file_name.append(file_name)
-        image_array = ChangeImage(images)
-    return image_array, image_file_name, image_id
+        image_array_resized = ChangeImage(image_array)
+    return image_array_resized, image_file_name, image_id
 
 def GetFeatureVector(image_array):
     hub_path = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
@@ -228,6 +215,3 @@ def Similarity(postId):
             }
             similarities.append(similarity_set)
     return similarities
-    
-    
- 
