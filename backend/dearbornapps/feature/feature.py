@@ -148,12 +148,12 @@ def GetImageArray(postId):
         s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
         
         for post in  posts:
-            url = post.thumbnail.url
+            url = post.thumbnail.upload_to
             image_id.append(Post.id)
             file_name = os.path.basename(post.thumbnail.url).split('.')[0]
             print("-----------check-------------")
-            print("+url - ",url)
             print("-url - ",post.thumbnail)
+            print("upload_to",post.thumbnail.upload_to)
             dir = url.split('/')
             print(dir)
             dir = dir[-4:]
@@ -173,7 +173,7 @@ def GetFeatureVector(image_array):
     featureVector = []
     for array in image_array:
         result = MyModule(array)
-        result_set = np.squeeze(result)
+        result_set = np.squeeze(result)x
         featureVector.append(result_set)
     return featureVector
 
