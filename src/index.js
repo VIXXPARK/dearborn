@@ -11,6 +11,8 @@ import { applyMiddleware, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise'
 import ReduxThunk from 'redux-thunk'
 
+import ScrollToTop from './components/utils/ScrollToTop'
+
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore)
 
 
@@ -22,6 +24,7 @@ ReactDOM.render(
       window.__REDUX_DEVTOOLS_EXTENSION__()
     )}>
     <BrowserRouter>
+      <ScrollToTop/>
       <App/>
     </BrowserRouter>
   </Provider>,

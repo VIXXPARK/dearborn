@@ -43,6 +43,7 @@ function App(props) {
     <Suspense fallback={(<div>Loading...</div>)}>
     
     <Router>
+      
       <Route path={ new RegExp("^(?!.*(/register|/login|/checkEmail|/changePassword|/modify)).*$") } component={NavBar}/>
       <div style={{height:'calc(100vh - 66px)'}}>
         <div>

@@ -71,7 +71,7 @@ function LandingPage(props) {
         const scrollHeight= (document.documentElement 
             && document.documentElement.scrollHeight)
             || document.body.scrollHeight;
-        if(scrollTop + window.innerHeight >= scrollHeight -1){
+        if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
         }
     }
@@ -152,8 +152,6 @@ function LandingPage(props) {
         setMainBanner(!MainBanner)
     }
 
-    console.log(document.documentElement.offsetHeight)
-
     const renderVoteItems = (post) => {
         return (
             <div className="item-vote-wrap">
@@ -172,22 +170,11 @@ function LandingPage(props) {
 
     return (
         <>
-        <div style={{width:'100%'}}>
-            <div className="main-banner-background" style={{height:`${MainBanner? `450px` : `20px`}`}}>
-                <div style={{paddingTop:'20px', maxWidth:'1400px', margin:'0 auto'}}>
+        <div style={{width:'100%', maxWidth:'1400px', margin:'0 auto', height: 'calc( 100vh - 10px)',}}>
+            <div className="main-banner-background" style={{maxHeight:`${MainBanner? 'calc(100% - 200px)' : `20px`}`}}>
+                <div style={{maxWidth:'1400px', margin:'0 auto'}}>
                     <div className="post-rank">
-                        <p style={{fontSize:'15px',fontWeight:'bold', color:'black', marginLeft:'10px'}}>지난 주 TOP 3 포스트</p>
                         <PostRankBox/>
-                    </div>
-                    <div className="main-banner-container">
-                        <div className="main-banner-text">
-                        당신의 패션 디자인을 팔아보세요.<br/>
-                        아마추어 디자이너들을 환영합니다!
-                        </div>
-                        <div className="rank">
-                            <p style={{width:'100%',fontSize:'20px', textAlign:'center', marginBottom:'0px', fontWeight:'bold', color:'black'}}>지난 주 TOP 3</p>
-                            <RankBox />
-                        </div>
                     </div>
                 </div>
             </div>

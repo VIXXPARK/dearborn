@@ -94,7 +94,7 @@ function RepoListPage(props) {
         const scrollHeight= (document.documentElement 
             && document.documentElement.scrollHeight)
             || document.body.scrollHeight;
-        if(scrollTop + window.innerHeight >= scrollHeight - 1){
+        if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
         }
     }
