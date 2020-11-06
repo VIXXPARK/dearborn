@@ -156,8 +156,9 @@ def GetImageArray(postId):
             print("-url - ",post.thumbnail)
             dir = url.split('/')
             print(dir)
-            dir.sort(reverse=True)
-            path = os.path.join('media',dir[3],dir[2],dir[1],dir[0])
+            dir = dir[-4:]
+            print(dir)
+            path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
             print("-----------check-------------")
             print(path)
             image = s3Images.from_s3("dearbornstorage",path)
