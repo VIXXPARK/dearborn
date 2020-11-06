@@ -139,7 +139,7 @@
 
 #### 💪 오픈소스 사용해보기
 
-- :rocket:<a href="https://github.com/VIXXPARK/django-jet">django-jet의 유저 positiveIntegerField를 CharField로 바꾸기 위해서 포크하여 수정하여 사용했다
+- :rocket:<a href="https://github.com/VIXXPARK/django-jet">django-jet의 유저 positiveIntegerField를 CharField로 바꾸기 위해서 포크하여 수정하여 사용했다</a>
 - tensorflow 사용
 
 ---
