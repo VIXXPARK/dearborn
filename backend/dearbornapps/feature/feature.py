@@ -37,9 +37,9 @@ class S3Images(object):
         
 
     def from_s3_non_image(self, bucket, key):
+        print(self.s3.list_objects(Bucket=bucket, Prefix=key))
         contents = self.s3.list_objects(Bucket=bucket, Prefix=key)['Contents']
         file_byte_string = contents['key']
-        print(self.s3.list_objects(Bucket=bucket, Prefix=key))
         buffer = BytesIO(file_byte_string)
         buffer.seek(0)
         obj = buffer.read()

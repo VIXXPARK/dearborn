@@ -730,7 +730,7 @@ def voteExpired():
 
         if expired_dt <= now:
 
-            votes = vote.objects.count(post = post.id)
+            votes = vote.objects.filter(post = post.id).count()
             try:
                 postUser = User.object.get(id = post.user.id)
             except APIException as e:
