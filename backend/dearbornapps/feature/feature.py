@@ -45,11 +45,8 @@ class S3Images(object):
         results = []
         for ObjKey in keys:
             file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
-            buffer = BytesIO(file_byte_string)
-            buffer.seek(0)
-            obj = buffer.read()
-            print(obj)
-            results.append(obj)
+            print(file_byte_string)
+            results.append(file_byte_string)
         return results
 
     def from_s3(self, bucket, key):
