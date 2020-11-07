@@ -68,7 +68,7 @@ class S3Images(object):
         buffer = BytesIO()
         pickle.dump(obj, buffer)
         buffer.seek(0)
-        sent_data = self.s3.put_object(Bucket=bucket, Key=key, Body=buffer)
+        sent_data = self.s3.upload_fileobj(buffer, bucket, key)
         if sent_data['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise S3ImagesUploadFailed('Failed to upload image {} to bucket {}'.format(key, bucket))
 
