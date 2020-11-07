@@ -3,7 +3,7 @@ import tensorflow_hub as hub
 import tensorflow as tf
 import numpy as np
 import glob, os.path, json
-import boto3, os
+import boto3, os, pickle
 from annoy import AnnoyIndex
 from scipy import spatial
 from dearbornConfig.settings.base import BASE_DIR, Is_Local
@@ -44,8 +44,10 @@ class S3Images(object):
             keys.append(content['Key'])
         results = []
         for ObjKey in keys:
-            file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
-            np_array = np.load(file_byte_string)
+            buffer = BytesIO()
+            file_byte_string = self.s3.download_fileobj(Bucket=bucket, Key=key,buffer)
+            buffer.seek(0)
+            np_array = pickle.load(buffer)
             results.append(np_array)
         return results
 
@@ -64,7 +66,7 @@ class S3Images(object):
         
     def to_s3(self, obj, bucket, key):
         buffer = BytesIO()
-        obj.save(buffer)
+        pickle.dump(obj, buffer)
         buffer.seek(0)
         sent_data = self.s3.put_object(Bucket=bucket, Key=key, Body=buffer)
         if sent_data['ResponseMetadata']['HTTPStatusCode'] != 200:
@@ -208,9 +210,9 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
             out_path = ""
             for dir in dirs:
                 out_path = os.path.join(out_path, dir)
-            out_path = os.path.join(out_path,image_file_name[index] + ".npz")
+            out_path = os.path.join(out_path,image_file_name[index] + ".pkl")
             print(out_path)
-            v = np.array(v)
+            
             s3Images.to_s3(v,"dearbornstorage",out_path)
 
 def Similarity(postId):
