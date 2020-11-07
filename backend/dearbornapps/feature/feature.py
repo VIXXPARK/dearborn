@@ -36,14 +36,17 @@ class S3Images(object):
                                      region_name=region_name)
         
 
-    def from_s3_non_image(self, bucket, key):
-        file_byte_string = self.s3.list_objects(Bucket=bucket, Prefix=key)['Body'].read()
-        return file_byte_string
-    
+    def from_s3_non_image(self, bucket, key):#buffer BytesIO사용
+        file_byte_string = self.s3.list_objects(Bucket=bucket, Prefix=key)
+        buffer = BytesIO(file_byte_string)
+        buffer.seek(0)
+        obj = buffer.read()
+        return obj
+
     def from_s3(self, bucket, key):
         file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
         img = Image.open(BytesIO(file_byte_string))
-        return  img
+        return img
 
     def to_s3_image(self, img, bucket, key):
         buffer = BytesIO()
