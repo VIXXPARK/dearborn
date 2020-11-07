@@ -36,7 +36,7 @@ class S3Images(object):
                                      region_name=region_name)
         
 
-    def from_s3_non_image(self, bucket, key):#buffer BytesIO사용
+    def from_s3_non_image(self, bucket, key):
         file_byte_string = self.s3.list_objects(Bucket=bucket, Prefix=key)
         buffer = BytesIO(file_byte_string)
         buffer.seek(0)
