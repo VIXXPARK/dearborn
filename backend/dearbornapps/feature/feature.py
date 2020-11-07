@@ -44,9 +44,8 @@ class S3Images(object):
             keys.append(content['Key'])
         results = []
         for ObjKey in keys:
-            buffer = BytesIO()
-            file_byte_string = self.s3.download_fileobj(bucket, key, buffer)
-            buffer.seek(0)
+            file_byte_string = self.s3.get_object(Bucket=bucket, key=key)['Body'].read()
+            buffer = BytesIO(file_byte_string)
             np_array = pickle.load(buffer)
             results.append(np_array)
         return results
@@ -68,7 +67,7 @@ class S3Images(object):
         buffer = BytesIO()
         pickle.dump(obj, buffer)
         buffer.seek(0)
-        sent_data = self.s3.upload_fileobj(buffer, bucket, key)
+        sent_data = self.s3.pust_object(Bucket=bucket, key=key, Body=buffer)
         if sent_data['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise S3ImagesUploadFailed('Failed to upload image {} to bucket {}'.format(key, bucket))
 
