@@ -45,6 +45,7 @@ class S3Images(object):
         results = []
         for ObjKey in keys:
             file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
+            print("-----------check---------")
             print(file_byte_string)
             results.append(file_byte_string)
         return results
