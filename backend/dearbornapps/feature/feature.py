@@ -45,7 +45,7 @@ class S3Images(object):
         results = []
         for ObjKey in keys:
             buffer = BytesIO()
-            file_byte_string = self.s3.download_fileobj(Bucket=bucket, Key=key,buffer)
+            file_byte_string = self.s3.download_fileobj(bucket, key, buffer)
             buffer.seek(0)
             np_array = pickle.load(buffer)
             results.append(np_array)
