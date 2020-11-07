@@ -45,9 +45,8 @@ class S3Images(object):
         results = []
         for ObjKey in keys:
             file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
-            print("-----------check---------")
-            print(file_byte_string)
-            results.append(file_byte_string)
+            np_array = np.load(file_byte_string)
+            results.append(np_array)
         return results
 
     def from_s3(self, bucket, key):
@@ -65,7 +64,7 @@ class S3Images(object):
         
     def to_s3(self, obj, bucket, key):
         buffer = BytesIO()
-        buffer.write(obj)
+        obj.save(buffer)
         buffer.seek(0)
         sent_data = self.s3.put_object(Bucket=bucket, Key=key, Body=buffer)
         if sent_data['ResponseMetadata']['HTTPStatusCode'] != 200:
@@ -211,6 +210,7 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
                 out_path = os.path.join(out_path, dir)
             out_path = os.path.join(out_path,image_file_name[index] + ".npz")
             print(out_path)
+            v = np.array(v)
             s3Images.to_s3(v,"dearbornstorage",out_path)
 
 def Similarity(postId):
