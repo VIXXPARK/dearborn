@@ -48,6 +48,7 @@ class S3Images(object):
             buffer = BytesIO(file_byte_string)
             buffer.seek(0)
             obj = buffer.read()
+            print(obj)
             results.append(obj)
         return results
 
