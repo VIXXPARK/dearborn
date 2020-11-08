@@ -38,13 +38,13 @@ class S3Images(object):
 
     def from_s3_non_image(self, bucket, key):
         print(self.s3.list_objects(Bucket=bucket, Prefix=key))
-        contents = self.s3.list_objects(Bucket=bucket, Prefix=key)['Contents'].read()
+        contents = self.s3.list_objects(Bucket=bucket, Prefix=key)['Contents']
         keys = []
         for content in contents:
             print("--------content------------")
             print(content)
             print("--------content------------")
-            keys.append(content['Key'].read())
+            keys.append(content['Key']
         results = []
         for ObjKey in keys:
             print("----------------check----------------------------")
