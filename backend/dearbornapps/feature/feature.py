@@ -37,7 +37,6 @@ class S3Images(object):
         
 
     def from_s3_non_image(self, bucket, key):
-        print(self.s3.list_objects(Bucket=bucket, Prefix=key))
         contents = self.s3.list_objects(Bucket=bucket, Prefix=key)['Contents']
         keys = []
         for content in contents:
