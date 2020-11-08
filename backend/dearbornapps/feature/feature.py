@@ -41,16 +41,10 @@ class S3Images(object):
         contents = self.s3.list_objects(Bucket=bucket, Prefix=key)['Contents']
         keys = []
         for content in contents:
-            print("--------content------------")
-            print(content)
-            print("--------content------------")
             keys.append(content['Key'])
         results = []
         keys = keys[1:]
         for ObjKey in keys:
-            print("----------------check----------------------------")
-            print(ObjKey)
-            print("----------------check----------------------------")
             response = self.s3.get_object(Bucket=bucket, Key=ObjKey)
             body_string = response['Body'].read()
             np_array = pickle.loads(body_string)
@@ -175,7 +169,6 @@ def GetImageArray(postId):
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
             image = s3Images.from_s3("dearbornstorage",path)
             image_array = np.array(image)
-            print(image_array)
             images.append(image_array)
             image_file_name.append(file_name)
         image_array_resized = ChangeImage(images)
@@ -215,7 +208,6 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
             for dir in dirs:
                 out_path = os.path.join(out_path, dir)
             out_path = os.path.join(out_path,image_file_name[index] + ".pkl")
-            print(out_path)
             
             s3Images.to_s3(v,"dearbornstorage",out_path)
 
@@ -242,24 +234,15 @@ def Similarity(postId):
     similarities = []
     for index, v in enumerate(vectors):
         nearest_neighbors = annoy.get_nns_by_vector(v, n_nearest_neighbors)
-        print(nearest_neighbors)
         for neighbor in nearest_neighbors:
             similarity = 1 - spatial.distance.cosine(v, feature_vectors[neighbor])
             rounded_similarity = int((similarity * 10000)) / 10000.0
             filename = fileNames[neighbor]
             nameList = filename.split('/')
             nameList = nameList[-2:-1]
-            print("-----------------nameList--------------")
-            print(nameList)
-            print("-----------------filename--------------")
-            print(filename)
             similarity_set = {
                 'similarity' : rounded_similarity,
                 'postId' : nameList[0],
-            }
-            print("------------similarity------------")
-            print(similarity)
-            print("------------id--------------------")
-            print(image_id[index])
+            } 
             similarities.append(similarity_set)
     return similarities
