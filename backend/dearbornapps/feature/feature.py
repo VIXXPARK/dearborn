@@ -44,7 +44,7 @@ class S3Images(object):
             print("--------content------------")
             print(content)
             print("--------content------------")
-            keys.append(content['Key']
+            keys.append(content['Key'])
         results = []
         for ObjKey in keys:
             print("----------------check----------------------------")
