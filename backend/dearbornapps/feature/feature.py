@@ -247,7 +247,7 @@ def Similarity(postId):
             rounded_similarity = int((similarity * 10000)) / 10000.0
             similarity_set = {
                 'similarity' : rounded_similarity,
-                'postId' : image_id[index],
+                'postId' : image_id[neighbor],
             }
             print("------------similarity------------")
             print(similarity)
