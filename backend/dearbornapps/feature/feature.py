@@ -153,7 +153,7 @@ def GetImageArray(postId):
             for dir in dirs:
                 path = os.path.join(path, dir)
             image_urls.append(path)
-            image_id.append(Post.id)
+            image_id.append(post.id)
             file_name = os.path.basename(path).split('.')[0]
             image_file_name.append(file_name)
         image_array_resized = LoadImage(image_urls)
@@ -168,7 +168,7 @@ def GetImageArray(postId):
         
         for post in  posts:
             url = post.thumbnail.url
-            image_id.append(Post.id)
+            image_id.append(post.id)
             file_name = os.path.basename(post.thumbnail.url).split('.')[0]
             dir = url.split('/')
             dir = dir[-4:]
@@ -247,7 +247,7 @@ def Similarity(postId):
             rounded_similarity = int((similarity * 10000)) / 10000.0
             similarity_set = {
                 'similarity' : rounded_similarity,
-                'postId' : image_id[index]
+                'postId' : image_id[index],
             }
             print("------------similarity------------")
             print(similarity)
