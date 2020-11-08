@@ -14,7 +14,7 @@ from dearbornapps.feature.feature import Similarity
 
 @api_view(["POST"])
 def getCategory(request):
-    catSerializer = categorySerializer(data=request.data)
+    catSerializer = CategorySerializer(data=request.data)
     if not catSerializer.is_valid():
         return Response({'success':False, 'err':catSerializer.errors}, status=HTTP_400_BAD_REQUEST)
 
