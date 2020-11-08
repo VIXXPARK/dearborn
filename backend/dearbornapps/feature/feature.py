@@ -50,6 +50,7 @@ class S3Images(object):
             print("----------------check----------------------------")
             print(ObjKey)
             print("----------------check----------------------------")
+            key = ObjKey['Key']
             response = self.s3.get_object(Bucket=bucket, Key=key)
             body_string = response['Body'].read()
             np_array = pickle.loads(body_string)
