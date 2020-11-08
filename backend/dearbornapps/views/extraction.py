@@ -8,8 +8,8 @@ from rest_framework.status import(
     HTTP_502_BAD_GATEWAY,
     HTTP_500_INTERNAL_SERVER_ERROR
 )
-from models.post import Post, PostImage
-from serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer
+from dearbornapps.models.post import Post, PostImage
+from dearbornapps.serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer
 from feature.feature import Similarity
 
 @api_view(["POST"])
