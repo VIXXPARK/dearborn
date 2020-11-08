@@ -27,7 +27,7 @@ def getCategory(request):
             'thumbnail' : post.thumbnail.url,
         } 
         posts.append(postsContext)
-    Response({'success' : True, 'posts' : posts}, HTTP_200_OK)
+    return Response({'success' : True, 'posts' : posts},status = HTTP_200_OK)
 
 @api_view(["POST"])
 def selectFilter(request):
@@ -44,7 +44,7 @@ def selectFilter(request):
                 posts.append(sim['postId'])
     tmp = set(posts)
     posts = list(tmp)
-    Response({'success':True, 'posts' : posts}, HTTP_200_OK)
+    return Response({'success':True, 'posts' : posts}, status = HTTP_200_OK)
 
 @api_view(["POST"])
 def saveTasteInfo(request):
@@ -59,7 +59,7 @@ def saveTasteInfo(request):
         try:
             postObj = Post.objects.get(id=postId)
         except:
-            return Response({'success' : False}, status = HTTP_500_INTERNAL_SERVER_ERROR})
+            return Response({'success' : False}, status = HTTP_500_INTERNAL_SERVER_ERROR)
         title = postObj.title
         thumbnail = postObj.thumbnail.url
         userId = postObj.user
@@ -73,6 +73,6 @@ def saveTasteInfo(request):
     try:
         taste = saveTasteSerializer.create(saveTasteSerializer.validated_data)
     except APIException as e:
-        return Response({'success' : False, 'err' : e.detail}, HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response({'success' : True, 'postList' : postData}, status = HTTP_201_CREATED})
