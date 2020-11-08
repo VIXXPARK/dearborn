@@ -10,7 +10,7 @@ from rest_framework.status import(
 )
 from dearbornapps.models.post import Post, PostImage
 from dearbornapps.serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer
-from feature.feature import Similarity
+from dearbornapps.feature.feature import Similarity
 
 @api_view(["POST"])
 def getCategory(request):
