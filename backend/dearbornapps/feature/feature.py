@@ -242,6 +242,7 @@ def Similarity(postId):
     similarities = []
     for index, v in enumerate(vectors):
         nearest_neighbors = annoy.get_nns_by_vector(v, n_nearest_neighbors)
+        print(nearest_neighbors)
         for neighbor in nearest_neighbors:
             similarity = 1 - spatial.distance.cosine(v, feature_vectors[neighbor])
             rounded_similarity = int((similarity * 10000)) / 10000.0
