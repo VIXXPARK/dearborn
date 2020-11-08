@@ -55,7 +55,7 @@ class S3Images(object):
             body_string = response['Body'].read()
             np_array = pickle.loads(body_string)
             results.append(np_array)
-        return results
+        return results, keys
 
     def from_s3(self, bucket, key):
         file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
@@ -105,9 +105,9 @@ def download_all_files():
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     region_name = os.getenv('AWS_S3_REGION_NAME')
     s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
-    obj = s3Images.from_s3_non_image("dearbornstorage",'feature_vectors/')
+    obj, keys = s3Images.from_s3_non_image("dearbornstorage",'feature_vectors/')
     
-    return obj
+    return obj, keys
         
 
 def featureUpload_to(postId):
@@ -229,7 +229,7 @@ def Similarity(postId):
     vectors = GetFeatureVector(image_array)
     
     if not Is_Local[0]:
-        feature_vectors = download_all_files()
+        feature_vectors, fileNames = download_all_files()
     else: 
         feature_vectors = glob.glob('feature_vectors/*/*.npz')
     
@@ -246,9 +246,16 @@ def Similarity(postId):
         for neighbor in nearest_neighbors:
             similarity = 1 - spatial.distance.cosine(v, feature_vectors[neighbor])
             rounded_similarity = int((similarity * 10000)) / 10000.0
+            filename = fileNames[neighbor]
+            nameList = filename.split('/')
+            nameList = nameList[-2:-1]
+            print("-----------------nameList--------------")
+            print(nameList)
+            print("-----------------filename--------------")
+            print(filename)
             similarity_set = {
                 'similarity' : rounded_similarity,
-                'postId' : image_id[neighbor],
+                'postId' : nameList[0],
             }
             print("------------similarity------------")
             print(similarity)
