@@ -44,7 +44,9 @@ class S3Images(object):
             keys.append(content['Key'])
         results = []
         for ObjKey in keys:
-            np_array =  pickle.load(self.s3.get_object(Bucket=bucket, Key=key)['Body'].read())
+            response = self.s3.get_object(Bucket=bucket, Key=key)
+            body_string = response['Body'].read()
+            np_array = pickle.loads(body_string)
             results.append(np_array)
         return results
 
