@@ -75,4 +75,4 @@ def saveTasteInfo(request):
     except APIException as e:
         return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
 
-    return Response({'success' : True, 'postList' : postData}, status = HTTP_201_CREATED})
+    return Response({'success' : True, 'postList' : postData}, status = HTTP_201_CREATED)
