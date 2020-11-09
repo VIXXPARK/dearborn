@@ -8,13 +8,13 @@ from rest_framework.status import(
     HTTP_502_BAD_GATEWAY,
     HTTP_500_INTERNAL_SERVER_ERROR
 )
-from models import Post, PostImage
-from serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer
-from feature.feature import Similarity
+from dearbornapps.models.post import Post, PostImage
+from dearbornapps.serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer
+from dearbornapps.feature.feature import Similarity
 
 @api_view(["POST"])
 def getCategory(request):
-    catSerializer = categorySerializer(data=request.data)
+    catSerializer = CategorySerializer(data=request.data)
     if not catSerializer.is_valid():
         return Response({'success':False, 'err':catSerializer.errors}, status=HTTP_400_BAD_REQUEST)
 
@@ -27,7 +27,7 @@ def getCategory(request):
             'thumbnail' : post.thumbnail.url,
         } 
         posts.append(postsContext)
-    Response({'success' : True, 'posts' : posts}, HTTP_200_OK)
+    return Response({'success' : True, 'posts' : posts},status = HTTP_200_OK)
 
 @api_view(["POST"])
 def selectFilter(request):
@@ -41,10 +41,19 @@ def selectFilter(request):
         for sim in similarities:
             similarity = sim['similarity']
             if similarity >= 0.5:
-                posts.append(sim['postId'])
+                try:
+                    thumbnail = Post.objects.get(id=sim['postId']).thumbnail.url
+                except:
+                    thumbnail = None
+                postData = {
+                    'postId' : sim['postId'],
+                    'thumbnail' : thumbnail,
+                }
+                posts.append(postData)
+                
     tmp = set(posts)
     posts = list(tmp)
-    Response({'success':True, 'posts' : posts}, HTTP_200_OK)
+    return Response({'success':True, 'posts' : postD}, status = HTTP_200_OK)
 
 @api_view(["POST"])
 def saveTasteInfo(request):
@@ -59,7 +68,7 @@ def saveTasteInfo(request):
         try:
             postObj = Post.objects.get(id=postId)
         except:
-            return Response({'success' : False}, status = HTTP_500_INTERNAL_SERVER_ERROR})
+            return Response({'success' : False}, status = HTTP_500_INTERNAL_SERVER_ERROR)
         title = postObj.title
         thumbnail = postObj.thumbnail.url
         userId = postObj.user
@@ -73,6 +82,6 @@ def saveTasteInfo(request):
     try:
         taste = saveTasteSerializer.create(saveTasteSerializer.validated_data)
     except APIException as e:
-        return Response({'success' : False, 'err' : e.detail}, HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
 
-    return Response({'success' : True, 'postList' : postData}, status = HTTP_201_CREATED})
+    return Response({'success' : True, 'postList' : postData}, status = HTTP_201_CREATED)

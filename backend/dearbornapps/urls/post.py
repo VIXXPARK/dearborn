@@ -34,6 +34,6 @@ urlpatterns = [
     
 ]
 try:
-    voteExpired(repeat=100000,repeat_until=None)
+    voteExpired(repeat=3600,repeat_until=None)
 except:
     pass

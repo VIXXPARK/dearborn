@@ -9,7 +9,7 @@ def _delete_file(path):
       os.remove(path)
 
 def postUpload_to(instance,filename):
-   return 'thumb/{0}/{1}/{2}'.format(instance.user,instance.id,filename)
+   return 'thumb/{0}/{1}/{2}'.format(instance.user.id,instance.id,filename)
 
 class Post(models.Model):
    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)

@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/', include('dearbornapps.urls.messanger')),
     path('api/', include('dearbornapps.urls.contest')),
     path('api/', include('dearbornapps.urls.assess')),
+    path('api/', include('dearbornapps.urls.extraction')),
     re_path('^(?:.*)/?$', TemplateView.as_view(template_name='index.html'), name='index'),
     re_path('^service-worker.js$',
         TemplateView.as_view(template_name='service-worker.js',

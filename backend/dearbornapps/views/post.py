@@ -70,7 +70,7 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId)
-        similarity = Similarity(response.data.postId)
+        similarity = Similarity(postId)
         context = {
             'similarity' : similarity,
             'success' : True,
@@ -698,20 +698,33 @@ class getMyWork(APIView):
             return Response({'success':False,'err':username.error_messages},status=HTTP_400_BAD_REQUEST)
 
         
-        work = myWork.objects.get(user=username.validated_data['user'])
-        postdata = Post.objects.get(id=work.post.id)
+        
         try:
+            work = myWork.objects.get(user=username.validated_data['user'])
+            postdata = Post.objects.get(id=work.post.id)
             thumbnail=postdata.thumbnail.url
-        except:
-            thumbnail=None,
-        about = {
+            about = {
             'id':postdata.id,
-            'thumbnail':thumbnail
-        }
-        content={
-            'success':True,
-            'about':about,
-        }
+            'thumbnail':thumbnail,
+            'title':postdata.title,
+            'content':postdata.content
+            }
+            content={
+                'success':True,
+                'about':about,
+            }
+        except:
+            about = {
+            'id': None,
+            'thumbnail': None,
+            'title':None,
+            'content':None
+            }
+            content={
+                'success': True,
+                'about':about,
+            }
+        
         return Response(content,status=HTTP_200_OK)
 
 
@@ -730,7 +743,7 @@ def voteExpired():
 
         if expired_dt <= now:
 
-            votes = vote.objects.count(post = post.id)
+            votes = vote.objects.filter(post = post.id).count()
             try:
                 postUser = User.object.get(id = post.user.id)
             except APIException as e:

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models.extraction import Taste
+from dearbornapps.models.extraction import Taste
 
 
 class CategorySerializer(serializers.Serializer):

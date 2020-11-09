@@ -3,7 +3,7 @@ import tensorflow_hub as hub
 import tensorflow as tf
 import numpy as np
 import glob, os.path, json
-import boto3, os
+import boto3, os, pickle
 from annoy import AnnoyIndex
 from scipy import spatial
 from dearbornConfig.settings.base import BASE_DIR, Is_Local
@@ -37,12 +37,23 @@ class S3Images(object):
         
 
     def from_s3_non_image(self, bucket, key):
-        file_byte_string = self.s3.list_objects(Bucket=bucket, Prefix=key)['Body'].read()
-        return file_byte_string
-    
+        contents = self.s3.list_objects(Bucket=bucket, Prefix=key)['Contents']
+        keys = []
+        for content in contents:
+            keys.append(content['Key'])
+        results = []
+        keys = keys[1:]
+        for ObjKey in keys:
+            response = self.s3.get_object(Bucket=bucket, Key=ObjKey)
+            body_string = response['Body'].read()
+            np_array = pickle.loads(body_string)
+            results.append(np_array)
+        return results, keys
+
     def from_s3(self, bucket, key):
         file_byte_string = self.s3.get_object(Bucket=bucket, Key=key)['Body'].read()
-        return Image.open(BytesIO(file_byte_string))
+        img = Image.open(BytesIO(file_byte_string))
+        return img
 
     def to_s3_image(self, img, bucket, key):
         buffer = BytesIO()
@@ -54,7 +65,7 @@ class S3Images(object):
         
     def to_s3(self, obj, bucket, key):
         buffer = BytesIO()
-        obj.save(buffer)
+        pickle.dump(obj, buffer)
         buffer.seek(0)
         sent_data = self.s3.put_object(Bucket=bucket, Key=key, Body=buffer)
         if sent_data['ResponseMetadata']['HTTPStatusCode'] != 200:
@@ -87,22 +98,18 @@ def download_all_files():
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     region_name = os.getenv('AWS_S3_REGION_NAME')
     s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
-    obj = s3Images.from_s3_non_image("dearbornstorage",'feature_vectors/')
+    obj, keys = s3Images.from_s3_non_image("dearbornstorage",'feature_vectors/')
     
-    return obj
+    return obj, keys
         
 
-def featureUpload_to(postId,filename):
-   return 'feature_vector/{0}/{1}'.format(postId ,filename)
+def featureUpload_to(postId):
+   return 'feature_vectors/{0}'.format(postId)
 
 def ChangeImage(images):
     image_array = []
-    print("------------------------------")
-    print(images)
-    print("------------------------------")
-    for image in images:
-        image = tf.image.decode_image(image)
-        image = tf.image.resize(image, [224, 224])
+    for img in images:
+        image = tf.image.resize(img, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
     return image_array
@@ -112,11 +119,12 @@ def LoadImage(image_urls):
     image_array = []
     for path in image_urls:
         image = tf.io.read_file(path)
-        image = tf.image.decode_image(image)
+        image = tf.image.decode_image(image, channels=3)
         image = tf.image.resize(image, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
     return image_array
+
 
 def CheckDir(path):
     try:
@@ -133,11 +141,15 @@ def GetImageArray(postId):
         image_id = []
         for post in  posts:
             url = post.thumbnail.url
-            image_urls.append(url)
-            image_id.append(Post.id)
-            file_name = os.path.basename(url).split('.')[0]
+            dirs = url.split('/')
+            path = os.path.join(BASE_DIR)
+            for dir in dirs:
+                path = os.path.join(path, dir)
+            image_urls.append(path)
+            image_id.append(post.id)
+            file_name = os.path.basename(path).split('.')[0]
             image_file_name.append(file_name)
-        image_array = LoadImage(image_urls)
+        image_array_resized = LoadImage(image_urls)
     else:
         image_file_name = []
         image_id = []
@@ -149,75 +161,85 @@ def GetImageArray(postId):
         
         for post in  posts:
             url = post.thumbnail.url
-            image_id.append(Post.id)
-            file_name = os.path.basename(url).split('.')[0]
+            image_id.append(post.id)
+            file_name = os.path.basename(post.thumbnail.url).split('.')[0]
             dir = url.split('/')
-            reversed(dir)
-            path = os.path.join('media',dir[2],dir[1],dir[0])
-            print("-----------check-------------")
-            print(path)
+            dir = dir[-4:]
+            path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
             image = s3Images.from_s3("dearbornstorage",path)
-            images.append(image)
+            image_array = np.array(image)
+            images.append(image_array)
             image_file_name.append(file_name)
-        image_array = ChangeImage(images)
-    return image_array, image_file_name, image_id
+        image_array_resized = ChangeImage(images)
+    return image_array_resized, image_file_name, image_id
 
 def GetFeatureVector(image_array):
     hub_path = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
+    
     MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False)
+    
     featureVector = []
-    for array in image_array:
-        result = MyModule(array)
-        result_set = np.squeeze(result)
+    result = MyModule(image_array)
+    for res in result:
+        result_set = np.squeeze(res)
         featureVector.append(result_set)
+    
     return featureVector
 
 def SaveFeatureVector(featureVector, image_file_name, postId):
-    for index, v in featureVector:
-        if not Is_Local[0]:
+    if Is_Local[0]:
+        for index, v in enumerate(featureVector):
+            dirs = featureUpload_to(postId).split('/')
+            out_path = os.path.join(BASE_DIR)
+            for dir in dirs:
+                out_path = os.path.join(out_path, dir)
+            CheckDir(out_path)
+            out_path = os.path.join(out_path,image_file_name[index] + ".npz")
+            np.savetxt(out_path, v, delimiter=',')
+    else :
+        for index, v in enumerate(featureVector):
             ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
             SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
             region_name = os.getenv('AWS_S3_REGION_NAME')
             s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
-            s3Images.to_s3(v,"dearbornstorage",featureUpload_to(postId, image_file_name[index])+".npz")
-        else :
-            out_dir = os.path.join(BASE_DIR,'feature_vectors')
-            CheckDir(out_dir)
-            out_path = os.path.join(BASE_DIR,featureUpload_to(postId, image_file_name[index]) + ".npz")
-            np.savetxt(out_path, v, delimiter=',')
+            dirs = featureUpload_to(postId).split('/')
+            out_path = ""
+            for dir in dirs:
+                out_path = os.path.join(out_path, dir)
+            out_path = os.path.join(out_path,image_file_name[index] + ".pkl")
+            
+            s3Images.to_s3(v,"dearbornstorage",out_path)
 
 def Similarity(postId):
 
     dims = 1280
-    n_nearest_neighbors = 1
+    n_nearest_neighbors = 5
     trees = 10000
 
     image_array, image_file_name, image_id = GetImageArray(postId)
     vectors = GetFeatureVector(image_array)
     
     if not Is_Local[0]:
-        feature_vectors = download_all_files()
+        feature_vectors, fileNames = download_all_files()
     else: 
-        feature_vectors = glob.glob('feature_vectors/*.npz')
-    
-    n_nearest_neighbors = feature_vectors.count()
+        feature_vectors = glob.glob('feature_vectors/*/*.npz')
 
     annoy = AnnoyIndex(dims,'angular')
-    for index, v in feature_vectors:
+    for index, v in enumerate(feature_vectors):
         annoy.add_item(index, v)
     annoy.build(trees)
     similarities = []
-    for index, v in vectors:
-        nearest_neighbors = t.get_nns_by_vector(v, n_nearest_neighbors)
+    for index, v in enumerate(vectors):
+        nearest_neighbors = annoy.get_nns_by_vector(v, n_nearest_neighbors)
         for neighbor in nearest_neighbors:
-            similarity = 1 - spatial.distance.cosine(v, tested[neighbor])
+            similarity = 1 - spatial.distance.cosine(v, feature_vectors[neighbor])
             rounded_similarity = int((similarity * 10000)) / 10000.0
+            filename = fileNames[neighbor]
+            nameList = filename.split('/')
+            nameList = nameList[-2:-1]
             similarity_set = {
-                'similarity' : similarity,
-                'postId' : image_id[index]
-            }
+                'similarity' : rounded_similarity,
+                'postId' : nameList[0],
+            } 
             similarities.append(similarity_set)
     return similarities
-    
-    
- 
