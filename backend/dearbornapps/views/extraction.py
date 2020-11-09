@@ -76,7 +76,7 @@ def saveTasteInfo(request):
         thumbnail = postObj.thumbnail.url
         userId = postObj.user
         # try:
-        taste = Taste(user=postObj.user,post=postObj.id)
+        taste = Taste(user=postObj.user,Post=postObj.id)
         taste.save()
         # except e:
         #     return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
