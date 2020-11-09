@@ -84,7 +84,13 @@ function FindFeaturePage(props) {
                 Authorization: `Token ${getCookieValue('w_auth')}`
             }
         }
-        axios.post('/api/feature/saveType', {userId : props.user.userData._id ,postList : SelectedPA }, config)
+        let sendData = SelectedPA.map(post => (
+            {
+                userId : props.user.userData._id,
+                postList : post.postId
+            }
+        ))
+        axios.post('/api/feature/saveType', sendData, config)
         .then(response => {
             if(response.data.success){
                 alert('저장 성공')
