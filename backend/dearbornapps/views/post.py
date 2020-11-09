@@ -705,17 +705,20 @@ class getMyWork(APIView):
             thumbnail=postdata.thumbnail.url
             about = {
             'id':postdata.id,
-            'thumbnail':thumbnail
+            'thumbnail':thumbnail,
+            'title':postdata.title,
+            'content':postdata.content
             }
             content={
                 'success':True,
                 'about':about,
             }
         except:
-            thumbnail=None,
             about = {
             'id': None,
-            'thumbnail': None
+            'thumbnail': None,
+            'title':None,
+            'content':None
             }
             content={
                 'success': True,
