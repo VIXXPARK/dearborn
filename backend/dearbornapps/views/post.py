@@ -704,8 +704,8 @@ class getMyWork(APIView):
             postdata = Post.objects.get(id=work.post.id)
             thumbnail=postdata.thumbnail.url
             about = {
-            'id':postdata.id,
-            'thumbnail':thumbnail
+                'id':postdata.id,
+                'thumbnail':thumbnail
             }
             content={
                 'success':True,
@@ -714,8 +714,8 @@ class getMyWork(APIView):
         except:
             thumbnail=None,
             about = {
-            'id': None,
-            'thumbnail': None
+                'id': None,
+                'thumbnail': None
             }
             content={
                 'success': True,
