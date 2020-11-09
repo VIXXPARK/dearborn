@@ -41,7 +41,7 @@ def selectFilter(request):
         similarities = Similarity(post)
         for sim in similarities:
             similarity = sim['similarity']
-            if similarity >= 0.5:
+            if similarity >= 0.7:
                 posts.append(sim['postId'])
     tmp = set(posts)
     posts = list(tmp)
@@ -76,7 +76,7 @@ def saveTasteInfo(request):
         thumbnail = postObj.thumbnail.url
         userId = postObj.user
         # try:
-        taste = Taste(user=postObj.user,Post=postObj.id)
+        taste = Taste(user=postObj.user,post=postObj)
         taste.save()
         # except e:
         #     return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
