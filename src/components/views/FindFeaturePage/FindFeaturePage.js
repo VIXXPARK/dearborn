@@ -87,10 +87,11 @@ function FindFeaturePage(props) {
         let sendData = SelectedPA.map(post => (
             {
                 userId : props.user.userData._id,
-                postList : post.postId
+                postId : post.postId
             }
         ))
-        axios.post('/api/feature/saveType', sendData, config)
+        console.log(sendData)
+        axios.post('/api/feature/saveType', {postList : sendData}, config)
         .then(response => {
             if(response.data.success){
                 alert('저장 성공')
