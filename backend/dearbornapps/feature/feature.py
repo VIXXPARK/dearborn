@@ -213,7 +213,7 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
 def Similarity(postId):
 
     dims = 1280
-    n_nearest_neighbors = 1
+    n_nearest_neighbors = 5
     trees = 10000
 
     image_array, image_file_name, image_id = GetImageArray(postId)
@@ -223,8 +223,6 @@ def Similarity(postId):
         feature_vectors, fileNames = download_all_files()
     else: 
         feature_vectors = glob.glob('feature_vectors/*/*.npz')
-    
-    n_nearest_neighbors = len(feature_vectors)
 
     annoy = AnnoyIndex(dims,'angular')
     for index, v in enumerate(feature_vectors):

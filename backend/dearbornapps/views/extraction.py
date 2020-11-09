@@ -41,10 +41,19 @@ def selectFilter(request):
         for sim in similarities:
             similarity = sim['similarity']
             if similarity >= 0.5:
-                posts.append(sim['postId'])
+                try:
+                    thumbnail = Post.objects.get(id=sim['postId']).thumbnail.url
+                except:
+                    thumbnail = None
+                postData = {
+                    'postId' : sim['postId'],
+                    'thumbnail' : thumbnail,
+                }
+                posts.append(postData)
+                
     tmp = set(posts)
     posts = list(tmp)
-    return Response({'success':True, 'posts' : posts}, status = HTTP_200_OK)
+    return Response({'success':True, 'posts' : postD}, status = HTTP_200_OK)
 
 @api_view(["POST"])
 def saveTasteInfo(request):
