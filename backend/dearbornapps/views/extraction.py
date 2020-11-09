@@ -9,6 +9,7 @@ from rest_framework.status import(
     HTTP_500_INTERNAL_SERVER_ERROR
 )
 from dearbornapps.models.post import Post, PostImage
+from dearbornapps.models.extraction import Taste
 from dearbornapps.serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer
 from dearbornapps.feature.feature import Similarity
 
@@ -47,7 +48,7 @@ def selectFilter(request):
     context = []
     for post in posts:
         try:
-            thumbnail = Post.objects.get(id = post).thumbnail._url
+            thumbnail = Post.objects.get(id = post).thumbnail.url
         except:
             thumbnail = None
         postData = {
@@ -74,16 +75,18 @@ def saveTasteInfo(request):
         title = postObj.title
         thumbnail = postObj.thumbnail.url
         userId = postObj.user
+        try:
+            taste = Taste()
+            taste.user = postObj.user
+            taste.post = postObj.id
+            taste.save()
+        except APIException as e:
+            return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
         postDict = {
             'title' : title,
             'thumbnail' : thumbnail,
             'userId' : userId,
         }
         postData.append(postDict)
-
-    try:
-        taste = saveTasteSerializer.create(saveTasteSerializer.validated_data)
-    except APIException as e:
-        return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response({'success' : True, 'postList' : postData}, status = HTTP_201_CREATED)
