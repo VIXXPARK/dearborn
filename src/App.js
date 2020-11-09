@@ -38,6 +38,8 @@ import ContestManagePage from './components/views/DetailPage/ContestManagePage'
 import FindFeaturePage from './components/views/FindFeaturePage/FindFeaturePage'
 import UserChangePasswordPage from './components/views/UserInfoPage/UserChangePasswordPage'
 
+import ScrollToTop from './components/utils/ScrollToTop'
+
 function App(props) {
   return (
     <Suspense fallback={(<div>Loading...</div>)}>

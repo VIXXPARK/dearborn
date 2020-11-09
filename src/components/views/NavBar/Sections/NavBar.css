@@ -30,7 +30,7 @@
 }
 
 #header-clicked{
-    color: #49c5b6;
+    color: #f85272;
 }
 
 #header-a{
@@ -106,12 +106,12 @@
 }
 
 .ant-btn-primary{
-    background-color: #49c5b6;
-    border-color: #49c5b6;
+    background-color: #f85272;
+    border-color: #f85272;
 }
 .ant-btn-primary:hover{
-    background-color: #39b4a6;
-    border-color: #39b4a6;
+    background-color: #f85272;
+    border-color: #f85272;
 }
 
 .message-modal-background{

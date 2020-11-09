@@ -111,6 +111,9 @@ function CommentArea(props) {
 
     return (
         <div>
+            <div style={{borderBottom: '1px solid black', marginBottom:'10px'}}>
+                댓글
+            </div>
             <div>
                 {Comments && Comments.map((comment)=>(
                     renderingComments(comment)

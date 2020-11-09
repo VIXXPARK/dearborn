@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {Avatar, Card, Radio, Typography} from 'antd'
 
 import './ListPage.css'
@@ -24,6 +24,18 @@ function RepoListPage(props) {
     const [Ook, setOok] = useState(0); //One of kind
     const [Sort, setSort] = useState(0)
     const [Loading, setLoading] = useState(true)
+    const [WindowX, setWindowX] = useState(0)
+    const [PostColumn, setPostColumn] = useState(5)
+
+    useLayoutEffect(() => {
+        function updateSize(){
+            setWindowX(window.innerWidth)
+        }
+        window.addEventListener('resize', updateSize)
+        updateSize()
+        return () => window.removeEventListener('resize', updateSize)
+    }, [])
+
 
     useEffect(() => {
         const variables = {
@@ -36,11 +48,24 @@ function RepoListPage(props) {
         window.addEventListener('scroll', handleScroll)
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
-
     useEffect(() => {
         setTimeout(() => {
             let images = document.querySelectorAll('.item-vote-wrap')
-            let imgStack = [0,0,0,0,0]
+            let imgStack
+            if(PostColumn === 1){
+                imgStack = [0]
+            }else if(PostColumn === 2){
+                imgStack =[0,0]
+            }
+            else if(PostColumn === 3){
+                imgStack =[0,0,0]
+            }
+            else if(PostColumn === 4){
+                imgStack =[0,0,0,0]
+            }
+            else if(PostColumn === 5){
+                imgStack =[0,0,0,0,0]
+            }
             let colWidth = 256;
             for(let i=0; i<images.length; i++){
                 let minIndex = imgStack.indexOf(Math.min.apply(0, imgStack))
@@ -50,8 +75,27 @@ function RepoListPage(props) {
                 console.log(images)
                 images[i].style.transform = `translateX(${x}px) translateY(${y}px)`
             }
-        }, 100);
+        }, 500);
     }, [document.querySelectorAll('.item-vote-wrap')])
+
+    useEffect(() => {
+        if(window.innerWidth < 400){
+            setPostColumn(1)
+        }
+        else if(window.innerWidth <700)
+        {
+            setPostColumn(2)
+        }
+        else if(window.innerWidth <1000){
+            setPostColumn(3)
+        }
+        else if(window.innerWidth <1300){
+            setPostColumn(4)
+        }
+        else if(window.innerWidth >=1300){
+            setPostColumn(5)
+        }
+    }, [window.innerWidth])
 
     useEffect(() => {
         if(IsBottom && LoadMore){
