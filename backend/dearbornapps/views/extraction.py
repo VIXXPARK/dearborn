@@ -10,6 +10,7 @@ from rest_framework.status import(
 )
 from dearbornapps.models.post import Post, PostImage
 from dearbornapps.models.extraction import Taste
+from dearbornapps.models.user import User
 from dearbornapps.serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer
 from dearbornapps.feature.feature import Similarity
 
@@ -68,15 +69,16 @@ def saveTasteInfo(request):
     postData = []
     for post in postList:
         postId = post['postId']
+        userId = post['userId']
         try:
             postObj = Post.objects.get(id=postId)
+            user = User.object.get(id = userId)
         except:
             return Response({'success' : False}, status = HTTP_500_INTERNAL_SERVER_ERROR)
         title = postObj.title
         thumbnail = postObj.thumbnail.url
-        userId = postObj.user
         # try:
-        taste = Taste(user=postObj.user,post=postObj)
+        taste = Taste(user=user,post=postObj)
         taste.save()
         # except e:
         #     return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
