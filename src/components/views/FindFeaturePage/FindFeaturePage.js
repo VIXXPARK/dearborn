@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import {LoadingOutlined, RightSquareOutlined, CheckOutlined} from '@ant-design/icons'
 import axios from 'axios'
 import {getCookieValue} from '../../utils/Cookie'
+import {convertToS3EP} from '../../utils/String'
 import {Loader} from '../../utils/Loader'
 
 import './FindFeaturePage.css'
@@ -20,13 +21,14 @@ function FindFeaturePage(props) {
     const [SelectedPA, setSelectedPA] = useState([])
 
     const handleCategoryClick = (e) => {
-        setCategory(e)
+        setCategory(parseInt(e.key))
     }
 
     const OnNextStepClick = () => {
         setLoading(true)
         switch (CurrentStep) {
             case 1:
+                console.log(1)
                 OnFirstStepClick()
                 break;
             case 2:
@@ -40,7 +42,6 @@ function FindFeaturePage(props) {
         }
         setCurrentStep(CurrentStep+1)
     }
-
     const OnFirstStepClick = () =>{
         const config = {
             headers : {
@@ -59,8 +60,6 @@ function FindFeaturePage(props) {
         })
     }
 
-    console.log(PostsBefore)
-
     const OnSecondStepClick = () => {
         const config = {
             headers : {
@@ -70,7 +69,7 @@ function FindFeaturePage(props) {
         axios.post('/api/feature/selectFilter', {postList : SelectedPB}, config)
         .then(response => {
             if(response.data.success){
-                setPostsAfter(response.data.postList)
+                setPostsAfter(response.data.posts)
             }else{
                 alert('데이터2 가져오기 실패')
             }
@@ -97,7 +96,7 @@ function FindFeaturePage(props) {
         })
     }
 
-
+    console.log(PostsAfter)
 
 
     const OnModalClose = () => {
@@ -108,33 +107,32 @@ function FindFeaturePage(props) {
         setModal(true)
         setPreview(1)
     }
-
     const renderPB = (post) => {
 
         const OnPBSelected = () =>{
-            setSelectedPB([...SelectedPB, 1])
+            setSelectedPB([...SelectedPB, post.postId])
         }
         const OnPBSelectedCancel = () => {
-            setSelectedPB(SelectedPB.filter(id => id !== 1))
+            setSelectedPB(SelectedPB.filter(id => id !== post.postId))
         }
 
         return (
             <>
             <div className="post-list-show-item">
-                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                <img id="img-match" src={convertToS3EP(post.thumbnail)}/>
                 <div className="post-list-show-wrap">
                     <div>
                         <div className="post-list-show-btn" onClick={OnModalOpen}>
                             미리보기
                         </div>
-                        {SelectedPB.indexOf(1)=== -1 ? <div className="post-list-show-btn" onClick={OnPBSelected}>
+                        {SelectedPB.indexOf(post.postId)=== -1 ? <div className="post-list-show-btn" onClick={OnPBSelected}>
                             선택
                         </div> : <div className="post-list-show-btn" onClick={OnPBSelectedCancel}>
                             선택 취소
                         </div>}
                     </div>
                 </div>
-                {SelectedPB.indexOf(1)!== -1 && <div className="post-list-show-selected">
+                {SelectedPB.indexOf(post.postId)!== -1 && <div className="post-list-show-selected">
                     <CheckOutlined style={{fontSize:'30px',fontWeight:'bold', color:'green'}}/>
                 </div>}
             </div>
@@ -145,36 +143,36 @@ function FindFeaturePage(props) {
     const renderPA = (post) => {
 
         const OnPASelected = () =>{
-            setSelectedPA([...SelectedPA, 1])
+            setSelectedPA([...SelectedPA, post])
         }
         const OnPASelectedCancel = () => {
-            setSelectedPA(SelectedPA.filter(id => id !== 1))
+            setSelectedPA(SelectedPA.filter(id => id !== post))
         }
 
         return (
             <>
             <div className="post-list-show-item">
-                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                <img id="img-match" src={convertToS3EP(post.thumbnail)}/>
                 <div className="post-list-show-wrap">
                     <div>
                         <div className="post-list-show-btn" onClick={OnModalOpen}>
                             미리보기
                         </div>
-                        {SelectedPA.indexOf(1)=== -1 ? <div className="post-list-show-btn" onClick={OnPASelected}>
+                        {SelectedPA.indexOf(post)=== -1 ? <div className="post-list-show-btn" onClick={OnPASelected}>
                             선택
                         </div> : <div className="post-list-show-btn" onClick={OnPASelectedCancel}>
                             선택 취소
                         </div>}
                     </div>
                 </div>
-                {SelectedPA.indexOf(1)!== -1 && <div className="post-list-show-selected">
+                {SelectedPA.indexOf(post)!== -1 && <div className="post-list-show-selected">
                     <CheckOutlined style={{fontSize:'30px',fontWeight:'bold', color:'green'}}/>
                 </div>}
             </div>
             </>
         )
     }
-
+    console.log(SelectedPA)
     const renderResult = () => {
         return <div className="feature-result-item">
             <div className="feature-result-item-thumb">
@@ -262,14 +260,9 @@ function FindFeaturePage(props) {
                     </div>
                     <div className="post-list-show-container">
                         <div className="post-list-show-wrapper">
-                            {renderPB()}
-                            {renderPB()}
-                            {renderPB()}
-                            {renderPB()}
-                            {renderPB()}
-                            {renderPB()}
-                            {renderPB()}
-                            {renderPB()}
+                            {PostsBefore && PostsBefore.map(post => (
+                                renderPB(post)
+                            ))}
                         </div>
                     </div>
                     <div className="next-btn-wrapper">
@@ -282,14 +275,9 @@ function FindFeaturePage(props) {
                     </div>
                     <div className="post-list-show-container">
                         <div className="post-list-show-wrapper">
-                            {renderPA()}
-                            {renderPA()}
-                            {renderPA()}
-                            {renderPA()}
-                            {renderPA()}
-                            {renderPA()}
-                            {renderPA()}
-                            {renderPA()}
+                            {PostsAfter && PostsAfter.map(post => (
+                                renderPA(post)
+                            ))}
                         </div>
                     </div>
                     <div className="next-btn-wrapper">

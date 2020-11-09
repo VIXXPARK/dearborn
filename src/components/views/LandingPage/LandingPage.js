@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios'
 
 import RankBox from './Sections/RankBox'
@@ -30,6 +30,17 @@ function LandingPage(props) {
     const [IsBottom, setIsBottom] = useState(false)
     const [Loading, setLoading] = useState(true)
     const [MainBanner, setMainBanner] = useState(true)
+    const [PostColumn, setPostColumn] = useState(5)
+    const [WindowX, setWindowX] = useState(0)
+
+    useLayoutEffect(() => {
+        function updateSize(){
+            setWindowX(window.innerWidth)
+        }
+        window.addEventListener('resize', updateSize)
+        updateSize()
+        return () => window.removeEventListener('resize', updateSize)
+    }, [])
 
     useEffect(() => {
         const variables = {
@@ -44,9 +55,41 @@ function LandingPage(props) {
     }, [])
 
     useEffect(() => {
+        if(window.innerWidth < 400){
+            setPostColumn(1)
+        }
+        else if(window.innerWidth <700)
+        {
+            setPostColumn(2)
+        }
+        else if(window.innerWidth <1000){
+            setPostColumn(3)
+        }
+        else if(window.innerWidth <1300){
+            setPostColumn(4)
+        }
+        else if(window.innerWidth >=1300){
+            setPostColumn(5)
+        }
+    }, [window.innerWidth])
+    useEffect(() => {
         setTimeout(() => {
             let images = document.querySelectorAll('.item-vote-wrap')
-            let imgStack = [0,0,0,0,0]
+            let imgStack
+            if(PostColumn === 1){
+                imgStack = [0]
+            }else if(PostColumn === 2){
+                imgStack =[0,0]
+            }
+            else if(PostColumn === 3){
+                imgStack =[0,0,0]
+            }
+            else if(PostColumn === 4){
+                imgStack =[0,0,0,0]
+            }
+            else if(PostColumn === 5){
+                imgStack =[0,0,0,0,0]
+            }
             let colWidth = 256;
             for(let i=0; i<images.length; i++){
                 let minIndex = imgStack.indexOf(Math.min.apply(0, imgStack))
@@ -55,8 +98,8 @@ function LandingPage(props) {
                 imgStack[minIndex] += (images[i].children[0].height + 15)
                 images[i].style.transform = `translateX(${x}px) translateY(${y}px)`
             }
-        }, 100);
-    }, [document.querySelectorAll('.item-vote-wrap')])
+        }, 500);
+    }, [document.querySelectorAll('.item-vote-wrap'), PostColumn])
 
     useEffect(() => {
         if(IsBottom && LoadMore && !Loading){
@@ -73,6 +116,8 @@ function LandingPage(props) {
             || document.body.scrollHeight;
         if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
+        }else{
+            setIsBottom(false)
         }
     }
 

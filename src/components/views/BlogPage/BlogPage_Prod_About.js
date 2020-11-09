@@ -52,7 +52,7 @@ function BlogPage_Prod_About(props) {
             }
         })
     }
-
+    console.log(About)
     return (
         <div className="blog-container">
             <div className="blog-right-container">
@@ -79,8 +79,21 @@ function BlogPage_Prod_About(props) {
                             <div className="prod-about-title">
                                 User 님의 대표작품
                             </div>
-                            <div className="prod-about-content">
-                                {About && <a href={`/${designer}/${About.id}`}><img src={convertToS3EP(About.thumbnail)}/></a>}
+                            <div style={{marginLeft:'150px', marginRight:'150px'}}>
+                                <div style={{width:'50%',height:'100%',textAlign:'center', display:'inline-block', backgroundColor:'white',verticalAlign:'top', wordBreak:'break-all'}}>
+                                    <div style={{width:'100%', marginTop:'35%'}}>
+                                        <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'2rem'}}>{About.title}</p>
+                                        <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'1rem'}}>{About.content}</p>
+                                    </div>
+                                    <div>
+                                        <div style={{width:'90%',maxWidth:'400px',height:'70px',marginTop:'10%', borderRadius:'30px',fontSize:'1.5rem', backgroundColor:'#f85272', display:'inline-block', lineHeight:'80px'}}>
+                                            작품 보러 가기
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{width:'50%',height:'100%', display:'inline-block', backgroundColor:'gray', overflow:'hidden', wordBreak:'break-all'}}>
+                                    <img style={{width:'100%'}} src={convertToS3EP(About.thumbnail)}/>
+                                </div>
                             </div>
                         </div>
                     </div>

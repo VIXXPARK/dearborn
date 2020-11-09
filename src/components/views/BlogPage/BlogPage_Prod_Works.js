@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios'
-import { Button, Typography, Card, Avatar, Modal } from 'antd';
+import { Button, Typography, Card, Avatar, Modal, Tooltip } from 'antd';
 import {config} from '../../utils/Token'
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
+import {CheckCircleOutlined} from '@ant-design/icons'
+import {Loader} from '../../utils/Loader'
 
 const {Title} = Typography
 const {confirm} = Modal
@@ -15,11 +17,23 @@ function BlogPage_Prod_Works(props) {
     const [Repos, setRepos] = useState([])
     const [Designer, setDesigner] = useState("")
     const [Skip, setSkip] = useState(0)
-    const [Limit, setLimit] = useState(4)
+    const [Limit, setLimit] = useState(7)
     const [LoadMore, setLoadMore] = useState(true)
     const [IsBottom, setIsBottom] = useState(false)
+    const [Loading, setLoading] = useState(true)
+    const [PostColumn, setPostColumn] = useState(7)
+    const [WindowX, setWindowX] = useState(0)
 
     const designer = props.match.params.designer
+
+    useLayoutEffect(() => {
+        function updateSize(){
+            setWindowX(window.innerWidth)
+        }
+        window.addEventListener('resize', updateSize)
+        updateSize()
+        return () => window.removeEventListener('resize', updateSize)
+    }, [])
 
     useEffect(() => {
         const config = {
@@ -43,7 +57,69 @@ function BlogPage_Prod_Works(props) {
     }, [])
 
     useEffect(() => {
-        if(IsBottom && LoadMore){
+        if(window.innerWidth < 400){
+            setPostColumn(1)
+        }
+        else if(window.innerWidth <700)
+        {
+            setPostColumn(2)
+        }
+        else if(window.innerWidth <1000){
+            setPostColumn(3)
+        }
+        else if(window.innerWidth <1300){
+            setPostColumn(4)
+        }
+        else if(window.innerWidth <1600){
+            setPostColumn(5)
+        }
+        else if(window.innerWidth <1900){
+            setPostColumn(6)
+        }
+        else if(window.innerWidth >=1900){
+            setPostColumn(7)
+        }
+    }, [window.innerWidth])
+
+    useEffect(() => {
+        setTimeout(() => {
+            let images = document.querySelectorAll('.item-vote-wrap')
+            let imgStack
+            if(PostColumn === 1){
+                imgStack = [0]
+            }else if(PostColumn === 2){
+                imgStack =[0,0]
+            }
+            else if(PostColumn === 3){
+                imgStack =[0,0,0]
+            }
+            else if(PostColumn === 4){
+                imgStack =[0,0,0,0]
+            }
+            else if(PostColumn === 5){
+                imgStack =[0,0,0,0,0]
+            }
+            else if(PostColumn === 6){
+                imgStack =[0,0,0,0,0,0]
+            }
+            else if(PostColumn === 7){
+                imgStack =[0,0,0,0,0,0,0]
+            }
+            let colWidth = 256;
+            for(let i=0; i<images.length; i++){
+                let minIndex = imgStack.indexOf(Math.min.apply(0, imgStack))
+                let x = colWidth * minIndex
+                let y = imgStack[minIndex]
+                imgStack[minIndex] += (images[i].children[0].height + 15)
+                images[i].style.transform = `translateX(${x}px) translateY(${y}px)`
+            }
+        }, 500);
+
+    }, [document.querySelectorAll('.item-vote-wrap'), PostColumn])
+
+    useEffect(() => {
+        if(IsBottom && LoadMore && !Loading){
+            setLoading(true)
             getPosts(Designer.id)
             setIsBottom(false)
         }
@@ -58,6 +134,8 @@ function BlogPage_Prod_Works(props) {
             || document.body.scrollHeight;
         if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
+        }else{
+            setIsBottom(false)
         }
     }
 
@@ -81,6 +159,8 @@ function BlogPage_Prod_Works(props) {
                     }else{
                         console.log(response.data.err)
                     }
+                }).finally(()=>{
+                    setLoading(false)
                 })
     }
 
@@ -107,14 +187,17 @@ function BlogPage_Prod_Works(props) {
             })
         }
         return (
-            <div className="works-wrapper">
-                <a href={`/${designer}/${repo.id}`}>
-                <div className="works-thumb"><img style={{width:'100%', height:'100%'}} src={convertToS3EP(repo.thumbnail)}/></div>
-                </a>
-                <div className="works-content">
-                    <p>{repo.title}</p>
-                    <Button onClick={onMyWorkPick}>대표작품 지정</Button>
-                </div>
+            <div className="item-vote-wrap">
+                <img className="item-vote-img" src={convertToS3EP(repo.thumbnail)} alt/>
+                <div className="item-vote-obv"></div>
+                    <div className="item-vote-show">
+                        <div style={{position:'absolute',top:'5%', right:'5%',fontSize:'30px', textAlign:'center', margin:'0 auto', color:'#f85272'}}><Tooltip placement="topLeft" title="대표작품 지정"><CheckCircleOutlined onClick={onMyWorkPick}/></Tooltip></div>
+                        <a href = {`/${Designer.nickname}/${repo.id}`}>
+                        <div className="item-vote-title">
+                            {repo.title}
+                        </div>
+                        </a>
+                    </div>
             </div>
             )
     }
@@ -148,6 +231,7 @@ function BlogPage_Prod_Works(props) {
                     </div>
                 </div>
             </div>
+            {Loading && Loader("spin", "black")}
         </div>
     );
 }
