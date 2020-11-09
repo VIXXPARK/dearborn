@@ -61,9 +61,11 @@ function PostRankBox(props) {
                             <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'1rem'}}>{post.title+" 아이우에오아이우"}</p>
                         </div>
                         <div>
-                            <div style={{width:'90%',maxWidth:'400px',height:'70px',marginTop:'10%', borderRadius:'30px',fontSize:'1.5rem', backgroundColor:'#f85272', display:'inline-block', lineHeight:'80px'}}>
+                            <a href={`/`}>
+                            <div style={{width:'90%',maxWidth:'400px',height:'70px',marginTop:'10%', borderRadius:'30px',fontSize:'1.5rem', backgroundColor:'#f85272', display:'inline-block', lineHeight:'80px', color:'white'}}>
                                 블로그 보러 가기
                             </div>
+                            </a>
                         </div>
                         <div style={{position:'absolute', top:'50%', left:'0', fontSize:'40px'}}>
                             <LeftOutlined onClick={ShowLeftIndex}/>
