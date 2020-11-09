@@ -698,20 +698,30 @@ class getMyWork(APIView):
             return Response({'success':False,'err':username.error_messages},status=HTTP_400_BAD_REQUEST)
 
         
-        work = myWork.objects.get(user=username.validated_data['user'])
-        postdata = Post.objects.get(id=work.post.id)
+        
         try:
+            work = myWork.objects.get(user=username.validated_data['user'])
+            postdata = Post.objects.get(id=work.post.id)
             thumbnail=postdata.thumbnail.url
-        except:
-            thumbnail=None,
-        about = {
+            about = {
             'id':postdata.id,
             'thumbnail':thumbnail
-        }
-        content={
-            'success':True,
-            'about':about,
-        }
+            }
+            content={
+                'success':True,
+                'about':about,
+            }
+        except:
+            thumbnail=None,
+            about = {
+            'id': None,
+            'thumbnail': None
+            }
+            content={
+                'success': True,
+                'about':about,
+            }
+        
         return Response(content,status=HTTP_200_OK)
 
 
