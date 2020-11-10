@@ -52,19 +52,19 @@ def GetBid(request):
             sellPost = []
             for item in postData:
                 bid = BidInfo.objects.filter(post = item.id).order_by('-price')
+                voteCnt = vote.objects.filter(post = item).count()
                 try:
                     price = bid[0].price
-                    vote = vote.objects.filter(post = item).count()
                 except:
                     price = 0
-                    vote = 0
                 post = {
                     'thumbnail' : item.thumbnail.url,
                     'id' : item.id,
                     'title' : item.title,
                     'price' : price,
                     'sell' : item.sell,
-                    'vote' : vote,
+                    'vote' : voteCnt,
+                    'scope' : item.scope,
                 }
                 sellPost.append(post)
             context = {
