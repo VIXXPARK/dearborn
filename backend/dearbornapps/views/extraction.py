@@ -77,14 +77,15 @@ def saveTasteInfo(request):
             return Response({'success' : False}, status = HTTP_500_INTERNAL_SERVER_ERROR)
         title = postObj.title
         thumbnail = postObj.thumbnail.url
-        # try:
-        taste = Taste(user=user,post=postObj)
-        taste.save()
-        # except e:
-        #     return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
+        try:
+            taste = Taste(user=user,post=postObj)
+            taste.save()
+        except e:
+            return Response({'success' : False, 'err' : e.detail}, status = HTTP_500_INTERNAL_SERVER_ERROR)
         postDict = {
             'title' : title,
             'thumbnail' : thumbnail,
+            'postId' : postId,
             'userId' : userId,
         }
         postData.append(postDict)
