@@ -11,7 +11,7 @@
 
 ## 목차
 
-- [![Build Status](https://travis-ci.org/VIXXPARK/dearborn)](#img-srchttpstravis-ciorgvixxparkdearbornsvgbranchmaster-altbuild-status)
+- [</p>](#p)
 - [목차](#목차)
 - [👨‍👨‍👧팀원 소개](#팀원-소개)
   - [report](#report)

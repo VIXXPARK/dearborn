@@ -155,6 +155,7 @@ class PostView(ListAPIView):
                     'thumbnail' : thumb,
                     'writer' : nick,
                     'profileImage' : profile,
+                    'view':post.view,
                 }
                 postData.append(postDic)
            
