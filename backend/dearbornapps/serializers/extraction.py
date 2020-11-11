@@ -9,15 +9,7 @@ class FilterSerializer(serializers.Serializer):
     postList = serializers.ListField(
         child=serializers.UUIDField()
     )
-class SaveTasteSerializer(serializers.ModelSerializer):
+class SaveTasteSerializer(serializers.Serializer):
     postList = serializers.ListField(
         child = serializers.DictField()
     )
-
-    def create(self, validated_data):
-        postList = validated_data['postList']
-        for post in postList:
-            postId = post['postId']
-            userId = post['userId']
-            taste = Taste.objects.create(user=userId, post=postId)
-        return taste

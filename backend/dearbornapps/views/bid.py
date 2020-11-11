@@ -1,7 +1,7 @@
 from dearbornapps.serializers.bid import MakeBidSerializer,GetBidSerializer
 from dearbornapps.models.bid import BidInfo
 from dearbornapps.models.user import User
-from dearbornapps.models.post import Post
+from dearbornapps.models.post import Post, vote
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
@@ -48,22 +48,25 @@ def GetBid(request):
         job = user.job
 
         if job == 1:
-            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id,scope=1, is_repo=False), request)
+            postData = paginator.paginate_queryset(Post.objects.filter(user = user.id, is_repo=False), request)
             sellPost = []
             for item in postData:
-                if item.sell == 1:
-                    bid = BidInfo.objects.filter(post = item.id).order_by('-price')
-                    try:
-                        price = bid[0].price
-                    except:
-                        price = 0
-                    post = {
-                        'thumbnail' : item.thumbnail.url,
-                        'id' : item.id,
-                        'title' : item.title,
-                        'price' : price,
-                    }
-                    sellPost.append(post)
+                bid = BidInfo.objects.filter(post = item.id).order_by('-price')
+                voteCnt = vote.objects.filter(post = item).count()
+                try:
+                    price = bid[0].price
+                except:
+                    price = 0
+                post = {
+                    'thumbnail' : item.thumbnail.url,
+                    'id' : item.id,
+                    'title' : item.title,
+                    'price' : price,
+                    'sell' : item.sell,
+                    'vote' : voteCnt,
+                    'scope' : item.scope,
+                }
+                sellPost.append(post)
             context = {
                 'posts' : sellPost,
                 'success' : True,
