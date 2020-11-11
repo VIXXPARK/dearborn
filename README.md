@@ -7,11 +7,12 @@
  전공자 뿐만 아니라 비전공자도 할 수 있어요.<br>
 디어본으로 많은 작품을 보여주세요 😊
 </p>
-
+[![Build Status](https://travis-ci.org/VIXXPARK/dearborn.svg?branch=master)](https://travis-ci.org/VIXXPARK/dearborn)
 ---
 
 ## 목차
 
+- [![Build Status](https://travis-ci.org/VIXXPARK/dearborn)](#img-srchttpstravis-ciorgvixxparkdearbornsvgbranchmaster-altbuild-status)
 - [목차](#목차)
 - [👨‍👨‍👧팀원 소개](#팀원-소개)
   - [report](#report)
