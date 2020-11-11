@@ -74,7 +74,7 @@ function PostRankBox(props) {
                             <RightOutlined onClick={ShowRightIndex}/>
                         </div>
                     </div>
-                    <div style={{width:'50%',height:'100%', verticalAlign:'top', display:'inline-block', backgroundColor:'gray', overflow:'hidden', wordBreak:'break-all', backgroundColor:'white'}}>
+                    <div style={{width:'50%',height:'100%', verticalAlign:'top', display:'inline-block', backgroundColor:'gray', overflow:'hidden', wordBreak:'break-all', backgroundColor:'whitesmoke'}}>
                         <img style={{width:'100%'}} src={post.thumbnail}/>
                     </div>
                 </div>
