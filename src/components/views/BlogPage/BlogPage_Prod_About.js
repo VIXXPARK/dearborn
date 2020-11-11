@@ -35,6 +35,7 @@ function BlogPage_Prod_About(props) {
             }
         })
     }, [])
+    console.log(About)
 
     const getAbout = (id) => {
         const config = {
@@ -79,7 +80,7 @@ function BlogPage_Prod_About(props) {
                             <div className="prod-about-title">
                                 User 님의 대표작품
                             </div>
-                            <div style={{marginLeft:'150px', marginRight:'150px'}}>
+                            {About && About.id ? <div style={{marginLeft:'150px', marginRight:'150px'}}>
                                 <div style={{width:'50%',height:'100%',textAlign:'center', display:'inline-block', backgroundColor:'white',verticalAlign:'top', wordBreak:'break-all'}}>
                                     <div style={{width:'100%', marginTop:'35%'}}>
                                         <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'2rem'}}>{About.title}</p>
@@ -94,7 +95,7 @@ function BlogPage_Prod_About(props) {
                                 <div style={{width:'50%',height:'100%', display:'inline-block', backgroundColor:'gray', overflow:'hidden', wordBreak:'break-all'}}>
                                     <img style={{width:'100%'}} src={convertToS3EP(About.thumbnail)}/>
                                 </div>
-                            </div>
+                            </div> : <div style={{textAlign:'center', margin:'40px'}}>대표작 없음</div>}
                         </div>
                     </div>
                 </div>

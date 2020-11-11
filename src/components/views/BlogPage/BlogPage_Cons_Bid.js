@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios'
 import { Button, Typography, Card, Avatar } from 'antd';
 
@@ -9,6 +9,7 @@ import UserInfoMainPage from '../UserInfoPage/UserInfoMainPage';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import { Link } from 'react-router-dom';
+import {Loader} from '../../utils/Loader'
 
 const {Title} = Typography
 
@@ -17,12 +18,23 @@ function BlogPage_Cons_Bid(props) {
     const [Posts, setPosts] = useState([])
     const [Designer, setDesigner] = useState("")
     const [Skip, setSkip] = useState(0)
-    const [Limit, setLimit] = useState(4)
+    const [Limit, setLimit] = useState(7)
     const [LoadMore, setLoadMore] = useState(true)
     const [IsBottom, setIsBottom] = useState(false)
+    const [Loading, setLoading] = useState(true)
+    const [PostColumn, setPostColumn] = useState(7)
+    const [WindowX, setWindowX] = useState(0)
 
     const designer = props.match.params.designer
-    console.log(Posts)
+    useLayoutEffect(() => {
+        function updateSize(){
+            setWindowX(window.innerWidth)
+        }
+        window.addEventListener('resize', updateSize)
+        updateSize()
+        return () => window.removeEventListener('resize', updateSize)
+    }, [])
+
     useEffect(() => {
         const config = {
             headers : {
@@ -45,10 +57,14 @@ function BlogPage_Cons_Bid(props) {
     }, [])
 
     useEffect(() => {
-        if(IsBottom && LoadMore){
-            getPosts()
+        if(IsBottom && LoadMore && !Loading){
+            setLoading(true)
+            getPosts(Designer.id)
+            setIsBottom(false)
         }
     }, [IsBottom])
+
+    
 
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
@@ -59,8 +75,71 @@ function BlogPage_Cons_Bid(props) {
             || document.body.scrollHeight;
         if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
+        }else{
+            setIsBottom(false)
         }
     }
+
+    useEffect(() => {
+        if(window.innerWidth < 400){
+            setPostColumn(1)
+        }
+        else if(window.innerWidth <700)
+        {
+            setPostColumn(2)
+        }
+        else if(window.innerWidth <1000){
+            setPostColumn(3)
+        }
+        else if(window.innerWidth <1300){
+            setPostColumn(4)
+        }
+        else if(window.innerWidth <1600){
+            setPostColumn(5)
+        }
+        else if(window.innerWidth <1900){
+            setPostColumn(6)
+        }
+        else if(window.innerWidth >=1900){
+            setPostColumn(7)
+        }
+    }, [window.innerWidth])
+
+    useEffect(() => {
+        setTimeout(() => {
+            let images = document.querySelectorAll('.item-vote-wrap')
+            let imgStack
+            if(PostColumn === 1){
+                imgStack = [0]
+            }else if(PostColumn === 2){
+                imgStack =[0,0]
+            }
+            else if(PostColumn === 3){
+                imgStack =[0,0,0]
+            }
+            else if(PostColumn === 4){
+                imgStack =[0,0,0,0]
+            }
+            else if(PostColumn === 5){
+                imgStack =[0,0,0,0,0]
+            }
+            else if(PostColumn === 6){
+                imgStack =[0,0,0,0,0,0]
+            }
+            else if(PostColumn === 7){
+                imgStack =[0,0,0,0,0,0,0]
+            }
+            let colWidth = 256;
+            for(let i=0; i<images.length; i++){
+                let minIndex = imgStack.indexOf(Math.min.apply(0, imgStack))
+                let x = colWidth * minIndex
+                let y = imgStack[minIndex]
+                imgStack[minIndex] += (images[i].children[0].height + 15)
+                images[i].style.transform = `translateX(${x}px) translateY(${y}px)`
+            }
+        }, 500);
+
+    }, [document.querySelectorAll('.item-vote-wrap'), PostColumn])
 
     const getPosts = (id) => {
         const variables = {
@@ -73,6 +152,7 @@ function BlogPage_Cons_Bid(props) {
         }
         axios.post(`/api/info/getBid/?limit=${Limit}&offset=${Skip}`, variables, config)
         .then(response => {
+            console.log(response.data)
             if(response.data.success){
                 if(response.data.posts.length < Limit)
                     setLoadMore(false)
@@ -86,35 +166,34 @@ function BlogPage_Cons_Bid(props) {
             }else{
                 console.log(response.data.err)
             }
+        }).finally(()=>{
+            setLoading(false)
         })
     }
     console.log(Posts)
 
     const renderPost = (post) => {
         return (
-            <div className="prod-works">
-                <div className="works-wrapper">
-                    <div className="bid-wrap">
-                        <img className="bid-thumb" src={convertToS3EP(post.thumbnail)}/>
-                        {props.user.userData && props.user.userData._id === post.bid.bidder ? 
-                        <div className="bid-wrap-show" style={{backgroundColor:'rgb(81, 159, 229)'}}>
-                        </div>
-                        :
-                        <div className="bid-wrap-show" style={{backgroundColor:'tomato'}}>
-                        </div>
-                        }
+            <div className="item-vote-wrap">
+                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
+                <div className="item-vote-obv"></div>
+                    <div className="item-vote-show">
+                        {props.user.userData && props.user.userData.nickname === designer && <div style={{position:'absolute',top:'10%',left:'10%',fontSize:'15px', textAlign:'center', margin:'0 auto', color:'white'}}>
+                            <p>입찰 최고가 :{post.bid.price}</p>
+                            {post.bid.bidder === props.user.userData._id ?
+                            <button style={{backgroundColor:'#49c5b6', color:'white', border:'none'}} disabled>최고가로 입찰 중</button> 
+                            : 
+                            <Link to = {{pathname:'/', search:`designer=${post ? post.designer : null}&postId=${post ? post.postid : null}`}}>
+                                <button style={{backgroundColor:'#f85272', color:'white', border:'none'}}>재입찰</button>
+                            </Link>
+                            }
+                        </div>}
+                        <a href = {`/${Designer.nickname}/${post.id}`}>
+                            <div className="item-vote-title">
+                                {post.title}
+                            </div>
+                        </a>
                     </div>
-                    <div className="blog-bid-content">
-                        <p>입찰 최고가 :{post.bid.price}</p>
-                        {post.bid.bidder === props.user.userData._id ?
-                        <button disabled>최고가로 입찰 중</button> 
-                        : 
-                        <Link to = {{pathname:'/', search:`designer=${post ? post.designer : null}&postId=${post ? post.postid : null}`}}>
-                            <button>재입찰</button>
-                        </Link>
-                        }
-                    </div>
-                </div>
             </div>
             )
     }
@@ -147,6 +226,7 @@ function BlogPage_Cons_Bid(props) {
                     }
                 </div>
             </div>
+            {Loading && Loader("spin", "black")}
         </div>
     );
 }

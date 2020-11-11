@@ -55,7 +55,7 @@ function PostRankBox(props) {
             {RankPosts && RankPosts.map((post, i) => (
                 <>
                 <div style={{position:'relative',transition:'transform 1s', transform:`translate(calc(-100% * ${RankIndex}), 0)`}} className="post-rank-item">
-                    <div style={{width:'50%',height:'100%', display:'inline-block', backgroundColor:'white',verticalAlign:'top', wordBreak:'break-all'}}>
+                    <div style={{width:'50%',height:'100%', display:'inline-block', backgroundColor:'whitesmoke',verticalAlign:'top', wordBreak:'break-all'}}>
                         <div style={{width:'100%', marginTop:'35%'}}>
                             <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'2rem'}}>{post.title+" 아이우에오아이우"}</p>
                             <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'1rem'}}>{post.title+" 아이우에오아이우"}</p>

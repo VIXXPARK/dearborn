@@ -19,6 +19,7 @@ function FindFeaturePage(props) {
     const [SelectedPB, setSelectedPB] = useState([])
     const [PostsAfter, setPostsAfter] = useState([])
     const [SelectedPA, setSelectedPA] = useState([])
+    const [Result, setResult] = useState([])
 
     const handleCategoryClick = (e) => {
         setCategory(parseInt(e.key))
@@ -95,6 +96,7 @@ function FindFeaturePage(props) {
         .then(response => {
             if(response.data.success){
                 alert('저장 성공')
+                setResult(response.data.postList)
             }else{
                 alert('실패')
             }
@@ -179,17 +181,17 @@ function FindFeaturePage(props) {
             </>
         )
     }
-    console.log(SelectedPA)
-    const renderResult = () => {
+    console.log(Result)
+    const renderResult = (post) => {
         return <div className="feature-result-item">
             <div className="feature-result-item-thumb">
-                <img id="img-match" src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F24283C3858F778CA2E"/>
+                <img id="img-match" src={convertToS3EP(post.thumbnail)}/>
             </div>
             <div className="feature-result-item-title">
-                타이틀
+                {post.title}
             </div>
             <div className="feature-result-item-btn">
-                <RightSquareOutlined/>
+                <a><RightSquareOutlined/></a>
             </div>
         </div>
     }
@@ -296,7 +298,7 @@ function FindFeaturePage(props) {
                         <h1>STEP 4: 카테고리 설정</h1>
                     </div>
                     <div className="feature-result-container">
-                        {SelectedPA && SelectedPA.map(post=>(
+                        {Result && Result.map(post=>(
                             renderResult(post)
                         ))}
                     </div>

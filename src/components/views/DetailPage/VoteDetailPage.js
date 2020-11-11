@@ -182,7 +182,7 @@ function VoteDetailPage(props) {
                 <div className="profile-header">
                     {Voted ? "투표함" : "투표하기"}
                 </div>
-                {props.user.userData && props.user.userData.job === 2 && 
+                {props.user.userData && props.user.userData.job === 2 && DetailPost.sell === 1 &&
                 <>
                     <div className="profile-icon" onClick={showBiddingForm}>
                         <DollarOutlined/>
