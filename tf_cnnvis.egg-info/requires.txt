@@ -1,7 +1,0 @@
-numpy
-scipy
-h5py
-wget
-Pillow
-six
-scikit-image
