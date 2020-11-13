@@ -23,7 +23,6 @@ urlpatterns = [
     path('api/', include('dearbornapps.urls.user')),
     path('api/', include('dearbornapps.urls.post')),
     path('api/', include('dearbornapps.urls.comment')),
-    path('api/', include('dearbornapps.urls.bid')),
     path('api/', include('dearbornapps.urls.messanger')),
     path('api/', include('dearbornapps.urls.contest')),
     path('api/', include('dearbornapps.urls.assess')),

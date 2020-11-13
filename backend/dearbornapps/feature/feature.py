@@ -6,10 +6,10 @@ import glob, os.path, json
 import boto3, os, pickle
 from annoy import AnnoyIndex
 from scipy import spatial
+import matplotlib.pyplot as plt
 from dearbornConfig.settings.base import BASE_DIR, Is_Local
 from io import BytesIO
 from PIL import Image
-
 
 
 class S3ImagesInvalidExtension(Exception):
@@ -178,7 +178,6 @@ def GetFeatureVector(image_array):
     hub_path = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
     
     MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False)
-    
     featureVector = []
     result = MyModule(image_array)
     for res in result:
@@ -190,6 +189,12 @@ def GetFeatureVector(image_array):
 def SaveFeatureVector(featureVector, image_file_name, postId):
     if Is_Local[0]:
         for index, v in enumerate(featureVector):
+            tmp = v
+            tmp = np.array(tmp)
+            tmp = tmp.reshape(16,16,5)
+            print(np.shape(tmp))
+            image = Image.fromarray(tmp.astype('float32'),'RGB')
+            image.show()
             dirs = featureUpload_to(postId).split('/')
             out_path = os.path.join(BASE_DIR)
             for dir in dirs:
@@ -210,6 +215,8 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
             out_path = os.path.join(out_path,image_file_name[index] + ".pkl")
             
             s3Images.to_s3(v,"dearbornstorage",out_path)
+
+
 
 def Similarity(postId):
 

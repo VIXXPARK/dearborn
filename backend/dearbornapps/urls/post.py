@@ -33,7 +33,3 @@ urlpatterns = [
     path('info/getAbout',getMyWork.as_view()),
     
 ]
-try:
-    voteExpired(repeat=3600,repeat_until=None)
-except:
-    pass
