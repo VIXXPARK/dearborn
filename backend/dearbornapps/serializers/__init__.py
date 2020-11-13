@@ -1,4 +1,3 @@
-from .assess import *
 from .comment import *
 from .contest import *
 from .messanger import *

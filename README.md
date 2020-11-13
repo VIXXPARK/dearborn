@@ -1,17 +1,17 @@
 <p align='middle'>
 
-
+[![Build Status](https://travis-ci.org/VIXXPARK/dearborn.svg?branch=master)](https://travis-ci.org/VIXXPARK/dearborn)
 <h1 align='middle'><a href='https://dearborn.herokuapp.com'>Dearborn</a></h1>
 <p align='middle'>
 패션디자이너를 위한 <u>🙆‍♂️🙅‍♀️웹 기반 중개 플랫폼</u>이에요.<br>
  전공자 뿐만 아니라 비전공자도 할 수 있어요.<br>
 디어본으로 많은 작품을 보여주세요 😊
 </p>
-
 ---
 
 ## 목차
 
+- [</p>](#p)
 - [목차](#목차)
 - [👨‍👨‍👧팀원 소개](#팀원-소개)
   - [report](#report)

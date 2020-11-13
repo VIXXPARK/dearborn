@@ -154,6 +154,7 @@ class PostView(ListAPIView):
                     'thumbnail' : thumb,
                     'writer' : nick,
                     'profileImage' : profile,
+                    'view':post.view,
                 }
                 postData.append(postDic)
            
@@ -278,11 +279,9 @@ class PostDetail(APIView):
             'updatedAt' : postdata.updated_dt,
             'thumbnail':thumbnail,
             'images':Jpost,
-            'sell':postdata.sell,
             'category':postdata.category,
             'scope':postdata.scope,
-            'sellPrice':postdata.sellPrice,
-            'bidPrice':postdata.bidPrice,
+            
         }
 
         context = {
@@ -311,7 +310,6 @@ class getProfileView(ListAPIView):
         try:
             postdata = Post.objects.filter(user=userdata.id)
             for x in postdata:
-                print(x.id)
                 work=work+1
                 view=x.view+view
         except:
@@ -779,3 +777,6 @@ class getMyWork(APIView):
 #                 post.save()
 #             except APIException as e:
 #                 raise e
+
+
+

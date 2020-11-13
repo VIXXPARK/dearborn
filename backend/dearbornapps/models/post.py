@@ -20,13 +20,12 @@ class Post(models.Model):
    thumbnail = models.ImageField(upload_to=postUpload_to,null=True)
    view = models.IntegerField(default=0)
    scope = models.IntegerField(default=0)
-   sell = models.IntegerField(default=0)
    category = models.IntegerField(default=None)
-   expire_dt = models.DateTimeField()
-   is_repo = models.BooleanField(default=False)
-   bidPrice = models.IntegerField()
-   sellPrice = models.IntegerField()
-
+   # expire_dt = models.DateTimeField()
+   # is_repo = models.BooleanField(default=False)
+   # bidPrice = models.IntegerField()
+   # sellPrice = models.IntegerField()
+   # sell = models.IntegerField(default=0)
    def get_id(self):
       return self.id
    
