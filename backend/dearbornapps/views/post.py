@@ -155,6 +155,7 @@ class PostView(ListAPIView):
                     'thumbnail' : thumb,
                     'writer' : nick,
                     'profileImage' : profile,
+                    'view':post.view,
                 }
                 postData.append(postDic)
            
@@ -279,11 +280,9 @@ class PostDetail(APIView):
             'updatedAt' : postdata.updated_dt,
             'thumbnail':thumbnail,
             'images':Jpost,
-            'sell':postdata.sell,
             'category':postdata.category,
             'scope':postdata.scope,
-            'sellPrice':postdata.sellPrice,
-            'bidPrice':postdata.bidPrice,
+            
         }
 
         context = {
@@ -312,7 +311,6 @@ class getProfileView(ListAPIView):
         try:
             postdata = Post.objects.filter(user=userdata.id)
             for x in postdata:
-                print(x.id)
                 work=work+1
                 view=x.view+view
         except:
@@ -728,59 +726,59 @@ class getMyWork(APIView):
         return Response(content,status=HTTP_200_OK)
 
 
-@background()
-def voteExpired():
-    posts = Post.objects.filter(is_repo=False)
-    users = User.object.all()
-    for user in users:
-        user.now_updating = False
+# @background()
+# def voteExpired():
+#     posts = Post.objects.filter(is_repo=False)
+#     users = User.object.all()
+#     for user in users:
+#         user.now_updating = False
         
-    for post in posts:
+#     for post in posts:
 
-        KST = timezone('Asia/Seoul')
-        now = datetime.now(tz=KST)
-        expired_dt = post.expire_dt
+#         KST = timezone('Asia/Seoul')
+#         now = datetime.now(tz=KST)
+#         expired_dt = post.expire_dt
 
-        if expired_dt <= now:
+#         if expired_dt <= now:
 
-            votes = vote.objects.filter(post = post.id).count()
-            try:
-                postUser = User.object.get(id = post.user.id)
-            except APIException as e:
-                raise e                
+#             votes = vote.objects.filter(post = post.id).count()
+#             try:
+#                 postUser = User.object.get(id = post.user.id)
+#             except APIException as e:
+#                 raise e                
             
-            try:
-                user = User.object.get(nickname='admin', is_superuser=True)    
-            except APIException as e:
-                raise e      
+#             try:
+#                 user = User.object.get(nickname='admin', is_superuser=True)    
+#             except APIException as e:
+#                 raise e      
             
-            if not postUser.now_updating:
-                postUser.now_updating = True
-                postUser.rankData = 0
-            postUser.rankData += votes
+#             if not postUser.now_updating:
+#                 postUser.now_updating = True
+#                 postUser.rankData = 0
+#             postUser.rankData += votes
             
-            bid = BidInfo.objects.filter(post=post).order_by('-price')
-            try:
-                price = bid[0].price
-                message = price + "가격으로 판매됐읍니다\n Vote -> Repo로 넘어갑니다."
-            except:
-                message = "판매로 넘어갑니다\n Vote -> Repo로 넘어갑니다."
-            data = {
-                'userFrom' : user.id,
-                'userTo' : post.user.id,
-                'message' : message,
-            }
-            messageSerializer = SaveMessageSerializer(data = data)
-            if not messageSerializer.is_valid():
-                raise messageSerializer.errors
+#             bid = BidInfo.objects.filter(post=post).order_by('-price')
+#             try:
+#                 price = bid[0].price
+#                 message = price + "가격으로 판매됐읍니다\n Vote -> Repo로 넘어갑니다."
+#             except:
+#                 message = "판매로 넘어갑니다\n Vote -> Repo로 넘어갑니다."
+#             data = {
+#                 'userFrom' : user.id,
+#                 'userTo' : post.user.id,
+#                 'message' : message,
+#             }
+#             messageSerializer = SaveMessageSerializer(data = data)
+#             if not messageSerializer.is_valid():
+#                 raise messageSerializer.errors
 
-            try:
-                messageSerializer.create(messageSerializer.validated_data)
-                postUser.save()
-                post.is_repo = True
-                post.save()
-            except APIException as e:
-                raise e
+#             try:
+#                 messageSerializer.create(messageSerializer.validated_data)
+#                 postUser.save()
+#                 post.is_repo = True
+#                 post.save()
+#             except APIException as e:
+#                 raise e
 
 
 
