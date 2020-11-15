@@ -15,7 +15,7 @@ class CommentSerializer(serializers.ModelSerializer):
         contents = validated_data['contents']
         score = validated_data['score']
         try: 
-            result = Comment.objects.create(user=user, post=post, contents=contents)
+            result = Comment.objects.create(user=user, post=post, contents=contents, score=score)
             return result
         except:
             raise IntegerityError
