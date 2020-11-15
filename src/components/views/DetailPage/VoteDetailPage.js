@@ -112,7 +112,7 @@ function VoteDetailPage(props) {
                 </div>
                 {props.user.userData && Writer && props.user.userData._id !== Writer.id &&
                 <> 
-                <LikeDislike postId={DetailPost.id} userId={Writer.id}/>
+                <LikeDislike postId={DetailPost.id} userId={props.user.userData._id}/>
                 </>}
                 {props.user.userData && props.user.userData.job === 2 && 
                     <>

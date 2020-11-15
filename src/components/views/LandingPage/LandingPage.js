@@ -10,7 +10,7 @@ import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
 
 
-import {UpOutlined, DownOutlined, EyeOutlined} from '@ant-design/icons'
+import {HomeOutlined, DownOutlined, EyeOutlined} from '@ant-design/icons'
 import PostRankBox from './Sections/PostRankBox';
 
 const {Meta} = Card
@@ -31,6 +31,7 @@ function LandingPage(props) {
     const [MainBanner, setMainBanner] = useState(true)
     const [PostColumn, setPostColumn] = useState(5)
     const [WindowX, setWindowX] = useState(0)
+    const [ScrollPercentage, setScrollPercentage] = useState(0)
 
     useLayoutEffect(() => {
         function updateSize(){
@@ -50,6 +51,7 @@ function LandingPage(props) {
         getPosts(variables)
         setSkip(Skip+Limit)
         window.addEventListener('scroll', handleScroll)
+
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
 
@@ -105,7 +107,6 @@ function LandingPage(props) {
             addPosts()
         }
     }, [IsBottom])
-
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
             && document.documentElement.scrollTop)
@@ -113,6 +114,10 @@ function LandingPage(props) {
         const scrollHeight= (document.documentElement 
             && document.documentElement.scrollHeight)
             || document.body.scrollHeight;
+        const scrollBottom= (document.documentElement 
+                && document.documentElement.scrollBottom)
+                || document.body.scrollBottom
+        console.log(scrollBottom / scrollHeight)
         if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
         }else{
@@ -227,7 +232,6 @@ function LandingPage(props) {
             </div>
         )
     }
-
     return (
         <>
         <div style={{position:'fixed',zIndex:'40', top:'100px',width:'100%', height:'40px', backgroundColor:'white',borderTop:'1px solid whitesmoke', boxShadow:'0 4px 4px 0 rgba(0,0,0,0.2), 0 1px 0 0 #d9d9d9'}}>
@@ -276,22 +280,25 @@ function LandingPage(props) {
                     </div>
                 </div>
             </div>
-        <div style={{width:'100%', maxWidth:'1400px', margin:'0 auto', height: 'calc( 100vh)',}}>
+        <div style={{width:'100%', margin:'0 auto', height: 'calc( 100vh)',}}>
             <div className="main-banner-background" style={{maxHeight:`${MainBanner? 'calc(100vh - 140px)' : `42px`}`}}>
-                <div style={{maxWidth:'1400px', margin:'0 auto'}}>
+                <div>
                     <div className="post-rank">
                         <PostRankBox/>
                     </div>
                 </div>
             </div>
-            <div className="vote" style={{width:'100%', height:'100%', margin:'0 auto', backgroundColor:'white', zIndex:'1000'}}>
+            <div className="vote" style={{width:'100%',maxWidth:'1400px', margin:'0 auto', margin:'0 auto', backgroundColor:'white', zIndex:'1000'}}>
                 <div style={{margin: '0 auto', maxWidth:'1400px', width:'100%',}}> 
-                    <div style={{width:'100%',textAlign:'center'}}>
-                        <span style={{float:'left', fontSize:'20px', fontWeight:'bold', color:'black'}}>이번 주 포스팅</span>
+                    <div style={{width:'100%',textAlign:'center', marginTop:'20px'}}>
+                        <span style={{float:'left', fontSize:'20px', color:'black'}}>추천&nbsp;&nbsp;</span>
+                        <span style={{float:'left', fontSize:'20px', color:'black'}}>실시간 포스트&nbsp;&nbsp;</span>
+                        <span style={{float:'left', fontSize:'20px', color:'black'}}>투데이&nbsp;&nbsp;</span>
+                        <span style={{float:'left', fontSize:'20px', color:'black'}}>인기 포스트&nbsp;&nbsp;</span>
                         {MainBanner ? 
-                        <UpOutlined style={{fontSize:'30px', textAlign:'center'}} onClick={ShowMainBanner}/>
+                        <div style={{fontSize:'15px', textAlign:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 접기</a></div>
                         :
-                        <DownOutlined style={{fontSize:'30px', textAlign:'center'}} onClick={ShowMainBanner}/>
+                        <div style={{fontSize:'15px', textAlign:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 열기</a></div>
                         }
                     </div>
                     <div className="filter-container">
@@ -321,6 +328,24 @@ function LandingPage(props) {
             </div>
         </div>
         {Loading && Loader("spin", "black")}
+        <div style={{position:'fixed', bottom:'10%', left:'5%',  width:'30px', height:'200px', border:'1px solid #d9d9d9', boxShadow:'1px 1px 3px #d9d9d9'}}>
+            <div id="nav-fix-bar" style={{position:'relative', width:'30px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}}>
+                <HomeOutlined />
+                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            </div>
+            <div id="nav-fix-bar" style={{position:'relative',width:'30px', height:'20%', fontSize:'20px'}}>
+                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            </div>
+            <div id="nav-fix-bar" style={{position:'relative',width:'30px', height:'20%', fontSize:'20px'}}>
+                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            </div>
+            <div id="nav-fix-bar" style={{position:'relative',width:'30px', height:'20%', fontSize:'20px'}}>
+                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            </div>
+            <div id="nav-fix-bar" style={{position:'relative',width:'30px', height:'20%', fontSize:'20px'}}>
+                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            </div>
+        </div>
         </>
     );
 }
