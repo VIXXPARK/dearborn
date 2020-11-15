@@ -122,14 +122,14 @@ class PostView(ListAPIView):
         try:
             if(filterSerializer.validated_data['sort']==0):
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=False).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=False).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
             postData = []
             for post in data:
                 person = User.object.filter(id=post.user.id)
@@ -184,14 +184,14 @@ class ReposView(ListAPIView):
         try:
             if(filterSerializer.validated_data['sort']==0):
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=True).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=True).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
             postData = []
             for post in data:
                 person = User.object.filter(id=post.user.id)
@@ -363,7 +363,7 @@ class getWorkView(ListAPIView):
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
         
-        postdata = self.paginate_queryset(Post.objects.filter(user=userdata, is_repo=True).order_by('-updated_dt'))
+        postdata = self.paginate_queryset(Post.objects.filter(user=userdata).order_by('-updated_dt'))
         
         postJson = []
         
