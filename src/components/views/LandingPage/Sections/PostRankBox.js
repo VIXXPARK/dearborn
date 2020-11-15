@@ -50,6 +50,16 @@ function PostRankBox(props) {
         }
     }
 
+    useEffect(() => {
+        setTimeout(() => {
+            if(RankIndex===2){
+                setRankIndex(0)
+            }else{
+                setRankIndex(RankIndex+1)
+            }
+        }, 7000);
+    }, [RankIndex])
+
     return (
         <div className="post-rank-container">
             {RankPosts && RankPosts.map((post, i) => (

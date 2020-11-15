@@ -136,36 +136,22 @@ function LikeDislike(props) {
         }
 
     }
-    if(!props.icon){
-    return (
-        <div className="like-dislike-span1">
-            
-            <button className="like-button" id={Liked ? "liked-checked":""} onClick={LikeClickHandler}>
-                좋아요 <LikeOutlined/> {Likes}
-            </button>
-            <button className="dislike-button" id={Disliked ? "disliked-checked": ""} onClick={DislikeClickHandler}>
-                싫어요 <DislikeOutlined/>
-            </button>
-        </div>
-    );}
-    else{
         return (
             <div className="like-dislike-span2">
                 <div style={{border:'1px solid rgb(229, 229, 229)'}} id={Liked ? "liked-checked":""} className="profile-icon" onClick={LikeClickHandler}>
                     <LikeOutlined/>
                 </div>
-                <div className="profile-header" style={{color:'black'}}>
+                <div className="profile-header">
                     좋아요
                 </div>
                 <div style={{border:'1px solid rgb(229, 229, 229)'}} id={Disliked ? "disliked-checked": ""}  className="profile-icon" onClick={DislikeClickHandler}>
                     <DislikeOutlined/>
                 </div>
-                <div className="profile-header" style={{color:'black'}}>
+                <div className="profile-header">
                     싫어요
                 </div>
             </div>
         )
-    }
 }
 
 export default LikeDislike;

@@ -9,7 +9,7 @@ import {USER_SERVER} from '../../Config'
 import {logoutUser} from '../../../_actions/user_action'
 import { Avatar, Button, Drawer, Dropdown, Menu, Modal, Typography, Input, Form } from 'antd';
 import {MenuOutlined, MailOutlined} from '@ant-design/icons'
-import Dearborn from '../../assets/Dearborn.png'
+import Logo from '../../assets/Logo.png'
 import {getCookieValue} from '../../utils/Cookie'
 import {convertToS3EP} from '../../utils/String'
 const {confirm} = Modal
@@ -168,36 +168,41 @@ function NavBar(props) {
 
     return (
         <>
-        <header id="header">
+        <header id="header" style={{borderBottom:'1px solid whitesmoke'}}>
             <div className="container" style={{maxWidth:'1400px', margin:'0 auto'}}>
                 <div>
-                    <div className="header-title"><a href="/"><img style={{marginTop:'11px', marginRight:'50px', height:'40px'}} className="main-logo" src={Dearborn}/></a></div>
-                    <a className="header-a" id={props.location.pathname === '/contest' ? "header-clicked" : null} href="/contest">Contest</a>
-                    <a className="header-a" id={props.location.pathname === '/repo' ? "header-clicked" : null} href="/repo">Storage</a>
-                    <div className="row-log">
+                    <div className="header-title"><a href="/"><img style={{height:'66px', marginBottom:'17px'}} className="main-logo" src={Logo}/></a></div>
+                    <div style={{display:'inline-block', width:'calc(100% - 160px)',height:'100px'}}>
+                        <div style={{height:'40px', backgroundColor:'whitesmoke'}}>
                         {user.userData && !user.userData.isAuth ?
-                        (<>
-                        <div className="register pull-right"><a href="/register"><div className="navbar-button">회원가입</div></a></div>
-                        <div className="logged-out pull-right" style={{marginRight:'5px'}}>로그인하세요<a href="/login"><div className="navbar-button">로그인</div></a></div>
-                        </>) :
-                        (<>
-                        <div className="logged-out pull-right" style={{marginRight:'50px'}}><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
-                        {user.userData && user.userData.job ===1 &&<div className="register pull-right" style={{marginRight:'5px'}}>
-                            <a href="/upload"><div className="navbar-button" >업로드</div></a>
-                        </div>}
-                        <div className="nav-bar-profile pull-right">
-                            <Dropdown overlay={message} placement="bottomRight" arrow trigger={["click"]} 
-                            onVisibleChange={handleVisible} visible={MessageVisible} overlayStyle={{border:'1px solid #e5e5e5', borderRadius:'20px'}}>
-                                <MailOutlined style={{marginRight:'20px', fontSize:'30px', verticalAlign: 'middle',}}/>
-                            </Dropdown>
-                            <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
-                                <Avatar style={{ backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} src={user.userData && user.userData.profileImage && convertToS3EP(user.userData.profileImage)} size="middle" gap={4}>
-                                    {user.userData && !user.userData.profileImage && user.userData.nickname ? user.userData.nickname[0] : null}
-                                </Avatar>
-                            </Dropdown>
+                            (<>
+                            <div className="register pull-right"><a href="/register"><div className="navbar-button">회원가입</div></a></div>
+                            <div className="logged-out pull-right" style={{marginRight:'5px'}}>로그인하세요<a href="/login"><div className="navbar-button">로그인</div></a></div>
+                            </>) :
+                            (<>
+                            <div className="logged-out pull-right"><a onClick={logoutHandler}><div className="navbar-button">로그아웃</div></a></div>
+                            </>)}
                         </div>
-                        </>)
-                        }
+                        <a className="header-a" id={props.location.pathname === '/contest' ? "header-clicked" : null} href="/contest">Contest</a>
+                        <div className="row-log">
+                            {(<>
+                            <div className="nav-bar-profile pull-right">
+                                {user.userData && user.userData.job ===1 &&<div className="register pull-right" style={{marginRight:'5px'}}>
+                                    <a href="/upload"><div className="navbar-button" style={{backgroundColor:'#f85272', color:'white', marginLeft:'30px', fontSize:'12px', borderRadius:'30px'}}>업로드</div></a>
+                                </div>}
+                                <Dropdown overlay={message} placement="bottomRight" arrow trigger={["click"]} 
+                                onVisibleChange={handleVisible} visible={MessageVisible} overlayStyle={{border:'1px solid #e5e5e5', borderRadius:'20px'}}>
+                                    <MailOutlined style={{marginTop:'2px',marginRight:'20px', fontSize:'30px', verticalAlign: 'middle',}}/>
+                                </Dropdown>
+                                <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
+                                    <Avatar style={{ marginTop:'5px',backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} src={user.userData && user.userData.profileImage && convertToS3EP(user.userData.profileImage)} size="middle" gap={4}>
+                                        {user.userData && !user.userData.profileImage && user.userData.nickname ? user.userData.nickname[0] : null}
+                                    </Avatar>
+                                </Dropdown>
+                            </div>
+                            </>)
+                            }
+                        </div>
                     </div>
                     <Button className="drawer" type="primary" onClick={showDrawer}>
                         <MenuOutlined />

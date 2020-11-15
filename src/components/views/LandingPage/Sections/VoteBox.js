@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {Card, Button, Col, Row} from 'antd'
 import axios from 'axios'
 import {Link} from 'react-router-dom'
-import VoteDetailPage from '../../DetailPage/VoteDetailPage'
-import { useSelector } from 'react-redux';
 
 const {Meta} = Card
 

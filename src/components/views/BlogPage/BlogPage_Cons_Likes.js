@@ -4,7 +4,6 @@ import { Button, Typography, Card, Avatar } from 'antd';
 
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
-import RepoListPage from '../ListPage/RepoListPage';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 
@@ -197,7 +196,6 @@ function BlogPage_Cons_Likes(props) {
                     </div>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">좋아요</button>
                     <a href={`/${designer}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
                     <div className="blog-tabs-content">

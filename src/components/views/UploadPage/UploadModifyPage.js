@@ -24,12 +24,9 @@ function UploadModifyPage(props) {
     const [ThumbnailUrl, setThumbnailUrl] = useState('')
     const [ThumbLoading, setThumbLoading] = useState(false)
     const [Category, setCategory] = useState(undefined)
-    const [Sell, setSell] = useState(undefined)
     const [Scope, setScope] = useState(undefined)
     const [Title, setTitle] = useState("")
     const [Content, setContent] = useState("")
-    const [BidPrice, setBidPrice] = useState(0)
-    const [SellPrice, setSellPrice] = useState(0)
     const [GotData, setGotData] = useState(false)
     
 
@@ -51,10 +48,7 @@ function UploadModifyPage(props) {
                 setTitle(response.data.detailPost.title)
                 setContent(response.data.detailPost.content)
                 setCategory(response.data.detailPost.category)
-                setSell(response.data.detailPost.sell)
                 setScope(response.data.detailPost.scope)
-                setBidPrice(response.data.detailPost.bidPrice)
-                setSellPrice(response.data.detailPost.sellPrice)
                 setGotData(true)
             }else {
                 alert("포스트 정보 가져오기 실패")
@@ -65,10 +59,6 @@ function UploadModifyPage(props) {
 
     const OnCategoryClick = (value) =>{
         setCategory(value)
-    }
-
-    const OnSellChange = (e) => {
-        setSell(e.target.value)
     }
 
     const onScopeChange = (e)=>{
@@ -108,10 +98,7 @@ function UploadModifyPage(props) {
         formData.append('title', values.title)
         formData.append('content', values.description)
         formData.append('category', Category)
-        formData.append('sell', values.sell ? parseInt(values.sell) : 2)
         formData.append('scope', values.scope ? parseInt(values.scope): 2)
-        formData.append('bidPrice', values.bidPrice ? parseInt(values.bidPrice) : -1)
-        formData.append('sellPrice', values.sellPrice ? parseInt(values.sellPrice) : -1)
         axios.patch(`/api/post/${postId}`, formData, config)
             .then(response => {
                 if(response.data.success)
@@ -126,22 +113,11 @@ function UploadModifyPage(props) {
 
     }
     
-    const handleRemove = (file) =>{
-        const index = FileList.indexOf(file)
-        const newFileList = FileList.slice()
-        newFileList.splice(index, 1)
-
-        setFileList(newFileList)
-    }
 
     const handleThumbRemove = ()=> {
         setThumbnailUrl(null)
     }
 
-    const handleChange = async (info) => {
-        setPreviews(...Previews, await getBase64(info.file.originFileObj))
-        setFileList(info.fileList)
-    }
     const handleThumbChange = (info) => {
         if (info.file.status === 'uploading') {
           setThumbLoading(true)
@@ -197,7 +173,6 @@ function UploadModifyPage(props) {
                     initialValues={{
                         title : Title,
                         description : Content,
-                        sell : Sell,
                         scope: Scope,
                     }}
                     onFinish={onFinish}
@@ -231,28 +206,35 @@ function UploadModifyPage(props) {
                                 onChange={OnCategoryClick}
                                 treeDefaultExpandAll
                             >
-                                <TreeNode selectable={false} title="의류">
+                                <TreeNode selectable={false} title="남성의류">
                                     <TreeNode value={1} title="상의"/>
                                     <TreeNode value={2} title="하의"/>
-                                    <TreeNode value={3} title="모자"/>
-                                    <TreeNode value={4} title="아우터"/>
-                                    <TreeNode value={5} title="속옷"/>
+                                    <TreeNode value={3} title="아우터"/>
+                                    <TreeNode value={4} title="속옷"/>
+                                </TreeNode>
+                                <TreeNode selectable={false} title="여성의류">
+                                    <TreeNode value={5} title="상의"/>
+                                    <TreeNode value={6} title="하의"/>
+                                    <TreeNode value={7} title="원피스"/>
+                                    <TreeNode value={8} title="아우터"/>
+                                    <TreeNode value={9} title="속옷"/>
                                 </TreeNode>
                                 <TreeNode selectable={false} title="악세서리">
-                                    <TreeNode value={6} title="귀걸이"/>
-                                    <TreeNode value={7} title="시계"/>
-                                    <TreeNode value={8} title="목걸이"/>
-                                    <TreeNode value={9} title="팔찌"/>
-                                    <TreeNode value={10} title="발찌"/>
-                                    <TreeNode value={11} title="안경"/>
-                                    <TreeNode value={12} title="반지"/>
+                                    <TreeNode value={10} title="귀걸이"/>
+                                    <TreeNode value={11} title="시계"/>
+                                    <TreeNode value={12} title="목걸이"/>
+                                    <TreeNode value={13} title="팔찌"/>
+                                    <TreeNode value={14} title="발찌"/>
+                                    <TreeNode value={15} title="안경"/>
+                                    <TreeNode value={16} title="반지"/>
+                                    <TreeNode value={17} title="모자"/>
                                 </TreeNode>
                                 <TreeNode selectable={false} title="신발">
-                                    <TreeNode value={13} title="단화"/>
-                                    <TreeNode value={14} title="스포츠"/>
-                                    <TreeNode value={15} title="슬리퍼"/>
-                                    <TreeNode value={16} title="샌들"/>
-                                    <TreeNode value={17} title="하이힐"/>
+                                    <TreeNode value={18} title="단화"/>
+                                    <TreeNode value={19} title="스포츠"/>
+                                    <TreeNode value={20} title="슬리퍼"/>
+                                    <TreeNode value={21} title="샌들"/>
+                                    <TreeNode value={22} title="하이힐"/>
                                 </TreeNode>
                             </TreeSelect><br/><br/>
                             
@@ -267,45 +249,6 @@ function UploadModifyPage(props) {
                                     <Radio.Button className="scope-radio-button" value={2}>Private</Radio.Button>
                                 </Radio.Group>
                             </Form.Item>
-                            {Scope === 1 && <>
-                            <label style={{fontSize:'30px'}}>판매 여부</label>
-                            <Form.Item
-                                style={{marginTop:'40px'}}
-                                name="sell"
-                                rules={[{required:true, message:'판매 여부를 결정해주세요'}]} 
-                            >
-                                <Radio.Group style={{width:'500px', height:'50px'}} onChange={OnSellChange}>
-                                    <Radio.Button className="scope-radio-button" value={1}>수락</Radio.Button>
-                                    <Radio.Button className="scope-radio-button" value={2}>거절</Radio.Button>
-                                </Radio.Group>
-                            </Form.Item></>}
-                            {Sell && Sell === 1 && (
-                                <>
-                                <Form.Item
-                                    label="입찰최저가"
-                                    name="bidPrice"
-                                    rules={[{required:true, message:'입찰죄저가를 써주시기 바랍니다'}]}    
-                                >
-                                <Input
-    
-                                    style={{width:'350px', fontSize:'20px'}}
-                                    placeholder="제  목"
-                                />
-                                </Form.Item>
-                                <Form.Item
-                                    label="판매가"
-                                    name="sellPrice"
-                                    rules={[{required:true, message:'판매가를 써주시기 바랍니다'}]}    
-                                >
-                                <Input
-    
-                                    style={{width:'350px', fontSize:'20px'}}
-                                    placeholder="제  목"
-                                />
-                                </Form.Item>
-                                </>
-                            )
-                            }
                             <Form.Item>
                                 <Button className="submit-btn" type="primary" htmlType="submit" block>
                                     제출

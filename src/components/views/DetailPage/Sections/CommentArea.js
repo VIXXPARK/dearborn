@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Input, Avatar, Button} from 'antd';
+import {Input, Avatar, Button, Rate} from 'antd';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
@@ -12,9 +12,10 @@ function CommentArea(props) {
 
     const [CommentValue, setCommentValue] = useState("")
     const [Comments, setComments] = useState([])
+    const [Score, setScore] = useState(2.5)
 
     const user = useSelector(state => state.user)
-
+    console.log(props.postId)
     useEffect(() => {
         const config = {
             headers : {
@@ -30,7 +31,7 @@ function CommentArea(props) {
                 console.log(response.data.err)
             }
         })
-    }, [])
+    }, [props.postId])
 
     const handleChange = (e) => {
         setCommentValue(e.currentTarget.value)
@@ -42,7 +43,8 @@ function CommentArea(props) {
         const data = {
             contents : CommentValue,
             user : window.localStorage.getItem('userId'),
-            post : props.postId
+            post : props.postId,
+            score :Rate
         }
         console.log(data)
         const config = {
@@ -73,6 +75,10 @@ function CommentArea(props) {
 
     console.log(Comments)
 
+    const handleScoreChange = (value) => {
+        setScore(value)
+    }
+
     const renderingComments = (comment) => {
         const ChangeComment = () =>{
             
@@ -96,12 +102,13 @@ function CommentArea(props) {
             })
         }
         return (
-            <div className="comment-form">
+            <div className="comment-form" style={{color:'black'}}>
                 <div className="comment-nickname">
                     <Avatar src={user.userData && convertToS3EP(user.userData.profileImage)}/>
                     {comment.nickname}
+                    <div style={{float:'right'}}><Rate disabled allowHalf defaultValue={comment.score}/></div>
                 </div>
-                <p className="comment-content">{comment.contents}</p>
+                <p className="comment-content" style={{fontSize:'15px'}}>{comment.contents}</p>
                 <div className="comment-action">
                     <p style={{fontSize : '15px'}}><a onClick={ChangeComment}>수정</a> <a onClick={DeleteComment}>삭제</a></p>
                 </div>
@@ -120,15 +127,18 @@ function CommentArea(props) {
                 ))}
             </div>
             {/*{props.userId &&*/}
-            <form style={{display:'flex'}} onSubmit={onSubmit}>
-                <Avatar style={{marginRight:'10px'}} size={35} src={user.userData && user.userData.profileImage ? convertToS3EP(user.userData.profileImage) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
-                <TextArea
-                    style={{width:'100%', borderRadius:'5px', marginBottom:'1rem'}}
-                    onChange={handleChange}
-                    value={CommentValue}
-                    placeholder="write comments"
-                />
-                <Button style={{width:'20%', height:'52px'}} onClick={onSubmit}>제출</Button>
+            <form onSubmit={onSubmit}>
+                <Avatar style={{display:'inline-block', width:'32px', marginRight:'20px'}} src={user.userData && user.userData.profileImage ? convertToS3EP(user.userData.profileImage) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                <div style={{display:'inline-block', width:'calc(100% - 142px)', verticalAlign:'middle'}}>
+                    <Rate allowHalf value={Score} defaultValue={Score} onChange={handleScoreChange}/>
+                    <TextArea
+                        style={{borderRadius:'5px', marginBottom:'1rem'}}
+                        onChange={handleChange}
+                        value={CommentValue}
+                        placeholder="write comments"
+                    />
+                </div>
+                <Button style={{width:'70px', height:'52px', margin:'10px'}} onClick={onSubmit}>제출</Button>
             </form>{/* } */}
         </div>
     );

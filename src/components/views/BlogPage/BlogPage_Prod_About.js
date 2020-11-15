@@ -74,7 +74,6 @@ function BlogPage_Prod_About(props) {
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">대표작</button>
                     <a href={`/${designer}/works`}><button className="blog-tabs-btn">작품</button></a>
                     <a href={`/${designer}/likes`}><button className="blog-tabs-btn">좋아요</button></a>
-                    <a href={`/${designer}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
                     <div className="blog-tabs-content">
                         <div className="prod-about">
                             <div className="prod-about-title">

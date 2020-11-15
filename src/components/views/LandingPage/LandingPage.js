@@ -3,15 +3,14 @@ import axios from 'axios'
 
 import RankBox from './Sections/RankBox'
 import './Sections/LandingPage.css'
-import { Card, Radio} from 'antd';
+import { Card, Radio, Rate} from 'antd';
 import {Link} from 'react-router-dom'
-import FilterBox from '../ListPage/Sections/FilterBox'
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
 
 
-import {UpOutlined, DownOutlined} from '@ant-design/icons'
+import {UpOutlined, DownOutlined, EyeOutlined} from '@ant-design/icons'
 import PostRankBox from './Sections/PostRankBox';
 
 const {Meta} = Card
@@ -95,7 +94,7 @@ function LandingPage(props) {
                 let minIndex = imgStack.indexOf(Math.min.apply(0, imgStack))
                 let x = colWidth * minIndex
                 let y = imgStack[minIndex]
-                imgStack[minIndex] += (images[i].children[0].height + 15)
+                imgStack[minIndex] += (images[i].children[0].height + 65)
                 images[i].style.transform = `translateX(${x}px) translateY(${y}px)`
             }
         }, 500);
@@ -161,13 +160,13 @@ function LandingPage(props) {
             sort : Sort,
         }
         setLoading(true)
-        getPosts(variables)
         setSkip(0)
+        setPosts([])
+        getPosts(variables)
     }
 
     const handleFilters = (ook) => {
         setOok(ook)
-
         showFilteredResults(ook)
     }
 
@@ -202,21 +201,83 @@ function LandingPage(props) {
             <div className="item-vote-wrap">
                 <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
-                <Link to = {{pathname:'/', search:`designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
+                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
                     <div className="item-vote-show">
                         <div className="item-vote-title">
                             {post.title}
                         </div>
+                        <div className="item-vote-rate">
+                            <Rate disabled defaultValue={post.score}/>
+                            <div style={{display:'inline-block'}}>({post.score} 3.6 / 5점)</div>
+                        </div>
                     </div>
                 </Link>
+                <div style={{width:'100%', height:'50px'}}>
+                    <div style={{width :'50px', height:'50px', display:'inline-block'}}>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileImage)}/>
+                    </div>
+                    <div style={{width:'30px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
+                        {post.writer}
+                    </div>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>1000</div>
+                    <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
+                        <EyeOutlined />
+                    </div>
+                </div>
             </div>
         )
     }
 
     return (
         <>
-        <div style={{width:'100%', maxWidth:'1400px', margin:'0 auto', height: 'calc( 100vh - 10px)',}}>
-            <div className="main-banner-background" style={{maxHeight:`${MainBanner? 'calc(100% - 200px)' : `20px`}`}}>
+        <div style={{position:'fixed',zIndex:'40', top:'100px',width:'100%', height:'40px', backgroundColor:'white',borderTop:'1px solid whitesmoke', boxShadow:'0 4px 4px 0 rgba(0,0,0,0.2), 0 1px 0 0 #d9d9d9'}}>
+                <div style={{width:'100%', height:'100%', maxWidth:'1400px', margin:'0 auto', textAlign:'center', lineHeight:'40px'}}>
+                    <div className="category" style={{position:'relative',width:'25%', display:'inline-block', fontSize:'12px'}}>
+                        남성의류
+                        <div className="category-show">
+                            <div onClick={()=>handleFilters(1)}>상의</div>
+                            <div onClick={()=>handleFilters(2)}>하의</div>
+                            <div onClick={()=>handleFilters(3)}>아우터</div>
+                            <div onClick={()=>handleFilters(4)}>속옷</div>
+                        </div>
+                    </div>
+                    <div className="category" style={{position:'relative',width:'25%', display:'inline-block', fontSize:'12px'}}>
+                        여성의류
+                        <div className="category-show">
+                            <div onClick={()=>handleFilters(5)}>상의</div>
+                            <div onClick={()=>handleFilters(6)}>하의</div>
+                            <div onClick={()=>handleFilters(7)}>원피스</div>
+                            <div onClick={()=>handleFilters(8)}>아우터</div>
+                            <div onClick={()=>handleFilters(9)}>속옷</div>
+                        </div>
+                    </div>
+                    <div className="category" style={{position:'relative',width:'25%', display:'inline-block', fontSize:'12px'}}>
+                        악세서리
+                        <div className="category-show">
+                            <div onClick={()=>handleFilters(10)}>귀걸이</div>
+                            <div onClick={()=>handleFilters(11)}>시계</div>
+                            <div onClick={()=>handleFilters(12)}>목걸이</div>
+                            <div onClick={()=>handleFilters(13)}>팔찌</div>
+                            <div onClick={()=>handleFilters(14)}>발찌</div>
+                            <div onClick={()=>handleFilters(15)}>안경</div>
+                            <div onClick={()=>handleFilters(16)}>반지</div>
+                            <div onClick={()=>handleFilters(17)}>모자</div>
+                        </div>
+                    </div>
+                    <div className="category" style={{position:'relative',width:'25%', display:'inline-block', fontSize:'12px'}}>
+                        신발
+                        <div className="category-show">
+                            <div onClick={()=>handleFilters(18)}>단화</div>
+                            <div onClick={()=>handleFilters(19)}>스포츠</div>
+                            <div onClick={()=>handleFilters(20)}>슬리퍼</div>
+                            <div onClick={()=>handleFilters(21)}>샌들</div>
+                            <div onClick={()=>handleFilters(22)}>하이힐</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div style={{width:'100%', maxWidth:'1400px', margin:'0 auto', height: 'calc( 100vh)',}}>
+            <div className="main-banner-background" style={{maxHeight:`${MainBanner? 'calc(100vh - 140px)' : `42px`}`}}>
                 <div style={{maxWidth:'1400px', margin:'0 auto'}}>
                     <div className="post-rank">
                         <PostRankBox/>
@@ -234,15 +295,6 @@ function LandingPage(props) {
                         }
                     </div>
                     <div className="filter-container">
-                        <div className="filter-btn">
-                            <div style={{width:'100%', height:'100%'}} onClick={OpenFilterClick}>필터</div>
-                            <div className="filter-wrapper" id={OpenFilter ? "filter-show" : null}>
-                                <FilterBox 
-                                    open={OpenFilter}
-                                    handleFilters={ook => handleFilters(ook)}
-                                />
-                            </div>
-                        </div>
                         <div className="filter-btn">
                             <div style={{width:'100%', height:'100%'}} onClick={OpenSortClick}>정렬</div>
                             <div className="filter-wrapper" id={OpenSort ? "filter-show" : null}>
