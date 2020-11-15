@@ -370,8 +370,12 @@ class getWorkView(ListAPIView):
         for postraw in postdata:
             image = []
             jpgs = PostImage.objects.filter(post=postraw.id)
+
             try:
-                print(jpgs)
+                likedata=like.objects.filter(post=postraw.id).count()
+            except:
+                likedata=0
+            try:
                 for pngs in jpgs:
                     image.append(pngs.image.url)
             except:
@@ -390,6 +394,9 @@ class getWorkView(ListAPIView):
                 'writer' : postraw.user.id,
                 'images' : image,
                 'thumbnail' : thumbnail,
+                'score':postraw.score,
+                'view':postraw.view,
+                'like':likedata,
                 
             }
             postJson.append(post)
@@ -422,6 +429,9 @@ class getWorkLikeView(ListAPIView):
         for postraw in likeObject:
             image = []
             jpgs = PostImage.objects.filter(post=postraw.post.id)
+            
+           
+
             try:
                 for pngs in jpgs:
                     image.append(pngs.image.url)
@@ -441,7 +451,6 @@ class getWorkLikeView(ListAPIView):
                 'writer' : temp.user.id,
                 'images' : image,
                 'thumbnail' : thumbnail,
-                
             }
             postJson.append(post)
 
