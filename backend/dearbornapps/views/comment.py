@@ -31,7 +31,7 @@ class MakeCommentView(APIView):
             score = comment.score
             commentCount = Comment.objects.filter(post=post).count()
             postScore = post.score
-            postScore = (postScore * commentCount + score) / (commentCount + 1)
+            postScore = (postScore * (commentCount - 1) + score) / (commentCount)
             post.score = postScore
             post.save()
             try:
