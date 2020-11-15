@@ -35,6 +35,7 @@ function BlogPage_Prod_About(props) {
             }
         })
     }, [])
+    console.log(About)
 
     const getAbout = (id) => {
         const config = {
@@ -73,13 +74,12 @@ function BlogPage_Prod_About(props) {
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">대표작</button>
                     <a href={`/${designer}/works`}><button className="blog-tabs-btn">작품</button></a>
                     <a href={`/${designer}/likes`}><button className="blog-tabs-btn">좋아요</button></a>
-                    <a href={`/${designer}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
                     <div className="blog-tabs-content">
                         <div className="prod-about">
                             <div className="prod-about-title">
                                 User 님의 대표작품
                             </div>
-                            <div style={{marginLeft:'150px', marginRight:'150px'}}>
+                            {About && About.id ? <div style={{marginLeft:'150px', marginRight:'150px'}}>
                                 <div style={{width:'50%',height:'100%',textAlign:'center', display:'inline-block', backgroundColor:'white',verticalAlign:'top', wordBreak:'break-all'}}>
                                     <div style={{width:'100%', marginTop:'35%'}}>
                                         <p style={{overflow:'hidden', textOverflow:'ellipsis', fontSize:'2rem'}}>{About.title}</p>
@@ -94,7 +94,7 @@ function BlogPage_Prod_About(props) {
                                 <div style={{width:'50%',height:'100%', display:'inline-block', backgroundColor:'gray', overflow:'hidden', wordBreak:'break-all'}}>
                                     <img style={{width:'100%'}} src={convertToS3EP(About.thumbnail)}/>
                                 </div>
-                            </div>
+                            </div> : <div style={{textAlign:'center', margin:'40px'}}>대표작 없음</div>}
                         </div>
                     </div>
                 </div>

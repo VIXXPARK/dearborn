@@ -209,18 +209,56 @@ function RepoListPage(props) {
     }
 
     return (
-        <div style={{width:'100vw', height:'100vh', backgroundColor:'white'}}>
-        <div className="list-container">
-            <div className="filter-container">
-                <div className="filter-btn">
-                    <div style={{width:'100%', height:'100%'}} onClick={OpenFilterClick}>필터</div>
-                    <div className="filter-wrapper" id={OpenFilter ? "filter-show" : null}>
-                        <FilterBox 
-                            open={OpenFilter}
-                            handleFilters={ook => handleFilters(ook)}
-                        />
+        <>
+                <div style={{position:'fixed',zIndex:'40', top:'100px',width:'100%', height:'40px', backgroundColor:'white',borderTop:'1px solid whitesmoke', boxShadow:'0 4px 4px 0 rgba(0,0,0,0.2), 0 1px 0 0 #d9d9d9'}}>
+                <div style={{width:'100%', height:'100%', maxWidth:'1400px', margin:'0 auto', textAlign:'center', lineHeight:'40px'}}>
+                    <div className="category" style={{position:'relative',width:'25%', display:'inline-block', fontSize:'12px'}}>
+                        남성의류
+                        <div className="category-show">
+                            <div onClick={()=>handleFilters(1)}>상의</div>
+                            <div onClick={()=>handleFilters(2)}>하의</div>
+                            <div onClick={()=>handleFilters(3)}>아우터</div>
+                            <div onClick={()=>handleFilters(4)}>속옷</div>
+                        </div>
+                    </div>
+                    <div className="category" style={{position:'relative',width:'25%', display:'inline-block', fontSize:'12px'}}>
+                        여성의류
+                        <div className="category-show">
+                            <div onClick={()=>handleFilters(5)}>상의</div>
+                            <div onClick={()=>handleFilters(6)}>하의</div>
+                            <div onClick={()=>handleFilters(7)}>원피스</div>
+                            <div onClick={()=>handleFilters(8)}>아우터</div>
+                            <div onClick={()=>handleFilters(9)}>속옷</div>
+                        </div>
+                    </div>
+                    <div className="category" style={{position:'relative',width:'25%', display:'inline-block', fontSize:'12px'}}>
+                        악세서리
+                        <div className="category-show">
+                            <div onClick={()=>handleFilters(10)}>귀걸이</div>
+                            <div onClick={()=>handleFilters(11)}>시계</div>
+                            <div onClick={()=>handleFilters(12)}>목걸이</div>
+                            <div onClick={()=>handleFilters(13)}>팔찌</div>
+                            <div onClick={()=>handleFilters(14)}>발찌</div>
+                            <div onClick={()=>handleFilters(15)}>안경</div>
+                            <div onClick={()=>handleFilters(16)}>반지</div>
+                            <div onClick={()=>handleFilters(17)}>모자</div>
+                        </div>
+                    </div>
+                    <div className="category" style={{position:'relative',width:'25%', display:'inline-block', fontSize:'12px'}}>
+                        신발
+                        <div className="category-show">
+                            <div onClick={()=>handleFilters(18)}>단화</div>
+                            <div onClick={()=>handleFilters(19)}>스포츠</div>
+                            <div onClick={()=>handleFilters(20)}>슬리퍼</div>
+                            <div onClick={()=>handleFilters(21)}>샌들</div>
+                            <div onClick={()=>handleFilters(22)}>하이힐</div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        <div style={{width:'100vw', height:'100vh', marginTop:'40px', backgroundColor:'white'}}>
+        <div className="list-container">
+            <div className="filter-container">
                 <div className="filter-btn">
                     <div style={{width:'100%', height:'100%'}} onClick={OpenSortClick}>정렬</div>
                     <div className="filter-wrapper" id={OpenSort ? "filter-show" : null}>
@@ -239,6 +277,7 @@ function RepoListPage(props) {
         </div>
         {Loading && Loader("spin", "black")}
         </div>
+        </>
     );
 }
 

@@ -1,7 +1,9 @@
 @import '~antd/dist/antd.css';
 
 #header {
-    height: 66px;
+    position: fixed;
+    width:100%;
+    height : 100px;
     z-index : 40;
     top: 0px;
 
@@ -15,7 +17,7 @@
         font-weight: bold;
         line-height: 35px;
         margin-top:14px;
-        font-size: 20px;
+        font-size: 12px;
         margin-left:40px;
         margin-right:40px;
         color:black;
@@ -43,21 +45,17 @@
     margin-left: 10px;
 }
 
-
+.header-title{
+    display: inline-block;
+}
 .header-title a{
-    font-size:20px;
     font-weight: bold;
 }
 
-.logged-out, .register {
-    margin-right: 10px;
-    margin-top: 14px;
-}
 
 .logged-out a, .register a{
     font-size:16px; 
     font-weight:normal;
-    padding:6px 0px 6px 12px;
 }
 
 .pull-right {
@@ -68,20 +66,19 @@
     display: inline-block;
     width:100px;
     height:40px;
-    background-color: #f85272;
+    line-height: 40px;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: 10px;
     font-style: bold;
     text-align: center;
-    padding-top: 5px;
-    color : white;
+    color : black;
 }
 
 
 .nav-bar-profile{
     margin-top: 8px;
     font-size: 25px;
-    padding: 2px;
+    padding: 4px;
     cursor: pointer;
 }
 
@@ -104,6 +101,20 @@
         float:right;
     }
 }
+
+.category-show {
+    display: none;
+}
+
+.category:hover .category-show{
+    position:absolute;
+    display: block;
+    bottom:-1;
+    left:0; 
+    width:100%;
+    background-color:white;
+}
+
 
 .ant-btn-primary{
     background-color: #f85272;

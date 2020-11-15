@@ -198,7 +198,6 @@ function BlogPage_Prod_Likes(props) {
                     <a href={`/${designer}`}><button className="blog-tabs-btn">대표작</button></a>
                     <a href={`/${designer}/works`}><button className="blog-tabs-btn">작품</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">좋아요</button>
-                    <a href={`/${designer}/bid`}><button className="blog-tabs-btn">진행 중</button></a>
                     <div className="blog-tabs-content">
                         <div className="prod-works">
                             {Repos && Repos.map(repo => renderLikes(repo))}

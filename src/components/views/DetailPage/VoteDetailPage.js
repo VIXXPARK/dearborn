@@ -5,8 +5,10 @@ import axios from 'axios'
 import { Input, Modal} from 'antd';
 import {config} from '../../utils/Token'
 import {convertToS3EP} from '../../utils/String'
-import {FormOutlined, DollarOutlined, DeleteOutlined} from '@ant-design/icons'
+import {FormOutlined, DollarOutlined, DeleteOutlined, EditOutlined, FileTextOutlined} from '@ant-design/icons'
 import {getCookieValue} from '../../utils/Cookie'
+import CommentArea from './Sections/CommentArea';
+import LikeDislike from './Sections/LikeDislike';
 
 const {confirm} = Modal;
 
@@ -67,58 +69,6 @@ function VoteDetailPage(props) {
         }
     }, [params.get('postId')])
     
-    const showBiddingForm = () => {
-        var Bid
-        
-        confirm({
-            width:800,
-            icon: null,
-            content: 
-            <div className="bid-container">
-                <div className="bid-title">현재 입찰가 : &&원</div>
-                <div className="bid-content"><p>희망가격 : </p><Input style={{width:'70px'}} value={Bid} onChange={(e)=>{Bid = e.currentTarget.value}}/> ,000원</div>
-            </div>,
-            onOk(){
-                console.log(Bid)
-                if(!Bid){
-                    return alert('가격을 적어주세요')
-                }else{
-                    confirm({
-                        icon:null,
-                        content:
-                            <div>정말로 입찰하시겠습니까?</div>,
-                            onOk(){
-                                console.log(Bid)
-                                const variables = {
-                                    user : props.user.userData._id,
-                                    post : DetailPost.id,
-                                    price : Bid,
-                                }
-                                const config = {
-                                    headers : {
-                                        Authorization: `Token ${getCookieValue('w_auth')}`
-                                    }
-                                }
-                                axios.post('/api/bid/setBid', variables, config)
-                                .then(response => {
-                                    console.log(response)
-                                    if(response.data.success){
-                                        alert('성공')
-                                    }else{
-                                        alert('실패')
-                                        console.log(response.data.err)
-                                    }
-                                })
-                                Modal.destroyAll()
-                            }
-                    })
-                }
-            },
-            onCancel(){
-
-            }
-        })
-    }
 
     const OnDeleteClick = () => {
         const config = {
@@ -138,26 +88,10 @@ function VoteDetailPage(props) {
             }
         })
     }
-
-    const OnVoteClick = () => {
-        if(VoteLength === 3)
-            return alert('이미 3번의 투표지를 사용했습니다.')
-        
-        const config = {
-        headers : {
-            Authorization: `Token ${getCookieValue('w_auth')}`
-        }
-        }
-        axios.post('/api/vote/upVote', {user: props.user.userData._id, post: DetailPost.id}, config)
-        .then(response => {
-            if(response.data.success){
-                setVoted(true)
-            }else{
-                console.log(response.data.err)
-            }
-        })
+    const onModifyClick = () => {
+        props.history.push(`/upload/modify/${DetailPost.id}`)
     }
-    
+
     return (
         OnModal && params.get('designer') && (
         <DetailModal
@@ -176,24 +110,28 @@ function VoteDetailPage(props) {
                 <div className="profile-header">
                     {Writer.nickname}
                 </div>
-                <div className="profile-icon" onClick={OnVoteClick}>
-                    <FormOutlined/>
-                </div>
-                <div className="profile-header">
-                    {Voted ? "투표함" : "투표하기"}
-                </div>
+                {props.user.userData && Writer && props.user.userData._id !== Writer.id &&
+                <> 
+                <LikeDislike postId={DetailPost.id} userId={Writer.id}/>
+                </>}
                 {props.user.userData && props.user.userData.job === 2 && 
-                <>
-                    <div className="profile-icon" onClick={showBiddingForm}>
-                        <DollarOutlined/>
+                    <>
+                    <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon">
+                        <FileTextOutlined />
                     </div>
-                    <div className="profile-header">
-                        입찰하기
+                    <div className="profile-header" style={{color:'black'}}>
+                        채용
                     </div>
-                </>
+                    </>
                 }
                 {props.user.userData && Writer && props.user.userData._id === Writer.id && 
                 <>
+                    <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={onModifyClick}>
+                        <EditOutlined />
+                    </div>
+                    <div className="profile-header">
+                        수정하기
+                    </div>
                     <div className="profile-icon" onClick={OnDeleteClick}>
                         <DeleteOutlined/>
                     </div>
@@ -213,6 +151,7 @@ function VoteDetailPage(props) {
                 </div>
                 {DetailPost.content}
             </div>
+            <CommentArea postId={DetailPost.id}/>
         </DetailModal>
         )
     );

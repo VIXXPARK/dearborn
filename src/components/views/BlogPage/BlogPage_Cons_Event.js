@@ -205,7 +205,6 @@ function BlogPage_Cons_Event(props) {
                     </div>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
                     <a href={`/${designer}/cons/likes`}><button className="blog-tabs-btn">좋아요</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">이벤트</button>
                     {props.user.userData && props.user.userData.nickname === designer && <button style={{float:'right'}} className="blog-tabs-btn"  id="blog-tabs-clicked2" onClick={OnOpenEvent}>

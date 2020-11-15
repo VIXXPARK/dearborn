@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios'
 import { Button, Typography, Card, Avatar } from 'antd';
 
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
-import RepoListPage from '../ListPage/RepoListPage';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 
@@ -15,11 +14,23 @@ function BlogPage_Cons_Likes(props) {
     const [Repos, setRepos] = useState([])
     const [Designer, setDesigner] = useState("")
     const [Skip, setSkip] = useState(0)
-    const [Limit, setLimit] = useState(4)
+    const [Limit, setLimit] = useState(7)
     const [LoadMore, setLoadMore] = useState(true)
     const [IsBottom, setIsBottom] = useState(false)
+    const [Loading, setLoading] = useState(true)
+    const [PostColumn, setPostColumn] = useState(7)
+    const [WindowX, setWindowX] = useState(0)
 
     const designer = props.match.params.designer
+
+    useLayoutEffect(() => {
+        function updateSize(){
+            setWindowX(window.innerWidth)
+        }
+        window.addEventListener('resize', updateSize)
+        updateSize()
+        return () => window.removeEventListener('resize', updateSize)
+    }, [])
 
     useEffect(() => {
         const config = {
@@ -43,10 +54,73 @@ function BlogPage_Cons_Likes(props) {
     }, [])
 
     useEffect(() => {
-        if(IsBottom && LoadMore){
+        if(IsBottom && LoadMore && !Loading){
+            setLoading(true)
             getPosts(Designer.id)
+            setIsBottom(false)
         }
     }, [IsBottom])
+
+    useEffect(() => {
+        if(window.innerWidth < 400){
+            setPostColumn(1)
+        }
+        else if(window.innerWidth <700)
+        {
+            setPostColumn(2)
+        }
+        else if(window.innerWidth <1000){
+            setPostColumn(3)
+        }
+        else if(window.innerWidth <1300){
+            setPostColumn(4)
+        }
+        else if(window.innerWidth <1600){
+            setPostColumn(5)
+        }
+        else if(window.innerWidth <1900){
+            setPostColumn(6)
+        }
+        else if(window.innerWidth >=1900){
+            setPostColumn(7)
+        }
+    }, [window.innerWidth])
+
+    useEffect(() => {
+        setTimeout(() => {
+            let images = document.querySelectorAll('.item-vote-wrap')
+            let imgStack
+            if(PostColumn === 1){
+                imgStack = [0]
+            }else if(PostColumn === 2){
+                imgStack =[0,0]
+            }
+            else if(PostColumn === 3){
+                imgStack =[0,0,0]
+            }
+            else if(PostColumn === 4){
+                imgStack =[0,0,0,0]
+            }
+            else if(PostColumn === 5){
+                imgStack =[0,0,0,0,0]
+            }
+            else if(PostColumn === 6){
+                imgStack =[0,0,0,0,0,0]
+            }
+            else if(PostColumn === 7){
+                imgStack =[0,0,0,0,0,0,0]
+            }
+            let colWidth = 256;
+            for(let i=0; i<images.length; i++){
+                let minIndex = imgStack.indexOf(Math.min.apply(0, imgStack))
+                let x = colWidth * minIndex
+                let y = imgStack[minIndex]
+                imgStack[minIndex] += (images[i].children[0].height + 15)
+                images[i].style.transform = `translateX(${x}px) translateY(${y}px)`
+            }
+        }, 500);
+
+    }, [document.querySelectorAll('.item-vote-wrap'), PostColumn])
 
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
@@ -57,6 +131,8 @@ function BlogPage_Cons_Likes(props) {
             || document.body.scrollHeight;
         if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
+        }else{
+            setIsBottom(false)
         }
     }
 
@@ -81,19 +157,23 @@ function BlogPage_Cons_Likes(props) {
             }else{
                 console.log(response.data.err)
             }
+        }).finally(()=>{
+            setLoading(false)
         })
     }
 
     const renderPost = (repo) => {
         return (
-            <div className="prod-works">
-                <div className="works-wrapper">
-                    <img className="works-thumb" src={convertToS3EP(repo.thumbnail)}/>
-                    <div className="works-content">
-                        <p>{repo.title}</p>
-                        <p>{repo.content}</p>
+            <div className="item-vote-wrap">
+                <img className="item-vote-img" src={convertToS3EP(repo.thumbnail)} alt/>
+                <div className="item-vote-obv"></div>
+                    <div className="item-vote-show">
+                        <a href = {`/${Designer.nickname}/${repo.id}`}>
+                        <div className="item-vote-title">
+                            {repo.title}
+                        </div>
+                        </a>
                     </div>
-                </div>
             </div>
             )
     }
@@ -116,7 +196,6 @@ function BlogPage_Cons_Likes(props) {
                     </div>
                 </div>
                 <div className="blog-section">
-                    <a href={`/${designer}/cons`}><button className="blog-tabs-btn">진행 중</button></a>
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">좋아요</button>
                     <a href={`/${designer}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
                     <div className="blog-tabs-content">
