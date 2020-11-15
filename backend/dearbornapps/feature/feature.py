@@ -6,7 +6,6 @@ import glob, os.path, json
 import boto3, os, pickle
 from annoy import AnnoyIndex
 from scipy import spatial
-import matplotlib.pyplot as plt
 from dearbornConfig.settings.base import BASE_DIR, Is_Local
 from io import BytesIO
 from PIL import Image
@@ -192,7 +191,6 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
             tmp = v
             tmp = np.array(tmp)
             tmp = tmp.reshape(16,16,5)
-            print(np.shape(tmp))
             image = Image.fromarray(tmp.astype('float32'),'RGB')
             image.show()
             dirs = featureUpload_to(postId).split('/')
