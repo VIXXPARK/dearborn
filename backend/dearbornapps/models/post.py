@@ -21,6 +21,7 @@ class Post(models.Model):
    view = models.IntegerField(default=0)
    scope = models.IntegerField(default=0)
    category = models.IntegerField(default=None)
+   score = models.FloatField(default=0)
    # expire_dt = models.DateTimeField()
    # is_repo = models.BooleanField(default=False)
    # bidPrice = models.IntegerField()

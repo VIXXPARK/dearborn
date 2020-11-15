@@ -11,7 +11,6 @@ from io import BytesIO
 from PIL import Image
 
 
-
 class S3ImagesInvalidExtension(Exception):
     pass
 
@@ -178,7 +177,6 @@ def GetFeatureVector(image_array):
     hub_path = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
     
     MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False)
-    
     featureVector = []
     result = MyModule(image_array)
     for res in result:
@@ -210,6 +208,8 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
             out_path = os.path.join(out_path,image_file_name[index] + ".pkl")
             
             s3Images.to_s3(v,"dearbornstorage",out_path)
+
+
 
 def Similarity(postId):
 

@@ -50,7 +50,6 @@ from rest_framework.pagination import LimitOffsetPagination
 from background_task import background
 from datetime import datetime, timedelta
 from pytz import timezone
-from dearbornapps.models.bid import BidInfo
 from dearbornapps.models.user import User
 from dearbornapps.models.messanger import Message
 from dearbornapps.feature.feature import Similarity,GetFeatureVector,SaveFeatureVector, GetImageArray
@@ -123,14 +122,14 @@ class PostView(ListAPIView):
         try:
             if(filterSerializer.validated_data['sort']==0):
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=False).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=False).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=False).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
             postData = []
             for post in data:
                 person = User.object.filter(id=post.user.id)
@@ -156,6 +155,7 @@ class PostView(ListAPIView):
                     'writer' : nick,
                     'profileImage' : profile,
                     'view':post.view,
+                    'score':post.score,
                 }
                 postData.append(postDic)
            
@@ -167,7 +167,7 @@ class PostView(ListAPIView):
         except APIException as e:
             context = {
                 'err':e.detail,
-                'success':False
+                'success':False 
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -184,14 +184,14 @@ class ReposView(ListAPIView):
         try:
             if(filterSerializer.validated_data['sort']==0):
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.all().order_by('-updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=True).order_by('-updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('-updated_dt'))
             else:
                 if filterSerializer.validated_data['ook']==0:
-                    data = self.paginate_queryset(Post.objects.filter(is_repo=True).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.all().order_by('updated_dt'))
                 else :
-                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook'], is_repo=True).order_by('updated_dt'))
+                    data = self.paginate_queryset(Post.objects.filter(category=filterSerializer.validated_data['ook']).order_by('updated_dt'))
             postData = []
             for post in data:
                 person = User.object.filter(id=post.user.id)
@@ -363,15 +363,19 @@ class getWorkView(ListAPIView):
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
         
-        postdata = self.paginate_queryset(Post.objects.filter(user=userdata, is_repo=True).order_by('-updated_dt'))
+        postdata = self.paginate_queryset(Post.objects.filter(user=userdata).order_by('-updated_dt'))
         
         postJson = []
         
         for postraw in postdata:
             image = []
             jpgs = PostImage.objects.filter(post=postraw.id)
+
             try:
-                print(jpgs)
+                likedata=like.objects.filter(post=postraw.id).count()
+            except:
+                likedata=0
+            try:
                 for pngs in jpgs:
                     image.append(pngs.image.url)
             except:
@@ -390,6 +394,9 @@ class getWorkView(ListAPIView):
                 'writer' : postraw.user.id,
                 'images' : image,
                 'thumbnail' : thumbnail,
+                'score':postraw.score,
+                'view':postraw.view,
+                'like':likedata,
                 
             }
             postJson.append(post)
@@ -422,6 +429,9 @@ class getWorkLikeView(ListAPIView):
         for postraw in likeObject:
             image = []
             jpgs = PostImage.objects.filter(post=postraw.post.id)
+            
+           
+
             try:
                 for pngs in jpgs:
                     image.append(pngs.image.url)
@@ -441,7 +451,6 @@ class getWorkLikeView(ListAPIView):
                 'writer' : temp.user.id,
                 'images' : image,
                 'thumbnail' : thumbnail,
-                
             }
             postJson.append(post)
 
@@ -724,7 +733,6 @@ class getMyWork(APIView):
             }
         
         return Response(content,status=HTTP_200_OK)
-
 
 # @background()
 # def voteExpired():
