@@ -188,11 +188,6 @@ def GetFeatureVector(image_array):
 def SaveFeatureVector(featureVector, image_file_name, postId):
     if Is_Local[0]:
         for index, v in enumerate(featureVector):
-            tmp = v
-            tmp = np.array(tmp)
-            tmp = tmp.reshape(16,16,5)
-            image = Image.fromarray(tmp.astype('float32'),'RGB')
-            image.show()
             dirs = featureUpload_to(postId).split('/')
             out_path = os.path.join(BASE_DIR)
             for dir in dirs:
