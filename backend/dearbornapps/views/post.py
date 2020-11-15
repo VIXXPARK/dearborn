@@ -155,6 +155,7 @@ class PostView(ListAPIView):
                     'writer' : nick,
                     'profileImage' : profile,
                     'view':post.view,
+                    'score':post.score,
                 }
                 postData.append(postDic)
            
@@ -166,7 +167,7 @@ class PostView(ListAPIView):
         except APIException as e:
             context = {
                 'err':e.detail,
-                'success':False
+                'success':False 
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
 
