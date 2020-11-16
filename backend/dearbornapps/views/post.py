@@ -312,43 +312,61 @@ class getProfileView(ListAPIView):
         view=0
         work=0
         liked=0
+        if userdata.job==1:
+            try:
+                postdata = Post.objects.filter(user=userdata.id)
+                for x in postdata:
+                    work=work+1
+                    view=x.view+view
+            except:
+                pass
 
-        try:
-            postdata = Post.objects.filter(user=userdata.id)
-            for x in postdata:
-                work=work+1
-                view=x.view+view
-        except:
-            pass
-
-        try:
-            postdata = Post.objects.filter(user=userdata.id)
-            for y in postdata:
-                liked =liked +like.objects.filter(post=postdata.id).count()
-        except:
-            pass
-       
-
-        try:
-            profileImage = userdata.profileImage.url,
-        except:
-            profileImage = None,
-        user = {
-            'id' : userdata.id,
-            'nickname' : userdata.nickname,
-            'profileImage' : profileImage,
-            'job':userdata.job,
-            'work':work,
-            'view':view,
-            'like':liked,
-            
-        }
+            try:
+                postdata = Post.objects.filter(user=userdata.id)
+                for y in postdata:
+                    liked =liked +like.objects.filter(post=y.id).count()
+            except:
+                pass
         
-        context={
-            'success': True,
-            'user' : user,
-        }
+
+            try:
+                profileImage = userdata.profileImage.url,
+            except:
+                profileImage = None,
+            user = {
+                'id' : userdata.id,
+                'nickname' : userdata.nickname,
+                'profileImage' : profileImage,
+                'job':userdata.job,
+                'work':work,
+                'view':view,
+                'like':liked,
+                
+            }
+            
+            context={
+                'success': True,
+                'user' : user,
+            }
+        else:
+            try:
+                profileImage = userdata.profileImage.url,
+            except:
+                profileImage = None,
+            user = {
+                'id' : userdata.id,
+                'nickname' : userdata.nickname,
+                'profileImage' : profileImage,
+                'job':userdata.job,
+            }
+            
+            context={
+                'success': True,
+                'user' : user,
+            }
         return Response(context, status=HTTP_200_OK)
+
+
 
 class getWorkView(ListAPIView):
     queryset = Post.objects.all()
