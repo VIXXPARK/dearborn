@@ -322,9 +322,9 @@ class getProfileView(ListAPIView):
             pass
 
         try:
-            likey = like.objects.filter(user=userdata.id)
-            for y in likey:
-                liked=liked+1
+            postdata = Post.objects.filter(user=userdata.id)
+            for y in postdata:
+                liked =liked +like.objects.filter(post=postdata.id).count()
         except:
             pass
        
@@ -742,6 +742,10 @@ class getMyWork(APIView):
                 likedata = like.objects.filter(post=work.post.id).count()
             except:
                 likedata=None,
+            try:
+                profile = postdata.user.profileImage.url
+            except:
+                profile = None,
             about = {
             'id':postdata.id,
             'thumbnail':thumbnail,
@@ -749,7 +753,7 @@ class getMyWork(APIView):
             'content':postdata.content,
             'score':postdata.score,
             'nickname':postdata.user.nickname,
-            'profileimage':postdata.user.profileImage,
+            'profileimage':profile,
             'view':postdata.view,
             'like':likedata,
 
