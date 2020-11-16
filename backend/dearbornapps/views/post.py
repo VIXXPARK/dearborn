@@ -145,6 +145,10 @@ class PostView(ListAPIView):
                     nick = person[0].nickname
                 except:
                     nick=None
+                try:
+                    likedata = like.objects.filter(post=post.id).count()
+                except:
+                    likedata = None,
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
@@ -156,6 +160,7 @@ class PostView(ListAPIView):
                     'profileImage' : profile,
                     'view':post.view,
                     'score':post.score,
+                    'like': likedata,
                 }
                 postData.append(postDic)
            
@@ -335,7 +340,8 @@ class getProfileView(ListAPIView):
             'job':userdata.job,
             'work':work,
             'view':view,
-            'like':liked
+            'like':liked,
+            
         }
         
         context={
@@ -386,6 +392,11 @@ class getWorkView(ListAPIView):
             except:
                 thumbnail = None,
             
+            try:
+                profile = postraw.user.profileImage.url
+            except:
+                profile = None,
+
             post = {
                 'id' : postraw.id,
                 'title' : postraw.title,
@@ -397,7 +408,8 @@ class getWorkView(ListAPIView):
                 'score':postraw.score,
                 'view':postraw.view,
                 'like':likedata,
-                
+                'profileimage':profile,
+                'nickname':postraw.user.nickname,
             }
             postJson.append(post)
 
@@ -430,19 +442,30 @@ class getWorkLikeView(ListAPIView):
             image = []
             jpgs = PostImage.objects.filter(post=postraw.post.id)
             
-           
-
             try:
                 for pngs in jpgs:
                     image.append(pngs.image.url)
             except:
                 pass
 
+            
+
             try:
                 thumbnail = Post.objects.get(id=postraw.post.id).thumbnail.url
             except:
                 thumbnail = None,
             temp = Post.objects.get(id=postraw.post.id)
+
+            try:
+                profile = temp.user.profileImage.url
+            except:
+                profile=None,
+            
+            try:
+                likedata = like.objects.filter(post=postraw.post.id).count()
+            except:
+                likedata = None,
+
             post = {
                 'id' : temp.id,
                 'title' : temp.title,
@@ -451,6 +474,11 @@ class getWorkLikeView(ListAPIView):
                 'writer' : temp.user.id,
                 'images' : image,
                 'thumbnail' : thumbnail,
+                'score':temp.score,
+                'nickname':temp.user.nickname,
+                'profileimage':profile,
+                'view':temp.view,
+                'like':likedata,
             }
             postJson.append(post)
 
@@ -710,11 +738,21 @@ class getMyWork(APIView):
             work = myWork.objects.get(user=username.validated_data['user'])
             postdata = Post.objects.get(id=work.post.id)
             thumbnail=postdata.thumbnail.url
+            try:
+                likedata = like.objects.filter(post=work.post.id).count()
+            except:
+                likedata=None,
             about = {
             'id':postdata.id,
             'thumbnail':thumbnail,
             'title':postdata.title,
-            'content':postdata.content
+            'content':postdata.content,
+            'score':postdata.score,
+            'nickname':postdata.user.nickname,
+            'profileimage':postdata.user.profileImage,
+            'view':postdata.view,
+            'like':likedata,
+
             }
             content={
                 'success':True,
@@ -725,7 +763,12 @@ class getMyWork(APIView):
             'id': None,
             'thumbnail': None,
             'title':None,
-            'content':None
+            'content':None,
+            'score':None,
+            'nickname':None,
+            'profileimage':None,
+            'view':None,
+            'like':None,
             }
             content={
                 'success': True,
