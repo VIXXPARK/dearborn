@@ -10,7 +10,7 @@ import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
 
 
-import {HomeOutlined, DownOutlined, EyeOutlined} from '@ant-design/icons'
+import {HomeFilled ,ClockCircleFilled,CalendarFilled ,ThunderboltFilled,FileWordFilled, DownOutlined, EyeOutlined, HeartFilled} from '@ant-design/icons'
 import PostRankBox from './Sections/PostRankBox';
 
 const {Meta} = Card
@@ -32,6 +32,7 @@ function LandingPage(props) {
     const [PostColumn, setPostColumn] = useState(5)
     const [WindowX, setWindowX] = useState(0)
     const [ScrollPercentage, setScrollPercentage] = useState(0)
+    const [Category, setCategory] = useState(0)
 
     useLayoutEffect(() => {
         function updateSize(){
@@ -213,7 +214,13 @@ function LandingPage(props) {
                         </div>
                         <div className="item-vote-rate">
                             <Rate disabled defaultValue={post.score}/>
-                            <div style={{display:'inline-block'}}>({post.score} 3.6 / 5점)</div>
+                            <div style={{display:'inline-block'}}>({post.score} / 5점)</div>
+                        </div>
+                        <div className="item-vote-like" style={{color:'black'}}>
+                            <div>
+                                <HeartFilled style={{color:'tomato', fontSize:'20px', verticalAlign:'middle'}}/>
+                                <span style={{fontSize:'10px', marginLeft:'10px'}}>{post.like}</span>
+                            </div>
                         </div>
                     </div>
                 </Link>
@@ -224,7 +231,7 @@ function LandingPage(props) {
                     <div style={{width:'30px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
                         {post.writer}
                     </div>
-                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>1000</div>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
                     <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
                         <EyeOutlined />
                     </div>
@@ -291,14 +298,15 @@ function LandingPage(props) {
             <div className="vote" style={{width:'100%',maxWidth:'1400px', margin:'0 auto', margin:'0 auto', backgroundColor:'white', zIndex:'1000'}}>
                 <div style={{margin: '0 auto', maxWidth:'1400px', width:'100%',}}> 
                     <div style={{width:'100%',textAlign:'center', marginTop:'20px'}}>
-                        <span style={{float:'left', fontSize:'20px', color:'black'}}>추천&nbsp;&nbsp;</span>
-                        <span style={{float:'left', fontSize:'20px', color:'black'}}>실시간 포스트&nbsp;&nbsp;</span>
-                        <span style={{float:'left', fontSize:'20px', color:'black'}}>투데이&nbsp;&nbsp;</span>
-                        <span style={{float:'left', fontSize:'20px', color:'black'}}>인기 포스트&nbsp;&nbsp;</span>
+                        <span style={{float:'left', marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(0)} id={Category === 0 ? 'category-clicked' : null}>추천</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(1)} id={Category === 1 ? 'category-clicked' : null}>실시간 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(2)} id={Category === 2 ? 'category-clicked' : null}>투데이 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(3)} id={Category === 3 ? 'category-clicked' : null}>주간 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(4)} id={Category === 4 ? 'category-clicked' : null}>월간 인기</span>
                         {MainBanner ? 
-                        <div style={{fontSize:'15px', textAlign:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 접기</a></div>
+                        <div style={{fontSize:'15px', float:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 접기</a></div>
                         :
-                        <div style={{fontSize:'15px', textAlign:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 열기</a></div>
+                        <div style={{fontSize:'15px', float:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 열기</a></div>
                         }
                     </div>
                     <div className="filter-container">
@@ -328,22 +336,36 @@ function LandingPage(props) {
             </div>
         </div>
         {Loading && Loader("spin", "black")}
-        <div style={{position:'fixed', bottom:'10%', left:'5%',  width:'30px', height:'200px', border:'1px solid #d9d9d9', boxShadow:'1px 1px 3px #d9d9d9'}}>
-            <div id="nav-fix-bar" style={{position:'relative', width:'30px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}}>
-                <HomeOutlined />
-                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+        <div style={{position:'fixed', bottom:'10%', left:'5%',  width:'40px', height:'200px', border:'1px solid #d9d9d9', boxShadow:'1px 1px 3px #d9d9d9'}}>
+            <div id="nav-fix-bar" style={{position:'relative', width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(0)}>
+                <HomeFilled />
+                <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'50px', height:'100%'}}>
+                    추천
+                </div>
             </div>
-            <div id="nav-fix-bar" style={{position:'relative',width:'30px', height:'20%', fontSize:'20px'}}>
-                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(1)}>
+                <ClockCircleFilled />
+                <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'120px', height:'100%'}}>
+                    실시간 인기
+                </div>
             </div>
-            <div id="nav-fix-bar" style={{position:'relative',width:'30px', height:'20%', fontSize:'20px'}}>
-                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(2)}>
+                <ThunderboltFilled />
+                <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'80px', height:'100%'}}>
+                    투데이
+                </div>
             </div>
-            <div id="nav-fix-bar" style={{position:'relative',width:'30px', height:'20%', fontSize:'20px'}}>
-                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(3)}>
+                <FileWordFilled />
+                <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'100px', height:'100%'}}>
+                    주간 인기
+                </div>
             </div>
-            <div id="nav-fix-bar" style={{position:'relative',width:'30px', height:'20%', fontSize:'20px'}}>
-                <div style={{position:'absolute',display:'none', top:0, left:'30px', width:'50px', height:'100%', backgroundColor:'powderblue'}}></div>
+            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(4)}>
+                <CalendarFilled />
+                <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'100px', height:'100%'}}>
+                    월간 인기
+                </div>
             </div>
         </div>
         </>

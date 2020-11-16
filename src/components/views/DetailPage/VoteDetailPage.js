@@ -119,7 +119,7 @@ function VoteDetailPage(props) {
                     <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon">
                         <FileTextOutlined />
                     </div>
-                    <div className="profile-header" style={{color:'black'}}>
+                    <div className="profile-header" style={{color:'white'}}>
                         채용
                     </div>
                     </>

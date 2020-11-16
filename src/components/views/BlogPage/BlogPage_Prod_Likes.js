@@ -7,7 +7,7 @@ import Meta from 'antd/lib/card/Meta';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
-import {EyeOutlined} from '@ant-design/icons'
+import {EyeOutlined, HeartFilled} from '@ant-design/icons'
 import { Link } from 'react-router-dom';
 
 const {Title} = Typography
@@ -178,18 +178,24 @@ function BlogPage_Prod_Likes(props) {
                         </div>
                         <div className="item-vote-rate">
                             <Rate disabled defaultValue={post.score}/>
-                            <div style={{display:'inline-block'}}>({post.score} 3.6 / 5점)</div>
+                            <div style={{display:'inline-block'}}>({post.score} / 5점)</div>
+                        </div>
+                        <div className="item-vote-like" style={{color:'black'}}>
+                            <div>
+                                <HeartFilled style={{color:'tomato', fontSize:'20px'}}/>
+                                <span style={{fontSize:'10px', marginLeft:'10px'}}>{post.like}</span>
+                            </div>
                         </div>
                     </div>
                 </Link>
                 <div style={{width:'100%', height:'50px'}}>
                     <div style={{width :'50px', height:'50px', display:'inline-block'}}>
-                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileImage)}/>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileimage)}/>
                     </div>
                     <div style={{width:'30px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
-                        {post.writer}
+                        {post.nickname}
                     </div>
-                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>1000</div>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
                     <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
                         <EyeOutlined />
                     </div>
