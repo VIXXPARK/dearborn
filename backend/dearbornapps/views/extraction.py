@@ -11,8 +11,8 @@ from rest_framework.status import(
 from dearbornapps.models.post import Post, PostImage
 from dearbornapps.models.extraction import Taste
 from dearbornapps.models.user import User
-from dearbornapps.serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer
-from dearbornapps.feature.feature import Similarity
+from dearbornapps.serializers.extraction import CategorySerializer, FilterSerializer, SaveTasteSerializer, RecommendPostSerializer
+from dearbornapps.feature.feature import Similarity, GetFeatureVector, GetImageArray
 
 @api_view(["POST"])
 def getCategory(request):
@@ -39,7 +39,9 @@ def selectFilter(request):
     postList = filterSerializer.validated_data['postList']
     posts = []
     for post in postList:
-        similarities = Similarity(post)
+        image_array, image_file_name, image_id = GetImageArray(post)
+        vectors = GetFeatureVector(image_array)
+        similarities = Similarity(vectors)
         for sim in similarities:
             similarity = sim['similarity']
             if similarity >= 0.7:
@@ -91,3 +93,56 @@ def saveTasteInfo(request):
         postData.append(postDict)
 
     return Response({'success' : True, 'postList' : postData}, status = HTTP_201_CREATED)
+
+@api_view(["POST"])
+def recommend(request):
+    recommandSerializer = RecommendPostSerializer(data=request.data)
+    if not recommandSerializer.is_valid():
+        return Response({'success':False, 'err':recommandSerializer.errors}, status=HTTP_400_BAD_REQUEST)
+    
+    postId = recommandSerializer.validated_data['postId']
+    image_array, image_file_name, image_id = GetImageArray(postId)
+    vectors = GetFeatureVector(image_array)
+    similarities = Similarity(vectors)
+    for sim in similarities:
+        similarity = sim['similarity']
+        postid = sim['postId']
+        postData = []
+        if similarity >= 0.9:
+            if postId != postid:
+                try:
+                    post = Post.objects.get(id=postid)
+                    user = post.user
+                except:
+                    return  Response({'success':False}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+                try:
+                    thumb = post.thumbnail.url
+                except:
+                    thumb = None
+
+                try:
+                    nick = user.nickname
+                except:
+                    nick = None
+
+                try:
+                    profile = user.profileImage.url
+                except:
+                    profile = None
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : user.id,
+                    'thumbnail' : thumb,
+                    'writer' : nick,
+                    'profileImage' : profile,
+                    'view':post.view,
+                    'score':post.score,
+                }
+                postData.append(postDic)
+    
+    return Response({'success' : True, 'posts' : postData})
+                
