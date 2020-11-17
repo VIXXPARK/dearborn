@@ -49,7 +49,8 @@ import datetime
 from rest_framework.views import APIView
 from rest_framework.pagination import LimitOffsetPagination
 from background_task import background
-from datetime import datetime, timedelta
+import datetime
+import timedelta
 from pytz import timezone
 from dearbornapps.models.user import User
 from dearbornapps.models.messanger import Message
@@ -69,9 +70,8 @@ class PostViewSet(ModelViewSet):
         postId = response.data['id']
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
-        similarity = Similarity(vectors)
         SaveFeatureVector(vectors,image_file_name,postId)
-        
+        similarity = Similarity(postId)
         context = {
             'similarity' : similarity,
             'success' : True,
@@ -87,8 +87,8 @@ class PostViewSet(ModelViewSet):
         postId = response.data['id']
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
-        similarity = Similarity(vectors)
         SaveFeatureVector(vectors,image_file_name,postId)
+        similarity = Similarity(response.data.postId)
         context = {
             'similarity' : similarity,
             'success' : True,
@@ -806,8 +806,8 @@ class weeklyPopularity(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = LimitOffsetPagination
     def get(self,request):
-        date = datetime.today()
-        start_week = date-datetime.timedelta(date.weekday())
+        dat = datetime.date.today()
+        start_week = dat-datetime.timedelta(dat.weekday()) 
         end_week = start_week + datetime.timedelta(7)
         try:
             postdata = self.paginate_queryset(like.objects.filter(updated_dt=[start_week,end_week]).values('post').annotate(like('post')))
@@ -861,12 +861,12 @@ class monthlyPopularity(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = LimitOffsetPagination
     def get(self,request):
-        date = datetime.date.today().month
+        dat = datetime.date.today().month
         try:
             postdata = self.paginate_queryset(like.objects.all().values('post').annotate(like('post')))
             postData=[]
             for post in postdata:
-                if post.updated_dt.month==date:
+                if post.updated_dt.month==dat:
                     person = User.objects.filter(id=post.user.id)
                     try:
                         thumb=post.thumbnail.url
@@ -910,9 +910,6 @@ class monthlyPopularity(ListAPIView):
                 'success':False 
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
 # @background()
 # def voteExpired():
 #     posts = Post.objects.filter(is_repo=False)
