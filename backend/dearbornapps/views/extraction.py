@@ -144,5 +144,4 @@ def recommend(request):
                 }
                 postData.append(postDic)
     
-    return Response({'success' : True, 'posts' : postData})
-                
+    return Response({'success' : True, 'posts' : postData}, status=HTTP_200_OK)
