@@ -104,12 +104,14 @@ def recommend(request):
     image_array, image_file_name, image_id = GetImageArray(postId)
     vectors = GetFeatureVector(image_array)
     similarities = Similarity(vectors, 5)
+    postData = []
     for sim in similarities:
         similarity = sim['similarity']
         postid = sim['postId']
-        postData = []
         if similarity >= 0.9:
             if postId != postid:
+                print("postId = ",postId)
+                print("postid = ",postid)
                 try:
                     post = Post.objects.get(id=postid)
                     user = post.user
@@ -143,5 +145,6 @@ def recommend(request):
                     'score':post.score,
                 }
                 postData.append(postDic)
+    print(postData)
     
     return Response({'success' : True, 'posts' : postData}, status=HTTP_200_OK)

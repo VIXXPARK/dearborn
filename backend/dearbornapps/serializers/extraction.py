@@ -15,4 +15,4 @@ class SaveTasteSerializer(serializers.Serializer):
     )
 
 class RecommendPostSerializer(serializers.Serializer):
-    postId = serializers.UUIDField()
+    postId = serializers.CharField()
