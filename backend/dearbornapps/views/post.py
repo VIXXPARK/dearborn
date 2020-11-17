@@ -50,7 +50,6 @@ from rest_framework.views import APIView
 from rest_framework.pagination import LimitOffsetPagination
 from background_task import background
 import datetime
-import timedelta
 from pytz import timezone
 from dearbornapps.models.user import User
 from dearbornapps.models.messanger import Message
