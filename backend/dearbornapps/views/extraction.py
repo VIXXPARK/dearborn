@@ -110,6 +110,8 @@ def recommend(request):
         postid = sim['postId']
         if similarity >= 0.9:
             if postId != postid:
+                print("postId = ",postId)
+                print("postid = ",postid)
                 try:
                     post = Post.objects.get(id=postid)
                     user = post.user
