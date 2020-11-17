@@ -3,7 +3,7 @@ from .user import User
 from dearbornConfig.settings.base import MEDIA_URL
 import os
 from django.dispatch import receiver
-import uuid
+import uuid,datetime
 def _delete_file(path):
    if os.path.isfile(path):
       os.remove(path)
@@ -58,12 +58,12 @@ def remove_file_from_s3_image(sender,instance,*args,**kwargs):
 class like(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
    post = models.ForeignKey(Post,on_delete=models.CASCADE)
-
+   updated_dt = models.DateTimeField(auto_now_add=True)
 
 class disLike(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
    post = models.ForeignKey(Post,on_delete=models.CASCADE)
-
+   updated_dt = models.DateTimeField(auto_now_add=True)
 
 class vote(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)

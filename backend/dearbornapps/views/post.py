@@ -809,7 +809,7 @@ class weeklyPopularity(ListAPIView):
         start_week = date-datetime.timedelta(date.weekday())
         end_week = start_week + datetime.timedelta(7)
         try:
-            postdata = self.paginate_queryset(Post.objects.filter(updated_dt=[start_week,end_week]))
+            postdata = self.paginate_queryset(like.objects.filter(updated_dt=[start_week,end_week]).values('post').annotate(like('post')))
             postData=[]
             for post in postdata:
                 person = User.objects.filter(id=post.user.id)
@@ -855,59 +855,61 @@ class weeklyPopularity(ListAPIView):
                 'success':False 
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
-
+   
 class monthlyPopularity(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = LimitOffsetPagination
     def get(self,request):
-        date = datetime.today().month()
+        date = datetime.date.today().month
         try:
-            postdata = self.paginate_queryset(Post.objects.filter(updated_dt=date))
+            postdata = self.paginate_queryset(like.objects.all().values('post').annotate(like('post')))
             postData=[]
             for post in postdata:
-                person = User.objects.filter(id=post.user.id)
-                try:
-                    thumb=post.thumbnail.url
-                except:
-                    thumb=None,
-                try:
-                    profile=person[0].profileImage.url
-                except:
-                    profile=None,
-                try:
-                    nick = person[0].nickname
-                except:
-                    nick = None
-                try:
-                    likedata = like.objects.filter(post=post.id).count()
-                except:
-                    likedata = None,
-                postDic = {
-                    'id' : post.id,
-                    'title' : post.title,
-                    'content' : post.content,
-                    'updated_dt' : post.updated_dt,
-                    'userId' : post.user.id,
-                    'thumbnail' : thumb,
-                    'writer' : nick,
-                    'profileImage' : profile,
-                    'view':post.view,
-                    'score':post.score,
-                    'like': likedata,
+                if post.updated_dt.month==date:
+                    person = User.objects.filter(id=post.user.id)
+                    try:
+                        thumb=post.thumbnail.url
+                    except:
+                        thumb=None,
+                    try:
+                        profile=person[0].profileImage.url
+                    except:
+                        profile=None,
+                    try:
+                        nick = person[0].nickname
+                    except:
+                        nick = None
+                    try:
+                        likedata = like.objects.filter(post=post.id).count()
+                    except:
+                        likedata = None,
+                    postDic = {
+                        'id' : post.id,
+                        'title' : post.title,
+                        'content' : post.content,
+                        'updated_dt' : post.updated_dt,
+                        'userId' : post.user.id,
+                        'thumbnail' : thumb,
+                        'writer' : nick,
+                        'profileImage' : profile,
+                        'view':post.view,
+                        'score':post.score,
+                        'like': likedata,
+                    }
+                    postData.append(postDic)
+                
+                context = {
+                    'success':True,
+                    'votes':postData,
                 }
-                postData.append(postDic)
-            
-            context = {
-                'success':True,
-                'votes':postData,
-            }
-            return Response(context,status=HTTP_200_OK)
+                return Response(context,status=HTTP_200_OK)
         except APIException as e:
             context = {
                 'err':e.detail,
                 'success':False 
             }
-            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)   
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 # @background()
