@@ -18,16 +18,8 @@ class S3ImagesUploadFailed(Exception):
     pass
 
 class S3Images(object):
-    
-    """Useage:
-    
-        images = S3Images(aws_access_key_id='fjrn4uun-my-access-key-589gnmrn90', 
-                          aws_secret_access_key='4f4nvu5tvnd-my-secret-access-key-rjfjnubu34un4tu4', 
-                          region_name='eu-west-1')
-        im = images.from_s3('my-example-bucket-9933668', 'pythonlogo.png')
-        im
-        images.to_s3(im, 'my-example-bucket-9933668', 'pythonlogo2.png')
-    """
+
+
     
     def __init__(self, aws_access_key_id, aws_secret_access_key, region_name):
         self.s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, 
@@ -78,19 +70,6 @@ class S3Images(object):
             return 'PNG' 
         else:
             raise S3ImagesInvalidExtension('Extension is invalid') 
-
-# def upload_file_to_bucket(file_name, s3_file):
-#     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
-#     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-#     bucket = os.getenv('AWS_STORAGE_BUCKET_NAME')
-#     s3 = boto3.client('s3', aws_access_key=ACCESS_KEY, aws_secret_access_key=SECRET_ACCESS_KEY)
-#     try:
-#         s3.upload_file(file_name, bucket, s3_file)
-#         return True
-#     except FileNotFoundError:
-#         return False
-#     except:
-#         return False
 
 def download_all_files():
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
@@ -174,7 +153,7 @@ def GetImageArray(postId):
     return image_array_resized, image_file_name, image_id
 
 def GetFeatureVector(image_array):
-    hub_path = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
+    hub_path = "https://tfhub.dev/google/imagenet/resnet_v2_50/feature_vector/4"
     
     MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False)
     featureVector = []
@@ -211,36 +190,58 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
 
 
 
-def Similarity(postId):
+def Similarity(vectors):
 
-    dims = 1280
+    dims = 2048
     n_nearest_neighbors = 5
     trees = 10000
-
-    image_array, image_file_name, image_id = GetImageArray(postId)
-    vectors = GetFeatureVector(image_array)
     
     if not Is_Local[0]:
         feature_vectors, fileNames = download_all_files()
     else: 
-        feature_vectors = glob.glob('feature_vectors/*/*.npz')
+        feature_vectors = glob.glob(os.path.join(BASE_DIR,'feature_vectors/*/*.npz'))
 
     annoy = AnnoyIndex(dims,'angular')
-    for index, v in enumerate(feature_vectors):
-        annoy.add_item(index, v)
+    if Is_Local[0]:
+        loadedVectors = []
+        fileNames = []
+        for index, v in enumerate(feature_vectors):
+            dir = v.split('\\')
+            dir = dir[-2:-1]        
+            fileNames.append(dir[0])
+            vector = np.loadtxt(v)
+            loadedVectors.append(vector)
+            annoy.add_item(index, vector)
+        feature_vectors = loadedVectors
+    else:
+        for index, v in enumerate(feature_vectors):
+            annoy.add_item(index, v)
+
+    n_nearest_neighbors = len(feature_vectors)
+
     annoy.build(trees)
     similarities = []
     for index, v in enumerate(vectors):
-        nearest_neighbors = annoy.get_nns_by_vector(v, n_nearest_neighbors)
-        for neighbor in nearest_neighbors:
-            similarity = 1 - spatial.distance.cosine(v, feature_vectors[neighbor])
-            rounded_similarity = int((similarity * 10000)) / 10000.0
-            filename = fileNames[neighbor]
-            nameList = filename.split('/')
-            nameList = nameList[-2:-1]
-            similarity_set = {
-                'similarity' : rounded_similarity,
+        nearest_neighbors, distance = annoy.get_nns_by_vector(v, n_nearest_neighbors, include_distances=True)
+
+        for index, neighbor in enumerate(nearest_neighbors):
+            similarity = 1 - (int)(distance[index] * 10000) / 10000
+            if Is_Local[0]:
+                filename = fileNames[neighbor]
+                print("similarity = ",similarity)
+                print("postId = ", filename)
+                print("index = ", neighbor)
+                similarity_set = {
+                'similarity' : similarity,
+                'postId' : filename,
+                } 
+            else:
+                filename = fileNames[neighbor]
+                nameList = filename.split('/')
+                nameList = nameList[-2:-1]
+                similarity_set = {
+                'similarity' : similarity,
                 'postId' : nameList[0],
-            } 
+                }
             similarities.append(similarity_set)
     return similarities
