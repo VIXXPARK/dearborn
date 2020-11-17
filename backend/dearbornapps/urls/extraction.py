@@ -5,5 +5,5 @@ urlpatterns = [
     path('feature/getCategory', extraction.getCategory),
     path('feature/selectFilter', extraction.selectFilter),
     path('feature/saveType', extraction.saveTasteInfo),
-    
+    path('feature/recommend', extraction.recommend),
 ]

@@ -13,3 +13,6 @@ class SaveTasteSerializer(serializers.Serializer):
     postList = serializers.ListField(
         child = serializers.DictField()
     )
+
+class RecommendPostSerializer(serializers.Serializer):
+    postId = serializers.UUIDField()

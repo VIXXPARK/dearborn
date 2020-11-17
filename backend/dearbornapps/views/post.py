@@ -68,8 +68,9 @@ class PostViewSet(ModelViewSet):
         postId = response.data['id']
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
+        similarity = Similarity(vectors)
         SaveFeatureVector(vectors,image_file_name,postId)
-        similarity = Similarity(postId)
+        
         context = {
             'similarity' : similarity,
             'success' : True,
@@ -85,8 +86,8 @@ class PostViewSet(ModelViewSet):
         postId = response.data['id']
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
+        similarity = Similarity(vectors)
         SaveFeatureVector(vectors,image_file_name,postId)
-        similarity = Similarity(response.data.postId)
         context = {
             'similarity' : similarity,
             'success' : True,
