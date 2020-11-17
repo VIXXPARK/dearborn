@@ -54,7 +54,7 @@ from pytz import timezone
 from dearbornapps.models.user import User
 from dearbornapps.models.messanger import Message
 from dearbornapps.feature.feature import Similarity,GetFeatureVector,SaveFeatureVector, GetImageArray
-
+import pytz
 from django.db.models import Count
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -810,9 +810,13 @@ class weeklyPopularity(ListAPIView):
         start_week = (dat-datetime.timedelta(dat.weekday()))
         start = (dat-datetime.timedelta(dat.weekday())).day
         end = (start_week + datetime.timedelta(7)).day
+        end_week = (start_week + datetime.timedelta(7)).isoformat()
+        fromDate = start_week.isoformat()
+        print(fromDate)
+        print(end_week)
         try:
-            # postdata = self.paginate_queryset(like.objects.filter(updated_dt=[start_week,end_week]).values('post').annotate(total=Count('post')))
-            postdata=like.objects.all().values('post').annotate(total=Count('user')).order_by('-total')
+            postdata = (like.objects.filter(updated_dt__range=[fromDate,end_week]).values('post').annotate(total=Count('post')))
+            # postdata=like.objects.all().values('post').annotate(total=Count('user')).order_by('-total')
             print(">>><<<")
             print(postdata)
             postData=[]
@@ -838,7 +842,7 @@ class weeklyPopularity(ListAPIView):
                     except:
                         nick = None
                     try:
-                        likedata = like.objects.filter(post=datas.id).count()
+                        likedata = data['total']
                     except:
                         likedata = None,
                     postDic = {
@@ -875,50 +879,53 @@ class monthlyPopularity(ListAPIView):
     
     def get(self,request):
         dat = datetime.date.today().month
+        dat2 = datetime.date.today().year
+        print(dat)
+        print(dat2)
         try:
             # postdata = self.paginate_queryset()
-            likeddata = like.objects.all().values('post').annotate(total=Count('user')).order_by('-total')
-            
+            likeddata = like.objects.filter(updated_dt__month=str(dat),updated_dt__year=str(dat2)).values('post').annotate(total=Count('user')).order_by('-total')
+            print (likeddata)
             postData=[]
             for data in likeddata:
+                print (data)
                 datas = Post.objects.get(id=data['post'])
-                if datas.updated_dt.month==dat:
-                    person = User.object.get(id=datas.user.id)
-                    try:
-                        thumb=datas.thumbnail.url
-                    except:
-                        thumb=None,
-                    try:
-                        profile=person.profileImage.url
-                    except:
-                        profile=None,
-                    try:
-                        nick = person.nickname
-                    except:
-                        nick = None
-                    try:
-                        likedata = like.objects.filter(post=datas.id).count()
-                    except:
-                        likedata = None,
-                    postDic = {
-                        'id' : datas.id,
-                        'title' : datas.title,
-                        'content' : datas.content,
-                        'updated_dt' : datas.updated_dt,
-                        'userId' : datas.user.id,
-                        'thumbnail' : thumb,
-                        'writer' : nick,
-                        'profileImage' : profile,
-                        'view':datas.view,
-                        'score':datas.score,
-                        'like': likedata,
-                    }
-                    postData.append(postDic)
-                
-                context = {
-                    'success':True,
-                    'votes':postData,
+                person = User.object.get(id=datas.user.id)
+                try:
+                    thumb=datas.thumbnail.url
+                except:
+                    thumb=None,
+                try:
+                    profile=person.profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person.nickname
+                except:
+                    nick = None
+                try:
+                    likedata = data['total']
+                except:
+                    likedata = None,
+                postDic = {
+                    'id' : datas.id,
+                    'title' : datas.title,
+                    'content' : datas.content,
+                    'updated_dt' : datas.updated_dt,
+                    'userId' : datas.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : nick,
+                    'profileImage' : profile,
+                    'view':datas.view,
+                    'score':datas.score,
+                    'like': likedata,
                 }
+                postData.append(postDic)
+                
+            context = {
+                'success':True,
+                'votes':postData,
+            }
             return Response(context,status=HTTP_200_OK)
         except APIException as e:
             context = {
