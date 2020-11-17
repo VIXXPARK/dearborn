@@ -190,10 +190,9 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
 
 
 
-def Similarity(vectors):
+def Similarity(vectors, n_nearest_neighbors):
 
     dims = 2048
-    n_nearest_neighbors = 5
     trees = 10000
     
     if not Is_Local[0]:
@@ -217,7 +216,6 @@ def Similarity(vectors):
         for index, v in enumerate(feature_vectors):
             annoy.add_item(index, v)
 
-    n_nearest_neighbors = len(feature_vectors)
 
     annoy.build(trees)
     similarities = []

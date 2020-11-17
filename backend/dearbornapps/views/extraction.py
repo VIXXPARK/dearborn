@@ -41,7 +41,7 @@ def selectFilter(request):
     for post in postList:
         image_array, image_file_name, image_id = GetImageArray(post)
         vectors = GetFeatureVector(image_array)
-        similarities = Similarity(vectors)
+        similarities = Similarity(vectors, 5)
         for sim in similarities:
             similarity = sim['similarity']
             if similarity >= 0.7:
@@ -103,7 +103,7 @@ def recommend(request):
     postId = recommandSerializer.validated_data['postId']
     image_array, image_file_name, image_id = GetImageArray(postId)
     vectors = GetFeatureVector(image_array)
-    similarities = Similarity(vectors)
+    similarities = Similarity(vectors, 5)
     for sim in similarities:
         similarity = sim['similarity']
         postid = sim['postId']
