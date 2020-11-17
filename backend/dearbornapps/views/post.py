@@ -964,8 +964,4 @@ class monthlyPopularity(ListAPIView):
 #             except APIException as e:
 #                 raise e
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f960758f41e5b9faa6650554fc510a4a72ff6d6f
 
