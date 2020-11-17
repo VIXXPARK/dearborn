@@ -32,7 +32,9 @@ function LandingPage(props) {
     const [PostColumn, setPostColumn] = useState(5)
     const [WindowX, setWindowX] = useState(0)
     const [ScrollPercentage, setScrollPercentage] = useState(0)
-    const [Category, setCategory] = useState(0)
+    const [Rank, setRank] = useState(1)
+    const [LastPost, setLastPost] = useState(undefined)
+    const [Recommend, setRecommend] = useState([])
 
     useLayoutEffect(() => {
         function updateSize(){
@@ -55,7 +57,7 @@ function LandingPage(props) {
 
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
-
+    console.log(LastPost)
     useEffect(() => {
         if(window.innerWidth < 400){
             setPostColumn(1)
@@ -108,6 +110,75 @@ function LandingPage(props) {
             addPosts()
         }
     }, [IsBottom])
+
+    useEffect(() => {
+        const variables = {
+            ook : 0,
+            sort : 0,
+        }
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        setLoading(true)
+        setSkip(0)
+        setPosts([])
+        var rank = Rank === 2 ? "today/" : Rank === 3? "week/" : Rank===4 ? "month/" : "";
+        if(Rank === 1){
+            if(LastPost){
+                
+            axios.post('/api/feature/recommend', { postId : LastPost}, config)
+            .then(response => {
+                console.log(response)
+                if(response.data.success){
+                    setRecommend(response.data.votes)
+                }else{
+                    console.log(response.data.err)
+                }
+            })}
+
+            axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
+            .then(response => {
+                setLoading(true)
+                if(response.data.success){
+                    console.log(response)
+                    if(response.data.votes.length < Limit)
+                        setLoadMore(false)
+                    if(Skip !==0){
+                        setPosts([...Posts, ...response.data.votes])
+                    }else{
+                        setPosts(response.data.votes)
+                    }
+                }else{
+                    console.log(response.data.err)
+                }
+            
+            }).finally(()=>{
+                setLoading(false)
+            })
+        }else{
+        axios.get(`/api/post/getVotes/${rank}?limit=${Limit}&offset=${Skip}`, config)
+            .then(response => {
+                setLoading(true)
+                if(response.data.success){
+                    console.log(response)
+                    if(response.data.votes.length < Limit)
+                        setLoadMore(false)
+                    if(Skip !==0){
+                        setPosts([...Posts, ...response.data.votes])
+                    }else{
+                        setPosts(response.data.votes)
+                    }
+                }else{
+                    console.log(response.data.err)
+                }
+            }).finally(()=>{
+                setLoading(false)
+            })
+        }
+    }, [Rank])
+
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
             && document.documentElement.scrollTop)
@@ -118,7 +189,6 @@ function LandingPage(props) {
         const scrollBottom= (document.documentElement 
                 && document.documentElement.scrollBottom)
                 || document.body.scrollBottom
-        console.log(scrollBottom / scrollHeight)
         if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
         }else{
@@ -127,33 +197,27 @@ function LandingPage(props) {
     }
 
     const getPosts = (variables) => {
-        console.log(1)
-        axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
-        .then(response => {
-            setLoading(true)
-            if(response.data.success){
-                console.log(response)
-                if(response.data.votes.length < Limit)
-                    setLoadMore(false)
-                if(Skip !==0){
-                    setPosts([...Posts, ...response.data.votes])
+            axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
+            .then(response => {
+                setLoading(true)
+                if(response.data.success){
+                    console.log(response)
+                    if(response.data.votes.length < Limit)
+                        setLoadMore(false)
+                    if(Skip !==0){
+                        setPosts([...Posts, ...response.data.votes])
+                    }else{
+                        setPosts(response.data.votes)
+                    }
                 }else{
-                    setPosts(response.data.votes)
+                    console.log(response.data.err)
                 }
-            }else{
-                console.log(response.data.err)
-            }
             
-        }).finally(()=>{
-            setLoading(false)
-        })
-
+            }).finally(()=>{
+                setLoading(false)
+            })
     }
 
-    const OpenFilterClick = () => {
-        setOpenSort(false)
-        setOpenFilter(!OpenFilter)
-    }
 
     const OpenSortClick = () => {
         setOpenFilter(false)
@@ -194,7 +258,7 @@ function LandingPage(props) {
         }
         setSkip(Skip+Limit)
         setLoading(true)
-        getPosts(variables)
+        getPosts(Rank===0 ? variables : null)
         setIsBottom(false)
     }
 
@@ -202,12 +266,16 @@ function LandingPage(props) {
         setMainBanner(!MainBanner)
     }
 
+    const handleRank = (rank) => {
+        setRank(rank)
+    }
+
     const renderVoteItems = (post) => {
         return (
             <div className="item-vote-wrap">
                 <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
-                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
+                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}} onClick={()=>setLastPost(post.id)}>
                     <div className="item-vote-show">
                         <div className="item-vote-title">
                             {post.title}
@@ -298,11 +366,10 @@ function LandingPage(props) {
             <div className="vote" style={{width:'100%',maxWidth:'1400px', margin:'0 auto', margin:'0 auto', backgroundColor:'white', zIndex:'1000'}}>
                 <div style={{margin: '0 auto', maxWidth:'1400px', width:'100%',}}> 
                     <div style={{width:'100%',textAlign:'center', marginTop:'20px'}}>
-                        <span style={{float:'left', marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(0)} id={Category === 0 ? 'category-clicked' : null}>추천</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(1)} id={Category === 1 ? 'category-clicked' : null}>실시간 인기</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(2)} id={Category === 2 ? 'category-clicked' : null}>투데이 인기</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(3)} id={Category === 3 ? 'category-clicked' : null}>주간 인기</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>setCategory(4)} id={Category === 4 ? 'category-clicked' : null}>월간 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(1)} id={Rank === 1 ? 'category-clicked' : null}>메인</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(2)} id={Rank === 2 ? 'category-clicked' : null}>투데이 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(3)} id={Rank === 3 ? 'category-clicked' : null}>주간 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(4)} id={Rank === 4 ? 'category-clicked' : null}>월간 인기</span>
                         {MainBanner ? 
                         <div style={{fontSize:'15px', float:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 접기</a></div>
                         :
@@ -337,31 +404,25 @@ function LandingPage(props) {
         </div>
         {Loading && Loader("spin", "black")}
         <div style={{position:'fixed', bottom:'10%', left:'5%',  width:'40px', height:'200px', border:'1px solid #d9d9d9', boxShadow:'1px 1px 3px #d9d9d9'}}>
-            <div id="nav-fix-bar" style={{position:'relative', width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(0)}>
+            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>handleRank(1)}>
                 <HomeFilled />
-                <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'50px', height:'100%'}}>
-                    추천
-                </div>
-            </div>
-            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(1)}>
-                <ClockCircleFilled />
                 <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'120px', height:'100%'}}>
-                    실시간 인기
+                    메인
                 </div>
             </div>
-            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(2)}>
+            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>handleRank(2)}>
                 <ThunderboltFilled />
                 <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'80px', height:'100%'}}>
                     투데이
                 </div>
             </div>
-            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(3)}>
+            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>handleRank(3)}>
                 <FileWordFilled />
                 <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'100px', height:'100%'}}>
                     주간 인기
                 </div>
             </div>
-            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>setCategory(4)}>
+            <div id="nav-fix-bar" style={{position:'relative',width:'40px', height:'20%', fontSize:'20px',paddingTop:'10px', textAlign:'center'}} onClick={()=>handleRank(4)}>
                 <CalendarFilled />
                 <div id="nav-fix-bar-extend" style={{position:'absolute', top:0, left:'40px',width:'100px', height:'100%'}}>
                     월간 인기
