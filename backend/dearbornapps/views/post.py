@@ -53,7 +53,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 from dearbornapps.models.user import User
 from dearbornapps.models.messanger import Message
-from dearbornapps.feature.feature import Similarity,GetFeatureVector,SaveFeatureVector, GetImageArray
+from dearbornapps.feature.feature import GetFeatureVector,SaveFeatureVector, GetImageArray
 
 class PostViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
@@ -71,7 +71,6 @@ class PostViewSet(ModelViewSet):
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId)
         context = {
-            'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
@@ -85,10 +84,8 @@ class PostViewSet(ModelViewSet):
         postId = response.data['id']
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
-        similarity = Similarity(vectors)
         SaveFeatureVector(vectors,image_file_name,postId)
         context = {
-            'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
