@@ -199,9 +199,7 @@ function BlogPage_Cons_Event(props) {
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}</p>
-                        <p>Works : {Designer.work}개</p>
-                        <p>Likes : {Designer.like}개</p>
-                        <p>Views : {Designer.view}개</p>
+                        <div style={{width:'90px', height:'40px', borderRadius:'10px', backgroundColor:'#f85272', lineHeight:'45px', textAlign:'center'}}>채용하기</div>
                     </div>
                 </div>
                 <div className="blog-section">

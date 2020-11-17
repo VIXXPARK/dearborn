@@ -17,6 +17,11 @@
   src:url(./components/assets/font1.ttf) format('truetype')
 }
 
+@font-face{
+  font-family: 'font2';
+  src:url(./components/assets/font2.ttf) format('truetype')
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
