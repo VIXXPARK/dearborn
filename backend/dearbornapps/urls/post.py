@@ -1,6 +1,6 @@
 from dearbornapps.views.post import PostViewSet, getProfileView ,upViewSet,getDisLikeView,ReposView
 from dearbornapps.views.post import likeView,disLikeView,likeDownView,dislikeDownView,getLikeView,getLikeDetail,PostView,PostDetail
-from dearbornapps.views.post import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork,getMyWork,postDeleteView
+from dearbornapps.views.post import myVoteView,upVoteView,getWorkView,getWorkLikeView,mySetWork,getMyWork,postDeleteView,weeklyPopularity,monthlyPopularity
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
@@ -14,6 +14,8 @@ urlpatterns = [
     path('post/<uuid:pk>',post_detail,name="post_detail"),#수정 삭제
     path('post/delete',postDeleteView.as_view()),
     path('post/getVotes/',PostView.as_view()),
+    path('post/getVotes/week/',weeklyPopularity.as_view()),
+    path('post/getVotes/month/',monthlyPopularity.as_view()),
     path('post/getRepos/',ReposView.as_view()),
     path('post/getPostDetail',PostDetail.as_view()),
     path('info/getProfile',getProfileView.as_view()),

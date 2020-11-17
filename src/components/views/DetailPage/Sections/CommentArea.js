@@ -44,7 +44,7 @@ function CommentArea(props) {
             contents : CommentValue,
             user : window.localStorage.getItem('userId'),
             post : props.postId,
-            score :Rate
+            score :Score
         }
         console.log(data)
         const config = {
@@ -63,6 +63,7 @@ function CommentArea(props) {
                     id : response.data.id,
                     nickname : response.data.user.nickname,
                     profileImage : response.data.user.profileImage,
+                    score : response.data.score
                 }
                 setComments(Comments.concat(variable))
                 alert('성공')
@@ -75,8 +76,8 @@ function CommentArea(props) {
 
     console.log(Comments)
 
-    const handleScoreChange = (value) => {
-        setScore(value)
+    const handleScoreChange = (e) => {
+        setScore(e)
     }
 
     const renderingComments = (comment) => {

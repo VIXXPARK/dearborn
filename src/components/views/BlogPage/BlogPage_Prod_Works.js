@@ -6,8 +6,9 @@ import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
-import {CheckCircleOutlined} from '@ant-design/icons'
+import {EyeOutlined, CheckCircleOutlined, LikeOutlined} from '@ant-design/icons'
 import {Loader} from '../../utils/Loader'
+import { Link } from 'react-router-dom';
 
 const {Title} = Typography
 const {confirm} = Modal
@@ -70,14 +71,8 @@ function BlogPage_Prod_Works(props) {
         else if(window.innerWidth <1300){
             setPostColumn(4)
         }
-        else if(window.innerWidth <1600){
+        else if(window.innerWidth >=1300){
             setPostColumn(5)
-        }
-        else if(window.innerWidth <1900){
-            setPostColumn(6)
-        }
-        else if(window.innerWidth >=1900){
-            setPostColumn(7)
         }
     }, [window.innerWidth])
 
@@ -99,18 +94,12 @@ function BlogPage_Prod_Works(props) {
             else if(PostColumn === 5){
                 imgStack =[0,0,0,0,0]
             }
-            else if(PostColumn === 6){
-                imgStack =[0,0,0,0,0,0]
-            }
-            else if(PostColumn === 7){
-                imgStack =[0,0,0,0,0,0,0]
-            }
             let colWidth = 256;
             for(let i=0; i<images.length; i++){
                 let minIndex = imgStack.indexOf(Math.min.apply(0, imgStack))
                 let x = colWidth * minIndex
                 let y = imgStack[minIndex]
-                imgStack[minIndex] += (images[i].children[0].height + 15)
+                imgStack[minIndex] += (images[i].children[0].height + 65)
                 images[i].style.transform = `translateX(${x}px) translateY(${y}px)`
             }
         }, 500);
@@ -164,7 +153,7 @@ function BlogPage_Prod_Works(props) {
                 })
     }
 
-    const renderLikes = (repo) => {
+    const renderLikes = (post) => {
         const onMyWorkPick = ()=>{
             confirm({
                 icon : null,
@@ -175,7 +164,7 @@ function BlogPage_Prod_Works(props) {
                             Authorization: `Token ${getCookieValue('w_auth')}`
                         }
                     }
-                    axios.post('/api/info/setMyWork', {post : repo.id}, config)
+                    axios.post('/api/info/setMyWork', {post : post.id}, config)
                     .then(response => {
                         if(!response.data.success)
                             alert('실패')
@@ -188,16 +177,29 @@ function BlogPage_Prod_Works(props) {
         }
         return (
             <div className="item-vote-wrap">
-                <img className="item-vote-img" src={convertToS3EP(repo.thumbnail)} alt/>
+                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
                     <div className="item-vote-show">
-                        <div style={{position:'absolute',top:'5%', right:'5%',fontSize:'30px', textAlign:'center', margin:'0 auto', color:'#f85272'}}><Tooltip placement="topLeft" title="대표작품 지정"><CheckCircleOutlined onClick={onMyWorkPick}/></Tooltip></div>
-                        <a href = {`/${Designer.nickname}/${repo.id}`}>
+                    <div style={{position:'absolute',top:'60px', right:'10%',fontSize:'30px', textAlign:'center', margin:'0 auto', color:'#f85272'}}><Tooltip placement="topLeft" title="대표작품 지정"><CheckCircleOutlined onClick={onMyWorkPick}/></Tooltip></div>
+                    <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
                         <div className="item-vote-title">
-                            {repo.title}
+                            {post.title}
                         </div>
-                        </a>
+                        <div className="item-vote-rate">
+                            <div style={{display:'inline-block'}}>({post.score} 3.6 / 5점)</div>
+                        </div>
+                        </Link>
                     </div>
+                <div style={{width:'100%', height:'50px'}}>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
+                    <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
+                        <EyeOutlined />
+                    </div>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.like}</div>
+                    <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
+                        <LikeOutlined />
+                    </div>
+                </div>
             </div>
             )
     }

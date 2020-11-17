@@ -112,14 +112,14 @@ function VoteDetailPage(props) {
                 </div>
                 {props.user.userData && Writer && props.user.userData._id !== Writer.id &&
                 <> 
-                <LikeDislike postId={DetailPost.id} userId={Writer.id}/>
+                <LikeDislike postId={DetailPost.id} userId={props.user.userData._id}/>
                 </>}
                 {props.user.userData && props.user.userData.job === 2 && 
                     <>
                     <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon">
                         <FileTextOutlined />
                     </div>
-                    <div className="profile-header" style={{color:'black'}}>
+                    <div className="profile-header" style={{color:'white'}}>
                         채용
                     </div>
                     </>

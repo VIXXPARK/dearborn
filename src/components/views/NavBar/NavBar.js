@@ -168,7 +168,7 @@ function NavBar(props) {
 
     return (
         <>
-        <header id="header" style={{borderBottom:'1px solid whitesmoke'}}>
+        <header id="header" style={{borderBottom:'1px solid whitesmoke', boxShadow: 'rgba(0, 0, 0, 0.2) 0px 4px 4px 0px, rgb(217, 217, 217) 0px 1px 0px 0px'}}>
             <div className="container" style={{maxWidth:'1400px', margin:'0 auto'}}>
                 <div>
                     <div className="header-title"><a href="/"><img style={{height:'66px', marginBottom:'17px'}} className="main-logo" src={Logo}/></a></div>

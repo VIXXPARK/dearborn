@@ -1,11 +1,13 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios'
-import { Button, Typography, Card, Avatar } from 'antd';
+import { Button, Typography, Card, Avatar, Rate } from 'antd';
 
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
+import { Link } from 'react-router-dom';
+import {HeartFilled, EyeOutlined} from '@ant-design/icons'
 
 const {Title} = Typography
 
@@ -75,14 +77,8 @@ function BlogPage_Cons_Likes(props) {
         else if(window.innerWidth <1300){
             setPostColumn(4)
         }
-        else if(window.innerWidth <1600){
+        else if(window.innerWidth >=1300){
             setPostColumn(5)
-        }
-        else if(window.innerWidth <1900){
-            setPostColumn(6)
-        }
-        else if(window.innerWidth >=1900){
-            setPostColumn(7)
         }
     }, [window.innerWidth])
 
@@ -103,12 +99,6 @@ function BlogPage_Cons_Likes(props) {
             }
             else if(PostColumn === 5){
                 imgStack =[0,0,0,0,0]
-            }
-            else if(PostColumn === 6){
-                imgStack =[0,0,0,0,0,0]
-            }
-            else if(PostColumn === 7){
-                imgStack =[0,0,0,0,0,0,0]
             }
             let colWidth = 256;
             for(let i=0; i<images.length; i++){
@@ -162,18 +152,40 @@ function BlogPage_Cons_Likes(props) {
         })
     }
 
-    const renderPost = (repo) => {
+    const renderPost = (post) => {
         return (
             <div className="item-vote-wrap">
-                <img className="item-vote-img" src={convertToS3EP(repo.thumbnail)} alt/>
+                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
+                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
                     <div className="item-vote-show">
-                        <a href = {`/${Designer.nickname}/${repo.id}`}>
                         <div className="item-vote-title">
-                            {repo.title}
+                            {post.title}
                         </div>
-                        </a>
+                        <div className="item-vote-rate">
+                            <Rate disabled defaultValue={post.score}/>
+                            <div style={{display:'inline-block'}}>({post.score} / 5점)</div>
+                        </div>
+                        <div className="item-vote-like" style={{color:'black'}}>
+                            <div>
+                                <HeartFilled style={{color:'tomato', fontSize:'20px'}}/>
+                                <span style={{fontSize:'10px', marginLeft:'10px'}}>{post.like}</span>
+                            </div>
+                        </div>
                     </div>
+                </Link>
+                <div style={{width:'100%', height:'50px'}}>
+                    <div style={{width :'50px', height:'50px', display:'inline-block'}}>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileimage)}/>
+                    </div>
+                    <div style={{width:'30px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
+                        {post.nickname}
+                    </div>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
+                    <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
+                        <EyeOutlined />
+                    </div>
+                </div>
             </div>
             )
     }
@@ -190,9 +202,7 @@ function BlogPage_Cons_Likes(props) {
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}</p>
-                        <p>Works : {Designer.work}개</p>
-                        <p>Likes : {Designer.like}개</p>
-                        <p>Views : {Designer.view}개</p>
+                        <div style={{width:'90px', height:'40px', borderRadius:'10px', backgroundColor:'#f85272', lineHeight:'45px', textAlign:'center'}}>채용하기</div>
                     </div>
                 </div>
                 <div className="blog-section">

@@ -1,12 +1,14 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios'
-import { Button, Typography, Card, Avatar } from 'antd';
+import { Button, Typography, Card, Avatar, Rate } from 'antd';
 
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
+import {EyeOutlined, HeartFilled} from '@ant-design/icons'
+import { Link } from 'react-router-dom';
 
 const {Title} = Typography
 
@@ -122,6 +124,8 @@ function BlogPage_Prod_Likes(props) {
             setIsBottom(false)
         }
     }, [IsBottom])
+
+    console.log(Repos)
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
             && document.documentElement.scrollTop)
@@ -135,6 +139,7 @@ function BlogPage_Prod_Likes(props) {
             setIsBottom(false)
         }
     }
+    
 
     const getPosts = (id) => {
         const config = {
@@ -161,18 +166,40 @@ function BlogPage_Prod_Likes(props) {
         })
     }
 
-    const renderLikes = (repo) => {
+    const renderLikes = (post) => {
         return (
             <div className="item-vote-wrap">
-                <img className="item-vote-img" src={convertToS3EP(repo.thumbnail)} alt/>
+                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
+                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
                     <div className="item-vote-show">
-                        <a href = {`/${Designer.nickname}/${repo.id}`}>
                         <div className="item-vote-title">
-                            {repo.title}
+                            {post.title}
                         </div>
-                        </a>
+                        <div className="item-vote-rate">
+                            <Rate disabled defaultValue={post.score}/>
+                            <div style={{display:'inline-block'}}>({post.score} / 5점)</div>
+                        </div>
+                        <div className="item-vote-like" style={{color:'black'}}>
+                            <div>
+                                <HeartFilled style={{color:'tomato', fontSize:'20px'}}/>
+                                <span style={{fontSize:'10px', marginLeft:'10px'}}>{post.like}</span>
+                            </div>
+                        </div>
                     </div>
+                </Link>
+                <div style={{width:'100%', height:'50px'}}>
+                    <div style={{width :'50px', height:'50px', display:'inline-block'}}>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileimage)}/>
+                    </div>
+                    <div style={{width:'30px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
+                        {post.nickname}
+                    </div>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
+                    <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
+                        <EyeOutlined />
+                    </div>
+                </div>
             </div>
             )
     }

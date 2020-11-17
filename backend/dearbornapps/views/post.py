@@ -45,6 +45,7 @@ from rest_framework.status import(
     HTTP_500_INTERNAL_SERVER_ERROR
 )
 import json
+import datetime
 from rest_framework.views import APIView
 from rest_framework.pagination import LimitOffsetPagination
 from background_task import background
@@ -115,6 +116,7 @@ class PostView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = LimitOffsetPagination
 
+    
     def post(self,request):
         filterSerializer = PostFilterSerializer(data=request.data)
         if not filterSerializer.is_valid():
@@ -146,6 +148,10 @@ class PostView(ListAPIView):
                     nick = person[0].nickname
                 except:
                     nick=None
+                try:
+                    likedata = like.objects.filter(post=post.id).count()
+                except:
+                    likedata = None,
                 postDic = {
                     'id' : post.id,
                     'title' : post.title,
@@ -157,6 +163,7 @@ class PostView(ListAPIView):
                     'profileImage' : profile,
                     'view':post.view,
                     'score':post.score,
+                    'like': likedata,
                 }
                 postData.append(postDic)
            
@@ -308,42 +315,61 @@ class getProfileView(ListAPIView):
         view=0
         work=0
         liked=0
+        if userdata.job==1:
+            try:
+                postdata = Post.objects.filter(user=userdata.id)
+                for x in postdata:
+                    work=work+1
+                    view=x.view+view
+            except:
+                view = None,
 
-        try:
-            postdata = Post.objects.filter(user=userdata.id)
-            for x in postdata:
-                work=work+1
-                view=x.view+view
-        except:
-            pass
-
-        try:
-            likey = like.objects.filter(user=userdata.id)
-            for y in likey:
-                liked=liked+1
-        except:
-            pass
-       
-
-        try:
-            profileImage = userdata.profileImage.url,
-        except:
-            profileImage = None,
-        user = {
-            'id' : userdata.id,
-            'nickname' : userdata.nickname,
-            'profileImage' : profileImage,
-            'job':userdata.job,
-            'work':work,
-            'view':view,
-            'like':liked
-        }
+            try:
+                postdata = Post.objects.filter(user=userdata.id)
+                for y in postdata:
+                    liked =liked +like.objects.filter(post=y.id).count()
+            except:
+                liked = None,
         
-        context={
-            'success': True,
-            'user' : user,
-        }
+
+            try:
+                profileImage = userdata.profileImage.url,
+            except:
+                profileImage = None,
+            user = {
+                'id' : userdata.id,
+                'nickname' : userdata.nickname,
+                'profileImage' : profileImage,
+                'job':userdata.job,
+                'work':work,
+                'view':view,
+                'like':liked,
+                
+            }
+            
+            context={
+                'success': True,
+                'user' : user,
+            }
+        else:
+            try:
+                profileImage = userdata.profileImage.url,
+            except:
+                profileImage = None,
+            user = {
+                'id' : userdata.id,
+                'nickname' : userdata.nickname,
+                'profileImage' : profileImage,
+                'job':userdata.job,
+            }
+            
+            context={
+                'success': True,
+                'user' : user,
+            }
         return Response(context, status=HTTP_200_OK)
+
+
 
 class getWorkView(ListAPIView):
     queryset = Post.objects.all()
@@ -371,8 +397,12 @@ class getWorkView(ListAPIView):
         for postraw in postdata:
             image = []
             jpgs = PostImage.objects.filter(post=postraw.id)
+
             try:
-                print(jpgs)
+                likedata=like.objects.filter(post=postraw.id).count()
+            except:
+                likedata=0
+            try:
                 for pngs in jpgs:
                     image.append(pngs.image.url)
             except:
@@ -383,6 +413,11 @@ class getWorkView(ListAPIView):
             except:
                 thumbnail = None,
             
+            try:
+                profile = postraw.user.profileImage.url
+            except:
+                profile = None,
+
             post = {
                 'id' : postraw.id,
                 'title' : postraw.title,
@@ -391,7 +426,11 @@ class getWorkView(ListAPIView):
                 'writer' : postraw.user.id,
                 'images' : image,
                 'thumbnail' : thumbnail,
-                
+                'score':postraw.score,
+                'view':postraw.view,
+                'like':likedata,
+                'profileimage':profile,
+                'nickname':postraw.user.nickname,
             }
             postJson.append(post)
 
@@ -423,17 +462,31 @@ class getWorkLikeView(ListAPIView):
         for postraw in likeObject:
             image = []
             jpgs = PostImage.objects.filter(post=postraw.post.id)
+            
             try:
                 for pngs in jpgs:
                     image.append(pngs.image.url)
             except:
                 pass
 
+            
+
             try:
                 thumbnail = Post.objects.get(id=postraw.post.id).thumbnail.url
             except:
                 thumbnail = None,
             temp = Post.objects.get(id=postraw.post.id)
+
+            try:
+                profile = temp.user.profileImage.url
+            except:
+                profile=None,
+            
+            try:
+                likedata = like.objects.filter(post=postraw.post.id).count()
+            except:
+                likedata = None,
+
             post = {
                 'id' : temp.id,
                 'title' : temp.title,
@@ -442,7 +495,11 @@ class getWorkLikeView(ListAPIView):
                 'writer' : temp.user.id,
                 'images' : image,
                 'thumbnail' : thumbnail,
-                
+                'score':temp.score,
+                'nickname':temp.user.nickname,
+                'profileimage':profile,
+                'view':temp.view,
+                'like':likedata,
             }
             postJson.append(post)
 
@@ -702,11 +759,25 @@ class getMyWork(APIView):
             work = myWork.objects.get(user=username.validated_data['user'])
             postdata = Post.objects.get(id=work.post.id)
             thumbnail=postdata.thumbnail.url
+            try:
+                likedata = like.objects.filter(post=work.post.id).count()
+            except:
+                likedata=None,
+            try:
+                profile = postdata.user.profileImage.url
+            except:
+                profile = None,
             about = {
             'id':postdata.id,
             'thumbnail':thumbnail,
             'title':postdata.title,
-            'content':postdata.content
+            'content':postdata.content,
+            'score':postdata.score,
+            'nickname':postdata.user.nickname,
+            'profileimage':profile,
+            'view':postdata.view,
+            'like':likedata,
+
             }
             content={
                 'success':True,
@@ -717,7 +788,12 @@ class getMyWork(APIView):
             'id': None,
             'thumbnail': None,
             'title':None,
-            'content':None
+            'content':None,
+            'score':None,
+            'nickname':None,
+            'profileimage':None,
+            'view':None,
+            'like':None,
             }
             content={
                 'success': True,
@@ -725,6 +801,115 @@ class getMyWork(APIView):
             }
         
         return Response(content,status=HTTP_200_OK)
+
+class weeklyPopularity(ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = LimitOffsetPagination
+    def get(self,request):
+        date = datetime.today()
+        start_week = date-datetime.timedelta(date.weekday())
+        end_week = start_week + datetime.timedelta(7)
+        try:
+            postdata = self.paginate_queryset(Post.objects.filter(updated_dt=[start_week,end_week]))
+            postData=[]
+            for post in postdata:
+                person = User.objects.filter(id=post.user.id)
+                try:
+                    thumb=post.thumbnail.url
+                except:
+                    thumb=None,
+                try:
+                    profile=person[0].profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person[0].nickname
+                except:
+                    nick = None
+                try:
+                    likedata = like.objects.filter(post=post.id).count()
+                except:
+                    likedata = None,
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : post.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : nick,
+                    'profileImage' : profile,
+                    'view':post.view,
+                    'score':post.score,
+                    'like': likedata,
+                }
+                postData.append(postDic)
+            
+            context = {
+                'success':True,
+                'votes':postData,
+            }
+            return Response(context,status=HTTP_200_OK)
+        except APIException as e:
+            context = {
+                'err':e.detail,
+                'success':False 
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+class monthlyPopularity(ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = LimitOffsetPagination
+    def get(self,request):
+        date = datetime.today().month()
+        try:
+            postdata = self.paginate_queryset(Post.objects.filter(updated_dt=date))
+            postData=[]
+            for post in postdata:
+                person = User.objects.filter(id=post.user.id)
+                try:
+                    thumb=post.thumbnail.url
+                except:
+                    thumb=None,
+                try:
+                    profile=person[0].profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person[0].nickname
+                except:
+                    nick = None
+                try:
+                    likedata = like.objects.filter(post=post.id).count()
+                except:
+                    likedata = None,
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : post.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : nick,
+                    'profileImage' : profile,
+                    'view':post.view,
+                    'score':post.score,
+                    'like': likedata,
+                }
+                postData.append(postDic)
+            
+            context = {
+                'success':True,
+                'votes':postData,
+            }
+            return Response(context,status=HTTP_200_OK)
+        except APIException as e:
+            context = {
+                'err':e.detail,
+                'success':False 
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)   
+
 
 # @background()
 # def voteExpired():
