@@ -89,7 +89,7 @@ class PostViewSet(ModelViewSet):
             'success' : True,
         }
         instance = response.data
-        return Response(context,HTTP_200_OK)
+        return Response(context,HTTP_201_OK)
 
 class postDeleteView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
