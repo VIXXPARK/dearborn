@@ -45,6 +45,7 @@ from rest_framework.status import(
     HTTP_500_INTERNAL_SERVER_ERROR
 )
 import json
+import datetime
 from rest_framework.views import APIView
 from rest_framework.pagination import LimitOffsetPagination
 from background_task import background
@@ -114,6 +115,7 @@ class PostView(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = LimitOffsetPagination
 
+    
     def post(self,request):
         filterSerializer = PostFilterSerializer(data=request.data)
         if not filterSerializer.is_valid():
@@ -319,14 +321,14 @@ class getProfileView(ListAPIView):
                     work=work+1
                     view=x.view+view
             except:
-                pass
+                view = None,
 
             try:
                 postdata = Post.objects.filter(user=userdata.id)
                 for y in postdata:
                     liked =liked +like.objects.filter(post=y.id).count()
             except:
-                pass
+                liked = None,
         
 
             try:
@@ -798,6 +800,115 @@ class getMyWork(APIView):
             }
         
         return Response(content,status=HTTP_200_OK)
+
+class weeklyPopularity(ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = LimitOffsetPagination
+    def get(self,request):
+        date = datetime.today()
+        start_week = date-datetime.timedelta(date.weekday())
+        end_week = start_week + datetime.timedelta(7)
+        try:
+            postdata = self.paginate_queryset(Post.objects.filter(updated_dt=[start_week,end_week]))
+            postData=[]
+            for post in postdata:
+                person = User.objects.filter(id=post.user.id)
+                try:
+                    thumb=post.thumbnail.url
+                except:
+                    thumb=None,
+                try:
+                    profile=person[0].profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person[0].nickname
+                except:
+                    nick = None
+                try:
+                    likedata = like.objects.filter(post=post.id).count()
+                except:
+                    likedata = None,
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : post.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : nick,
+                    'profileImage' : profile,
+                    'view':post.view,
+                    'score':post.score,
+                    'like': likedata,
+                }
+                postData.append(postDic)
+            
+            context = {
+                'success':True,
+                'votes':postData,
+            }
+            return Response(context,status=HTTP_200_OK)
+        except APIException as e:
+            context = {
+                'err':e.detail,
+                'success':False 
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+class monthlyPopularity(ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = LimitOffsetPagination
+    def get(self,request):
+        date = datetime.today().month()
+        try:
+            postdata = self.paginate_queryset(Post.objects.filter(updated_dt=date))
+            postData=[]
+            for post in postdata:
+                person = User.objects.filter(id=post.user.id)
+                try:
+                    thumb=post.thumbnail.url
+                except:
+                    thumb=None,
+                try:
+                    profile=person[0].profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person[0].nickname
+                except:
+                    nick = None
+                try:
+                    likedata = like.objects.filter(post=post.id).count()
+                except:
+                    likedata = None,
+                postDic = {
+                    'id' : post.id,
+                    'title' : post.title,
+                    'content' : post.content,
+                    'updated_dt' : post.updated_dt,
+                    'userId' : post.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : nick,
+                    'profileImage' : profile,
+                    'view':post.view,
+                    'score':post.score,
+                    'like': likedata,
+                }
+                postData.append(postDic)
+            
+            context = {
+                'success':True,
+                'votes':postData,
+            }
+            return Response(context,status=HTTP_200_OK)
+        except APIException as e:
+            context = {
+                'err':e.detail,
+                'success':False 
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)   
+
 
 # @background()
 # def voteExpired():
