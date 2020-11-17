@@ -144,7 +144,6 @@ def GetImageArray(postId):
             dir = url.split('/')
             dir = dir[-4:]
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
-            print(path)
             image = s3Images.from_s3("dearbornstorage",path)
             image_array = np.array(image)
             images.append(image_array)
@@ -226,9 +225,6 @@ def Similarity(vectors, n_nearest_neighbors):
             similarity = 1 - (int)(distance[index] * 10000) / 10000
             if Is_Local[0]:
                 filename = fileNames[neighbor]
-                print("similarity = ",similarity)
-                print("postId = ", filename)
-                print("index = ", neighbor)
                 similarity_set = {
                 'similarity' : similarity,
                 'postId' : filename,
