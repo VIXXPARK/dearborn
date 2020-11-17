@@ -32,7 +32,7 @@ import ContestDetailPage from './components/views/DetailPage/ContestDetailPage'
 import ContestManagePage from './components/views/DetailPage/ContestManagePage'
 import FindFeaturePage from './components/views/FindFeaturePage/FindFeaturePage'
 import UserChangePasswordPage from './components/views/UserInfoPage/UserChangePasswordPage'
-
+import RankPage from './components/views/RankPage/RankPage'
 function App(props) {
   return (
     <Suspense fallback={(<div>Loading...</div>)}>
@@ -58,6 +58,7 @@ function App(props) {
           <Route exact path='/contest/manage/:contestId' component={Auth(ContestManagePage, null)}/>
           <Route exact path='/contest/:contestId' component={Auth(ContestDetailPage, true)}/>
           <Route exact path='/feature' component={Auth(FindFeaturePage, null)}/>
+          <Route exact path='/rank' component={Auth(RankPage, true)}/>
 
           <Route exact path='/:designer' component={Auth(BlogPage_Prod_About, null)}/>
           <Route exact path='/:designer/works' component={Auth(BlogPage_Prod_Works, null)}/>
