@@ -57,7 +57,7 @@ from dearbornapps.feature.feature import Similarity,GetFeatureVector,SaveFeature
 import pytz
 from django.db.models import Count
 class PostViewSet(ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     parser_classes = (MultiPartParser,FormParser)
@@ -540,7 +540,7 @@ class upViewSet(ListAPIView):
 
 class likeView(ListAPIView):
     queryset = like.objects.all()
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = likeSerializer
 
     def get_queryset(self):
@@ -815,8 +815,8 @@ class weeklyPopularity(ListAPIView):
         print(fromDate)
         print(end_week)
         try:
-            postdata = (like.objects.filter(updated_dt__range=[fromDate,end_week]).values('post').annotate(total=Count('post')))
-            # postdata=like.objects.all().values('post').annotate(total=Count('user')).order_by('-total')
+            postdata = (like.objects.filter(updated_dt__range=[fromDate,end_week]).values('post').annotate(total=Count('user'))).order_by('-total')
+            # postdata=self.paginate_queryset(like.objects.filter(updated_dt__range=[fromDate,end_week]).values('post').annotate(total=Count('user')).order_by('-total'))
             print(">>><<<")
             print(postdata)
             postData=[]
@@ -933,6 +933,67 @@ class monthlyPopularity(ListAPIView):
                 'success':False 
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+class TodayPopularity(ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = LimitOffsetPagination
+
+    
+    def get(self,request):
+        dat = datetime.date.today().day
+        print(dat)
+        try:
+            # postdata = self.paginate_queryset()
+            likeddata = like.objects.filter(updated_dt__day=str(dat)).values('post').annotate(total=Count('user')).order_by('-total')
+            print (likeddata)
+            postData=[]
+            for data in likeddata:
+                print (data)
+                datas = Post.objects.get(id=data['post'])
+                person = User.object.get(id=datas.user.id)
+                try:
+                    thumb=datas.thumbnail.url
+                except:
+                    thumb=None,
+                try:
+                    profile=person.profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person.nickname
+                except:
+                    nick = None
+                try:
+                    likedata = data['total']
+                except:
+                    likedata = None,
+                postDic = {
+                    'id' : datas.id,
+                    'title' : datas.title,
+                    'content' : datas.content,
+                    'updated_dt' : datas.updated_dt,
+                    'userId' : datas.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : nick,
+                    'profileImage' : profile,
+                    'view':datas.view,
+                    'score':datas.score,
+                    'like': likedata,
+                }
+                postData.append(postDic)
+                
+            context = {
+                'success':True,
+                'votes':postData,
+            }
+            return Response(context,status=HTTP_200_OK)
+        except APIException as e:
+            context = {
+                'err':e.detail,
+                'success':False 
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
 # @background()
 # def voteExpired():
 #     posts = Post.objects.filter(is_repo=False)
