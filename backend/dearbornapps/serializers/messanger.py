@@ -9,3 +9,4 @@ class SaveMessageSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         message = Message.objects.create(**validated_data)
         return message
+

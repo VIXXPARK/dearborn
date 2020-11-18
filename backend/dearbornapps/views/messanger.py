@@ -30,9 +30,6 @@ class MessageViewSet(ModelViewSet):
         except APIException as e:
             return Response({'success':False, 'err':e.detail})
     
-    def Readed(self, request):
-        
-    
     #use "python manage.py process_tasks"
     @background(schedule=1209600)
     def AutoDelete(messageID):
@@ -50,6 +47,7 @@ class MessageViewSet(ModelViewSet):
                 'fromId' : message.userFrom.id,
                 'message' : message.message,
                 'date' : message.updated_dt,
+                'messageId' : message.id,
             }
             messageList.append(context1)
         
