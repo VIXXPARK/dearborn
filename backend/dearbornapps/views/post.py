@@ -67,11 +67,11 @@ class PostViewSet(ModelViewSet):
             response = super().create(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        # postId = response.data['id']
-        # image_array, image_file_name, image_id = GetImageArray(postId)
-        # vectors = GetFeatureVector(image_array)
-        # SaveFeatureVector(vectors,image_file_name,postId)
-        # similarity = Similarity(postId)
+        postId = response.data['id']
+        image_array, image_file_name, image_id = GetImageArray(postId)
+        vectors = GetFeatureVector(image_array)
+        SaveFeatureVector(vectors,image_file_name,postId)
+        # similarity = Similarity(vectors, 100)
         context = {
             # 'similarity' : similarity,
             'success' : True,
@@ -84,11 +84,11 @@ class PostViewSet(ModelViewSet):
             response = super().partial_update(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        # postId = response.data['id']
-        # image_array, image_file_name, image_id = GetImageArray(postId)
-        # vectors = GetFeatureVector(image_array)
-        # SaveFeatureVector(vectors,image_file_name,postId)
-        # similarity = Similarity(response.data.postId)
+        postId = response.data['id']
+        image_array, image_file_name, image_id = GetImageArray(postId)
+        vectors = GetFeatureVector(image_array)
+        SaveFeatureVector(vectors,image_file_name,postId)
+        # similarity = Similarity(vectors, 100)
         context = {
             # 'similarity' : similarity,
             'success' : True,

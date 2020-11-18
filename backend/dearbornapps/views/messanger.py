@@ -28,8 +28,7 @@ class MessageViewSet(ModelViewSet):
             self.AutoDelete(instance['id'])
             return Response({'success':True})
         except APIException as e:
-            return Response({'success':False, 'err':e.detail})
-       
+            return Response({'success':False, 'err':e.detail}, status=HTTP_200_OK)
     
     #use "python manage.py process_tasks"
     @background(schedule=1209600)
@@ -48,6 +47,7 @@ class MessageViewSet(ModelViewSet):
                 'fromId' : message.userFrom.id,
                 'message' : message.message,
                 'date' : message.updated_dt,
+                'messageId' : message.id,
             }
             messageList.append(context1)
         
