@@ -54,9 +54,10 @@ from pytz import timezone
 from dearbornapps.models.user import User
 from dearbornapps.models.messanger import Message
 from dearbornapps.feature.feature import Similarity,GetFeatureVector,SaveFeatureVector, GetImageArray
-
+import pytz
+from django.db.models import Count
 class PostViewSet(ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     parser_classes = (MultiPartParser,FormParser)
@@ -66,13 +67,13 @@ class PostViewSet(ModelViewSet):
             response = super().create(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        postId = response.data['id']
-        image_array, image_file_name, image_id = GetImageArray(postId)
-        vectors = GetFeatureVector(image_array)
-        SaveFeatureVector(vectors,image_file_name,postId)
-        similarity = Similarity(postId)
+        # postId = response.data['id']
+        # image_array, image_file_name, image_id = GetImageArray(postId)
+        # vectors = GetFeatureVector(image_array)
+        # SaveFeatureVector(vectors,image_file_name,postId)
+        # similarity = Similarity(postId)
         context = {
-            'similarity' : similarity,
+            # 'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
@@ -83,13 +84,13 @@ class PostViewSet(ModelViewSet):
             response = super().partial_update(request, *args, **kwargs)
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
-        postId = response.data['id']
-        image_array, image_file_name, image_id = GetImageArray(postId)
-        vectors = GetFeatureVector(image_array)
-        SaveFeatureVector(vectors,image_file_name,postId)
-        similarity = Similarity(response.data.postId)
+        # postId = response.data['id']
+        # image_array, image_file_name, image_id = GetImageArray(postId)
+        # vectors = GetFeatureVector(image_array)
+        # SaveFeatureVector(vectors,image_file_name,postId)
+        # similarity = Similarity(response.data.postId)
         context = {
-            'similarity' : similarity,
+            # 'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
@@ -539,7 +540,7 @@ class upViewSet(ListAPIView):
 
 class likeView(ListAPIView):
     queryset = like.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = likeSerializer
 
     def get_queryset(self):
@@ -805,44 +806,59 @@ class weeklyPopularity(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = LimitOffsetPagination
     def get(self,request):
-        dat = datetime.date.today()
-        start_week = dat-datetime.timedelta(dat.weekday()) 
-        end_week = start_week + datetime.timedelta(7)
+        dat = datetime.date.today()##day로 해서 if문 안에 해결하기
+        start_week = (dat-datetime.timedelta(dat.weekday()))
+        start = (dat-datetime.timedelta(dat.weekday())).day
+        end = (start_week + datetime.timedelta(7)).day
+        end_week = (start_week + datetime.timedelta(7)).isoformat()
+        fromDate = start_week.isoformat()
+        print(fromDate)
+        print(end_week)
         try:
-            postdata = self.paginate_queryset(like.objects.filter(updated_dt=[start_week,end_week]).values('post').annotate(like('post')))
+            postdata = (like.objects.filter(updated_dt__range=[fromDate,end_week]).values('post').annotate(total=Count('post')))
+            # postdata=like.objects.all().values('post').annotate(total=Count('user')).order_by('-total')
+            print(">>><<<")
+            print(postdata)
             postData=[]
-            for post in postdata:
-                person = User.objects.filter(id=post.user.id)
-                try:
-                    thumb=post.thumbnail.url
-                except:
-                    thumb=None,
-                try:
-                    profile=person[0].profileImage.url
-                except:
-                    profile=None,
-                try:
-                    nick = person[0].nickname
-                except:
-                    nick = None
-                try:
-                    likedata = like.objects.filter(post=post.id).count()
-                except:
-                    likedata = None,
-                postDic = {
-                    'id' : post.id,
-                    'title' : post.title,
-                    'content' : post.content,
-                    'updated_dt' : post.updated_dt,
-                    'userId' : post.user.id,
-                    'thumbnail' : thumb,
-                    'writer' : nick,
-                    'profileImage' : profile,
-                    'view':post.view,
-                    'score':post.score,
-                    'like': likedata,
-                }
-                postData.append(postDic)
+            for data in postdata:
+                
+                print(">>><<<")
+                print(data)
+                print(">>><<<")
+                print(data['post'])
+                datas = Post.objects.get(id=data['post'])
+                if datas.updated_dt.day>=start & datas.updated_dt.day<=end:
+                    person = User.object.get(id=datas.user.id)
+                    try:
+                        thumb=datas.thumbnail.url
+                    except:
+                        thumb=None,
+                    try:
+                        profile=person.profileImage.url
+                    except:
+                        profile=None,
+                    try:
+                        nick = person.nickname
+                    except:
+                        nick = None
+                    try:
+                        likedata = data['total']
+                    except:
+                        likedata = None,
+                    postDic = {
+                        'id' : datas.id,
+                        'title' : datas.title,
+                        'content' : datas.content,
+                        'updated_dt' : datas.updated_dt,
+                        'userId' : datas.user.id,
+                        'thumbnail' : thumb,
+                        'writer' : nick,
+                        'profileImage' : profile,
+                        'view':datas.view,
+                        'score':datas.score,
+                        'like': likedata,
+                    }
+                    postData.append(postDic)
             
             context = {
                 'success':True,
@@ -859,50 +875,58 @@ class weeklyPopularity(ListAPIView):
 class monthlyPopularity(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = LimitOffsetPagination
+
+    
     def get(self,request):
         dat = datetime.date.today().month
+        dat2 = datetime.date.today().year
+        print(dat)
+        print(dat2)
         try:
-            postdata = self.paginate_queryset(like.objects.all().values('post').annotate(like('post')))
+            # postdata = self.paginate_queryset()
+            likeddata = like.objects.filter(updated_dt__month=str(dat),updated_dt__year=str(dat2)).values('post').annotate(total=Count('user')).order_by('-total')
+            print (likeddata)
             postData=[]
-            for post in postdata:
-                if post.updated_dt.month==dat:
-                    person = User.objects.filter(id=post.user.id)
-                    try:
-                        thumb=post.thumbnail.url
-                    except:
-                        thumb=None,
-                    try:
-                        profile=person[0].profileImage.url
-                    except:
-                        profile=None,
-                    try:
-                        nick = person[0].nickname
-                    except:
-                        nick = None
-                    try:
-                        likedata = like.objects.filter(post=post.id).count()
-                    except:
-                        likedata = None,
-                    postDic = {
-                        'id' : post.id,
-                        'title' : post.title,
-                        'content' : post.content,
-                        'updated_dt' : post.updated_dt,
-                        'userId' : post.user.id,
-                        'thumbnail' : thumb,
-                        'writer' : nick,
-                        'profileImage' : profile,
-                        'view':post.view,
-                        'score':post.score,
-                        'like': likedata,
-                    }
-                    postData.append(postDic)
-                
-                context = {
-                    'success':True,
-                    'votes':postData,
+            for data in likeddata:
+                print (data)
+                datas = Post.objects.get(id=data['post'])
+                person = User.object.get(id=datas.user.id)
+                try:
+                    thumb=datas.thumbnail.url
+                except:
+                    thumb=None,
+                try:
+                    profile=person.profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person.nickname
+                except:
+                    nick = None
+                try:
+                    likedata = data['total']
+                except:
+                    likedata = None,
+                postDic = {
+                    'id' : datas.id,
+                    'title' : datas.title,
+                    'content' : datas.content,
+                    'updated_dt' : datas.updated_dt,
+                    'userId' : datas.user.id,
+                    'thumbnail' : thumb,
+                    'writer' : nick,
+                    'profileImage' : profile,
+                    'view':datas.view,
+                    'score':datas.score,
+                    'like': likedata,
                 }
-                return Response(context,status=HTTP_200_OK)
+                postData.append(postDic)
+                
+            context = {
+                'success':True,
+                'votes':postData,
+            }
+            return Response(context,status=HTTP_200_OK)
         except APIException as e:
             context = {
                 'err':e.detail,
