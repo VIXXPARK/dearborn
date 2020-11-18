@@ -994,6 +994,78 @@ class TodayPopularity(ListAPIView):
             }
             return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
 
+class UserPopularity(ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = LimitOffsetPagination
+
+    
+    def get(self,request):
+        try:
+            # postdata = self.paginate_queryset()
+            postdata = Post.objects.all().values('user').annotate(total=Count('view')).order_by('-total')
+            sums=0
+            works=0
+            counting=0
+            postData=[]
+            UserList=[]
+            for data in postdata:
+                print(data)
+                datas = Post.objects.filter(user=data['user'])
+                person = User.object.get(id=data['user'])
+                print(person)
+                try:
+                    profile=person.profileImage.url
+                except:
+                    profile=None,
+                try:
+                    nick = person.nickname
+                except:
+                    nick = None
+
+                user={
+                    'userId':person.id,
+                    'profileImage':profile,
+                    'writer':nick,
+                    'content':person.content
+                }
+                for detailData in datas:
+
+                    try:
+                        thumb=detailData.thumbnail.url
+                    except:
+                        thumb=None,
+                    
+                    try:
+                        likedata = like.objects.filter(post=detailData.id).count()
+                    except:
+                        likedata = None,
+                    postDic = {
+                        'postId' : detailData.id,
+                        'thumbnail' : thumb,
+                    }
+                    sums=sums+likedata
+                    works=works+1
+                    counting=counting+1
+                    if(counting<=4):
+                        postData.append(postDic)
+                
+                contextData = {
+                'user':user,
+                'post':postData,
+                'works':works,
+                'view':data['total'],
+                'like':sums
+                }
+                UserList.append(contextData)
+            return Response(UserList,status=HTTP_200_OK)
+        except APIException as e:
+            context = {
+                'err':e.detail,
+                'success':False 
+            }
+            return Response(context,status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 # @background()
 # def voteExpired():
 #     posts = Post.objects.filter(is_repo=False)
