@@ -7,3 +7,4 @@ class Message(models.Model):
     userFrom = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'From')
     userTo = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'To')
     updated_dt = models.TimeField(auto_now_add=True)
+    isRead = models.BooleanField(default=False)

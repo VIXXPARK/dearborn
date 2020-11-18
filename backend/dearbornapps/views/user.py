@@ -266,3 +266,4 @@ def deleteUser(request):
         return Response({'success':True}, HTTP_200_OK)
     except APIException as e:
         return Response({'success': False, 'err':e.detail}, HTTP_400_BAD_REQUEST)
+    
