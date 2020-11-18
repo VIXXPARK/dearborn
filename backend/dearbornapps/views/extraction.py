@@ -103,7 +103,7 @@ def recommend(request):
     postId = recommandSerializer.validated_data['postId']
     image_array, image_file_name, image_id = GetImageArray(postId)
     vectors = GetFeatureVector(image_array)
-    similarities = Similarity(vectors, 5)
+    similarities = Similarity(vectors, 100)
     postData = []
     print(similarities)
     for sim in similarities:
@@ -111,8 +111,8 @@ def recommend(request):
         postid = sim['postId']
         if similarity >= 0.9:
             if postId != postid:
-                print("postId = ",postId)
-                print("postid = ",postid)
+                print("postId = ", postId)
+                print("postid = ", postid)
                 try:
                     post = Post.objects.get(id=postid)
                     user = post.user

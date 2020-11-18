@@ -29,7 +29,9 @@ class MessageViewSet(ModelViewSet):
             return Response({'success':True})
         except APIException as e:
             return Response({'success':False, 'err':e.detail})
-       
+    
+    def Readed(self, request):
+        
     
     #use "python manage.py process_tasks"
     @background(schedule=1209600)
