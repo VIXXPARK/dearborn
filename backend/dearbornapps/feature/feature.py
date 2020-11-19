@@ -92,7 +92,6 @@ def featureUpload_to(postId,category):
 def ChangeImage(images):
     image_array = []
     for img in images:
-        image = tf.image.decode_image(img,channels=3)
         image = tf.image.resize(img, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
@@ -152,15 +151,15 @@ def GetImageArray(postId):
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
             image = s3Images.from_s3("dearbornstorage",path)
             image = image.getdata()
-            # image_array = tf.keras.preprocessing.image.img_to_array(image)
-            images.append(image)
+            image_array = tf.keras.preprocessing.image.img_to_array(image)
+            images.append(image_array)
             image_file_name.append(file_name)
         image_array_resized = ChangeImage(images)
     return image_array_resized, image_file_name, image_id
 
 def GetFeatureVector(image_array):
     hub_path = "https://tfhub.dev/google/imagenet/resnet_v2_50/feature_vector/4"
-    
+    print(image_array)
     MyModule = hub.KerasLayer(hub_path, input_shape = [224,224,3], trainable=False)
     featureVector = []
     result = MyModule(image_array)
