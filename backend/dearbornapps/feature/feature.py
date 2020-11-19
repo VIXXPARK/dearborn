@@ -92,6 +92,7 @@ def featureUpload_to(postId,category):
 def ChangeImage(images):
     image_array = []
     for img in images:
+        image = tf.image.decode_image(img,channels=3)
         image = tf.image.resize(img, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
@@ -103,7 +104,6 @@ def LoadImage(image_urls):
     for path in image_urls:
         image = tf.io.read_file(path)        
         image = tf.image.decode_image(image, channels=3)
-        print(image)
         image = tf.image.resize(image, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
