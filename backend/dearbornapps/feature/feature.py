@@ -144,7 +144,6 @@ def GetImageArray(postId):
             dir = url.split('/')
             dir = dir[-4:]
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
-            print(path)
             image = s3Images.from_s3("dearbornstorage",path)
             image_array = np.array(image)
             images.append(image_array)
@@ -190,10 +189,9 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
 
 
 
-def Similarity(vectors):
+def Similarity(vectors, n_nearest_neighbors):
 
     dims = 2048
-    n_nearest_neighbors = 5
     trees = 10000
     
     if not Is_Local[0]:
@@ -201,7 +199,7 @@ def Similarity(vectors):
     else: 
         feature_vectors = glob.glob(os.path.join(BASE_DIR,'feature_vectors/*/*.npz'))
 
-    annoy = AnnoyIndex(dims,'angular')
+    annoy = AnnoyIndex(dims,'euclidean')
     if Is_Local[0]:
         loadedVectors = []
         fileNames = []
@@ -217,20 +215,17 @@ def Similarity(vectors):
         for index, v in enumerate(feature_vectors):
             annoy.add_item(index, v)
 
-    n_nearest_neighbors = len(feature_vectors)
 
     annoy.build(trees)
     similarities = []
     for index, v in enumerate(vectors):
         nearest_neighbors, distance = annoy.get_nns_by_vector(v, n_nearest_neighbors, include_distances=True)
-
         for index, neighbor in enumerate(nearest_neighbors):
-            similarity = 1 - (int)(distance[index] * 10000) / 10000
+            print("index = ", index)
+            print("neighbor = ", neighbor)
+            similarity = 1 - (distance[index] * 10000) / 10000
             if Is_Local[0]:
                 filename = fileNames[neighbor]
-                print("similarity = ",similarity)
-                print("postId = ", filename)
-                print("index = ", neighbor)
                 similarity_set = {
                 'similarity' : similarity,
                 'postId' : filename,
