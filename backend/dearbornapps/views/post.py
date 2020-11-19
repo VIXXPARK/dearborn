@@ -1011,7 +1011,7 @@ class UserPopularity(ListAPIView):
             UserList=[]
             for data in postdata:
                 print(data)
-                datas = Post.objects.filter(user=data['user'])
+                datas = Post.objects.filter(user=data['user']).order_by('-view')
                 person = User.object.get(id=data['user'])
                 print(person)
                 try:
