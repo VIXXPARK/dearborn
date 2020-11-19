@@ -148,9 +148,9 @@ function BlogPage_Prod_Works(props) {
                     }else{
                         console.log(response.data.err)
                     }
-                }).finally(()=>{
-                    setLoading(false)
-                })
+        }).finally(()=>{
+            setLoading(false)
+        })
     }
 
     const renderLikes = (post) => {
@@ -180,13 +180,13 @@ function BlogPage_Prod_Works(props) {
                 <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
                     <div className="item-vote-show">
-                    <div style={{position:'absolute',top:'60px', right:'10%',fontSize:'30px', textAlign:'center', margin:'0 auto', color:'#f85272'}}><Tooltip placement="topLeft" title="대표작품 지정"><CheckCircleOutlined onClick={onMyWorkPick}/></Tooltip></div>
+                    {props.user.userData && props.user.userData.nickname === designer && <div style={{position:'absolute',top:'60px', right:'10%',fontSize:'30px', textAlign:'center', margin:'0 auto', color:'#f85272'}}><Tooltip placement="topLeft" title="대표작품 지정"><CheckCircleOutlined onClick={onMyWorkPick}/></Tooltip></div>}
                     <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
                         <div className="item-vote-title">
                             {post.title}
                         </div>
                         <div className="item-vote-rate">
-                            <div style={{display:'inline-block'}}>({post.score} 3.6 / 5점)</div>
+                            <div style={{display:'inline-block'}}>({post.score} / 5점)</div>
                         </div>
                         </Link>
                     </div>
@@ -207,7 +207,7 @@ function BlogPage_Prod_Works(props) {
     return (
         <div className="blog-container">
             <div className="blog-right-container">
-                {/* <img src= {`http://localhost:5000/${}`}/> */}
+                {/*<img src= {`http://localhost:5000/${}`}/>*/}
                 <div className="blog-header">
                     <div style={{width:'200px', height:'200px',float:'left'}}>
                         <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>

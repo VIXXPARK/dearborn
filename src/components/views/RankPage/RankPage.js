@@ -25,21 +25,29 @@ function RankPage(props) {
         })
     }, [])
     console.log(Ranks)
-    const renderRank = (rank) => {
+    const renderRank = (rank, i) => {
 
         return (
             <div style={{width:'1000px', margin:'0 auto',paddingTop:'30px',paddingBottom:'30px', borderBottom:'1px solid #d9d9d9'}}>
-                <div style={{display:'inline-block', width:'150px', height:'150px', borderRadius:'150px', overflow:'hidden'}}>
+                <div style={{fontSize:`calc(30px - 5*${i+1 >=4 ? 3 : i+1}px)`, color:'rgb(248, 82, 114)'}}>
+                    {i+1}
+                </div>
+                <div style={{display:'inline-block', width:'150px', height:'150px', marginLeft:'50px', borderRadius:'150px', overflow:'hidden'}}>
                     <img style={{width:'100%'}} src={convertToS3EP(rank.user.profileImage)}/>
                 </div>
-                <div style={{display:'inline-block', width:'200px', height:'125px',margin:'12.5px', verticalAlign:'top'}}>
-                    <div >
+                <div style={{display:'inline-block', width:'200px',margin:'12.5px', verticalAlign:'top'}}>
+                    <div style={{fontSize:'25px', color:'black'}}>
                         {rank.user.writer}
                     </div>
                     <div>
                         {rank.user.content}
                     </div>
-                    <button style={{width:'100%', textAlign:'center'}} onClick={()=>props.history.push(`/${rank.user.writer}`)}>작가 블로그</button>
+                    <div style={{fontSize:'10px'}}>
+                        좋아요 : {rank.like} &nbsp;&nbsp;
+                        조회수 : {rank.view}<br/>
+                        작품수 : {rank.works}<br/>
+                    </div>
+                    <button style={{width:'100%', textAlign:'center',border:'1px solid #ccc', borderRadius:'5px', backgroundColor:'white'}} onClick={()=>props.history.push(`/${rank.user.writer}`)}>작가 블로그</button>
                 </div>
                 <div style={{display:'inline-block', width:'550px',height:'125px', margin:'12.5px', verticalAlign:'top'}}>
                     
@@ -61,8 +69,8 @@ function RankPage(props) {
                 <div style={{position:'absolute', top:'180px', left:'calc( 50% - 125px)', margin:'0 auto', fontSize:'50px', color:'white'}}>작가 순위</div>
             </div>
             <div style={{width:'100%', height:'400px', maxWidth:'1400px', margin:'0 auto'}}>
-                {Ranks && Ranks.map((rank) => (
-                    renderRank(rank)
+                {Ranks && Ranks.map((rank, i) => (
+                    renderRank(rank, i)
                 ))}
             </div>
         </div>

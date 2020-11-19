@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux'
 import {USER_SERVER} from '../../Config'
 
 import {logoutUser} from '../../../_actions/user_action'
-import { Avatar, Button, Drawer, Dropdown, Menu, Modal, Typography, Input, Form } from 'antd';
+import { Avatar, Button, Drawer, Dropdown, Menu, Modal, Typography, Input, Form, Badge } from 'antd';
 import {MenuOutlined, MailOutlined} from '@ant-design/icons'
 import Logo from '../../assets/Logo.png'
 import {getCookieValue} from '../../utils/Cookie'
@@ -121,25 +121,11 @@ function NavBar(props) {
                 {message.date}
             </div>
             <div className="message-content-content">
-                {message.message}
+                <div style={{margin:'30px auto'}}>
+                    {message.message}
+                </div>
             </div>
-            <Form
-                style={{borderBottom:'1px solid #e5e5e5'}}
-                onFinish={onFinish}
-            >
-                <Form.Item
-                    style={{display:'inline-block'}}
-                    name="message"
-                >
-                    <Input.TextArea style={{width:'300px', display:'inline-block'}}/>
-                </Form.Item>
-                <Form.Item
-                    style={{display:'inline-block'}}
-                >
-                    
-                    <Button style={{width:'50px'}} onClick={sendMessage} htmlType="submit">답장</Button>
-                </Form.Item>
-            </Form></div>}
+            </div>}
             </div>)
     }
 
@@ -155,9 +141,9 @@ function NavBar(props) {
     )
 
     const message = (
-        <div className="message-container">
-            <div style={{height:'50px',fontSize:'15px',lineHeight:'40px', borderBottom : '1px solid #e5e5e5'}}>
-                받은 메일(messages.length(!))
+        <div className="message-container" style={{boxShadow:'5px 5px 5px gray'}}>
+            <div style={{height:'50px', fontFamily:'font1',marginLeft:'20px', marginRight:'20px',fontSize:'15px',lineHeight:'50px', borderBottom : '1px solid #e5e5e5'}}>
+                Messanger
             </div>
             {Messages && Messages.map((message, i) =>renderMessageBox(message, i))}
         </div>
@@ -193,11 +179,13 @@ function NavBar(props) {
                                     <a href="/upload"><div className="navbar-button" style={{backgroundColor:'#f85272', color:'white', marginLeft:'30px', fontSize:'12px', borderRadius:'30px'}}>업로드</div></a>
                                 </div>}
                                 <Dropdown overlay={message} placement="bottomRight" arrow trigger={["click"]} 
-                                onVisibleChange={handleVisible} visible={MessageVisible} overlayStyle={{border:'1px solid #e5e5e5', borderRadius:'20px'}}>
-                                    <MailOutlined style={{marginTop:'2px',marginRight:'20px', fontSize:'30px', verticalAlign: 'middle',}}/>
+                                onVisibleChange={handleVisible} visible={MessageVisible} overlayStyle={{borderRadius:'20px'}}>
+                                    <Badge count={Messages.length}>
+                                        <MailOutlined style={{marginTop:'2px', fontSize:'30px', verticalAlign: 'middle',}}/>
+                                    </Badge>
                                 </Dropdown>
                                 <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
-                                    <Avatar style={{ marginTop:'5px',backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} src={user.userData && user.userData.profileImage && convertToS3EP(user.userData.profileImage)} size="middle" gap={4}>
+                                    <Avatar style={{ marginTop:'5px',marginLeft:'20px',backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} src={user.userData && user.userData.profileImage && convertToS3EP(user.userData.profileImage)} size="middle" gap={4}>
                                         {user.userData && !user.userData.profileImage && user.userData.nickname ? user.userData.nickname[0] : null}
                                     </Avatar>
                                 </Dropdown>
