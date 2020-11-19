@@ -151,9 +151,7 @@ def GetImageArray(postId):
             dir = dir[-4:]
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
             image = s3Images.from_s3("dearbornstorage",path)
-            image = image.getdata()
-            image = tf.image.decode_image(image,channels=3)
-            image_array = np.array(image)
+            image_array = tf.keras.preprocessing.image.img_to_array(image)
             images.append(image_array)
             image_file_name.append(file_name)
         image_array_resized = ChangeImage(images)
