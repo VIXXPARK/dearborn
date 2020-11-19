@@ -72,9 +72,7 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId,category)
-        # similarity = Similarity(vectors, 100)
         context = {
-            # 'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
@@ -90,9 +88,7 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId,category)
-        # similarity = Similarity(vectors, 100)
         context = {
-            # 'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
