@@ -71,7 +71,7 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId)
-        # similarity = Similarity(vectors, 100)
+        similarity = Similarity(vectors, 100)
         context = {
             # 'similarity' : similarity,
             'success' : True,
@@ -88,7 +88,7 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId)
-        # similarity = Similarity(vectors, 100)
+        similarity = Similarity(vectors, 100)
         context = {
             # 'similarity' : similarity,
             'success' : True,
@@ -1006,7 +1006,7 @@ class UserPopularity(ListAPIView):
             sums=0
             works=0
             counting=0
-            postData=[]
+            
             UserList=[]
             for data in postdata:
                 print(data)
@@ -1028,8 +1028,10 @@ class UserPopularity(ListAPIView):
                     'writer':nick,
                     'content':person.content
                 }
+                counting=0
+                postDatas=[]
                 for detailData in datas:
-
+                    
                     try:
                         thumb=detailData.thumbnail.url
                     except:
@@ -1047,17 +1049,16 @@ class UserPopularity(ListAPIView):
                     works=works+1
                     counting=counting+1
                     if(counting<=4):
-                        postData.append(postDic)
+                        postDatas.append(postDic)
                 
                 contextData = {
                 'user':user,
-                'post':postData,
+                'post':postDatas,
                 'works':works,
                 'view':data['total'],
                 'like':sums
                 }
                 UserList.append(contextData)
-                postData.clear()
             return Response(UserList,status=HTTP_200_OK)
         except APIException as e:
             context = {

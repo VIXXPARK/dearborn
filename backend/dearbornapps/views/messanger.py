@@ -63,6 +63,7 @@ class MessageViewSet(ModelViewSet):
                 'message' : message.message,
                 'date' : message.updated_dt,
                 'messageId' : message.id,
+                'isRead' : message.isRead,
             }
             messageList.append(context1)
         
