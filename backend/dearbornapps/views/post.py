@@ -71,7 +71,8 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId)
-        similarity = Similarity(vectors, 100)
+
+        # similarity = Similarity(vectors, 100)
         context = {
             # 'similarity' : similarity,
             'success' : True,
@@ -88,7 +89,8 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId)
-        similarity = Similarity(vectors, 100)
+
+        # similarity = Similarity(vectors, 100)
         context = {
             # 'similarity' : similarity,
             'success' : True,
@@ -1003,8 +1005,7 @@ class UserPopularity(ListAPIView):
         try:
             # postdata = self.paginate_queryset()
             postdata = Post.objects.all().values('user').annotate(total=Count('view')).order_by('-total')
-            sums=0
-            works=0
+            
             counting=0
             
             UserList=[]
@@ -1028,7 +1029,10 @@ class UserPopularity(ListAPIView):
                     'writer':nick,
                     'content':person.content
                 }
+                sums=0
+                works=0
                 counting=0
+                views=0
                 postDatas=[]
                 for detailData in datas:
                     
@@ -1044,10 +1048,12 @@ class UserPopularity(ListAPIView):
                     postDic = {
                         'postId' : detailData.id,
                         'thumbnail' : thumb,
+                        'view':detailData.view,
                     }
                     sums=sums+likedata
                     works=works+1
                     counting=counting+1
+                    views=views+detailData.view
                     if(counting<=4):
                         postDatas.append(postDic)
                 
@@ -1055,7 +1061,7 @@ class UserPopularity(ListAPIView):
                 'user':user,
                 'post':postDatas,
                 'works':works,
-                'view':data['total'],
+                'view':views,
                 'like':sums
                 }
                 UserList.append(contextData)
