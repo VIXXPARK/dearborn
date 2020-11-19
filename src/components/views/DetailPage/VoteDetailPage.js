@@ -92,6 +92,27 @@ function VoteDetailPage(props) {
         props.history.push(`/upload/modify/${DetailPost.id}`)
     }
 
+    const SendMessage = () => {
+        const variables = {
+            message : `${props.user.userData.nickname}님이 채용을 원합니다.`,
+            userFrom : props.user.userData._id,
+            userTo : Writer.id,
+        }
+        const config = {
+            headers : {
+                Authorization: `Token ${getCookieValue('w_auth')}`
+            }
+        }
+        axios.post('/api/message/saveMessage', variables, config)
+        .then(response => {
+            if(response.data.success){
+                alert('성공')
+            }else{
+                alert('실패')
+            }
+        })
+    }
+
     return (
         OnModal && params.get('designer') && (
         <DetailModal
@@ -116,7 +137,7 @@ function VoteDetailPage(props) {
                 </>}
                 {props.user.userData && props.user.userData.job === 2 && 
                     <>
-                    <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon">
+                    <div style={{border:'1px solid rgb(229, 229, 229)'}} className="profile-icon" onClick={SendMessage}>
                         <FileTextOutlined />
                     </div>
                     <div className="profile-header" style={{color:'white'}}>

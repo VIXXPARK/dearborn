@@ -38,19 +38,20 @@ function NavBar(props) {
     },])
 
     useEffect(() => {
-        /*const config = {
+        const config = {
             headers : {
                 Authorization: `Token ${getCookieValue('w_auth')}`
             }
         }
         axios.get('/api/message/getMessage', config)
         .then(response => {
+            console.log(response)
             if(response.data.success){
                 setMessages(response.data.messages)
             }else{
                 console.log(response.data.err)
             }
-        })*/
+        })
     }, [])
     const logoutHandler = () =>{
         dispatch(logoutUser()).then(response =>{
@@ -184,6 +185,7 @@ function NavBar(props) {
                             </>)}
                         </div>
                         <a className="header-a" id={props.location.pathname === '/contest' ? "header-clicked" : null} href="/contest">Contest</a>
+                        <a className="header-a" id={props.location.pathname === '/rank' ? "header-clicked" : null} href="/rank">Rank</a>
                         <div className="row-log">
                             {(<>
                             <div className="nav-bar-profile pull-right">

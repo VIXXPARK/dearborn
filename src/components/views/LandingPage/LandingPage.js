@@ -50,14 +50,10 @@ function LandingPage(props) {
             ook : 0,
             sort : 0,
         }
-        setLoading(true)
-        getPosts(variables)
-        setSkip(Skip+Limit)
         window.addEventListener('scroll', handleScroll)
 
         return ()=> window.removeEventListener('scroll', handleScroll)
     }, [])
-    console.log(LastPost)
     useEffect(() => {
         if(window.innerWidth < 400){
             setPostColumn(1)
@@ -111,6 +107,8 @@ function LandingPage(props) {
         }
     }, [IsBottom])
 
+    console.log(Posts)
+
     useEffect(() => {
         const variables = {
             ook : 0,
@@ -121,9 +119,8 @@ function LandingPage(props) {
                 Authorization: `Token ${getCookieValue('w_auth')}`
             }
         }
+        setLoadMore(true)
         setLoading(true)
-        setSkip(0)
-        setPosts([])
         var rank = Rank === 2 ? "today/" : Rank === 3? "week/" : Rank===4 ? "month/" : "";
         if(Rank === 1){
             if(LastPost){
@@ -132,31 +129,12 @@ function LandingPage(props) {
             .then(response => {
                 console.log(response)
                 if(response.data.success){
-                    setRecommend(response.data.votes)
+                    setRecommend(response.data.posts)
                 }else{
                     console.log(response.data.err)
                 }
             })}
-
-            axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
-            .then(response => {
-                setLoading(true)
-                if(response.data.success){
-                    console.log(response)
-                    if(response.data.votes.length < Limit)
-                        setLoadMore(false)
-                    if(Skip !==0){
-                        setPosts([...Posts, ...response.data.votes])
-                    }else{
-                        setPosts(response.data.votes)
-                    }
-                }else{
-                    console.log(response.data.err)
-                }
-            
-            }).finally(()=>{
-                setLoading(false)
-            })
+            addPosts()
         }else{
         axios.get(`/api/post/getVotes/${rank}?limit=${Limit}&offset=${Skip}`, config)
             .then(response => {
@@ -186,9 +164,6 @@ function LandingPage(props) {
         const scrollHeight= (document.documentElement 
             && document.documentElement.scrollHeight)
             || document.body.scrollHeight;
-        const scrollBottom= (document.documentElement 
-                && document.documentElement.scrollBottom)
-                || document.body.scrollBottom
         if(scrollTop + window.innerHeight >= scrollHeight){
             setIsBottom(true)
         }else{
@@ -258,7 +233,7 @@ function LandingPage(props) {
         }
         setSkip(Skip+Limit)
         setLoading(true)
-        getPosts(Rank===0 ? variables : null)
+        getPosts(Rank===1 ? variables : null)
         setIsBottom(false)
     }
 
@@ -267,6 +242,8 @@ function LandingPage(props) {
     }
 
     const handleRank = (rank) => {
+        setSkip(0)
+        setPosts([])
         setRank(rank)
     }
 
@@ -395,6 +372,9 @@ function LandingPage(props) {
                         </div>
                     </div>
                     <div className="container-vote-section">
+                        {Recommend.map((post)=>(
+                            renderVoteItems(post)
+                        ))}
                         {Posts.map((post) => (
                             renderVoteItems(post)
                         ))}
