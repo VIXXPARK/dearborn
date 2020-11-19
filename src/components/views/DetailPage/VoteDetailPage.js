@@ -93,22 +93,35 @@ function VoteDetailPage(props) {
     }
 
     const SendMessage = () => {
-        const variables = {
-            message : `${props.user.userData.nickname}님이 채용을 원합니다.`,
-            userFrom : props.user.userData._id,
-            userTo : Writer.id,
-        }
-        const config = {
-            headers : {
-                Authorization: `Token ${getCookieValue('w_auth')}`
-            }
-        }
-        axios.post('/api/message/saveMessage', variables, config)
-        .then(response => {
-            if(response.data.success){
-                alert('성공')
-            }else{
-                alert('실패')
+        var HireMessage
+        confirm({
+            width:800,
+            icon:null,
+            content: 
+            <div className="bid-container">
+                <div className="hire-content">메시지<br/><Input.TextArea style={{fontSize:'20px'}} rows={5}  onChange={(e)=>{HireMessage = e.currentTarget.value}}/></div>
+            </div>,
+            okText: "메시지 전송",
+            cancelText: "취소",
+            onOk(){
+                const variables = {
+                    message : `${props.user.userData.nickname}님이 채용을 원합니다.\n${HireMessage}`,
+                    userFrom : props.user.userData._id,
+                    userTo : Writer.id,
+                }
+                const config = {
+                    headers : {
+                        Authorization: `Token ${getCookieValue('w_auth')}`
+                    }
+                }
+                axios.post('/api/message/saveMessage', variables, config)
+                .then(response => {
+                    if(response.data.success){
+                        alert('성공')
+                    }else{
+                        alert('실패')
+                    }
+                })
             }
         })
     }
@@ -141,7 +154,7 @@ function VoteDetailPage(props) {
                         <FileTextOutlined />
                     </div>
                     <div className="profile-header" style={{color:'white'}}>
-                        채용
+                        연락
                     </div>
                     </>
                 }
