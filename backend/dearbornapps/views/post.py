@@ -70,6 +70,7 @@ class PostViewSet(ModelViewSet):
         postId = response.data['id']
         category = response.data['category']
         image_array, image_file_name, image_id = GetImageArray(postId)
+        print(image_array)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId,category)
         context = {
