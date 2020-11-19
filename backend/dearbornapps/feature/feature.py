@@ -151,7 +151,7 @@ def GetImageArray(postId):
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
             image = s3Images.from_s3("dearbornstorage",path)
             image_array = np.array(image)
-            print(image)
+            print(image_array)
             images.append(image_array)
             image_file_name.append(file_name)
         image_array_resized = ChangeImage(images)
