@@ -92,7 +92,9 @@ def featureUpload_to(postId,category):
 def ChangeImage(images):
     image_array = []
     for img in images:
-        image = tf.image.resize(img, [224, 224])
+        print(img)
+        imgae = tf.image.grayscale_to_rgb(img)
+        image = tf.image.resize(image, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
     return image_array
