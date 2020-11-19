@@ -71,6 +71,7 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId)
+
         # similarity = Similarity(vectors, 100)
         context = {
             # 'similarity' : similarity,
@@ -88,6 +89,7 @@ class PostViewSet(ModelViewSet):
         image_array, image_file_name, image_id = GetImageArray(postId)
         vectors = GetFeatureVector(image_array)
         SaveFeatureVector(vectors,image_file_name,postId)
+
         # similarity = Similarity(vectors, 100)
         context = {
             # 'similarity' : similarity,
@@ -1003,14 +1005,13 @@ class UserPopularity(ListAPIView):
         try:
             # postdata = self.paginate_queryset()
             postdata = Post.objects.all().values('user').annotate(total=Count('view')).order_by('-total')
-            sums=0
-            works=0
+            
             counting=0
-            postData=[]
+            
             UserList=[]
             for data in postdata:
                 print(data)
-                datas = Post.objects.filter(user=data['user'])
+                datas = Post.objects.filter(user=data['user']).order_by('-view')
                 person = User.object.get(id=data['user'])
                 print(person)
                 try:
@@ -1028,8 +1029,13 @@ class UserPopularity(ListAPIView):
                     'writer':nick,
                     'content':person.content
                 }
+                sums=0
+                works=0
+                counting=0
+                views=0
+                postDatas=[]
                 for detailData in datas:
-
+                    
                     try:
                         thumb=detailData.thumbnail.url
                     except:
@@ -1042,22 +1048,23 @@ class UserPopularity(ListAPIView):
                     postDic = {
                         'postId' : detailData.id,
                         'thumbnail' : thumb,
+                        'view':detailData.view,
                     }
                     sums=sums+likedata
                     works=works+1
                     counting=counting+1
+                    views=views+detailData.view
                     if(counting<=4):
-                        postData.append(postDic)
+                        postDatas.append(postDic)
                 
                 contextData = {
                 'user':user,
-                'post':postData,
+                'post':postDatas,
                 'works':works,
-                'view':data['total'],
+                'view':views,
                 'like':sums
                 }
                 UserList.append(contextData)
-                postData.clear()
             return Response(UserList,status=HTTP_200_OK)
         except APIException as e:
             context = {
