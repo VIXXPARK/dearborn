@@ -1057,6 +1057,7 @@ class UserPopularity(ListAPIView):
                 'like':sums
                 }
                 UserList.append(contextData)
+                postData.clear()
             return Response(UserList,status=HTTP_200_OK)
         except APIException as e:
             context = {
