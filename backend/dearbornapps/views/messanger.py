@@ -1,4 +1,4 @@
-from dearbornapps.serializers.messanger import SaveMessageSerializer
+from dearbornapps.serializers.messanger import SaveMessageSerializer, MessageReadSerializer
 from dearbornapps.models.messanger import Message
 from datetime import timedelta
 
@@ -14,6 +14,7 @@ from rest_framework.status import(
     HTTP_204_NO_CONTENT,
     HTTP_502_BAD_GATEWAY,
     HTTP_500_INTERNAL_SERVER_ERROR,
+    HTTP_204_NO_CONTENT,
 )
 from background_task import background
 
@@ -30,6 +31,20 @@ class MessageViewSet(ModelViewSet):
         except APIException as e:
             return Response({'success':False, 'err':e.detail}, status=HTTP_200_OK)
     
+    def Read(self, request):
+        readSerializer = MessageReadSerializer(data = request.data)
+        if not readSerializer.is_valid():
+            return Response({'success' : False, 'err':readSerializer.error_messages}, status=HTTP_400_BAD_REQUEST)
+        messageId = readSerializer.validated_data['id']
+        try:
+            message = Message.objects.get(id=messageId)
+        except:
+            return Response({'success':False}, status=HTTP_204_NO_CONTENT)
+        message.isRead = True
+        message.save()
+        return Response({'success':True},status=HTTP_200_OK)
+
+
     #use "python manage.py process_tasks"
     @background(schedule=1209600)
     def AutoDelete(messageID):

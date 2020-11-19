@@ -10,3 +10,5 @@ class SaveMessageSerializer(serializers.ModelSerializer):
         message = Message.objects.create(**validated_data)
         return message
 
+class MessageReadSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
