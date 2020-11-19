@@ -92,6 +92,8 @@ def featureUpload_to(postId,category):
 def ChangeImage(images):
     image_array = []
     for img in images:
+        print(img)
+        image = tf.image.decode_image(image, channels=3)
         image = tf.image.resize(img, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
@@ -101,8 +103,9 @@ def ChangeImage(images):
 def LoadImage(image_urls):
     image_array = []
     for path in image_urls:
-        image = tf.io.read_file(path)
+        image = tf.io.read_file(path)        
         image = tf.image.decode_image(image, channels=3)
+        print(image)
         image = tf.image.resize(image, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
@@ -200,7 +203,7 @@ def Similarity(vectors, n_nearest_neighbors, category):
     trees = 10000
     
     if not Is_Local[0]:
-        feature_vectors, fileNames = download_all_files()
+        feature_vectors, fileNames = download_all_files(category)
     else: 
         dir = featureDownload_from_local(category) + "\\*\\*.npz"
         feature_vectors = glob.glob(os.path.join(BASE_DIR,dir))
