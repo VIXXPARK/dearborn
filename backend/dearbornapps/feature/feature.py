@@ -71,18 +71,23 @@ class S3Images(object):
         else:
             raise S3ImagesInvalidExtension('Extension is invalid') 
 
-def download_all_files():
+def download_all_files(category):
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
     SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     region_name = os.getenv('AWS_S3_REGION_NAME')
     s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
-    obj, keys = s3Images.from_s3_non_image("dearbornstorage",'feature_vectors/')
+    obj, keys = s3Images.from_s3_non_image("dearbornstorage",featureDownload_from(category))
     
     return obj, keys
         
+def featureDownload_from(category):
+    return 'feature_vectors/{0}' .format(category)
 
-def featureUpload_to(postId):
-   return 'feature_vectors/{0}'.format(postId)
+def featureDownload_from_local(category):
+    return 'feature_vectors\{0}' .format(category)
+
+def featureUpload_to(postId,category):
+   return 'feature_vectors/{0}/{1}'.format(category, postId)
 
 def ChangeImage(images):
     image_array = []
@@ -163,10 +168,10 @@ def GetFeatureVector(image_array):
     
     return featureVector
 
-def SaveFeatureVector(featureVector, image_file_name, postId):
+def SaveFeatureVector(featureVector, image_file_name, postId, category):
     if Is_Local[0]:
         for index, v in enumerate(featureVector):
-            dirs = featureUpload_to(postId).split('/')
+            dirs = featureUpload_to(postId, category).split('/')
             out_path = os.path.join(BASE_DIR)
             for dir in dirs:
                 out_path = os.path.join(out_path, dir)
@@ -179,7 +184,7 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
             SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
             region_name = os.getenv('AWS_S3_REGION_NAME')
             s3Images = S3Images(aws_access_key_id=ACCESS_KEY,aws_secret_access_key=SECRET_ACCESS_KEY,region_name=region_name)
-            dirs = featureUpload_to(postId).split('/')
+            dirs = featureUpload_to(postId, category).split('/')
             out_path = ""
             for dir in dirs:
                 out_path = os.path.join(out_path, dir)
@@ -189,7 +194,7 @@ def SaveFeatureVector(featureVector, image_file_name, postId):
 
 
 
-def Similarity(vectors, n_nearest_neighbors):
+def Similarity(vectors, n_nearest_neighbors, category):
 
     dims = 2048
     trees = 10000
@@ -197,9 +202,10 @@ def Similarity(vectors, n_nearest_neighbors):
     if not Is_Local[0]:
         feature_vectors, fileNames = download_all_files()
     else: 
-        feature_vectors = glob.glob(os.path.join(BASE_DIR,'feature_vectors/*/*.npz'))
+        dir = featureDownload_from_local(category) + "\\*\\*.npz"
+        feature_vectors = glob.glob(os.path.join(BASE_DIR,dir))
 
-    annoy = AnnoyIndex(dims,'euclidean')
+    annoy = AnnoyIndex(dims,'angular')
     if Is_Local[0]:
         loadedVectors = []
         fileNames = []
