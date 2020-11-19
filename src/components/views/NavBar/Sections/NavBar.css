@@ -142,6 +142,7 @@
     background-color: white;
     z-index: 1000;
     overflow-y: auto;
+    font-family: font2;
 }
 .message-container::-webkit-scrollbar{
     width: 3px;
