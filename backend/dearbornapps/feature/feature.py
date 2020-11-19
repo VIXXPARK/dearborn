@@ -92,8 +92,6 @@ def featureUpload_to(postId,category):
 def ChangeImage(images):
     image_array = []
     for img in images:
-        image = tf.image.decode_image(img, channels=3)
-        print(image)
         image = tf.image.resize(img, [224, 224])
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
@@ -153,6 +151,7 @@ def GetImageArray(postId):
             dir = dir[-4:]
             path = os.path.join('media',dir[0],dir[1],dir[2],dir[3])
             image = s3Images.from_s3("dearbornstorage",path)
+            image = tf.image.decode_image(image,channels=3)
             image_array = np.array(image)
             images.append(image_array)
             image_file_name.append(file_name)
