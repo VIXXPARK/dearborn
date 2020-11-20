@@ -28,7 +28,11 @@ class S3Images(object):
         
 
     def from_s3_non_image(self, bucket, key):
-        contents = self.s3.list_objects(Bucket=bucket, Prefix=key)['Contents']
+        try:
+            contents = self.s3.list_objects(Bucket=bucket, Prefix=key)['Contents']
+        except:
+            raise Exception()
+            
         keys = []
         for content in contents:
             keys.append(content['Key'])
@@ -195,7 +199,6 @@ def SaveFeatureVector(featureVector, image_file_name, postId, category):
             out_path = os.path.join(out_path,image_file_name[index] + ".pkl")
             
             s3Images.to_s3(v,"dearbornstorage",out_path)
-
 
 
 def Similarity(vectors, n_nearest_neighbors, category):
