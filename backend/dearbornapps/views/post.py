@@ -86,9 +86,6 @@ class PostViewSet(ModelViewSet):
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
         postId = response.data['id']
         category = response.data['category']
-        image_array, image_file_name, image_id = GetImageArray(postId)
-        vectors = GetFeatureVector(image_array)
-        SaveFeatureVector(vectors,image_file_name,postId,category)
         context = {
             'success' : True,
         }
