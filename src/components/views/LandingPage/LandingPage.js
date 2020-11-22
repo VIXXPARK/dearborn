@@ -8,6 +8,7 @@ import {Link} from 'react-router-dom'
 import {convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
+import {getCategoryName} from '../../utils/Category'
 
 
 import {HomeFilled ,ClockCircleFilled,CalendarFilled ,ThunderboltFilled,FileWordFilled, DownOutlined, EyeOutlined, HeartFilled} from '@ant-design/icons'
@@ -129,7 +130,13 @@ function LandingPage(props) {
             .then(response => {
                 console.log(response)
                 if(response.data.success){
-                    setRecommend(response.data.posts)
+                    const recommend = response.data.posts
+                    const duplicate = response.data.posts.find((post)=>{
+                        return post.id === LastPost
+                    })
+                    const idx = recommend.indexOf(duplicate)
+                    recommend.splice(idx, 1);
+                    setRecommend(recommend)
                 }else{
                     console.log(response.data.err)
                 }
@@ -156,7 +163,6 @@ function LandingPage(props) {
             })
         }
     }, [Rank])
-
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
             && document.documentElement.scrollTop)
@@ -171,15 +177,16 @@ function LandingPage(props) {
         }
     }
 
-    const getPosts = (variables) => {
-            axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
+    const getPosts = (variables, SkipRec) => {
+            axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${SkipRec===0 ? SkipRec : Skip}`, variables)
             .then(response => {
+                console.log(SkipRec ? SkipRec : Skip)
                 setLoading(true)
                 if(response.data.success){
                     console.log(response)
                     if(response.data.votes.length < Limit)
                         setLoadMore(false)
-                    if(Skip !==0){
+                    if(SkipRec===0 ? SkipRec !== 0 : Skip !==0){
                         setPosts([...Posts, ...response.data.votes])
                     }else{
                         setPosts(response.data.votes)
@@ -204,10 +211,10 @@ function LandingPage(props) {
             ook : ook,
             sort : Sort,
         }
+        setLoadMore(true)
         setLoading(true)
         setSkip(0)
-        setPosts([])
-        getPosts(variables)
+        getPosts(variables, 0)
     }
 
     const handleFilters = (ook) => {
@@ -243,8 +250,11 @@ function LandingPage(props) {
 
     const handleRank = (rank) => {
         setSkip(0)
-        setPosts([])
-        setRank(rank)
+        if(rank !== Rank)
+        {
+            setPosts([])
+            setRank(rank)
+        }
     }
 
     const renderVoteItems = (post) => {
@@ -273,7 +283,7 @@ function LandingPage(props) {
                     <div style={{width :'50px', height:'50px', display:'inline-block'}}>
                         <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileImage)}/>
                     </div>
-                    <div style={{width:'30px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
+                    <div style={{width:'70px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
                         {post.writer}
                     </div>
                     <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
@@ -327,7 +337,7 @@ function LandingPage(props) {
                             <div onClick={()=>handleFilters(19)}>스포츠</div>
                             <div onClick={()=>handleFilters(20)}>슬리퍼</div>
                             <div onClick={()=>handleFilters(21)}>샌들</div>
-                            <div onClick={()=>handleFilters(22)}>하이힐</div>
+                            <div onClick={()=>handleFilters(22)}>구두</div>
                         </div>
                     </div>
                 </div>
@@ -343,7 +353,7 @@ function LandingPage(props) {
             <div className="vote" style={{width:'100%',maxWidth:'1400px', margin:'0 auto', margin:'0 auto', backgroundColor:'white', zIndex:'1000'}}>
                 <div style={{margin: '0 auto', maxWidth:'1400px', width:'100%',}}> 
                     <div style={{width:'100%',textAlign:'center', marginTop:'20px'}}>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(1)} id={Rank === 1 ? 'category-clicked' : null}>메인</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(1)} id={Rank === 1 ? 'category-clicked' : null}>{getCategoryName(Ook)}</span>
                         <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(2)} id={Rank === 2 ? 'category-clicked' : null}>투데이 인기</span>
                         <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(3)} id={Rank === 3 ? 'category-clicked' : null}>주간 인기</span>
                         <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(4)} id={Rank === 4 ? 'category-clicked' : null}>월간 인기</span>

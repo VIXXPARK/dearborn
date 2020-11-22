@@ -23,19 +23,7 @@ function NavBar(props) {
     const [MessageVisible, setMessageVisible] = useState(false)
     const [Visible, setVisible] = useState(false)
     const [MessageBox, setMessageBox] = useState(-1)
-    const [Messages, setMessages] = useState([{
-        fromNickname : 'pazbear1',
-        message : 'gdgdgdgdgdggd',
-        date:'2020.01.01'   
-    },{
-        fromNickname : 'pazbear2',
-        message : 'gdgdgdgdgdggd',
-        date:'2020.01.01'   
-    },{
-        fromNickname : 'pazbear3',
-        message : 'gdgdgdgdgdggd',
-        date:'2020.01.01'   
-    },])
+    const [Messages, setMessages] = useState([])
 
     useEffect(() => {
         const config = {

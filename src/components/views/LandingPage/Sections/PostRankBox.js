@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {Avatar} from 'antd';
 import {convertToS3EP} from '../../../utils/String'
-import banner1 from '../../../assets/banner1.png'
-import banner2 from '../../../assets/banner2.png'
-import banner3 from '../../../assets/banner3.png'
+import banner1 from '../../../assets/banner1.PNG'
+import banner2 from '../../../assets/banner2.PNG'
+import banner3 from '../../../assets/banner3.PNG'
 import {LeftOutlined, RightOutlined} from '@ant-design/icons'
 
 function PostRankBox(props) {

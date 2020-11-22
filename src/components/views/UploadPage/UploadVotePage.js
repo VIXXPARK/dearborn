@@ -171,8 +171,8 @@ function UploadVotePage(props) {
                         >
                             <Input
                                 className="upload-title-input"
-                                style={{width:'350px', fontSize:'25px'}}
-                                placeholder="제  목"
+                                style={{width:'350px', fontSize:'25px', marginLeft:'0px'}}
+                                placeholder="이  름"
                             />
                         </Form.Item>
                         <Form.Item
@@ -182,7 +182,7 @@ function UploadVotePage(props) {
                             <Input.TextArea
                                 className="upload-desc-textarea"
                                 rows={5}
-                                placeholder="제  목"
+                                placeholder="소  개"
                             />
                         </Form.Item>
                         <div className="upload-left-bottom-container">
