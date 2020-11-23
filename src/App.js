@@ -71,6 +71,10 @@ function App(props) {
         </div>
       </div>
       <Route path="/" component={Auth(VoteDetailPage, null)}/>
+      <Route path="/:designer" component={Auth(VoteDetailPage, null)}/>
+      <Route path="/:designer/works" component={Auth(VoteDetailPage, null)}/>
+      <Route path="/:designer/likes" component={Auth(VoteDetailPage, null)}/>
+      <Route path="/:designer/cons/likes" component={Auth(VoteDetailPage, null)}/>
       <Route path="^/(?!.*(/login|/register|/checkEmail|/changePassword|/modify)).*$" component={Footer}/>
     </Router>
     </Suspense>

@@ -171,7 +171,7 @@ function BlogPage_Prod_Likes(props) {
             <div className="item-vote-wrap">
                 <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
-                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
+                <Link to = {{pathname:`/${post.nickname}/likes`, search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
                     <div className="item-vote-show">
                         <div className="item-vote-title">
                             {post.title}

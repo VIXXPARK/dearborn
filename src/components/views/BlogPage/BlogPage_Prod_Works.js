@@ -181,7 +181,7 @@ function BlogPage_Prod_Works(props) {
                 <div className="item-vote-obv"></div>
                     <div className="item-vote-show">
                     {props.user.userData && props.user.userData.nickname === designer && <div style={{position:'absolute',top:'60px', right:'10%',fontSize:'30px', textAlign:'center', margin:'0 auto', color:'#f85272'}}><Tooltip placement="topLeft" title="대표작품 지정"><CheckCircleOutlined onClick={onMyWorkPick}/></Tooltip></div>}
-                    <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
+                    <Link to = {{pathname:`/${designer}/works`, search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
                         <div className="item-vote-title">
                             {post.title}
                         </div>
