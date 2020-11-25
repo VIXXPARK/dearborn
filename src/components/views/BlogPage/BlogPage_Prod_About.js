@@ -5,7 +5,7 @@ import { Button, Typography, Card, Avatar } from 'antd';
 import {getCookieValue} from '../../utils/Cookie'
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 
 const {Title} = Typography
 
@@ -59,7 +59,7 @@ function BlogPage_Prod_About(props) {
             <div className="blog-right-container">
                 <div className="blog-header">
                     <div style={{width:'200px', height:'200px',float:'left'}}>
-                        <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                        <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToLocal(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     </div>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
@@ -92,7 +92,7 @@ function BlogPage_Prod_About(props) {
                                     </div>
                                 </div>
                                 <div style={{width:'50%',height:'100%', display:'inline-block', backgroundColor:'gray', overflow:'hidden', wordBreak:'break-all'}}>
-                                    <img style={{width:'100%'}} src={convertToS3EP(About.thumbnail)}/>
+                                    <img style={{width:'100%'}} src={convertToLocal(About.thumbnail)}/>
                                 </div>
                             </div> : <div style={{textAlign:'center', margin:'40px'}}>대표작 없음</div>}
                         </div>

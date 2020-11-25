@@ -62,7 +62,7 @@ function App(props) {
           <Route exact path='/:designer/works' component={Auth(BlogPage_Prod_Works, null)}/>
           <Route exact path='/:designer/likes' component={Auth(BlogPage_Prod_Likes, null)}/>
           <Route exact path='/:designer/cons/likes' component={Auth(BlogPage_Cons_Likes, null)}/>
-          <Route exact path='/:designer/cons/event' component={Auth(BlogPage_Cons_Event, null)}/>
+          <Route exact path='/:designer/cons' component={Auth(BlogPage_Cons_Event, null)}/>
 
 
           <Route exact path='/changePassword/1' component={Auth(ChangePasswordPage, null)}/>

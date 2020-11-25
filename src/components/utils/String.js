@@ -4,3 +4,12 @@ export const convertToS3EP = (path) =>{
     else
         return null
 }
+
+export const convertToLocal = (path) => {
+    if(path)
+    {
+        return "http://localhost:8000" + path
+    }
+    else
+        return null
+}

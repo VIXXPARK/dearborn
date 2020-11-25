@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 import banner_rank from '../../assets/banner_rank.png'
-import { convertToS3EP } from '../../utils/String';
+import { convertToLocal, convertToS3EP } from '../../utils/String';
 import {getCookieValue} from '../../utils/Cookie'
 
 function RankPage(props) {
@@ -33,7 +33,7 @@ function RankPage(props) {
                     {i+1}
                 </div>
                 <div style={{display:'inline-block', width:'150px', height:'150px', marginLeft:'50px', borderRadius:'150px', overflow:'hidden'}}>
-                    <img style={{width:'100%'}} src={convertToS3EP(rank.user.profileImage)}/>
+                    <img style={{width:'100%'}} src={convertToLocal(rank.user.profileImage)}/>
                 </div>
                 <div style={{display:'inline-block', width:'200px',margin:'12.5px', verticalAlign:'top'}}>
                     <div style={{fontSize:'25px', color:'black'}}>
@@ -53,7 +53,7 @@ function RankPage(props) {
                     
                     {rank.post.map(post => (
                         <div style={{display:'inline-block', width:'125px', height:'125px', marginLeft:'10px',borderRadius:'10px', overflow:'hidden'}}>
-                            <img style={{width:'100%'}} src={convertToS3EP(post.thumbnail)}/>
+                            <img style={{width:'100%'}} src={convertToLocal(post.thumbnail)}/>
                         </div>
                     ))}
                 </div>

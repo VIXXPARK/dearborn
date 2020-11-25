@@ -4,7 +4,7 @@ import DetailModal from '../../utils/DetailModal'
 import axios from 'axios'
 import { Input, Modal} from 'antd';
 import {config} from '../../utils/Token'
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 import {FormOutlined, DollarOutlined, DeleteOutlined, EditOutlined, FileTextOutlined} from '@ant-design/icons'
 import {getCookieValue} from '../../utils/Cookie'
 import CommentArea from './Sections/CommentArea';
@@ -139,7 +139,7 @@ function VoteDetailPage(props) {
         >
             <div className="profile-content">
                 <div className="profile-icon" onClick={()=>props.history.push(`/${Writer.nickname}`)}>
-                    <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                    <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Writer && Writer.profileImage[0] ? convertToLocal(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                 </div>
                 <div className="profile-header">
                     {Writer.nickname}
@@ -179,7 +179,7 @@ function VoteDetailPage(props) {
                 <div className="detail-content">
                     {DetailPost.images && DetailPost.images.map((image, i) => (
                         <div>
-                            <img key={i} src={convertToS3EP(image)} style={{width:'100%'}} />
+                            <img key={i} src={convertToLocal(image)} style={{width:'100%'}} />
                         </div>
                     ))}
                 </div>

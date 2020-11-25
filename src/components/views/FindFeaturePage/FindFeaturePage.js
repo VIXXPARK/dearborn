@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import {LoadingOutlined, RightSquareOutlined, CheckOutlined} from '@ant-design/icons'
 import axios from 'axios'
 import {getCookieValue} from '../../utils/Cookie'
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 import {Loader} from '../../utils/Loader'
 
 import './FindFeaturePage.css'
@@ -128,7 +128,7 @@ function FindFeaturePage(props) {
         return (
             <>
             <div className="post-list-show-item">
-                <img id="img-match" src={convertToS3EP(post.thumbnail)}/>
+                <img id="img-match" src={convertToLocal(post.thumbnail)}/>
                 <div className="post-list-show-wrap">
                     <div>
                         <div className="post-list-show-btn" onClick={OnModalOpen}>
@@ -161,7 +161,7 @@ function FindFeaturePage(props) {
         return (
             <>
             <div className="post-list-show-item">
-                <img id="img-match" src={convertToS3EP(post.thumbnail)}/>
+                <img id="img-match" src={convertToLocal(post.thumbnail)}/>
                 <div className="post-list-show-wrap">
                     <div>
                         <div className="post-list-show-btn" onClick={OnModalOpen}>
@@ -185,7 +185,7 @@ function FindFeaturePage(props) {
     const renderResult = (post) => {
         return <div className="feature-result-item">
             <div className="feature-result-item-thumb">
-                <img id="img-match" src={convertToS3EP(post.thumbnail)}/>
+                <img id="img-match" src={convertToLocal(post.thumbnail)}/>
             </div>
             <div className="feature-result-item-title">
                 {post.title}

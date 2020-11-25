@@ -5,13 +5,15 @@ import RankBox from './Sections/RankBox'
 import './Sections/LandingPage.css'
 import { Card, Radio, Rate} from 'antd';
 import {Link} from 'react-router-dom'
-import {convertToS3EP} from '../../utils/String'
+import {convertToS3EP, convertToLocal} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
 import {getCategoryName} from '../../utils/Category'
 
+import Bot from '../../assets/bot.png'
 
-import {HomeFilled ,ClockCircleFilled,CalendarFilled ,ThunderboltFilled,FileWordFilled, DownOutlined, EyeOutlined, HeartFilled} from '@ant-design/icons'
+
+import {HomeFilled ,PushpinTwoTone,CalendarFilled ,ThunderboltFilled,FileWordFilled, DownOutlined, EyeOutlined, HeartFilled} from '@ant-design/icons'
 import PostRankBox from './Sections/PostRankBox';
 
 const {Meta} = Card
@@ -76,7 +78,7 @@ function LandingPage(props) {
     useEffect(() => {
         setTimeout(() => {
             let images = document.querySelectorAll('.item-vote-wrap')
-            let imgStack
+            let imgStack =[0,0,0,0,0]
             if(PostColumn === 1){
                 imgStack = [0]
             }else if(PostColumn === 2){
@@ -143,6 +145,7 @@ function LandingPage(props) {
             })}
             addPosts()
         }else{
+            setRecommend([])
         axios.get(`/api/post/getVotes/${rank}?limit=${Limit}&offset=${Skip}`, config)
             .then(response => {
                 setLoading(true)
@@ -219,6 +222,7 @@ function LandingPage(props) {
 
     const handleFilters = (ook) => {
         setOok(ook)
+        setRecommend([])
         showFilteredResults(ook)
     }
 
@@ -257,10 +261,10 @@ function LandingPage(props) {
         }
     }
 
-    const renderVoteItems = (post) => {
+    const renderRecommendItems = (post) => {
         return (
             <div className="item-vote-wrap">
-                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
+                <img className="item-vote-img" style={{border:'3px solid rgb(248, 197, 103)'}} src={convertToLocal(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
                 <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}} onClick={()=>setLastPost(post.id)}>
                     <div className="item-vote-show">
@@ -281,7 +285,45 @@ function LandingPage(props) {
                 </Link>
                 <div style={{width:'100%', height:'50px'}}>
                     <div style={{width :'50px', height:'50px', display:'inline-block'}}>
-                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileImage)}/>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToLocal(post.profileImage)}/>
+                    </div>
+                    <div style={{width:'70px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
+                        {post.writer}
+                    </div>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
+                    <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
+                        <EyeOutlined />
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    const renderVoteItems = (post) => {
+        return (
+            <div className="item-vote-wrap">
+                <img className="item-vote-img" src={convertToLocal(post.thumbnail)} alt/>
+                <div className="item-vote-obv"></div>
+                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}} onClick={()=>setLastPost(post.id)}>
+                    <div className="item-vote-show">
+                        <div className="item-vote-title">
+                            {post.title}
+                        </div>
+                        <div className="item-vote-rate">
+                            <Rate disabled defaultValue={post.score}/>
+                            <div style={{display:'inline-block'}}>({post.score} / 5점)</div>
+                        </div>
+                        <div className="item-vote-like" style={{color:'black'}}>
+                            <div>
+                                <HeartFilled style={{color:'tomato', fontSize:'20px', verticalAlign:'middle'}}/>
+                                <span style={{fontSize:'10px', marginLeft:'10px'}}>{post.like}</span>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+                <div style={{width:'100%', height:'50px'}}>
+                    <div style={{width :'50px', height:'50px', display:'inline-block'}}>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToLocal(post.profileImage)}/>
                     </div>
                     <div style={{width:'70px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
                         {post.writer}
@@ -383,7 +425,7 @@ function LandingPage(props) {
                     </div>
                     <div className="container-vote-section">
                         {Recommend.map((post)=>(
-                            renderVoteItems(post)
+                            renderRecommendItems(post)
                         ))}
                         {Posts.map((post) => (
                             renderVoteItems(post)

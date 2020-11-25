@@ -1,5 +1,6 @@
-from dearbornapps.serializers.messanger import SaveMessageSerializer, MessageReadSerializer
+from dearbornapps.serializers.messanger import SaveMessageSerializer, MessageReadSerializer, AnnounceSerializer
 from dearbornapps.models.messanger import Message
+from dearbornapps.models.user import User
 from datetime import timedelta
 
 from rest_framework import permissions
@@ -21,7 +22,7 @@ from background_task import background
 class MessageViewSet(ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = SaveMessageSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     def create(self, request, *args, **kwargs):
         try:
             response = super().create(request, *args, **kwargs)
@@ -72,7 +73,21 @@ class MessageViewSet(ModelViewSet):
             'messages' : messageList,
         }
         return Response(context, status=HTTP_200_OK)
-
+    
+    def Announce(self, request):
+        serializer = AnnounceSerializer(data = request.data)
+        if not serializer.is_valid():
+            return Response({'success' : False, 'err':serializer.error_messages}, status=HTTP_400_BAD_REQUEST)
+        messageData = serializer.validated_data['message']
+        try:
+            admin = User.object.get(nickname='admin', is_superuser=True)    
+        except APIException as e:
+            raise e      
+        users = User.object.all().exclude(is_superuser=True)
+        for user in users:
+            id = user.id
+            message = Message.objects.create(message=messageData, userFrom=admin, userTo=user)
+        return Response({'success':True}, status=HTTP_201_CREATED)
 
         
         
