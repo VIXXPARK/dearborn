@@ -353,10 +353,10 @@ function LandingPage(props) {
             <div className="vote" style={{width:'100%',maxWidth:'1400px', margin:'0 auto', margin:'0 auto', backgroundColor:'white', zIndex:'1000'}}>
                 <div style={{margin: '0 auto', maxWidth:'1400px', width:'100%',}}> 
                     <div style={{width:'100%',textAlign:'center', marginTop:'20px'}}>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(1)} id={Rank === 1 ? 'category-clicked' : null}>{getCategoryName(Ook)}</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(2)} id={Rank === 2 ? 'category-clicked' : null}>투데이 인기</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(3)} id={Rank === 3 ? 'category-clicked' : null}>주간 인기</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(4)} id={Rank === 4 ? 'category-clicked' : null}>월간 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer', fontFamily:'font3', fontWeight:'bold'}} onClick={()=>handleRank(1)} id={Rank === 1 ? 'category-clicked' : null}>{getCategoryName(Ook)}</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer', fontFamily:'font3', fontWeight:'bold'}} onClick={()=>handleRank(2)} id={Rank === 2 ? 'category-clicked' : null}>투데이 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer', fontFamily:'font3', fontWeight:'bold'}} onClick={()=>handleRank(3)} id={Rank === 3 ? 'category-clicked' : null}>주간 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer', fontFamily:'font3', fontWeight:'bold'}} onClick={()=>handleRank(4)} id={Rank === 4 ? 'category-clicked' : null}>월간 인기</span>
                         {MainBanner ? 
                         <div style={{fontSize:'15px', float:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 접기</a></div>
                         :

@@ -1,6 +1,7 @@
 body {
   margin: 0;
-  font-family:font1;
+  font-family:font3;
+  font-weight: bold;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
