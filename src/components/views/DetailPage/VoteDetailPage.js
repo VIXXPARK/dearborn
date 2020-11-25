@@ -26,7 +26,7 @@ function VoteDetailPage(props) {
             props.history.push('/login')
         if((params.get('designer') ||params.get('postId')) == null)
             return
-        document.body.style.cssText = 'overflow-y : hidden; font-family:font1;'
+        document.body.style.cssText = 'overflow-y : hidden; font-family:font3; font-weight:bold'
         
         const config = {
             headers : {
