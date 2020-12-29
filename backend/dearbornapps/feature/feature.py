@@ -18,8 +18,6 @@ class S3ImagesUploadFailed(Exception):
     pass
 
 class S3Images(object):
-
-
     
     def __init__(self, aws_access_key_id, aws_secret_access_key, region_name):
         self.s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, 
@@ -103,7 +101,6 @@ def ChangeImage(images):
         image_array.append(image)
     return image_array
 
-
 def LoadImage(image_urls):
     image_array = []
     for path in image_urls:
@@ -113,7 +110,6 @@ def LoadImage(image_urls):
         image = tf.image.convert_image_dtype(image, tf.float32)
         image_array.append(image)
     return image_array
-
 
 def CheckDir(path):
     try:
@@ -200,7 +196,6 @@ def SaveFeatureVector(featureVector, image_file_name, postId, category):
             
             s3Images.to_s3(v,"dearbornstorage",out_path)
 
-
 def Similarity(vectors, n_nearest_neighbors, category):
 
     dims = 2048
@@ -227,7 +222,6 @@ def Similarity(vectors, n_nearest_neighbors, category):
     else:
         for index, v in enumerate(feature_vectors):
             annoy.add_item(index, v)
-
 
     annoy.build(trees)
     similarities = []

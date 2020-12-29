@@ -188,8 +188,8 @@ function NavBar(props) {
                                 {user.userData && user.userData.job === 3 ? 
                                     (<MailOutlined style={{marginTop:'2px', fontSize:'30px', verticalAlign: 'middle',}} onClick={ClickNotification}/>)
                                 :
-                                user.userData && user.userData.job ===1 &&<><div className="register pull-right" style={{marginRight:'5px'}}>
-                                <a href="/upload"><div className="navbar-button" style={{backgroundColor:'#f85272', color:'white', marginLeft:'30px', fontSize:'12px', borderRadius:'30px'}}>업로드</div></a>
+                                <><div className="register pull-right" style={{marginRight:'5px'}}>
+                                {user.userData && user.userData.job === 1 && <a href="/upload"><div className="navbar-button" style={{backgroundColor:'#f85272', color:'white', marginLeft:'30px', fontSize:'12px', borderRadius:'30px'}}>업로드</div></a>}
                             </div>
                             <Dropdown overlay={message} placement="bottomRight" arrow trigger={["click"]} 
                             onVisibleChange={handleVisible} visible={MessageVisible} overlayStyle={{borderRadius:'20px'}}>

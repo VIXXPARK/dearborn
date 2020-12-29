@@ -207,7 +207,7 @@ function BlogPage_Cons_Likes(props) {
                 </div>
                 <div className="blog-section">
                     <button className="blog-tabs-btn" id="blog-tabs-clicked">좋아요</button>
-                    <a href={`/${designer}/cons/event`}><button className="blog-tabs-btn">이벤트</button></a>
+                    <a href={`/${designer}/cons`}><button className="blog-tabs-btn">이벤트</button></a>
                     <div className="blog-tabs-content">
                         {Repos && Repos.map(repo => renderPost(repo))}
                     </div>

@@ -114,7 +114,7 @@ def recommend(request):
     for sim in similarities:
         similarity = sim['similarity']
         postid = sim['postId']
-        if similarity >= 0.8:
+        if similarity >= 0.7:
             if postId != postid:
                 print("postId = ", postId)
                 print("postid = ", postid)

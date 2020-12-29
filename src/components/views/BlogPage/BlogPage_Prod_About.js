@@ -77,7 +77,7 @@ function BlogPage_Prod_About(props) {
                     <div className="blog-tabs-content">
                         <div className="prod-about">
                             <div className="prod-about-title">
-                                User 님의 대표작품
+                                {Designer.nickname} 님의 대표작품
                             </div>
                             {About && About.id ? <div style={{marginLeft:'150px', marginRight:'150px'}}>
                                 <div style={{width:'50%',height:'100%',textAlign:'center', display:'inline-block', backgroundColor:'white',verticalAlign:'top', wordBreak:'break-all'}}>

@@ -45,7 +45,6 @@ class MessageViewSet(ModelViewSet):
         message.save()
         return Response({'success':True},status=HTTP_200_OK)
 
-
     #use "python manage.py process_tasks"
     @background(schedule=1209600)
     def AutoDelete(messageID):
