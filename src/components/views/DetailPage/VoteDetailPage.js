@@ -4,7 +4,7 @@ import DetailModal from '../../utils/DetailModal'
 import axios from 'axios'
 import { Input, Modal} from 'antd';
 import {config} from '../../utils/Token'
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 import {FormOutlined, DollarOutlined, DeleteOutlined, EditOutlined, FileTextOutlined} from '@ant-design/icons'
 import {getCookieValue} from '../../utils/Cookie'
 import CommentArea from './Sections/CommentArea';
@@ -26,7 +26,7 @@ function VoteDetailPage(props) {
             props.history.push('/login')
         if((params.get('designer') ||params.get('postId')) == null)
             return
-        document.body.style.cssText = 'overflow-y : hidden; font-family:font1;'
+        document.body.style.cssText = 'overflow-y : hidden; font-family:font3; font-weight:bold'
         
         const config = {
             headers : {
@@ -93,22 +93,35 @@ function VoteDetailPage(props) {
     }
 
     const SendMessage = () => {
-        const variables = {
-            message : `${props.user.userData.nickname}님이 채용을 원합니다.`,
-            userFrom : props.user.userData._id,
-            userTo : Writer.id,
-        }
-        const config = {
-            headers : {
-                Authorization: `Token ${getCookieValue('w_auth')}`
-            }
-        }
-        axios.post('/api/message/saveMessage', variables, config)
-        .then(response => {
-            if(response.data.success){
-                alert('성공')
-            }else{
-                alert('실패')
+        var HireMessage
+        confirm({
+            width:800,
+            icon:null,
+            content: 
+            <div className="bid-container">
+                <div className="hire-content">메시지<br/><Input.TextArea style={{fontSize:'20px'}} rows={5}  onChange={(e)=>{HireMessage = e.currentTarget.value}}/></div>
+            </div>,
+            okText: "메시지 전송",
+            cancelText: "취소",
+            onOk(){
+                const variables = {
+                    message : `${props.user.userData.nickname}님이 채용을 원합니다.\n${HireMessage}`,
+                    userFrom : props.user.userData._id,
+                    userTo : Writer.id,
+                }
+                const config = {
+                    headers : {
+                        Authorization: `Token ${getCookieValue('w_auth')}`
+                    }
+                }
+                axios.post('/api/message/saveMessage', variables, config)
+                .then(response => {
+                    if(response.data.success){
+                        alert('성공')
+                    }else{
+                        alert('실패')
+                    }
+                })
             }
         })
     }
@@ -126,7 +139,7 @@ function VoteDetailPage(props) {
         >
             <div className="profile-content">
                 <div className="profile-icon" onClick={()=>props.history.push(`/${Writer.nickname}`)}>
-                    <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Writer && Writer.profileImage[0] ? convertToS3EP(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                    <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Writer && Writer.profileImage[0] ? convertToLocal(Writer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                 </div>
                 <div className="profile-header">
                     {Writer.nickname}
@@ -141,7 +154,7 @@ function VoteDetailPage(props) {
                         <FileTextOutlined />
                     </div>
                     <div className="profile-header" style={{color:'white'}}>
-                        채용
+                        연락
                     </div>
                     </>
                 }
@@ -166,7 +179,7 @@ function VoteDetailPage(props) {
                 <div className="detail-content">
                     {DetailPost.images && DetailPost.images.map((image, i) => (
                         <div>
-                            <img key={i} src={convertToS3EP(image)} style={{width:'100%'}} />
+                            <img key={i} src={convertToLocal(image)} style={{width:'100%'}} />
                         </div>
                     ))}
                 </div>

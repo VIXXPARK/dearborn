@@ -5,12 +5,15 @@ import RankBox from './Sections/RankBox'
 import './Sections/LandingPage.css'
 import { Card, Radio, Rate} from 'antd';
 import {Link} from 'react-router-dom'
-import {convertToS3EP} from '../../utils/String'
+import {convertToS3EP, convertToLocal} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
+import {getCategoryName} from '../../utils/Category'
+
+import Bot from '../../assets/bot.png'
 
 
-import {HomeFilled ,ClockCircleFilled,CalendarFilled ,ThunderboltFilled,FileWordFilled, DownOutlined, EyeOutlined, HeartFilled} from '@ant-design/icons'
+import {HomeFilled ,PushpinTwoTone,CalendarFilled ,ThunderboltFilled,FileWordFilled, DownOutlined, EyeOutlined, HeartFilled} from '@ant-design/icons'
 import PostRankBox from './Sections/PostRankBox';
 
 const {Meta} = Card
@@ -75,7 +78,7 @@ function LandingPage(props) {
     useEffect(() => {
         setTimeout(() => {
             let images = document.querySelectorAll('.item-vote-wrap')
-            let imgStack
+            let imgStack =[0,0,0,0,0]
             if(PostColumn === 1){
                 imgStack = [0]
             }else if(PostColumn === 2){
@@ -129,13 +132,20 @@ function LandingPage(props) {
             .then(response => {
                 console.log(response)
                 if(response.data.success){
-                    setRecommend(response.data.posts)
+                    const recommend = response.data.posts
+                    const duplicate = response.data.posts.find((post)=>{
+                        return post.id === LastPost
+                    })
+                    const idx = recommend.indexOf(duplicate)
+                    recommend.splice(idx, 1);
+                    setRecommend(recommend)
                 }else{
                     console.log(response.data.err)
                 }
             })}
             addPosts()
         }else{
+            setRecommend([])
         axios.get(`/api/post/getVotes/${rank}?limit=${Limit}&offset=${Skip}`, config)
             .then(response => {
                 setLoading(true)
@@ -156,7 +166,6 @@ function LandingPage(props) {
             })
         }
     }, [Rank])
-
     const handleScroll = () => {
         const scrollTop= (document.documentElement 
             && document.documentElement.scrollTop)
@@ -171,15 +180,16 @@ function LandingPage(props) {
         }
     }
 
-    const getPosts = (variables) => {
-            axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${Skip}`, variables)
+    const getPosts = (variables, SkipRec) => {
+            axios.post(`/api/post/getVotes/?limit=${Limit}&offset=${SkipRec===0 ? SkipRec : Skip}`, variables)
             .then(response => {
+                console.log(SkipRec ? SkipRec : Skip)
                 setLoading(true)
                 if(response.data.success){
                     console.log(response)
                     if(response.data.votes.length < Limit)
                         setLoadMore(false)
-                    if(Skip !==0){
+                    if(SkipRec===0 ? SkipRec !== 0 : Skip !==0){
                         setPosts([...Posts, ...response.data.votes])
                     }else{
                         setPosts(response.data.votes)
@@ -204,14 +214,15 @@ function LandingPage(props) {
             ook : ook,
             sort : Sort,
         }
+        setLoadMore(true)
         setLoading(true)
         setSkip(0)
-        setPosts([])
-        getPosts(variables)
+        getPosts(variables, 0)
     }
 
     const handleFilters = (ook) => {
         setOok(ook)
+        setRecommend([])
         showFilteredResults(ook)
     }
 
@@ -243,14 +254,17 @@ function LandingPage(props) {
 
     const handleRank = (rank) => {
         setSkip(0)
-        setPosts([])
-        setRank(rank)
+        if(rank !== Rank)
+        {
+            setPosts([])
+            setRank(rank)
+        }
     }
 
-    const renderVoteItems = (post) => {
+    const renderRecommendItems = (post) => {
         return (
             <div className="item-vote-wrap">
-                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
+                <img className="item-vote-img" style={{border:'3px solid rgb(248, 197, 103)'}} src={convertToLocal(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
                 <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}} onClick={()=>setLastPost(post.id)}>
                     <div className="item-vote-show">
@@ -271,9 +285,47 @@ function LandingPage(props) {
                 </Link>
                 <div style={{width:'100%', height:'50px'}}>
                     <div style={{width :'50px', height:'50px', display:'inline-block'}}>
-                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileImage)}/>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToLocal(post.profileImage)}/>
                     </div>
-                    <div style={{width:'30px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
+                    <div style={{width:'70px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
+                        {post.writer}
+                    </div>
+                    <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
+                    <div style={{float:'right', fontSize:'20px', verticalAlign:'middle', lineHeight:'50px', paddingTop:'5px', marginRight:'5px'}}>
+                        <EyeOutlined />
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    const renderVoteItems = (post) => {
+        return (
+            <div className="item-vote-wrap">
+                <img className="item-vote-img" src={convertToLocal(post.thumbnail)} alt/>
+                <div className="item-vote-obv"></div>
+                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}} onClick={()=>setLastPost(post.id)}>
+                    <div className="item-vote-show">
+                        <div className="item-vote-title">
+                            {post.title}
+                        </div>
+                        <div className="item-vote-rate">
+                            <Rate disabled defaultValue={post.score}/>
+                            <div style={{display:'inline-block'}}>({post.score} / 5점)</div>
+                        </div>
+                        <div className="item-vote-like" style={{color:'black'}}>
+                            <div>
+                                <HeartFilled style={{color:'tomato', fontSize:'20px', verticalAlign:'middle'}}/>
+                                <span style={{fontSize:'10px', marginLeft:'10px'}}>{post.like}</span>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+                <div style={{width:'100%', height:'50px'}}>
+                    <div style={{width :'50px', height:'50px', display:'inline-block'}}>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToLocal(post.profileImage)}/>
+                    </div>
+                    <div style={{width:'70px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
                         {post.writer}
                     </div>
                     <div style={{float:'right',width:'40px', fontSize:'10px', lineHeight:'50px', paddingTop:'3px'}}>{post.view}</div>
@@ -327,7 +379,7 @@ function LandingPage(props) {
                             <div onClick={()=>handleFilters(19)}>스포츠</div>
                             <div onClick={()=>handleFilters(20)}>슬리퍼</div>
                             <div onClick={()=>handleFilters(21)}>샌들</div>
-                            <div onClick={()=>handleFilters(22)}>하이힐</div>
+                            <div onClick={()=>handleFilters(22)}>구두</div>
                         </div>
                     </div>
                 </div>
@@ -343,10 +395,10 @@ function LandingPage(props) {
             <div className="vote" style={{width:'100%',maxWidth:'1400px', margin:'0 auto', margin:'0 auto', backgroundColor:'white', zIndex:'1000'}}>
                 <div style={{margin: '0 auto', maxWidth:'1400px', width:'100%',}}> 
                     <div style={{width:'100%',textAlign:'center', marginTop:'20px'}}>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(1)} id={Rank === 1 ? 'category-clicked' : null}>메인</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(2)} id={Rank === 2 ? 'category-clicked' : null}>투데이 인기</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(3)} id={Rank === 3 ? 'category-clicked' : null}>주간 인기</span>
-                        <span style={{float:'left',marginRight:'10%', cursor:'pointer'}} onClick={()=>handleRank(4)} id={Rank === 4 ? 'category-clicked' : null}>월간 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer', fontFamily:'font3', fontWeight:'bold'}} onClick={()=>handleRank(1)} id={Rank === 1 ? 'category-clicked' : null}>{getCategoryName(Ook)}</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer', fontFamily:'font3', fontWeight:'bold'}} onClick={()=>handleRank(2)} id={Rank === 2 ? 'category-clicked' : null}>투데이 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer', fontFamily:'font3', fontWeight:'bold'}} onClick={()=>handleRank(3)} id={Rank === 3 ? 'category-clicked' : null}>주간 인기</span>
+                        <span style={{float:'left',marginRight:'10%', cursor:'pointer', fontFamily:'font3', fontWeight:'bold'}} onClick={()=>handleRank(4)} id={Rank === 4 ? 'category-clicked' : null}>월간 인기</span>
                         {MainBanner ? 
                         <div style={{fontSize:'15px', float:'right', cursor:'pointer'}}><a style={{color:'gray'}} onClick={ShowMainBanner}>배너 접기</a></div>
                         :
@@ -373,7 +425,7 @@ function LandingPage(props) {
                     </div>
                     <div className="container-vote-section">
                         {Recommend.map((post)=>(
-                            renderVoteItems(post)
+                            renderRecommendItems(post)
                         ))}
                         {Posts.map((post) => (
                             renderVoteItems(post)

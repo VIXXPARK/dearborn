@@ -8,7 +8,7 @@ import {getCookieValue} from '../../utils/Cookie'
 import styles from './customstyle.css'
 import moment from 'moment'
 import './UploadVotePage.css'
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 
 
 const {TreeNode} = TreeSelect
@@ -43,7 +43,7 @@ function UploadModifyPage(props) {
                 console.log(response.data)
                 if(response.data.user.id !== window.localStorage.getItem('userId'))
                     props.history.push('/')
-                setThumbnailUrl(convertToS3EP(response.data.detailPost.thumbnail[0]))
+                setThumbnailUrl(convertToLocal(response.data.detailPost.thumbnail[0]))
                 setPreviews(response.data.detailPost.images)
                 setTitle(response.data.detailPost.title)
                 setContent(response.data.detailPost.content)
@@ -163,7 +163,7 @@ function UploadModifyPage(props) {
                 </Upload>
                 {Previews && Previews.map((image, i)=>(
                     <div key={i} className="upload-block-prev">
-                        <img style={{width:'300px',height:'400px', backgroundColor:'white'}} src={convertToS3EP(image)}/>
+                        <img style={{width:'300px',height:'400px', backgroundColor:'white'}} src={convertToLocal(image)}/>
                     </div>
                 ))}
             </div>

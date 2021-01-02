@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {Button, Input, Typography, Upload} from 'antd'
 import axios from 'axios';
 import {UploadOutlined} from '@ant-design/icons'
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 
 const {Title} = Typography
@@ -92,14 +92,14 @@ function ContestDetailPage(props) {
             <div className="repo-left-container">
                 <div className="repo-content">
                     <div style={{borderRadius:'20px'}}>
-                        <img src={convertToS3EP(Contest.image)} style={{width:'100%', borderRadius:'20px'}} />
+                        <img src={convertToLocal(Contest.image)} style={{width:'100%', borderRadius:'20px'}} />
                     </div>
                 </div>
             </div>
             <div className="repo-right-container">
                 <div className="repo-right-icon">
                     <div className="profile-icon" onClick={()=>props.history.push(`/${Host.nickname}`)}>
-                        <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Host && Host.profileImage ? convertToS3EP(Host.profileImage) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                        <img style={{width:'50px', height:'50px', borderRadius:'100px'}} src={Host && Host.profileImage ? convertToLocal(Host.profileImage) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     </div>
                     <div className="profile-header" style={{color:'black'}}>
                         {Host.nickname}

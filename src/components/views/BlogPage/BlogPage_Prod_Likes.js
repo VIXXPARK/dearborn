@@ -4,7 +4,7 @@ import { Button, Typography, Card, Avatar, Rate } from 'antd';
 
 import './BlogPage.css'
 import Meta from 'antd/lib/card/Meta';
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 import {Loader} from '../../utils/Loader'
 import {EyeOutlined, HeartFilled} from '@ant-design/icons'
@@ -84,7 +84,7 @@ function BlogPage_Prod_Likes(props) {
     useEffect(() => {
         setTimeout(() => {
             let images = document.querySelectorAll('.item-vote-wrap')
-            let imgStack
+            let imgStack =[0,0,0,0,0]
             if(PostColumn === 1){
                 imgStack = [0]
             }else if(PostColumn === 2){
@@ -169,9 +169,9 @@ function BlogPage_Prod_Likes(props) {
     const renderLikes = (post) => {
         return (
             <div className="item-vote-wrap">
-                <img className="item-vote-img" src={convertToS3EP(post.thumbnail)} alt/>
+                <img className="item-vote-img" src={convertToLocal(post.thumbnail)} alt/>
                 <div className="item-vote-obv"></div>
-                <Link to = {{pathname:'/', search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
+                <Link to = {{pathname:`/${post.nickname}/likes`, search: `designer=${post ? post.writer : null}&postId=${post ? post.id : null}`}}>
                     <div className="item-vote-show">
                         <div className="item-vote-title">
                             {post.title}
@@ -190,7 +190,7 @@ function BlogPage_Prod_Likes(props) {
                 </Link>
                 <div style={{width:'100%', height:'50px'}}>
                     <div style={{width :'50px', height:'50px', display:'inline-block'}}>
-                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToS3EP(post.profileimage)}/>
+                        <img style={{width:'60%', height:'60%',margin:'10px',borderRadius:'20px'}} src={convertToLocal(post.profileimage)}/>
                     </div>
                     <div style={{width:'30px', height:'50px', display: 'inline-block', fontSize:'10px'}}>
                         {post.nickname}
@@ -210,7 +210,7 @@ function BlogPage_Prod_Likes(props) {
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
                     <div style={{width:'200px', height:'200px',float:'left'}}>
-                        <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                        <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToLocal(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     </div>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>

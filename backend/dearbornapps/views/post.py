@@ -68,13 +68,12 @@ class PostViewSet(ModelViewSet):
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
         postId = response.data['id']
+        category = response.data['category']
         image_array, image_file_name, image_id = GetImageArray(postId)
+        print(image_array)
         vectors = GetFeatureVector(image_array)
-        SaveFeatureVector(vectors,image_file_name,postId)
-
-        # similarity = Similarity(vectors, 100)
+        SaveFeatureVector(vectors,image_file_name,postId,category)
         context = {
-            # 'similarity' : similarity,
             'success' : True,
         }
         instance = response.data
@@ -86,13 +85,8 @@ class PostViewSet(ModelViewSet):
         except APIException as e:
             return Response({"success":False,'err':e.detail},status=HTTP_404_NOT_FOUND)
         postId = response.data['id']
-        image_array, image_file_name, image_id = GetImageArray(postId)
-        vectors = GetFeatureVector(image_array)
-        SaveFeatureVector(vectors,image_file_name,postId)
-
-        # similarity = Similarity(vectors, 100)
+        category = response.data['category']
         context = {
-            # 'similarity' : similarity,
             'success' : True,
         }
         instance = response.data

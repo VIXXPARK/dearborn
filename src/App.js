@@ -29,7 +29,6 @@ import UserInfoMainPage from './components/views/UserInfoPage/UserInfoMainPage'
 import UserUpdatePage from './components/views/UserInfoPage/UserUpdatePage'
 import ContestListPage from './components/views/ListPage/ContestListPage'
 import ContestDetailPage from './components/views/DetailPage/ContestDetailPage'
-import ContestManagePage from './components/views/DetailPage/ContestManagePage'
 import FindFeaturePage from './components/views/FindFeaturePage/FindFeaturePage'
 import UserChangePasswordPage from './components/views/UserInfoPage/UserChangePasswordPage'
 import RankPage from './components/views/RankPage/RankPage'
@@ -55,7 +54,6 @@ function App(props) {
           <Route exact path='/modify/settings' component={Auth(UserUpdatePage, true)}/>
           <Route exact path='/modify/changePW' component={Auth(UserChangePasswordPage, null)}/>
           <Route exact path='/contest' component={Auth(ContestListPage, null)}/>
-          <Route exact path='/contest/manage/:contestId' component={Auth(ContestManagePage, null)}/>
           <Route exact path='/contest/:contestId' component={Auth(ContestDetailPage, true)}/>
           <Route exact path='/feature' component={Auth(FindFeaturePage, null)}/>
           <Route exact path='/rank' component={Auth(RankPage, true)}/>
@@ -64,7 +62,7 @@ function App(props) {
           <Route exact path='/:designer/works' component={Auth(BlogPage_Prod_Works, null)}/>
           <Route exact path='/:designer/likes' component={Auth(BlogPage_Prod_Likes, null)}/>
           <Route exact path='/:designer/cons/likes' component={Auth(BlogPage_Cons_Likes, null)}/>
-          <Route exact path='/:designer/cons/event' component={Auth(BlogPage_Cons_Event, null)}/>
+          <Route exact path='/:designer/cons' component={Auth(BlogPage_Cons_Event, null)}/>
 
 
           <Route exact path='/changePassword/1' component={Auth(ChangePasswordPage, null)}/>
@@ -73,6 +71,10 @@ function App(props) {
         </div>
       </div>
       <Route path="/" component={Auth(VoteDetailPage, null)}/>
+      <Route path="/:designer" component={Auth(VoteDetailPage, null)}/>
+      <Route path="/:designer/works" component={Auth(VoteDetailPage, null)}/>
+      <Route path="/:designer/likes" component={Auth(VoteDetailPage, null)}/>
+      <Route path="/:designer/cons/likes" component={Auth(VoteDetailPage, null)}/>
       <Route path="^/(?!.*(/login|/register|/checkEmail|/changePassword|/modify)).*$" component={Footer}/>
     </Router>
     </Suspense>

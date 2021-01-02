@@ -12,3 +12,6 @@ class SaveMessageSerializer(serializers.ModelSerializer):
 
 class MessageReadSerializer(serializers.Serializer):
     id = serializers.IntegerField()
+
+class AnnounceSerializer(serializers.Serializer):
+    message = serializers.CharField()

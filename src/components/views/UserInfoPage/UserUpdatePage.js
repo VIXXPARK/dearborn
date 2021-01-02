@@ -3,7 +3,7 @@ import {Typography, Input, Form, Select, Radio, Checkbox, Upload, Button, Avatar
 import '../LoginPage/LoginPage.css'
 import axios from 'axios'
 import {SmileOutlined, UserOutlined} from '@ant-design/icons';
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 
 import TextArea from 'antd/lib/input/TextArea';
@@ -88,7 +88,7 @@ function UserUpdatePage(props) {
                     </Button>
                 </Upload>
                 <div>미리보기<br/>
-                {ProfileImage ? <Avatar src={convertToS3EP(Preview)} /> : <Avatar src={`https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU`} />}
+                {ProfileImage ? <Avatar src={convertToLocal(Preview)} /> : <Avatar src={`https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU`} />}
                 </div>
                 <br/><br/>자기소개<br/><br/>
                 <Form.Item

@@ -7,11 +7,11 @@ import {useDispatch} from 'react-redux'
 import {USER_SERVER} from '../../Config'
 
 import {logoutUser} from '../../../_actions/user_action'
-import { Avatar, Button, Drawer, Dropdown, Menu, Modal, Typography, Input, Form } from 'antd';
+import { Avatar, Button, Drawer, Dropdown, Menu, Modal, Typography, Input, Form, Badge } from 'antd';
 import {MenuOutlined, MailOutlined} from '@ant-design/icons'
 import Logo from '../../assets/Logo.png'
 import {getCookieValue} from '../../utils/Cookie'
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 const {confirm} = Modal
 const {Title} = Typography
 
@@ -23,19 +23,7 @@ function NavBar(props) {
     const [MessageVisible, setMessageVisible] = useState(false)
     const [Visible, setVisible] = useState(false)
     const [MessageBox, setMessageBox] = useState(-1)
-    const [Messages, setMessages] = useState([{
-        fromNickname : 'pazbear1',
-        message : 'gdgdgdgdgdggd',
-        date:'2020.01.01'   
-    },{
-        fromNickname : 'pazbear2',
-        message : 'gdgdgdgdgdggd',
-        date:'2020.01.01'   
-    },{
-        fromNickname : 'pazbear3',
-        message : 'gdgdgdgdgdggd',
-        date:'2020.01.01'   
-    },])
+    const [Messages, setMessages] = useState([])
 
     useEffect(() => {
         const config = {
@@ -43,6 +31,7 @@ function NavBar(props) {
                 Authorization: `Token ${getCookieValue('w_auth')}`
             }
         }
+
         axios.get('/api/message/getMessage', config)
         .then(response => {
             console.log(response)
@@ -80,33 +69,54 @@ function NavBar(props) {
         setVisible(false)
     }
 
+    const ClickNotification = () => {
+        var HireMessage
+        confirm({
+            width:800,
+            icon:null,
+            content: 
+            <div className="bid-container">
+                <div className="hire-content">공지<br/><Input.TextArea style={{fontSize:'20px'}} rows={5}  onChange={(e)=>{HireMessage = e.currentTarget.value}}/></div>
+            </div>,
+            okText: "메시지 전송",
+            cancelText: "취소",
+            onOk(){
+                const variables = {
+                    message : `공지!\n${HireMessage}`
+                }
+                const config = {
+                    headers : {
+                        Authorization: `Token ${getCookieValue('w_auth')}`
+                    }
+                }
+                axios.post('/api/message/announce', variables, config)
+                .then(response => {
+                    if(response.data.success){
+                        alert('성공')
+                    }else{
+                        alert('실패')
+                    }
+                })
+            }
+        })
+    }
+
     const renderMessageBox = (message, i) => {
 
-        const onFinish = (value) =>{
-            console.log(value)
-            /*
-            const variables = {
-                message : value.message,
-                userFrom : user.userData._id,
-                userTo : message.fromId,
-            }
+        const showMessage = () =>{
             const config = {
                 headers : {
                     Authorization: `Token ${getCookieValue('w_auth')}`
                 }
             }
-            axios.post('/api/message/saveMessage', variables, config)
-            .then(response => {
-                if(response.data.success){
-                    alert('성공')
-                }else{
-                    alert('실패')
-                }
-            })*/
-            setMessageBox(-1)
-        }
-        const showMessage = () =>{
             if(MessageBox === -1){
+                axios.post('/api/message/read', {id : message.messageId}, config)
+                .then(response => {
+                    if(!response.data.success){
+                        console.log("메시지 읽음 처리 실패")
+                    }
+                })
+                message.isRead = true
                 setMessageBox(i)
             }
             else{
@@ -115,31 +125,17 @@ function NavBar(props) {
         }
         return (<div>
             <div className="message-head-content" onClick={showMessage}>
-                {message.fromNickname}님이 보낸 메시지(!)
+                {message.fromNickname}님이 보낸 메시지{message.isRead ? null : "(!)"}
             </div>
             {i === MessageBox && <div className="message-content-show"><div className="message-content-span">
                 {message.date}
             </div>
             <div className="message-content-content">
-                {message.message}
+                <div style={{margin:'30px auto'}}>
+                    {message.message}
+                </div>
             </div>
-            <Form
-                style={{borderBottom:'1px solid #e5e5e5'}}
-                onFinish={onFinish}
-            >
-                <Form.Item
-                    style={{display:'inline-block'}}
-                    name="message"
-                >
-                    <Input.TextArea style={{width:'300px', display:'inline-block'}}/>
-                </Form.Item>
-                <Form.Item
-                    style={{display:'inline-block'}}
-                >
-                    
-                    <Button style={{width:'50px'}} onClick={sendMessage} htmlType="submit">답장</Button>
-                </Form.Item>
-            </Form></div>}
+            </div>}
             </div>)
     }
 
@@ -155,9 +151,9 @@ function NavBar(props) {
     )
 
     const message = (
-        <div className="message-container">
-            <div style={{height:'50px',fontSize:'15px',lineHeight:'40px', borderBottom : '1px solid #e5e5e5'}}>
-                받은 메일(messages.length(!))
+        <div className="message-container" style={{boxShadow:'5px 5px 5px gray'}}>
+            <div style={{height:'50px', fontFamily:'font1',marginLeft:'20px', marginRight:'20px',fontSize:'15px',lineHeight:'50px', borderBottom : '1px solid #e5e5e5'}}>
+                Messanger
             </div>
             {Messages && Messages.map((message, i) =>renderMessageBox(message, i))}
         </div>
@@ -189,18 +185,25 @@ function NavBar(props) {
                         <div className="row-log">
                             {(<>
                             <div className="nav-bar-profile pull-right">
-                                {user.userData && user.userData.job ===1 &&<div className="register pull-right" style={{marginRight:'5px'}}>
-                                    <a href="/upload"><div className="navbar-button" style={{backgroundColor:'#f85272', color:'white', marginLeft:'30px', fontSize:'12px', borderRadius:'30px'}}>업로드</div></a>
-                                </div>}
-                                <Dropdown overlay={message} placement="bottomRight" arrow trigger={["click"]} 
-                                onVisibleChange={handleVisible} visible={MessageVisible} overlayStyle={{border:'1px solid #e5e5e5', borderRadius:'20px'}}>
-                                    <MailOutlined style={{marginTop:'2px',marginRight:'20px', fontSize:'30px', verticalAlign: 'middle',}}/>
-                                </Dropdown>
-                                <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
-                                    <Avatar style={{ marginTop:'5px',backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} src={user.userData && user.userData.profileImage && convertToS3EP(user.userData.profileImage)} size="middle" gap={4}>
-                                        {user.userData && !user.userData.profileImage && user.userData.nickname ? user.userData.nickname[0] : null}
-                                    </Avatar>
-                                </Dropdown>
+                                {user.userData && user.userData.job === 3 ? 
+                                    (<MailOutlined style={{marginTop:'2px', fontSize:'30px', verticalAlign: 'middle',}} onClick={ClickNotification}/>)
+                                :
+                                <><div className="register pull-right" style={{marginRight:'5px'}}>
+                                {user.userData && user.userData.job === 1 && <a href="/upload"><div className="navbar-button" style={{backgroundColor:'#f85272', color:'white', marginLeft:'30px', fontSize:'12px', borderRadius:'30px'}}>업로드</div></a>}
+                            </div>
+                            <Dropdown overlay={message} placement="bottomRight" arrow trigger={["click"]} 
+                            onVisibleChange={handleVisible} visible={MessageVisible} overlayStyle={{borderRadius:'20px'}}>
+                                <Badge count={Messages.filter(message => message.isRead === false).length}>
+                                    <MailOutlined style={{marginTop:'2px', fontSize:'30px', verticalAlign: 'middle',}}/>
+                                </Badge>
+                            </Dropdown>
+                            <Dropdown overlay={menu} placement="bottomLeft" arrow trigger={["click"]}>
+                                <Avatar style={{ marginTop:'5px',marginLeft:'20px',backgroundColor: '#809edf', verticalAlign: 'middle', fontSize:'20px', lineHeight:'25px' }} src={user.userData && user.userData.profileImage && convertToLocal(user.userData.profileImage)} size="middle" gap={4}>
+                                    {user.userData && !user.userData.profileImage && user.userData.nickname ? user.userData.nickname[0] : null}
+                                </Avatar>
+                            </Dropdown></>
+                                }
+                                
                             </div>
                             </>)
                             }

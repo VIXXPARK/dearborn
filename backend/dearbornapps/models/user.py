@@ -36,7 +36,7 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('is_activate', True)
         extra_fields.setdefault('profileImage',None)
         extra_fields.setdefault('content', "hello")
-        extra_fields.setdefault('job', 1)
+        extra_fields.setdefault('job', 3)
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff = True')
         if extra_fields.get('is_superuser') is not True:

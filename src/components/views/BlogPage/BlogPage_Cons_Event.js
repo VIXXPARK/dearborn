@@ -7,7 +7,7 @@ import moment from 'moment'
 import Meta from 'antd/lib/card/Meta';
 import UploadOutlined from '@ant-design/icons'
 import { render } from 'react-dom';
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 
 const {Title} = Typography
@@ -109,7 +109,7 @@ function BlogPage_Cons_Event(props) {
                 <a href={`/contest/${contest.id}`}>
                 <div className="contest-item-wrapper">
                     <div className="contest-item-img">
-                        <img style={{width:'100%', height:'100%'}} src={convertToS3EP(contest.banner)}/>
+                        <img style={{width:'100%', height:'100%'}} src={convertToLocal(contest.banner)}/>
                     </div>
                     <div className="contest-item-title">
                         <p>{contest.title}</p>
@@ -193,13 +193,13 @@ function BlogPage_Cons_Event(props) {
                 {/* <img src= {`http://localhost:5000/${}`}/> */}
                 <div className="blog-header">
                     <div style={{width:'200px', height:'200px',float:'left'}}>
-                        <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToS3EP(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
+                        <img style={{display:'inline-block', verticalAlign:'top', width:'100%', height:'100%', background:'rgba(0,0,0, 0.05)', borderRadius:'100px'}} src={Designer && Designer.profileImage[0] ? convertToLocal(Designer.profileImage[0]) : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT_yrd8qyMAeTKfxPH00Az2BqE561qnoB5Ulw&usqp=CAU"}/>
                     </div>
                     <div className="blog-header-content">
                         <Title>{Designer.nickname}</Title>
                         <p id="blog-header-p1">{Designer.content}</p>
                         <p id="blog-header-p2">{Designer.job===1 ? "디자이너" : "클라이언트"}</p>
-                        <div style={{width:'90px', height:'40px', borderRadius:'10px', backgroundColor:'#f85272', lineHeight:'45px', textAlign:'center'}}>채용하기</div>
+                        
                     </div>
                 </div>
                 <div className="blog-section">

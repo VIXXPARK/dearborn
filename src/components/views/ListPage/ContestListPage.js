@@ -4,7 +4,7 @@ import {Card, Radio, Typography} from 'antd'
 import './ListPage.css'
 import Meta from 'antd/lib/card/Meta';
 import axios from 'axios'
-import {convertToS3EP} from '../../utils/String'
+import {convertToLocal, convertToS3EP} from '../../utils/String'
 import {getCookieValue} from '../../utils/Cookie'
 
 const {Title} = Typography
@@ -67,7 +67,7 @@ function EventListPage(props) {
         <div className="event-list-item">
             <a href={`/contest/${contest.id}`}>
                 <div className="event-item">
-                    <div className="event-item-img"><img style={{width:'100%', height:'100%'}} src={convertToS3EP(contest.banner)} alt/></div>
+                    <div className="event-item-img"><img style={{width:'100%', height:'100%'}} src={convertToLocal(contest.banner)} alt/></div>
                     <div className="event-item-content">
                         <h1>{contest.title}</h1>
                         <h2>{contest.description}</h2>

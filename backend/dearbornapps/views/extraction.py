@@ -101,15 +101,20 @@ def recommend(request):
         return Response({'success':False, 'err':recommandSerializer.errors}, status=HTTP_400_BAD_REQUEST)
     
     postId = recommandSerializer.validated_data['postId']
+    try:
+        category = Post.objects.get(id=postId).category
+    except:
+        return Response({'success':False, 'err':"no object"},status=HTTP_500_INTERNAL_SERVER_ERROR)
+
     image_array, image_file_name, image_id = GetImageArray(postId)
     vectors = GetFeatureVector(image_array)
-    similarities = Similarity(vectors, 8)
+    similarities = Similarity(vectors, 8, category)
     postData = []
     print(similarities)
     for sim in similarities:
         similarity = sim['similarity']
         postid = sim['postId']
-        if similarity >= 0.8:
+        if similarity >= 0.7:
             if postId != postid:
                 print("postId = ", postId)
                 print("postid = ", postid)

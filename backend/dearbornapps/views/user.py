@@ -122,7 +122,6 @@ def emailVerification(current_site, user, email):
     # except SMTPException as smtpE:
     #     raise smtpE
 
-
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
 def emailReVerification(request):
