@@ -17,8 +17,6 @@
   - [report](#report)
 - [프로젝트 소개](#프로젝트-소개)
   - [:wrench:사용 기술](#wrench사용-기술)
-  - [Frontend](#frontend)
-  - [:file_folder:Backend](#file_folderbackend)
     - [:iphone:App](#iphoneapp)
     - [:package:Config](#packageconfig)
   - [:minidisc:사이트](#minidisc사이트)
@@ -87,14 +85,6 @@
 
 <p align='middle'><a href='' align='middle'><img src='./img/dev.png' /></a></p>
 
-
-### Frontend
-
-<p align='middle'><a href='' align='middle'><img src='./img/frontend.png' /></a></p>
-
-### :file_folder:Backend
-<strong>Backend Architecture</strong></br>
-<p align='middle'><a href='' align='middle'><img src='./img/backend structure.png' /></a></p>
 
 #### :iphone:App
 - <a href="./backend/dearbornApp">dearbornApp</a></br>

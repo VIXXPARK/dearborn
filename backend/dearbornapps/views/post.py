@@ -808,26 +808,16 @@ class weeklyPopularity(ListAPIView):
     permission_classes = (permissions.AllowAny,)
     pagination_class = LimitOffsetPagination
     def get(self,request):
-        dat = datetime.date.today()##day로 해서 if문 안에 해결하기
+        dat = datetime.date.today()
         start_week = (dat-datetime.timedelta(dat.weekday()))
         start = (dat-datetime.timedelta(dat.weekday())).day
         end = (start_week + datetime.timedelta(7)).day
         end_week = (start_week + datetime.timedelta(7)).isoformat()
         fromDate = start_week.isoformat()
-        print(fromDate)
-        print(end_week)
         try:
             postdata = (like.objects.filter(updated_dt__range=[fromDate,end_week]).values('post').annotate(total=Count('user'))).order_by('-total')
-            # postdata=self.paginate_queryset(like.objects.filter(updated_dt__range=[fromDate,end_week]).values('post').annotate(total=Count('user')).order_by('-total'))
-            print(">>><<<")
-            print(postdata)
             postData=[]
             for data in postdata:
-                
-                print(">>><<<")
-                print(data)
-                print(">>><<<")
-                print(data['post'])
                 datas = Post.objects.get(id=data['post'])
                 if datas.updated_dt.day>=start & datas.updated_dt.day<=end:
                     person = User.object.get(id=datas.user.id)
@@ -1003,17 +993,14 @@ class UserPopularity(ListAPIView):
     
     def get(self,request):
         try:
-            # postdata = self.paginate_queryset()
             postdata = Post.objects.all().values('user').annotate(total=Count('view')).order_by('-total')
             
             counting=0
             
             UserList=[]
             for data in postdata:
-                print(data)
                 datas = Post.objects.filter(user=data['user']).order_by('-view')
                 person = User.object.get(id=data['user'])
-                print(person)
                 try:
                     profile=person.profileImage.url
                 except:
