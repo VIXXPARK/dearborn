@@ -27,7 +27,7 @@ django-heroku==0.3.1
 django-rest-auth==0.9.5
 django-storages==1.10.1
 django-templated-mail==1.1.1
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 djangorestframework-jwt==1.11.0
 djangorestframework-simplejwt==4.4.0
 djoser==2.0.3
